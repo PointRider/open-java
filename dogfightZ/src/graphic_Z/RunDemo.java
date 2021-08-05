@@ -6,6 +6,7 @@ import graphic_Z.HUDs.CharDynamicHUD;
 import graphic_Z.HUDs.CharLabel;
 import graphic_Z.Objects.CharMessObject;
 import graphic_Z.Worlds.CharTimeSpace;
+import graphic_Z.utils.GraphicUtils;
 
 public class RunDemo
 {
@@ -70,16 +71,16 @@ public class RunDemo
 			
 			if(Math.abs(mainCamera.roll_angle[1]) > 90.0)
 			{
-				mainCamera.roll_angle[0] -= Math.sin(rad(mainCamera.roll_angle[2])) * xy.y / 6.4;
-				mainCamera.roll_angle[0] += Math.cos(rad(mainCamera.roll_angle[2])) * xy.x / 6.4;
+				mainCamera.roll_angle[0] -= GraphicUtils.sin(rad(mainCamera.roll_angle[2])) * xy.y / 6.4;
+				mainCamera.roll_angle[0] += GraphicUtils.cos(rad(mainCamera.roll_angle[2])) * xy.x / 6.4;
 			}
 			else
 			{
-				mainCamera.roll_angle[0] += Math.sin(rad(mainCamera.roll_angle[2])) * xy.y / 6.4;
-				mainCamera.roll_angle[0] -= Math.cos(rad(mainCamera.roll_angle[2])) * xy.x / 6.4;
+				mainCamera.roll_angle[0] += GraphicUtils.sin(rad(mainCamera.roll_angle[2])) * xy.y / 6.4;
+				mainCamera.roll_angle[0] -= GraphicUtils.cos(rad(mainCamera.roll_angle[2])) * xy.x / 6.4;
 			}
-			mainCamera.roll_angle[1] += Math.sin(rad(mainCamera.roll_angle[2])) * xy.x / 6.4;
-			mainCamera.roll_angle[1] += Math.cos(rad(mainCamera.roll_angle[2])) * xy.y / 6.4;
+			mainCamera.roll_angle[1] += GraphicUtils.sin(rad(mainCamera.roll_angle[2])) * xy.x / 6.4;
+			mainCamera.roll_angle[1] += GraphicUtils.cos(rad(mainCamera.roll_angle[2])) * xy.y / 6.4;
 			
 			
 			mainCamera.roll_angle[0] %= 360;

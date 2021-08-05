@@ -4,6 +4,8 @@ import java.io.EOFException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import graphic_Z.utils.GraphicUtils;
+
 public class CharDynamicHUD extends CharHUD
 {
 	protected short size[];
@@ -120,8 +122,8 @@ public class CharDynamicHUD extends CharHUD
 							r  = distance(x0, y0, (short)0, (short)0);
 							
 							tmp = Math.atan(y0/x0)+Math.toRadians(angle);
-							X = Math.cos(tmp) * r;
-							Y = Math.sin(tmp) * r;
+							X = GraphicUtils.cos(tmp) * r;
+							Y = GraphicUtils.sin(tmp) * r;
 							y0 = (short) ((x0<0)?(-Y):Y);
 							x0 = (short) ((x0<0)?(-X):X);
 						}

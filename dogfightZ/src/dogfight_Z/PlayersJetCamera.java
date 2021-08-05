@@ -7,6 +7,7 @@ import graphic_Z.HUDs.CharDynamicHUD;
 import graphic_Z.HUDs.CharLabel;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Worlds.CharWorld;
+import graphic_Z.utils.GraphicUtils;
 
 public class PlayersJetCamera extends CharFrapsCamera
 {
@@ -82,9 +83,9 @@ public class PlayersJetCamera extends CharFrapsCamera
 		
 		double X0, Y0, Z0, X, Y, Z;
 		
-		double locationOfanObj[] = new double[3];
+		double locationOfanObj[]  = new double[3];
 		double rollAngleOfanObj[] = new double[3];
-		double aPointOfanObj[] = new double[3];
+		double aPointOfanObj[]    = new double[3];
 		double range;
 		short  X1, Y1;
 		char spc;
@@ -92,14 +93,21 @@ public class PlayersJetCamera extends CharFrapsCamera
 		
 		double r0, r1, r2;
 		double cr0, cr1,cr2;
-		double tmp1, tmp2, temp=Math.tan(FOV/2.0);
+		double tmp1, tmp2, temp= GraphicUtils.tan(FOV/2.0);
 		
 		cr0 = rad(roll_angle[0]);
 		cr1 = rad(roll_angle[1]);
 		cr2 = rad(roll_angle[2]);
+
+		if(myJet.lockedByEnemy) warning_lockedByMissile();
+
+		Aircraft a = null;
+		double point_on_Scr[] = new double[2];
 		
 		for(ThreeDs aObject:inWorld.objectsManager.objects)	//for each object
 		{
+			if(aObject instanceof Aircraft) a = (Aircraft)aObject; else a = null;
+			
 			spc = aObject.getSpecialDisplayChar();
 			locationOfanObj = aObject.getLocation();
 			rollAngleOfanObj= aObject.getRollAngle();
@@ -124,24 +132,25 @@ public class PlayersJetCamera extends CharFrapsCamera
 						tmp1 = Math.atan2(Y0, X0)+r2;
 						tmp2 = Math.sqrt(X0*X0+Y0*Y0);
 						//---自身旋转---
-						X = Math.cos(tmp1)*tmp2;
-						Y = Math.sin(tmp1)*tmp2;
+						X = GraphicUtils.cos(tmp1)*tmp2;
+						Y = GraphicUtils.sin(tmp1)*tmp2;
+						
 						Y0 = Y;
 						X0 = X;
 						
 						tmp1 = Math.atan2(Z0, X0)+r1;
 						tmp2 = Math.sqrt(X0*X0+Z0*Z0);
 						
-						X = Math.cos(tmp1)*tmp2;
-						Z = Math.sin(tmp1)*tmp2;
+						X = GraphicUtils.cos(tmp1)*tmp2;
+						Z = GraphicUtils.sin(tmp1)*tmp2;
 						Z0 = Z;
 						X0 = X;
 						
 						tmp1 = Math.atan2(Y0, Z0)+r0;
 						tmp2 = Math.sqrt(Z0*Z0+Y0*Y0);
 						
-						Z = Math.cos(tmp1)*tmp2;
-						Y = Math.sin(tmp1)*tmp2;
+						Z = GraphicUtils.cos(tmp1)*tmp2;
+						Y = GraphicUtils.sin(tmp1)*tmp2;
 						Y0 = Y;
 						Z0 = Z;
 						//---旋转结束---
@@ -153,29 +162,30 @@ public class PlayersJetCamera extends CharFrapsCamera
 						//---围绕摄像机旋转(或相对的，摄像机原地左右上下转动)---
 						tmp1 = Math.atan2(Y0, Z0)+cr0;
 						tmp2 = Math.sqrt(Z0*Z0+Y0*Y0);
-						Z = Math.cos(tmp1)*tmp2;
-						Y = Math.sin(tmp1)*tmp2;
+						Z = GraphicUtils.cos(tmp1)*tmp2;
+						Y = GraphicUtils.sin(tmp1)*tmp2;
 						Y0 = Y;
 						Z0 = Z;
 						
 						tmp1 = Math.atan2(Z0, X0)+cr1;
 						tmp2 = Math.sqrt(X0*X0+Z0*Z0);
-						X = Math.cos(tmp1)*tmp2;
-						Z = Math.sin(tmp1)*tmp2;
+						X = GraphicUtils.cos(tmp1)*tmp2;
+						Z = GraphicUtils.sin(tmp1)*tmp2;
 						Z0 = Z;
 						X0 = X;
 						//---旋转结束---
 						
 						if(Z0>=0)
 						{
-							X0 = ((X0*Xcenter)*FOV/(Xcenter+temp*Z0));
-							Y0 = ((Y0*Xcenter)*FOV/(Xcenter+temp*Z0));
+							tmp1 = Xcenter*FOV/(Xcenter+temp*Z0);
+							X0 = X0 * tmp1;
+							Y0 = Y0 * tmp1;
 							
 							//屏幕视角绕Z轴转动
 							tmp1 = Math.atan2(Y0, X0)+cr2;
 							tmp2 = Math.sqrt(X0*X0+Y0*Y0);
-							X = Math.cos(tmp1)*tmp2;
-							Y = Math.sin(tmp1)*tmp2;
+							X = GraphicUtils.cos(tmp1)*tmp2;
+							Y = GraphicUtils.sin(tmp1)*tmp2;
 							
 							X1 = (short) (Y+Xcenter);
 							Y1 = (short) (X+Ycenter);
@@ -202,20 +212,8 @@ public class PlayersJetCamera extends CharFrapsCamera
 					tmp.pollBack();
 			} catch(ClassCastException e) {}
 			
-			if(myJet.lockedByEnemy)
-				warning_lockedByMissile();
+			if(a==null || a.ID.equals(myJet.ID) || !a.isAlive) continue;
 			
-			Aircraft a = null;
-			
-			try
-			{
-				a = (Aircraft)aObject;
-			} catch(ClassCastException e) {continue;}
-			
-			if(a==null || a.ID.equals(myJet.ID) || !a.isAlive)	//防止视角跟随导弹行进时将自己的进行战机拉回
-				continue;
-			
-			double point_on_Scr[] = new double[2];
 			double range_to_Scr = 
 			CharFrapsCamera.getXY_onCamera
 			(
@@ -316,8 +314,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 			currentMaxLockingPriority = 0;
 			lockTimeLeft			  = lockTime;
 		}
-		else if(locked)
-			return currentSelectObj;
+		else if(locked) return currentSelectObj;
 		
 		return null;
 	}

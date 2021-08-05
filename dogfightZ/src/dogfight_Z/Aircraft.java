@@ -14,6 +14,7 @@ import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Objects.CharMessObject;
 import graphic_Z.Worlds.CharTimeSpace;
+import graphic_Z.utils.GraphicUtils;
 
 public class Aircraft extends CharMessObject
 {
@@ -218,8 +219,8 @@ public class Aircraft extends CharMessObject
 		y -= location[1];
 		z -= location[2];
 		
-		Z = Math.cos(Math.atan(y/z)+Math.toRadians(cameraRollAngle[0]))*Math.sqrt(z*z+y*y);
-		Y = Math.sin(Math.atan(y/z)+Math.toRadians(cameraRollAngle[0]))*Math.sqrt(z*z+y*y);
+		Z = GraphicUtils.cos(Math.atan(y/z)+Math.toRadians(cameraRollAngle[0]))*Math.sqrt(z*z+y*y);
+		Y = GraphicUtils.sin(Math.atan(y/z)+Math.toRadians(cameraRollAngle[0]))*Math.sqrt(z*z+y*y);
 		
 		y = (z<0)?(-Y):Y;
 		z = (z<0)?(-Z):Z;
@@ -254,10 +255,10 @@ public class Aircraft extends CharMessObject
 	
 	public void roll_up_dn(double angleVel)
 	{
-		if(Math.abs(roll_angle[1]) > 90.0)	roll_angle[0] += Math.sin(Math.toRadians(roll_angle[2])) * angleVel / 6.4;
-			else							roll_angle[0] -= Math.sin(Math.toRadians(roll_angle[2])) * angleVel / 6.4;
+		if(Math.abs(roll_angle[1]) > 90.0)	roll_angle[0] += GraphicUtils.sin(Math.toRadians(roll_angle[2])) * angleVel / 6.4;
+			else							roll_angle[0] -= GraphicUtils.sin(Math.toRadians(roll_angle[2])) * angleVel / 6.4;
 		
-		roll_angle[1] += Math.cos(Math.toRadians(roll_angle[2])) * angleVel / 6.4;
+		roll_angle[1] += GraphicUtils.cos(Math.toRadians(roll_angle[2])) * angleVel / 6.4;
 			
 		roll_angle[0] %= 360;//
 		//roll_angle[1] %= 360;//
@@ -268,10 +269,10 @@ public class Aircraft extends CharMessObject
 	
 	public void turn_lr(double angleVel)
 	{
-		if(Math.abs(roll_angle[1]) > 90.0)	roll_angle[0] -= Math.cos(Math.toRadians(roll_angle[2])) * angleVel / 6.4;
-			else							roll_angle[0] += Math.cos(Math.toRadians(roll_angle[2])) * angleVel / 6.4;
+		if(Math.abs(roll_angle[1]) > 90.0)	roll_angle[0] -= GraphicUtils.cos(Math.toRadians(roll_angle[2])) * angleVel / 6.4;
+			else							roll_angle[0] += GraphicUtils.cos(Math.toRadians(roll_angle[2])) * angleVel / 6.4;
 
-		roll_angle[1] += Math.sin(Math.toRadians(roll_angle[2])) * angleVel / 6.4;
+		roll_angle[1] += GraphicUtils.sin(Math.toRadians(roll_angle[2])) * angleVel / 6.4;
 		
 		roll_angle[0] %= 360;//
 		//roll_angle[1] %= 360;//
@@ -600,10 +601,10 @@ public class Aircraft extends CharMessObject
 	{
 		//------------[go street]------------
 		double x, y, z, t, tmp = Math.toRadians(roll_angle[0]);
-		double r1 = Math.toRadians(roll_angle[1]), r2 = Math.cos(tmp);
-		t = Math.cos(r1) * speed;
-		x = Math.tan(r1) * t;
-		y = Math.sin(tmp) * t;
+		double r1 = Math.toRadians(roll_angle[1]), r2 = GraphicUtils.cos(tmp);
+		t = GraphicUtils.cos(r1) * speed;
+		x = GraphicUtils.tan(r1) * t;
+		y = GraphicUtils.sin(tmp) * t;
 		z = r2 * t;
 		
 		location[0]	-= x;

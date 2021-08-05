@@ -36,6 +36,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	public CharVisualManager(short resolution_X, short resolution_Y, CharWorld inWhichWorld, JTextArea	main_scr)
 	{
 		super(resolution_X, resolution_Y, inWhichWorld);
+		
 		mainCameraFeedBack = null;
 		scr_show = new StringBuilder(resolution_X * resolution_Y);
 		refreshDelay = inWorld.refreshDelay;
@@ -52,7 +53,6 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		point[5] = '+';
 		point[6] = '\'';
 		point[7] = '.';
-		
 		
 		blank = ' ';					//default
 		
@@ -193,35 +193,28 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		return newBar;
 	}
 	
-	public void run()
+	public void run() { 
+		try{Thread.sleep(refreshDelay);} catch(InterruptedException e) {}
+	}
+	
+	public void srun()
 	{
-		for(int i=0 ; i<resolution[1] ; ++i) for(int j=0 ; j<resolution[0] ; ++j)
+		for(int i=0 ; i<resolution[1] ; ++i) for(int j=0 ; j<resolution[0] ; ++j) {
 			fraps_buffer[i][j] = blank;
+		}
 		
 		
-		CharFrapsCamera aCamera;
-		for
-		(
-			Iterator<CharFrapsCamera> iter = cameras.iterator();
-			iter.hasNext();
-		)
+		for(CharFrapsCamera aCamera : cameras)
 		{
-			aCamera = iter.next();
 			Thread staticObjExposureThread = new Thread(aCamera);
 			staticObjExposureThread.start();
-			/*
-			for(Iterable<ThreeDs> eachList:staticObjLists)
-			{
-				aCamera.exposure(eachList);
-			}
-			*/
+
 			for(Iterable<Dynamic> eachList:dynamicObjLists)
 				aCamera.exposure(eachList, 0);
 			for(Iterable<Dynamic> eachList:selfDisposable)
 				aCamera.exposure(eachList, 0);
 			mainCameraFeedBack = aCamera.exposure();
 		}
-		
 		for
 		(
 			Iterator<HUD> iter = HUDs.iterator();
@@ -235,14 +228,9 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		tmpThread = new Thread(this);
 		tmpThread.start();
 		
-		try
-		{
-			Thread.sleep(refreshDelay);
-			tmpThread.join();
-		} catch (InterruptedException e)
-		{ e.printStackTrace();}
-		
-		
+		srun();
+
+		try{tmpThread.join();} catch (InterruptedException e) {}
 		boolean firstInLine, firstLine;
 		
 		scr_show.delete(0, scr_show.length());
@@ -251,17 +239,18 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		for(char y[]:fraps_buffer)
 		{
 			firstInLine = true;
-			if(!firstLine)
-				scr_show.append('\n');
+			if(!firstLine) scr_show.append('\n');
+			
 			for(char x:y)
 			{
 				if(!firstInLine) scr_show.append(' ');
-					scr_show.append(x);
+				scr_show.append(x);
 				firstInLine = false;
 			}
+			
 			firstLine = false;
 		}
-		
+
 		mainScr.setText(scr_show.toString());
 	}
 

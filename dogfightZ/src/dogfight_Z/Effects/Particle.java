@@ -1,6 +1,7 @@
 package dogfight_Z.Effects;
 
 import graphic_Z.Worlds.CharTimeSpace;
+import graphic_Z.utils.GraphicUtils;
 
 public class Particle extends EngineFlame
 {
@@ -30,11 +31,11 @@ public class Particle extends EngineFlame
 		}
 		else
 		{
-			double x, y, z, t = Math.cos(Math.toRadians(roll_angle[1])) * velocity;
+			double x, y, z, t = GraphicUtils.cos(Math.toRadians(roll_angle[1])) * velocity;
 			
-			x = Math.tan(Math.toRadians(roll_angle[1])) * t;
-			y = Math.sin(Math.toRadians(roll_angle[0])) * t;
-			z = Math.cos(Math.toRadians(roll_angle[0])) * t;
+			x = GraphicUtils.tan(Math.toRadians(roll_angle[1])) * t;
+			y = GraphicUtils.sin(Math.toRadians(roll_angle[0])) * t;
+			z = GraphicUtils.cos(Math.toRadians(roll_angle[0])) * t;
 			
 			location[0]	-= x;
 			location[1]	+= y;

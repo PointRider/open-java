@@ -7,6 +7,7 @@ import java.util.HashSet;
 
 import graphic_Z.HUDs.CharDynamicHUD;
 import graphic_Z.Interfaces.ThreeDs;
+import graphic_Z.utils.GraphicUtils;
 
 public class Radar extends CharDynamicHUD
 {
@@ -94,8 +95,8 @@ public class Radar extends CharDynamicHUD
 		double theta = Math.toRadians(nowAngle);
 		for(int i=0 ; i<r ; ++i)
 		{
-			x = (int)(Math.cos(theta) * i);
-			y = (int)(Math.sin(theta) * i);
+			x = (int)(GraphicUtils.cos(theta) * i);
+			y = (int)(GraphicUtils.sin(theta) * i);
 			
 			x += center_X;
 			y += center_Y;

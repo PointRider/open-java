@@ -5,6 +5,7 @@ import dogfight_Z.Effects.EngineFlame;
 import dogfight_Z.Effects.ExplosionMaker;
 import graphic_Z.Cameras.CharFrapsCamera;
 import graphic_Z.Interfaces.Dynamic;
+import graphic_Z.utils.GraphicUtils;
 
 public class Missile extends Aircraft implements Dynamic
 {
@@ -288,11 +289,11 @@ public class Missile extends Aircraft implements Dynamic
 				trace();
 			//------------[go street]------------
 			r1 = Math.toRadians(roll_angle[1]);
-			r2 = Math.cos(Math.toRadians(roll_angle[0]));
-			t = Math.cos(r1) * speed;
-			x = Math.tan(r1) * t;
-			y = Math.sin(Math.toRadians(roll_angle[0])) * t;
-			z = r2 * t;
+			r2 = GraphicUtils.cos(Math.toRadians(roll_angle[0]));
+			t  = GraphicUtils.cos(r1) * speed;
+			x  = GraphicUtils.tan(r1) * t;
+			y  = GraphicUtils.sin(Math.toRadians(roll_angle[0])) * t;
+			z  = r2 * t;
 			
 			location[0]	-= x;
 			location[1]	+= y;

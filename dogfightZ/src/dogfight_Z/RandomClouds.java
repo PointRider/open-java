@@ -33,13 +33,13 @@ public class RandomClouds extends CharObject implements Runnable, ThreeDs
 		location_player = Location;
 		location = new double[3];
 		location[0] = Math.random();
-		if((int)(location[0] * 1000000) % 2 == 0)
+		if(((int)(location[0] * 1000000) & 1) == 0)
 			location[0] = -location[0];
 		location[1] = Math.random();
-		if((int)(location[1] * 1000000) % 2 == 0)
+		if(((int)(location[1] * 1000000) & 1) == 0)
 			location[1] = -location[1];
 		location[2] = Math.random();
-		if((int)(location[2] * 1000000) % 2 == 0)
+		if(((int)(location[2] * 1000000) & 1) == 0)
 			location[2] = -location[2];
 		
 		location[0] = /*location_player[0] < hight - visibility? hight + location_player[0] - location[0] * 2 * size[1] :*/ hight - location[0] * 2 * size[1];
@@ -90,13 +90,13 @@ public class RandomClouds extends CharObject implements Runnable, ThreeDs
 	public void reConstruct()
 	{
 		location[0] = Math.random();
-		if((int)(location[0] * 1000000) % 2 == 0)
+		if(((int)(location[0] * 1000000) & 1) == 0)
 			location[0] = -location[0];
 		location[1] = Math.random();
-		if((int)(location[1] * 1000000) % 2 == 0)
+		if(((int)(location[1] * 1000000) & 1) == 0)
 			location[1] = -location[1];
 		location[2] = Math.random();
-		if((int)(location[2] * 1000000) % 2 == 0)
+		if(((int)(location[2] * 1000000) & 1) == 0)
 			location[2] = -location[2];
 		
 		location[0] = /*location_player[0] < hight - visibility? hight + location_player[0] - location[0] * 2 * size[1] :*/ hight - location[0] * 2 * size[1];

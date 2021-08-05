@@ -8,6 +8,7 @@ import dogfight_Z.Effects.EngineFlame;
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Worlds.CharTimeSpace;
+import graphic_Z.utils.GraphicUtils;
 
 public class Decoy extends Aircraft implements Dynamic
 {
@@ -132,11 +133,11 @@ public class Decoy extends Aircraft implements Dynamic
 			disable();
 		else
 		{
-			double x, y, z, t = Math.cos(Math.toRadians(roll_angle[1])) * velocity;
+			double x, y, z, t = GraphicUtils.cos(Math.toRadians(roll_angle[1])) * velocity;
 			
-			x = Math.tan(Math.toRadians(roll_angle[1])) * t;
-			y = Math.sin(Math.toRadians(roll_angle[0])) * t;
-			z = Math.cos(Math.toRadians(roll_angle[0])) * t;
+			x = GraphicUtils.tan(Math.toRadians(roll_angle[1])) * t;
+			y = GraphicUtils.sin(Math.toRadians(roll_angle[0])) * t;
+			z = GraphicUtils.cos(Math.toRadians(roll_angle[0])) * t;
 			
 			location[0]	-= x;
 			location[1]	+= y;
@@ -145,11 +146,11 @@ public class Decoy extends Aircraft implements Dynamic
 			velocity -= velocity * resistanceRate * 1.5;
 			location[0] += CharTimeSpace.g * (life - lifeLeft) * 0.0125 - (life-lifeLeft) * resistanceRate;
 			
-			t = Math.cos(Math.toRadians(Roll_angle_Aircraft[1])) * speed;
+			t = GraphicUtils.cos(Math.toRadians(Roll_angle_Aircraft[1])) * speed;
 			
-			x = Math.tan(Math.toRadians(Roll_angle_Aircraft[1])) * t;
-			y = Math.sin(Math.toRadians(Roll_angle_Aircraft[0])) * t;
-			z = Math.cos(Math.toRadians(Roll_angle_Aircraft[0])) * t;
+			x = GraphicUtils.tan(Math.toRadians(Roll_angle_Aircraft[1])) * t;
+			y = GraphicUtils.sin(Math.toRadians(Roll_angle_Aircraft[0])) * t;
+			z = GraphicUtils.cos(Math.toRadians(Roll_angle_Aircraft[0])) * t;
 			
 			location[0]	-= x;
 			location[1]	+= y;

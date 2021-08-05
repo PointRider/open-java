@@ -8,6 +8,7 @@ import dogfight_Z.Effects.ExplosionMaker;
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Objects.CharMessObject;
+import graphic_Z.utils.GraphicUtils;
 //import graphic_Z.Worlds.CharTimeSpace;
 
 public class CannonAmmo extends CharMessObject implements Dynamic
@@ -142,10 +143,10 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 		{
 			//------------[go street]------------
 			r1 = Math.toRadians(roll_angle[1]);
-			r2 = Math.cos(Math.toRadians(roll_angle[0]));
-			t = Math.cos(r1) * speed;
-			x = Math.tan(r1) * t;
-			y = Math.sin(Math.toRadians(roll_angle[0])) * t;
+			r2 = GraphicUtils.cos(Math.toRadians(roll_angle[0]));
+			t = GraphicUtils.cos(r1) * speed;
+			x = GraphicUtils.tan(r1) * t;
+			y = GraphicUtils.sin(Math.toRadians(roll_angle[0])) * t;
 			z = r2 * t;
 			
 			location[0]	-= x;

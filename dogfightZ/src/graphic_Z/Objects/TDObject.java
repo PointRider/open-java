@@ -1,5 +1,7 @@
 package graphic_Z.Objects;
 
+import graphic_Z.utils.GraphicUtils;
+
 public abstract class TDObject
 {
 	public double location[];		//物体中心坐标
@@ -22,16 +24,16 @@ public abstract class TDObject
 	{
 		double X, Y, Z;
 		
-		X = Math.cos(Math.atan(Y0/X0)+Math.toRadians(rz))*Math.sqrt(X0*X0+Y0*Y0);
-		Y = Math.sin(Math.atan(Y0/X0)+Math.toRadians(rz))*Math.sqrt(X0*X0+Y0*Y0);
+		X = GraphicUtils.cos(Math.atan(Y0/X0)+Math.toRadians(rz))*Math.sqrt(X0*X0+Y0*Y0);
+		Y = GraphicUtils.sin(Math.atan(Y0/X0)+Math.toRadians(rz))*Math.sqrt(X0*X0+Y0*Y0);
 		Y0 = (X0<0)?(-Y):Y;
 		X0 = (X0<0)?(-X):X;
-		X = Math.cos(Math.atan(Z0/X0)+Math.toRadians(ry))*Math.sqrt(X0*X0+Z0*Z0);
-		Z = Math.sin(Math.atan(Z0/X0)+Math.toRadians(ry))*Math.sqrt(X0*X0+Z0*Z0);
+		X = GraphicUtils.cos(Math.atan(Z0/X0)+Math.toRadians(ry))*Math.sqrt(X0*X0+Z0*Z0);
+		Z = GraphicUtils.sin(Math.atan(Z0/X0)+Math.toRadians(ry))*Math.sqrt(X0*X0+Z0*Z0);
 		Z0 = (X0<0)?(-Z):Z;
 		X0 = (X0<0)?(-X):X;
-		Z = Math.cos(Math.atan(Y0/Z0)+Math.toRadians(rx))*Math.sqrt(Z0*Z0+Y0*Y0);
-		Y = Math.sin(Math.atan(Y0/Z0)+Math.toRadians(rx))*Math.sqrt(Z0*Z0+Y0*Y0);
+		Z = GraphicUtils.cos(Math.atan(Y0/Z0)+Math.toRadians(rx))*Math.sqrt(Z0*Z0+Y0*Y0);
+		Y = GraphicUtils.sin(Math.atan(Y0/Z0)+Math.toRadians(rx))*Math.sqrt(Z0*Z0+Y0*Y0);
 		Y0 = (Z0<0)?(-Y):Y;
 		Z0 = (Z0<0)?(-Z):Z;
 		
@@ -50,16 +52,16 @@ public abstract class TDObject
 	{
 		double X, Y, Z;
 		
-		Z = Math.cos(Math.atan(Y0/Z0)+Math.toRadians(-rx))*Math.sqrt(Z0*Z0+Y0*Y0);
-		Y = Math.sin(Math.atan(Y0/Z0)+Math.toRadians(-rx))*Math.sqrt(Z0*Z0+Y0*Y0);
+		Z = GraphicUtils.cos(Math.atan(Y0/Z0)+Math.toRadians(-rx))*Math.sqrt(Z0*Z0+Y0*Y0);
+		Y = GraphicUtils.sin(Math.atan(Y0/Z0)+Math.toRadians(-rx))*Math.sqrt(Z0*Z0+Y0*Y0);
 		Y0 = (Z0<0)?(-Y):Y;
 		Z0 = (Z0<0)?(-Z):Z;
-		X = Math.cos(Math.atan(Z0/X0)+Math.toRadians(-ry))*Math.sqrt(X0*X0+Z0*Z0);
-		Z = Math.sin(Math.atan(Z0/X0)+Math.toRadians(-ry))*Math.sqrt(X0*X0+Z0*Z0);
+		X = GraphicUtils.cos(Math.atan(Z0/X0)+Math.toRadians(-ry))*Math.sqrt(X0*X0+Z0*Z0);
+		Z = GraphicUtils.sin(Math.atan(Z0/X0)+Math.toRadians(-ry))*Math.sqrt(X0*X0+Z0*Z0);
 		Z0 = (X0<0)?(-Z):Z;
 		X0 = (X0<0)?(-X):X;
-		X = Math.cos(Math.atan(Y0/X0)+Math.toRadians(-rz))*Math.sqrt(X0*X0+Y0*Y0);
-		Y = Math.sin(Math.atan(Y0/X0)+Math.toRadians(-rz))*Math.sqrt(X0*X0+Y0*Y0);
+		X = GraphicUtils.cos(Math.atan(Y0/X0)+Math.toRadians(-rz))*Math.sqrt(X0*X0+Y0*Y0);
+		Y = GraphicUtils.sin(Math.atan(Y0/X0)+Math.toRadians(-rz))*Math.sqrt(X0*X0+Y0*Y0);
 		Y0 = (X0<0)?(-Y):Y;
 		X0 = (X0<0)?(-X):X;
 		

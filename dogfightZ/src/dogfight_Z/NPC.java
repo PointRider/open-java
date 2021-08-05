@@ -8,6 +8,7 @@ import dogfight_Z.Ammo.Missile;
 import graphic_Z.Cameras.CharFrapsCamera;
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
+import graphic_Z.utils.GraphicUtils;
 
 public class NPC extends Aircraft
 {
@@ -267,7 +268,7 @@ public class NPC extends Aircraft
 					else if(roll_angle[2] < -maxRollAngle_lr)
 						control_roll_lr(maxVelRollLR / motionRate);	//r
 					
-					roll_up_dn(velocity_roll[1] * 2 * Math.sin(Math.toRadians(maxRollAngle_lr)) / Math.cos(Math.toRadians(maxRollAngle_lr)));
+					roll_up_dn(velocity_roll[1] * 2 * GraphicUtils.sin(Math.toRadians(maxRollAngle_lr)) / GraphicUtils.cos(Math.toRadians(maxRollAngle_lr)));
 					
 					control_turn_lr(maxVelRollLR / motionRate);
 				}
@@ -278,7 +279,7 @@ public class NPC extends Aircraft
 					else if(roll_angle[2] > maxRollAngle_lr)
 						control_roll_lr(maxVelRollLR / -motionRate);	//l
 					
-					roll_up_dn(-velocity_roll[1] * 2 * Math.sin(Math.toRadians(maxRollAngle_lr)) / Math.cos(Math.toRadians(maxRollAngle_lr)));
+					roll_up_dn(-velocity_roll[1] * 2 * GraphicUtils.sin(Math.toRadians(maxRollAngle_lr)) / GraphicUtils.cos(Math.toRadians(maxRollAngle_lr)));
 	
 					control_turn_lr(maxVelRollLR / -motionRate);
 				}

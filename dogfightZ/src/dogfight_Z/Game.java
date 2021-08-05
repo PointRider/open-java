@@ -23,6 +23,7 @@ import graphic_Z.HUDs.CharProgressBar;
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Worlds.CharTimeSpace;
+import graphic_Z.utils.GraphicUtils;
 
 public class Game extends CharTimeSpace implements Runnable
 {
@@ -625,8 +626,8 @@ public class Game extends CharTimeSpace implements Runnable
 			
 			hud_roll_up_dn_angle.angle = Math.abs(myJet.roll_angle[1]) > 90.0? myJet.roll_angle[2] + 180 : myJet.roll_angle[2];
 			
-			hud_roll_up_dn_angle.location[0] = (short) (Math.sin(Math.toRadians(myJet.roll_angle[2])) * Math.sin(Math.toRadians(Math.abs(myJet.roll_angle[1]) > 90.0? -myJet.roll_angle[1] : myJet.roll_angle[1])) * -resolution_min + visualManager.getResolution_X()/2);
-			hud_roll_up_dn_angle.location[1] = (short) (Math.cos(Math.toRadians(myJet.roll_angle[2])) * Math.sin(Math.toRadians(Math.abs(myJet.roll_angle[1]) > 90.0?  myJet.roll_angle[1] :-myJet.roll_angle[1])) * -resolution_min + visualManager.getResolution_Y()/2);
+			hud_roll_up_dn_angle.location[0] = (short) (GraphicUtils.sin(Math.toRadians(myJet.roll_angle[2])) * GraphicUtils.sin(Math.toRadians(Math.abs(myJet.roll_angle[1]) > 90.0? -myJet.roll_angle[1] : myJet.roll_angle[1])) * -resolution_min + visualManager.getResolution_X()/2);
+			hud_roll_up_dn_angle.location[1] = (short) (GraphicUtils.cos(Math.toRadians(myJet.roll_angle[2])) * GraphicUtils.sin(Math.toRadians(Math.abs(myJet.roll_angle[1]) > 90.0?  myJet.roll_angle[1] :-myJet.roll_angle[1])) * -resolution_min + visualManager.getResolution_Y()/2);
 			
 			
 			hud_roll_up_dn_scrollBar.value = (short) (myJet.roll_angle[1] / 360 * 72);
@@ -635,8 +636,8 @@ public class Game extends CharTimeSpace implements Runnable
 			
 			hud_roll_up_dn_angle.angle = Math.abs(missileTestTarget2.roll_angle[1]) > 90.0? missileTestTarget2.roll_angle[2] + 180 : missileTestTarget2.roll_angle[2];
 			
-			hud_roll_up_dn_angle.location[0] = (short) (Math.sin(Math.toRadians(missileTestTarget2.roll_angle[2])) * Math.sin(Math.toRadians(Math.abs(missileTestTarget2.roll_angle[1]) > 90.0? -missileTestTarget2.roll_angle[1] : missileTestTarget2.roll_angle[1])) * -resolution_min + visualManager.getResolution_X()/2);
-			hud_roll_up_dn_angle.location[1] = (short) (Math.cos(Math.toRadians(missileTestTarget2.roll_angle[2])) * Math.sin(Math.toRadians(Math.abs(missileTestTarget2.roll_angle[1]) > 90.0?  missileTestTarget2.roll_angle[1] :-missileTestTarget2.roll_angle[1])) * -resolution_min + visualManager.getResolution_Y()/2);
+			hud_roll_up_dn_angle.location[0] = (short) (GraphicUtils.sin(Math.toRadians(missileTestTarget2.roll_angle[2])) * GraphicUtils.sin(Math.toRadians(Math.abs(missileTestTarget2.roll_angle[1]) > 90.0? -missileTestTarget2.roll_angle[1] : missileTestTarget2.roll_angle[1])) * -resolution_min + visualManager.getResolution_X()/2);
+			hud_roll_up_dn_angle.location[1] = (short) (GraphicUtils.cos(Math.toRadians(missileTestTarget2.roll_angle[2])) * GraphicUtils.sin(Math.toRadians(Math.abs(missileTestTarget2.roll_angle[1]) > 90.0?  missileTestTarget2.roll_angle[1] :-missileTestTarget2.roll_angle[1])) * -resolution_min + visualManager.getResolution_Y()/2);
 			
 			hud_roll_up_dn_scrollBar.value = (short) (missileTestTarget2.roll_angle[1] / 360 * 72);
 			hud_turn_lr_scrollBar.value = (short) (-missileTestTarget2.roll_angle[0] / 360 * 72);
