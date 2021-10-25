@@ -328,13 +328,10 @@ public class Game extends CharTimeSpace implements Runnable
 		myJet.mainCamera = mainCamera;
 		visualManager.newCamera(mainCamera);
 		
-		
-		
 		myJet.randomRespawn();
 		
 		for(Aircraft a:NPCs)
 			a.randomRespawn();
-		
 		/*
 		missileTestTarget0.randomRespawn();
 		missileTestTarget1.randomRespawn();
@@ -470,7 +467,6 @@ public class Game extends CharTimeSpace implements Runnable
 		);
 	}
 	*/
-	@SuppressWarnings("unused")
 	private static double range_YZ
 	(double p1[], double p2[])
 	{

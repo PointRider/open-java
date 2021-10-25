@@ -7,7 +7,6 @@ import graphic_Z.HUDs.CharDynamicHUD;
 import graphic_Z.HUDs.CharLabel;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Worlds.CharWorld;
-import graphic_Z.utils.GraphicUtils;
 
 public class PlayersJetCamera extends CharFrapsCamera
 {
@@ -76,48 +75,35 @@ public class PlayersJetCamera extends CharFrapsCamera
 		reversedAngle[1] = -roll_source[1];
 		reversedAngle[2] = -roll_source[2];
 		
-		char point[] = inWorld.visualManager.point;
-		int  pcount,
-			 Xcenter = resolution[0] / 2, 
-			 Ycenter = resolution[1] / 2;
-		
-		double X0, Y0, Z0, X, Y, Z;
-		
 		double locationOfanObj[]  = new double[3];
+		/*
 		double rollAngleOfanObj[] = new double[3];
 		double aPointOfanObj[]    = new double[3];
-		double range;
 		short  X1, Y1;
-		char spc;
+		char spc;*/
 		lockingSelected = false;
-		
-		double r0, r1, r2;
-		double cr0, cr1,cr2;
-		double tmp1, tmp2, temp= GraphicUtils.tan(FOV/2.0);
-		
-		cr0 = rad(roll_angle[0]);
-		cr1 = rad(roll_angle[1]);
-		cr2 = rad(roll_angle[2]);
 
 		if(myJet.lockedByEnemy) warning_lockedByMissile();
 
 		Aircraft a = null;
 		double point_on_Scr[] = new double[2];
+
+		double rge;
 		
 		for(ThreeDs aObject:inWorld.objectsManager.objects)	//for each object
 		{
 			if(aObject instanceof Aircraft) a = (Aircraft)aObject; else a = null;
-			
-			spc = aObject.getSpecialDisplayChar();
 			locationOfanObj = aObject.getLocation();
+			/*
+			spc = aObject.getSpecialDisplayChar();
 			rollAngleOfanObj= aObject.getRollAngle();
 
 			r0 = rad(rollAngleOfanObj[0]);
 			r1 = rad(rollAngleOfanObj[1]);
 			r2 = rad(rollAngleOfanObj[2]);
-			
-			if((range = range(locationOfanObj, location)) < visibility)
-			{	
+			*/
+			rge = exposureObject(aObject, rad(roll_angle[0]), rad(roll_angle[1]), rad(roll_angle[2]), false);
+			if((rge < visibility)) {/*(range = range(locationOfanObj, location)) < visibility) {
 				if(aObject.getVisible() == true)
 				{
 					pcount = aObject.getPointsCount();
@@ -193,19 +179,16 @@ public class PlayersJetCamera extends CharFrapsCamera
 							if(X1>=0 && Y1>=0 && X1<resolution[0] && Y1<resolution[1])
 							{
 								int index = (int)Z0 / 64;
-								if(index < 0)
-									index = 0;
-								else if(index > 7)
-									index = 7;
+								if(index < 0) index = 0;
+								else if(index > 7) index = 7;
 								
-								//if(fraps_buffer[Y1][X1] != ' ')
 								fraps_buffer[Y1][X1] = (spc =='\0'? point[index] : spc);
 							}
 						}
 					}
-				}
+				}*/
 			}
-			else if(range > maxSearchingRange) try
+			else if(rge > maxSearchingRange) try
 			{
 				Aircraft tmp = (Aircraft)aObject;
 				if(!tmp.ID.equals(myJet.ID))	//防止视角跟随导弹行进时将自己的进行战机拉回
@@ -214,8 +197,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 			
 			if(a==null || a.ID.equals(myJet.ID) || !a.isAlive) continue;
 			
-			double range_to_Scr = 
-			CharFrapsCamera.getXY_onCamera
+			double range_to_Scr = CharFrapsCamera.getXY_onCamera
 			(
 				locationOfanObj[0], locationOfanObj[1], locationOfanObj[2], 
 				resolution[0], resolution[1], location, roll_angle, point_on_Scr, FOV
@@ -224,7 +206,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 			if
 			(
 				range_to_Scr > 0    &&    range_to_Scr < maxSearchingRange    &&    
-				rangeXY(point_on_Scr[0], point_on_Scr[1], Xcenter, Ycenter) < 24
+				rangeXY(point_on_Scr[0], point_on_Scr[1], XcenterI, YcenterI) < 24
 			)
 			{
 				hudDistance.setText(String.format("%.2f", range_to_Scr));

@@ -149,7 +149,7 @@ public class Aircraft extends CharMessObject
 		specialDisplay		= '@';
 		ID					= id;
 		mainCamera			= MainCamera;
-		//cannonRollAngle		= new double[3];
+		//cannonRollAngle	= new double[3];
 		cameraRollAngle		= new double[3];
 		tmp_double			= new double[3];
 		cannonLocation		= new double[3];

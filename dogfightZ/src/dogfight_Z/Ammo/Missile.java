@@ -20,7 +20,7 @@ public class Missile extends Aircraft implements Dynamic
 	public		  Aircraft  target;
 	public		  CharFrapsCamera camera;
 	
-	public		  double guideResolution;
+	public		  int    guideResolution;
 	public		  double guideFOV;
 	public		  double maxSpeed;
 	private		  double halfAResolution;
@@ -60,7 +60,7 @@ public class Missile extends Aircraft implements Dynamic
 		double Location[],
 		double Roll_angle[],
 		double guideStartTime,
-		double guide_Resolution,
+		int    guide_Resolution,
 		double guide_FOV, 
 		Aircraft From,
 		Aircraft Target,
