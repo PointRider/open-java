@@ -58,7 +58,7 @@ public class NPC extends Aircraft
 		HashSet<ThreeDs>		Aircrafts
 	)
 	{
-		super(theGame, modelFile, Mess, camp, firedAmmo, Effects, delete_que, add_que, Aircrafts, null, id);
+		super(theGame, modelFile, Mess, camp, firedAmmo, Effects, delete_que, add_que, Aircrafts, null, id, true);
 		scrResolution		= new short[2];
 		point_on_Scr		= new double[2];
 		//point_on_Old		= new double[2];

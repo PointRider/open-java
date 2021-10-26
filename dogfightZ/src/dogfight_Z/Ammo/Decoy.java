@@ -84,7 +84,7 @@ private static ArrayList<double[]> missileModelData;
 		PriorityQueue<Dynamic> effect
 	)
 	{
-		super(null, null, 0.0, (short)-1, null, effect, del_que, null, null, null, "\nDecory" + Math.random());
+		super(null, null, 0.0, (short)-1, null, effect, del_que, null, null, null, "\nDecory" + Math.random(), false);
 		camp = campTo;
 		specialDisplay = '*';
 		location[0] = Location[0];

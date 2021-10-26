@@ -141,7 +141,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 				}
 				else //敌军
 				{
-					if(GraphicUtils.absI(currentMaxLockingPriority) < GraphicUtils.absI(a.lockingPriority)  &&  !reversed)
+					if(/*myJet.missileMagazineLeft > 0  &&  */GraphicUtils.absI(currentMaxLockingPriority) < GraphicUtils.absI(a.lockingPriority)  &&  !reversed)
 					{	//当前选择目标切换到优先级更高的	(发生切换)
 						currentMaxLockingPriority	= a.lockingPriority;
 						currentSelectObj			= a;
@@ -158,7 +158,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 					}
 					else //未发生优先级切换
 					{
-						if(currentSelectObj!=null && a!=null && currentSelectObj.ID.equals(a.ID)  &&  !reversed)//
+						if(/*myJet.missileMagazineLeft > 0  &&  */currentSelectObj!=null && a!=null && currentSelectObj.ID.equals(a.ID)  &&  !reversed)//
 						{//如果正在锁定或者已锁定了a
 							lockingSelected = true;//设置已选择锁定a的状态
 							if(locked)//已锁定

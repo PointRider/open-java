@@ -1,9 +1,7 @@
 package graphic_Z.Objects;
 
 import java.io.DataInputStream;
-import java.io.EOFException;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +12,8 @@ public class CharObject extends TDObject implements ThreeDs
 	public char specialDisplay;
 	public int points_count;			//物体点个数
 	public List<double[]> points;		//物体每个点坐标
+	private boolean lineConstruct;
+	
 	/*
 	public CharObject(CharObject another)
 	{
@@ -33,39 +33,43 @@ public class CharObject extends TDObject implements ThreeDs
 		return new CharObject(this);
 	}
 	*/
-	public CharObject(String ModelFile)
+	
+	public CharObject(String ModelFile, boolean lineConstruct)
 	{
 		super();
+		this.lineConstruct = lineConstruct;
 		specialDisplay = '\0';
 		points = new ArrayList<double[]>();
 		location[0]   = location[1]   = location[2]   = 0.0;
 		roll_angle[0] = roll_angle[1] = roll_angle[2] = 0.0;
 		
-		if(ModelFile != null) try
-		(
+		if(ModelFile != null) try (
 			DataInputStream data = new DataInputStream
 			(new FileInputStream(ModelFile))
-		)
-		{
+		) {
 			double newPonit[] = null;
 			for(points_count=0 ; true ; ++points_count)
 			{
-				newPonit = new double[3];
+				if(lineConstruct) newPonit = new double[6];
+				else newPonit = new double[3];
 				
 				newPonit[0] = data.readDouble();
 				newPonit[1] = data.readDouble();
 				newPonit[2] = data.readDouble();
 				
+				if(lineConstruct) {
+					newPonit[3] = data.readDouble();
+					newPonit[4] = data.readDouble();
+					newPonit[5] = data.readDouble();
+				}
+				
 				points.add(newPonit);
 			}
-		}
-		catch(EOFException exc)
-		{
-			
-		}
-		catch(IOException exc)
-		{
-		}
+		} catch(Exception exc) {}
+	}
+	
+	public CharObject(String ModelFile) {
+		this(ModelFile, false);
 	}
 	
 	public void setLocation(double x, double y, double z)
@@ -129,8 +133,12 @@ public class CharObject extends TDObject implements ThreeDs
 	}
 
 	@Override
-	public char getSpecialDisplayChar()
-	{
+	public char getSpecialDisplayChar() {
 		return specialDisplay;
+	}
+
+	@Override
+	public boolean constructWithLine() {
+		return lineConstruct;
 	}
 }

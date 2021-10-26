@@ -67,12 +67,12 @@ public class GraphicUtils
 			if(x < x2) for(; x <= x2; y += k) {
 				drX = x++;
 				drY = (int)(y + 0.5);
-				if(drY >= 0 && drY < maxY && drX >=0 && drX <= maxX)
+				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX)
 				fraps_buffer[drY][drX] = pixel;
 			} else for(; x >= x2; y-=k) {
 				drX = x--;
 				drY = (int)(y + 0.5);
-				if(drY >= 0 && drY < maxY && drX >=0 && drX <= maxX)
+				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX)
 				fraps_buffer[drY][drX] = pixel;
 			}
 			
@@ -85,12 +85,12 @@ public class GraphicUtils
 			if(y < y2) for(; y <= y2; x+=k) {
 				drX = (int)(x + 0.5);
 				drY = y++;
-				if(drY >= 0 && drY < maxY && drX >=0 && drX <= maxX)
+				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX)
 				fraps_buffer[drY][drX] = pixel;
 			} else for(; y >= y2; x-=k) {
 				drX = (int)(x + 0.5);
 				drY = y--;
-				if(drY >= 0 && drY < maxY && drX >=0 && drX <= maxX)
+				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX)
 				fraps_buffer[drY][drX] = pixel;
 			}
 			
@@ -136,28 +136,28 @@ public class GraphicUtils
 		
 		ty = y + y0;
 		tx = x + x0;
-		if(tx >= 0  &&  tx <= maxX  &&  ty >= 0  &&  ty <= maxY) fraps_buffer[ty][tx] = pc;
+		if(tx >= 0  &&  tx < maxX  &&  ty >= 0  &&  ty < maxY) fraps_buffer[ty][tx] = pc;
 		ty = x + y0;
 		tx = y + x0;
-		if(tx >= 0  &&  tx <= maxX  &&  ty >= 0  &&  ty <= maxY) fraps_buffer[ty][tx] = pc;
+		if(tx >= 0  &&  tx < maxX  &&  ty >= 0  &&  ty < maxY) fraps_buffer[ty][tx] = pc;
 		ty = y + y0;
 		tx = x0 - x;
-		if(tx >= 0  &&  tx <= maxX  &&  ty >= 0  &&  ty <= maxY) fraps_buffer[ty][tx] = pc;
+		if(tx >= 0  &&  tx < maxX  &&  ty >= 0  &&  ty < maxY) fraps_buffer[ty][tx] = pc;
 		ty = y0 - x;
 		tx = y + x0;
-		if(tx >= 0  &&  tx <= maxX  &&  ty >= 0  &&  ty <= maxY) fraps_buffer[ty][tx] = pc;
+		if(tx >= 0  &&  tx < maxX  &&  ty >= 0  &&  ty < maxY) fraps_buffer[ty][tx] = pc;
 		ty = y0 - y;
 		tx = x + x0;
-		if(tx >= 0  &&  tx <= maxX  &&  ty >= 0  &&  ty <= maxY) fraps_buffer[ty][tx] = pc;
+		if(tx >= 0  &&  tx < maxX  &&  ty >= 0  &&  ty < maxY) fraps_buffer[ty][tx] = pc;
 		ty = x + y0;
 		tx = x0 - y;
-		if(tx >= 0  &&  tx <= maxX  &&  ty >= 0  &&  ty <= maxY) fraps_buffer[ty][tx] = pc;
+		if(tx >= 0  &&  tx < maxX  &&  ty >= 0  &&  ty < maxY) fraps_buffer[ty][tx] = pc;
 		ty = y0 - y;
 		tx = x0 - x;
-		if(tx >= 0  &&  tx <= maxX  &&  ty >= 0  &&  ty <= maxY) fraps_buffer[ty][tx] = pc;
+		if(tx >= 0  &&  tx < maxX  &&  ty >= 0  &&  ty < maxY) fraps_buffer[ty][tx] = pc;
 		ty = y0 - x;
 		tx = x0 - y;
-		if(tx >= 0  &&  tx <= maxX  &&  ty >= 0  &&  ty <= maxY) fraps_buffer[ty][tx] = pc;
+		if(tx >= 0  &&  tx < maxX  &&  ty >= 0  &&  ty < maxY) fraps_buffer[ty][tx] = pc;
 	}
 	
 	public static void main(String args[]) {

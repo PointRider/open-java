@@ -26,9 +26,9 @@ public class CharMessObject extends CharObject
 		velocity_roll[2] = another.velocity_roll[2];
 	}
 	*/
-	public CharMessObject(String ModelFile, double Mess)
+	public CharMessObject(String ModelFile, double Mess, boolean lineConstruct)
 	{
-		super(ModelFile);
+		super(ModelFile, lineConstruct);
 
 		mess = Mess;
 		
@@ -42,6 +42,10 @@ public class CharMessObject extends CharObject
 		velocity_roll[0] = 0.0;
 		velocity_roll[1] = 0.0;
 		velocity_roll[2] = 0.0;
+	}
+	
+	public CharMessObject(String ModelFile, double Mess) {
+		this(ModelFile, Mess, false);
 	}
 
 	@Override

@@ -136,10 +136,11 @@ public class Aircraft extends CharMessObject
 		LinkedList<ThreeDs>	   add_que,
 		HashSet<ThreeDs>	   Aircrafts,
 		CharFrapsCamera		   MainCamera, 
-		String                 id
+		String                 id,
+		boolean                line
 	)
 	{
-		super(modelFile, Mess);
+		super(modelFile, Mess, line);
 		killed				= dead = 0;
 		fov_1stPerson		= 2.6;
 		fov_3thPerson		= 2.6;
@@ -240,10 +241,11 @@ public class Aircraft extends CharMessObject
 		LinkedList<ThreeDs>	   delete_que,
 		LinkedList<ThreeDs>	   add_que,
 		HashSet<ThreeDs>	   Aircrafts,
-		CharFrapsCamera		   MainCamera
+		CharFrapsCamera		   MainCamera,
+		boolean                line
 	)
 	{
-		this(game, modelFile, Mess, Camp, firedAmmo, Effects, delete_que, add_que, Aircrafts, MainCamera, "Me");
+		this(game, modelFile, Mess, Camp, firedAmmo, Effects, delete_que, add_que, Aircrafts, MainCamera, "Me", line);
 	}
 	
 	public void warning(Aircraft source)
@@ -481,16 +483,16 @@ public class Aircraft extends CharMessObject
 	{
 		if(missileMagazineLeft > 0 && isAlive)
 		{
-			cannonLocation[0] = 35;
+			cannonLocation[0] = 70;
 			cannonLocation[1] = 0;
 			cannonLocation[2] = 0;
 			
 			if(cannonGunFlg % 2 == 0)
-				cannonLocation[1] += 75;
-			else cannonLocation[1] -= 75;
+				cannonLocation[1] += 160;
+			else cannonLocation[1] -= 160;
 			if(cannonGunFlg < 2)
-				cannonLocation[0] += 10;
-			else cannonLocation[0] -= 10;
+				cannonLocation[0] += 30;
+			else cannonLocation[0] -= 30;
 			
 			getXYZ_afterRolling
 			(
@@ -555,13 +557,13 @@ public class Aircraft extends CharMessObject
 	
 	public void wingsEffectRun()
 	{
-		effectMakingLocation[0][0] = 20;
-		effectMakingLocation[0][1] = 50;
-		effectMakingLocation[0][2] = 0;
+		effectMakingLocation[0][0] = 80;
+		effectMakingLocation[0][1] = 160;
+		effectMakingLocation[0][2] = -80;
 		
-		effectMakingLocation[1][0] = 20;
-		effectMakingLocation[1][1] = -50;
-		effectMakingLocation[1][2] = 0;
+		effectMakingLocation[1][0] = 80;
+		effectMakingLocation[1][1] = -160;
+		effectMakingLocation[1][2] = -80;
 		
 		getXYZ_afterRolling
 		(
@@ -666,6 +668,7 @@ public class Aircraft extends CharMessObject
 			{
 				if(cannonMagazineLeft > 0)
 				{
+					/*
 					cannonLocation[0] = 35;
 					cannonLocation[1] = 0;
 					cannonLocation[2] = 0;
@@ -676,6 +679,17 @@ public class Aircraft extends CharMessObject
 					if(cannonGunFlg < 2)
 						cannonLocation[0] += 25;
 					else cannonLocation[0] -= 25;
+					*/
+					cannonLocation[0] = 70;
+					cannonLocation[1] = 0;
+					cannonLocation[2] = 0;
+					
+					if(cannonGunFlg % 2 == 0)
+						cannonLocation[1] += 160;
+					else cannonLocation[1] -= 160;
+					if(cannonGunFlg < 2)
+						cannonLocation[0] += 30;
+					else cannonLocation[0] -= 30;
 					
 					getXYZ_afterRolling
 					(
@@ -736,10 +750,15 @@ public class Aircraft extends CharMessObject
 		if(cameraLocationFlag == 0)
 		{
 			double t1, t2, t3;
-			
+			/*
 			cameraLocation[0] = -50;
 			cameraLocation[1] = 0;
 			cameraLocation[2] =  -150;
+			*/
+
+			cameraLocation[0] = -120;
+			cameraLocation[1] = 0;
+			cameraLocation[2] =  -480;
 			
 			if(cameraRollAngle[0] < 0)
 			{
@@ -802,9 +821,9 @@ public class Aircraft extends CharMessObject
 			if(cameraLocationFlag > 1)
 				cameraLocationFlag = 0;
 			
-			cameraLocation[0] = -9;
+			cameraLocation[0] = -32;
 			cameraLocation[1] = 0;
-			cameraLocation[2] = 1;
+			cameraLocation[2] = -4;
 			
 			cameraRollAngle[0] = -roll_angle[0];
 			cameraRollAngle[1] = -roll_angle[1];

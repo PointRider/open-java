@@ -224,7 +224,7 @@ public class Game extends CharTimeSpace implements Runnable
 		scoreShow.visible = false;
 		visualManager.newDynamicHUD(scoreShow);
 		
-		myJet = new Aircraft(this, myJetModel_file, 10000, playersCamp, firedAmmo, effects, deleteQue, waitToAddQue, objectsManager.objects, null, "Me");
+		myJet = new Aircraft(this, myJetModel_file, 10000, playersCamp, firedAmmo, effects, deleteQue, waitToAddQue, objectsManager.objects, null, "Me", true);
 		//myJet.setLocation(0, 0, 60);
 		scoreList.add(myJet);
 		objectsManager.newMessObject(myJet);

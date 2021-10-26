@@ -24,7 +24,7 @@ public class RunDemo
 		CharTimeSpace testWorld = new CharTimeSpace(Short.parseShort(args[3]), Short.parseShort(args[4]));
 		//System.out.println("testWorld created.");
 		
-		CharMessObject mainBox = testWorld.objectsManager.newMessObject(new CharMessObject(args[0], 10));
+		CharMessObject mainBox = testWorld.objectsManager.newMessObject(new CharMessObject(args[0], 10, true));
 		//mainBox.specialDisplay = '';
 		mainBox.setLocation(0, 0, 0);
 		mainBox.visible = true;
@@ -61,7 +61,7 @@ public class RunDemo
 		testWorld.getIntoTheWorld();
 		while(true)
 		{
-			testWorld.printNew();
+			testWorld.buffStatic();
 			/*
 			mainBox.roll_angle[0] -= 3;
 			mainBox.roll_angle[1] += 1;
@@ -249,6 +249,7 @@ public class RunDemo
 				break;
 				
 			}
+			testWorld.printNew();
 		}
 	}
 }

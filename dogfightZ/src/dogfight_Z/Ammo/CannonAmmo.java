@@ -151,7 +151,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 			{
 				aJet = (Aircraft) T;
 				if(aJet.ID.charAt(0) != '\n')
-				if(CharFrapsCamera.range(location, aJet.location) < 128)
+				if(CharFrapsCamera.range(location, aJet.location) < 320)
 				{
 					if(aJet.camp != myCamp)
 					{

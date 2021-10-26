@@ -2,6 +2,7 @@ package graphic_Z.Interfaces;
 
 public interface ThreeDs extends Runnable
 {
+	public boolean  constructWithLine();
 	public double[] getLocation();
 	public double[] getRollAngle();
 	public boolean  getVisible();

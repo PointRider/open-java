@@ -118,7 +118,7 @@ public class Missile extends Aircraft implements Dynamic
 		CharFrapsCamera Camera
 	)
 	{
-		super(null, null, 0.0, (short)-1, null, null, null, null, null, null);
+		super(null, null, 0.0, (short)-1, null, null, null, null, null, null, false);
 		specialDisplay	= '@';
 		maxSpeed		= max_speed;
 		maxVelRollUp	= 20.0;				//导弹最大上下翻滚能力
