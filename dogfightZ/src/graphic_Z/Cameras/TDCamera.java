@@ -70,4 +70,9 @@ public abstract class TDCamera<WorldType>
 			roll_angle = reversedAngle;
 		else roll_angle = roll_source;
 	}
+	
+	public void setReversed(boolean rev) {
+		if(!(rev ^ reversed)) return;
+		reverse();
+	}
 }

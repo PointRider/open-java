@@ -1,5 +1,7 @@
 package dogfight_Z.Ammo;
 
+import java.util.ArrayList;
+
 import dogfight_Z.Aircraft;
 import dogfight_Z.Effects.EngineFlame;
 import dogfight_Z.Effects.ExplosionMaker;
@@ -25,6 +27,55 @@ public class Missile extends Aircraft implements Dynamic
 	public		  double maxSpeed;
 	private		  double halfAResolution;
 	private		  double range_old;
+	
+	private static ArrayList<double[]> missileModelData;
+	
+	static {
+		missileModelData = new ArrayList<double[]>();
+		
+		double newPonit[];
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 0;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 0;
+		newPonit[2] = 1;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 0;
+		newPonit[2] = -1;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 1;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = -1;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 1;
+		newPonit[1] = 0;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = -1;
+		newPonit[1] = 0;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+	}
 	
 	//private		  double lrRangeToCenterOnScreen_old = 0.0;
 	//private		  double up_dnRangeToCenterOnScreen_old = 0.0;
@@ -85,8 +136,7 @@ public class Missile extends Aircraft implements Dynamic
 		resistanceRate_normal	= 0.0;
 		range_old		= 0.0;
 		
-		if(lifeTime > maxLife)
-			lifeTime = maxLife;
+		if(lifeTime > maxLife) lifeTime = maxLife;
 		
 		target = Target;
 		
@@ -102,54 +152,10 @@ public class Missile extends Aircraft implements Dynamic
 		
 		halfAResolution = guideResolution / 2;
 		
-		double newPonit[];
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = 1;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = -1;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 1;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = -1;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 1;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = -1;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		points_count = 7;
+		points = missileModelData;
+		points_count = missileModelData.size();
 		
 		visible = true;
-		
 	}
 	
 	public void trace()

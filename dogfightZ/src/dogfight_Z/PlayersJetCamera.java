@@ -7,6 +7,7 @@ import graphic_Z.HUDs.CharDynamicHUD;
 import graphic_Z.HUDs.CharLabel;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Worlds.CharWorld;
+import graphic_Z.utils.GraphicUtils;
 
 public class PlayersJetCamera extends CharFrapsCamera
 {
@@ -19,13 +20,17 @@ public class PlayersJetCamera extends CharFrapsCamera
 	public CharDynamicHUD hudWarning_missile;
 	
 	public double 		  maxSearchingRange;
-	public Aircraft		  currentSelectObj;
 	public Aircraft		  myJet;
+	//-------------------------------------------------
+	public Aircraft		  currentSelectObj;
 	public boolean		  locked;
 	public boolean		  lockingSelected;
 	public short		  lockTime;
 	public short		  lockTimeLeft;
 	public short		  currentMaxLockingPriority;
+	//-------------------------------------------------
+	
+	private static final char linePixel = '#';
 	
 	public PlayersJetCamera
 	(
@@ -103,99 +108,15 @@ public class PlayersJetCamera extends CharFrapsCamera
 			r2 = rad(rollAngleOfanObj[2]);
 			*/
 			rge = exposureObject(aObject, rad(roll_angle[0]), rad(roll_angle[1]), rad(roll_angle[2]), false);
-			if((rge < visibility)) {/*(range = range(locationOfanObj, location)) < visibility) {
-				if(aObject.getVisible() == true)
-				{
-					pcount = aObject.getPointsCount();
-					for(int i=0 ; i<pcount ; ++i)				//for each point
-					{
-						aPointOfanObj = aObject.getPoint(i);
-						//获取点随着物体分别绕X、Y、Z坐标轴滚动前的原坐标
-						X0 = aPointOfanObj[0];
-						Y0 = aPointOfanObj[1];
-						Z0 = aPointOfanObj[2];
-						
-						tmp1 = Math.atan2(Y0, X0)+r2;
-						tmp2 = Math.sqrt(X0*X0+Y0*Y0);
-						//---自身旋转---
-						X = GraphicUtils.cos(tmp1)*tmp2;
-						Y = GraphicUtils.sin(tmp1)*tmp2;
-						
-						Y0 = Y;
-						X0 = X;
-						
-						tmp1 = Math.atan2(Z0, X0)+r1;
-						tmp2 = Math.sqrt(X0*X0+Z0*Z0);
-						
-						X = GraphicUtils.cos(tmp1)*tmp2;
-						Z = GraphicUtils.sin(tmp1)*tmp2;
-						Z0 = Z;
-						X0 = X;
-						
-						tmp1 = Math.atan2(Y0, Z0)+r0;
-						tmp2 = Math.sqrt(Z0*Z0+Y0*Y0);
-						
-						Z = GraphicUtils.cos(tmp1)*tmp2;
-						Y = GraphicUtils.sin(tmp1)*tmp2;
-						Y0 = Y;
-						Z0 = Z;
-						//---旋转结束---
-						
-						X0 += locationOfanObj[0] - location[0];
-						Y0 += locationOfanObj[1] - location[1];
-						Z0 += locationOfanObj[2] - location[2];
-						
-						//---围绕摄像机旋转(或相对的，摄像机原地左右上下转动)---
-						tmp1 = Math.atan2(Y0, Z0)+cr0;
-						tmp2 = Math.sqrt(Z0*Z0+Y0*Y0);
-						Z = GraphicUtils.cos(tmp1)*tmp2;
-						Y = GraphicUtils.sin(tmp1)*tmp2;
-						Y0 = Y;
-						Z0 = Z;
-						
-						tmp1 = Math.atan2(Z0, X0)+cr1;
-						tmp2 = Math.sqrt(X0*X0+Z0*Z0);
-						X = GraphicUtils.cos(tmp1)*tmp2;
-						Z = GraphicUtils.sin(tmp1)*tmp2;
-						Z0 = Z;
-						X0 = X;
-						//---旋转结束---
-						
-						if(Z0>=0)
-						{
-							tmp1 = Xcenter*FOV/(Xcenter+temp*Z0);
-							X0 = X0 * tmp1;
-							Y0 = Y0 * tmp1;
-							
-							//屏幕视角绕Z轴转动
-							tmp1 = Math.atan2(Y0, X0)+cr2;
-							tmp2 = Math.sqrt(X0*X0+Y0*Y0);
-							X = GraphicUtils.cos(tmp1)*tmp2;
-							Y = GraphicUtils.sin(tmp1)*tmp2;
-							
-							X1 = (short) (Y+Xcenter);
-							Y1 = (short) (X+Ycenter);
-							
-							if(X1>=0 && Y1>=0 && X1<resolution[0] && Y1<resolution[1])
-							{
-								int index = (int)Z0 / 64;
-								if(index < 0) index = 0;
-								else if(index > 7) index = 7;
-								
-								fraps_buffer[Y1][X1] = (spc =='\0'? point[index] : spc);
-							}
-						}
-					}
-				}*/
-			}
-			else if(rge > maxSearchingRange) try
+			
+			if(rge > maxSearchingRange) try
 			{
 				Aircraft tmp = (Aircraft)aObject;
 				if(!tmp.ID.equals(myJet.ID))	//防止视角跟随导弹行进时将自己的进行战机拉回
 					tmp.pollBack();
 			} catch(ClassCastException e) {}
 			
-			if(a==null || a.ID.equals(myJet.ID) || !a.isAlive) continue;
+			if(a==null || a.ID.equals(myJet.ID) || !a.isAlive || !myJet.isAlive) continue;
 			
 			double range_to_Scr = CharFrapsCamera.getXY_onCamera
 			(
@@ -209,18 +130,18 @@ public class PlayersJetCamera extends CharFrapsCamera
 				rangeXY(point_on_Scr[0], point_on_Scr[1], XcenterI, YcenterI) < 24
 			)
 			{
-				hudDistance.setText(String.format("%.2f", range_to_Scr));
-				if(a.camp == thisCamp)
+				hudDistance.setText(String.format("%.0f", range_to_Scr));
+				if(a.camp == thisCamp) //友军
 				{
 					hudFriends.location[0] = (short) point_on_Scr[0];
 					hudFriends.location[1] = (short) point_on_Scr[1];
 					hudFriends.printNew();	//盖章
-					hudDistance.setLocation((short)(point_on_Scr[0] - hudFriends.center_X), (short)(point_on_Scr[1] + hudFriends.center_Y + 1));
+					hudDistance.setLocation((short)(hudFriends.location[0] - hudFriends.center_X), (short)(hudFriends.location[1] + hudFriends.center_Y + 1));
 					hudDistance.printNew();
 				}
-				else
+				else //敌军
 				{
-					if(currentMaxLockingPriority < Math.abs(a.lockingPriority)    &&    !reversed)
+					if(GraphicUtils.absI(currentMaxLockingPriority) < GraphicUtils.absI(a.lockingPriority)  &&  !reversed)
 					{	//当前选择目标切换到优先级更高的	(发生切换)
 						currentMaxLockingPriority	= a.lockingPriority;
 						currentSelectObj			= a;
@@ -231,34 +152,36 @@ public class PlayersJetCamera extends CharFrapsCamera
 						hudLocking.location[0] = (short) point_on_Scr[0];
 						hudLocking.location[1] = (short) point_on_Scr[1];
 						hudLocking.printNew();	//盖章
+						GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, (int)point_on_Scr[0], (int)point_on_Scr[1], linePixel);
 						hudDistance.setLocation((short)(point_on_Scr[0] - hudLocking.center_X), (short)(point_on_Scr[1] + hudLocking.center_Y));
 						hudDistance.printNew();
 					}
-					else
+					else //未发生优先级切换
 					{
-						if(currentSelectObj!=null && a!=null && currentSelectObj.ID.equals(a.ID)    &&    !reversed)//
-						{
-							lockingSelected = true;
-							if(locked)
+						if(currentSelectObj!=null && a!=null && currentSelectObj.ID.equals(a.ID)  &&  !reversed)//
+						{//如果正在锁定或者已锁定了a
+							lockingSelected = true;//设置已选择锁定a的状态
+							if(locked)//已锁定
 							{
 								hudLocked.location[0] = (short) point_on_Scr[0];
 								hudLocked.location[1] = (short) point_on_Scr[1];
-								hudLocked.printNew();	//盖章
-
+								
+								GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, (int)point_on_Scr[0], (int)point_on_Scr[1], linePixel);
 								a.warning(myJet);
 								
 								hudDistance.setLocation((short)(point_on_Scr[0] - hudLocked.center_X), (short)(point_on_Scr[1] + hudLocked.center_Y));
 								hudDistance.printNew();
 							}
-							else
+							else//正在锁定
 							{
-								if(--lockTimeLeft <= 0)
+								if(--lockTimeLeft <= 0)//刚好锁定
 								{
 									locked = true;
 									hudLocked.location[0] = (short) point_on_Scr[0];
 									hudLocked.location[1] = (short) point_on_Scr[1];
 									hudLocked.printNew();	//盖章
 
+									GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, (int)point_on_Scr[0], (int)point_on_Scr[1], linePixel);
 									a.warning(myJet);
 									
 									hudDistance.setLocation((short)(point_on_Scr[0] - hudLocked.center_X), (short)(point_on_Scr[1] + hudLocked.center_Y));
@@ -266,12 +189,13 @@ public class PlayersJetCamera extends CharFrapsCamera
 									
 									lockTimeLeft = lockTime;
 								}
-								else
+								else //还未锁定
 								{
 									hudLocking.location[0] = (short) point_on_Scr[0];
 									hudLocking.location[1] = (short) point_on_Scr[1];
 									hudLocking.printNew();	//盖章
 
+									GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, (int)point_on_Scr[0], (int)point_on_Scr[1], linePixel);
 									a.warning(myJet);
 									
 									hudDistance.setLocation((short)(point_on_Scr[0] - hudLocking.center_X), (short)(point_on_Scr[1] + hudLocking.center_Y));
@@ -279,7 +203,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 								}
 							}
 						}
-						else
+						else//没有选择锁定的敌机
 						{
 							hudEnemy.location[0] = (short) point_on_Scr[0];
 							hudEnemy.location[1] = (short) point_on_Scr[1];
@@ -291,12 +215,17 @@ public class PlayersJetCamera extends CharFrapsCamera
 				}
 			}
 		}
-		if(!lockingSelected)
-		{
+		
+		
+		if(!lockingSelected) {
 			currentMaxLockingPriority = 0;
 			lockTimeLeft			  = lockTime;
+		} else if(locked) {
+			hudLocked.printNew();	//盖章
+			
+			GraphicUtils.drawCircle(fraps_buffer, hudLocked.location[0], hudLocked.location[1], 5, '+');
+			return currentSelectObj;
 		}
-		else if(locked) return currentSelectObj;
 		
 		return null;
 	}

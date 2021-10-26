@@ -10,11 +10,11 @@ public abstract class TDWorld<WorldType, ObjectType, HUDType>
 	public VisualManager<WorldType>		visualManager;
 	public EventManager					eventManager;
 	
-	public int refreshDelay;
+	public int refreshHz;
 	
 	public TDWorld(int refresh_rate)
 	{
-		refreshDelay = 1000 / refresh_rate;
+		refreshHz = refresh_rate;
 	}
 	
 	public void getIntoTheWorld()

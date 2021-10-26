@@ -1,10 +1,12 @@
 package dogfight_Z.Ammo;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
 import dogfight_Z.Aircraft;
 import dogfight_Z.Effects.ExplosionMaker;
+import graphic_Z.Cameras.CharFrapsCamera;
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Objects.CharMessObject;
@@ -26,6 +28,54 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 	public PriorityQueue<Dynamic> effects;
 	public		  Aircraft	from;
 	public		  HashSet<ThreeDs> aircrafts;
+	
+	private static ArrayList<double[]> missileModelData;
+	static {
+		missileModelData = new ArrayList<double[]>();
+		
+		double newPonit[];
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 0;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 0;
+		newPonit[2] = 1;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 0;
+		newPonit[2] = -1;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 1;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = -1;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 1;
+		newPonit[1] = 0;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = -1;
+		newPonit[1] = 0;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+	}
 	
 	public CannonAmmo
 	(
@@ -64,66 +114,10 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 		roll_angle[1] = Roll_angle[1];
 		roll_angle[2] = Roll_angle[2];
 		
-		double newPonit[];
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = 1;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = -1;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 1;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = -1;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 1;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = -1;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		points_count = 7;
+		points = missileModelData;
+		points_count = missileModelData.size();
 		
 		visible = true;
-	}
-	
-	protected static double range(double p1[], double p2[])
-	{
-		return Math.abs
-		(
-			Math.sqrt
-			(
-				(p2[0]-p1[0])*(p2[0]-p1[0]) +
-				(p2[1]-p1[1])*(p2[1]-p1[1]) +
-				(p2[2]-p1[2])*(p2[2]-p1[2]) 
-			)
-		);
 	}
 	
 	@Override
@@ -144,10 +138,10 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 			//------------[go street]------------
 			r1 = Math.toRadians(roll_angle[1]);
 			r2 = GraphicUtils.cos(Math.toRadians(roll_angle[0]));
-			t = GraphicUtils.cos(r1) * speed;
-			x = GraphicUtils.tan(r1) * t;
-			y = GraphicUtils.sin(Math.toRadians(roll_angle[0])) * t;
-			z = r2 * t;
+			t  = GraphicUtils.cos(r1) * speed;
+			x  = GraphicUtils.tan(r1) * t;
+			y  = GraphicUtils.sin(Math.toRadians(roll_angle[0])) * t;
+			z  = r2 * t;
 			
 			location[0]	-= x;
 			location[1]	+= y;
@@ -157,7 +151,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 			{
 				aJet = (Aircraft) T;
 				if(aJet.ID.charAt(0) != '\n')
-				if(range(location, aJet.location) < 128)
+				if(CharFrapsCamera.range(location, aJet.location) < 128)
 				{
 					if(aJet.camp != myCamp)
 					{

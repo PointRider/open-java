@@ -32,8 +32,8 @@ public class CharWorld extends TDWorld<CharWorld, CharObject, CharHUD>
 	
 	public void setRefreshRate(int refresh_rate)
 	{
-		refreshDelay = 1000 / refresh_rate;
-		visualManager.refreshDelay = refreshDelay;
+		refreshHz = 1000 / refresh_rate;
+		visualManager.refreshHz = refresh_rate;
 	}
 	
 	public void printNew()

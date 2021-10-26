@@ -30,6 +30,7 @@ public class NPC extends Aircraft
 	public short		currentMaxLockingPriority;
 	public short		scrResolution[];
 	public double		point_on_Scr[];
+	//public double		point_on_Old[];
 	//---------------[cruise]-------------------
 	private short		goStreetTime;
 	private short		turnLRTime;
@@ -60,6 +61,7 @@ public class NPC extends Aircraft
 		super(theGame, modelFile, Mess, camp, firedAmmo, Effects, delete_que, add_que, Aircrafts, null, id);
 		scrResolution		= new short[2];
 		point_on_Scr		= new double[2];
+		//point_on_Old		= new double[2];
 		maxMotionRate		= max_motionRate;
 		maxSearchingRange	= searching_visibility;
 		scrResolution[0]	= scrResolution_X;
@@ -79,132 +81,131 @@ public class NPC extends Aircraft
 		currentMaxLockingPriority = 0;
 	}
 	
+	public void pursuit(double range_to_me) {
+		if(speed < tracingTarget.speed || range_to_me > 5000)
+			control_acc();
+		else if(speed > tracingTarget.speed && speed > minStableSpeed)
+			control_dec();
+		
+		if(maxVelRollUp > maxVelTurnLR)
+		{
+			if(point_on_Scr[0] > halfAResolution_X)
+				control_roll_lr(-maxVelRollLR * maxMotionRate/* * (point_on_Scr[0] * 2 - point_on_Old[0] - halfAResolution_X)*/);
+			else if(point_on_Scr[0] < halfAResolution_X)
+				control_roll_lr(maxVelRollLR * maxMotionRate/* * (halfAResolution_X - point_on_Scr[0] * 2 + point_on_Old[0])*/);
+			}
+		else if(maxVelRollUp < maxVelTurnLR)
+		{
+			if(point_on_Scr[1] > halfAResolution_Y)
+				control_roll_lr(-maxVelRollLR * maxMotionRate/* * (point_on_Scr[1] * 2 - point_on_Old[1] - halfAResolution_Y)*/);
+			else if(point_on_Scr[1] < halfAResolution_Y)
+				control_roll_lr(maxVelRollLR * maxMotionRate/* * (halfAResolution_Y) - point_on_Scr[1] * 2 + point_on_Old[1]*/);
+		}
+		
+		if(point_on_Scr[0] > halfAResolution_X)
+			control_turn_lr(maxVelTurnLR * maxMotionRate/* * (point_on_Scr[0] * 2 - point_on_Old[0] - halfAResolution_X)*/);
+		else if(point_on_Scr[0] < halfAResolution_X)
+			control_turn_lr(-maxVelTurnLR * maxMotionRate/* * (halfAResolution_X - point_on_Scr[0] * 2 + point_on_Old[0])*/);
+		
+		if(point_on_Scr[1] > halfAResolution_Y)
+			control_roll_up_dn(-maxVelRollUp * maxMotionRate/* * (point_on_Scr[1] * 2 - point_on_Old[1] - halfAResolution_Y)*/);
+		else if(point_on_Scr[1] < halfAResolution_Y)
+			control_roll_up_dn(maxVelRollUp * maxMotionRate/* * (halfAResolution_Y - point_on_Scr[1] * 2 + point_on_Old[1])*/);
+		
+		//System.arraycopy(point_on_Scr, 0, point_on_Old, 0, 2);
+	}
+	
 	public void trace()
 	{
-		if(tracingTarget!= null)
+		if(tracingTarget != null  &&  tracingTarget.isAlive)
 		{		
-			double range_to_Scr = 
-			CharFrapsCamera.getXY_onCamera
-			(
+			double range_to_Scr = CharFrapsCamera.getXY_onCamera (
 				tracingTarget.location[0], tracingTarget.location[1], tracingTarget.location[2], 
-				scrResolution[0], scrResolution[1], location, cameraRollAngle, point_on_Scr, 2.8
+				scrResolution[0], scrResolution[1], location, cameraRollAngle, point_on_Scr, 2.6
 			);
 			
-			if(range_to_Scr > 0)
-			{
-				if(speed < tracingTarget.speed || range_to_Scr > 10000)
-					control_acc();
-				else if(speed > tracingTarget.speed && speed > minStableSpeed)
-					control_dec();
+			if(range_to_Scr > 0) {
+				pursuit(range_to_Scr);
 				
-				if(maxVelRollUp > maxVelTurnLR)
-				{
-					if(point_on_Scr[0] > halfAResolution_X)
-						control_roll_lr(-maxVelRollLR * maxMotionRate);
-					else if(point_on_Scr[0] < halfAResolution_X)
-						control_roll_lr(maxVelRollLR * maxMotionRate);
-					}
-				else if(maxVelRollUp < maxVelTurnLR)
-				{
-					if(point_on_Scr[1] > halfAResolution_Y)
-						control_roll_lr(-maxVelRollLR * maxMotionRate);
-					else if(point_on_Scr[1] < halfAResolution_Y)
-						control_roll_lr(maxVelRollLR * maxMotionRate);
-				}
-				
-				if(point_on_Scr[0] > halfAResolution_X)
-					control_turn_lr(maxVelTurnLR * maxMotionRate);
-				else if(point_on_Scr[0] < halfAResolution_X)
-					control_turn_lr(-maxVelTurnLR * maxMotionRate);
-				
-				if(point_on_Scr[1] > halfAResolution_Y)
-					control_roll_up_dn(-maxVelRollUp * maxMotionRate);
-				else if(point_on_Scr[1] < halfAResolution_Y)
-					control_roll_up_dn(maxVelRollUp * maxMotionRate);
-			}
-			else cruise(4, 30, 14, 500, 500, 250);//escape
-			
-			if
-			(
-				range_to_Scr > 0    &&    range_to_Scr < maxSearchingRange    &&    
-				CharFrapsCamera.rangeXY(point_on_Scr[0], point_on_Scr[1], halfAResolution_X, halfAResolution_Y) < 24
-			)
-			{
-				cannonOpenFire();
-				Aircraft aJet;
-				currentMaxLockingPriority = 0;
-				lockingSelected = false;
-				
-				for(ThreeDs a : aircrafts)
-				{
-					aJet = (Aircraft) a;
-					if(aJet.camp == camp)
-						continue;
+				if(
+					range_to_Scr < maxSearchingRange    &&    
+					CharFrapsCamera.rangeXY(point_on_Scr[0], point_on_Scr[1], halfAResolution_X, halfAResolution_Y) < 24
+				) {
+					cannonOpenFire();
+					Aircraft aJet;
+					currentMaxLockingPriority = 0;
+					lockingSelected = false;
 					
-					range_to_Scr = CharFrapsCamera.getXY_onCamera
-					(
-						aJet.location[0], aJet.location[1], aJet.location[2], 
-						scrResolution[0], scrResolution[1], location, cameraRollAngle, point_on_Scr, 2.2
-					);
-					
-					if
-					(
-						range_to_Scr > 0    &&    range_to_Scr < maxSearchingRange    &&    
-						CharFrapsCamera.rangeXY(point_on_Scr[0], point_on_Scr[1], halfAResolution_X, halfAResolution_Y) < 24
-					)
+					for(ThreeDs a : aircrafts)
 					{
-						if(currentSelectObj == null || currentMaxLockingPriority < Math.abs(aJet.lockingPriority) && !currentSelectObj.ID.equals(aJet.ID))
-						{	//当前选择目标切换到优先级更高的	(发生切换)
-							if(aJet.lockingPriority > 0)
-								tracingTarget			= aJet;
-							currentMaxLockingPriority	= (short) Math.abs(aJet.lockingPriority);
-							currentSelectObj			= aJet;
-							lockTimeLeft				= lockTime;
-							locked						= false;
-							lockingSelected				= true;
-						}
-						else
+						aJet = (Aircraft) a;
+						if(aJet.camp == camp  ||  !aJet.isAlive) continue;
+						
+						range_to_Scr = CharFrapsCamera.getXY_onCamera
+						(
+							aJet.location[0], aJet.location[1], aJet.location[2], 
+							scrResolution[0], scrResolution[1], location, cameraRollAngle, point_on_Scr, 2.6
+						);
+						
+						if
+						(
+							range_to_Scr > 0    &&    range_to_Scr < maxSearchingRange    &&    
+							CharFrapsCamera.rangeXY(point_on_Scr[0], point_on_Scr[1], halfAResolution_X, halfAResolution_Y) < 24
+						)
 						{
-							if(currentSelectObj!=null && aJet!=null && currentSelectObj.ID.equals(aJet.ID))
+							if(currentSelectObj == null || currentMaxLockingPriority < Math.abs(aJet.lockingPriority) && !currentSelectObj.ID.equals(aJet.ID))
+							{	//当前选择目标切换到优先级更高的	(发生切换)
+								if(aJet.lockingPriority > 0)
+									tracingTarget			= aJet;
+								currentMaxLockingPriority	= (short) Math.abs(aJet.lockingPriority);
+								currentSelectObj			= aJet;
+								lockTimeLeft				= lockTime;
+								locked						= false;
+								lockingSelected				= true;
+							}
+							else
 							{
-								lockingSelected = true;
-								if(locked)
+								if(currentSelectObj!=null && aJet!=null && currentSelectObj.ID.equals(aJet.ID))
 								{
-									if(aJet.lockingPriority >= 0)
-										aJet.warning(this);
-									if(missileMagazineLeft > 0) missileOpenFire(false, aJet);
-								}
-								else
-								{
-									if(--lockTimeLeft <= 0)
+									lockingSelected = true;
+									if(locked)
 									{
-										locked = true;
-										if(tracingTarget.lockingPriority >= 0)
-											tracingTarget.warning(this);
-										if(missileMagazineLeft > 0) missileOpenFire(false, aJet);
+										if(aJet.lockingPriority >= 0) aJet.warning(this);
+										if(missileMagazineLeft > 0)   missileOpenFire(false, aJet);
 									}
 									else
 									{
-										if(tracingTarget.lockingPriority >= 0)
-											tracingTarget.warning(this);
+										if(--lockTimeLeft <= 0)
+										{
+											locked = true;
+											if(tracingTarget.lockingPriority >= 0) tracingTarget.warning(this);
+											if(missileMagazineLeft > 0)            missileOpenFire(false, aJet);
+										}
+										else
+										{
+											if(tracingTarget.lockingPriority >= 0)
+												tracingTarget.warning(this);
+										}
 									}
 								}
 							}
 						}
 					}
+					
+					if(!lockingSelected)
+					{
+						currentMaxLockingPriority = 0;
+						currentSelectObj		  = null;
+						lockTimeLeft			  = lockTime;
+						tracingTarget			  = null;
+					}
+					
+					if(currentSelectObj!=null && currentSelectObj.lockingPriority >= 0)
+						currentSelectObj.warning(this);
 				}
-				if(!lockingSelected)
-				{
-					currentMaxLockingPriority = 0;
-					currentSelectObj		  = null;
-					lockTimeLeft			  = lockTime;
-					tracingTarget			  = null;
-				}
-				
-				if(currentSelectObj!=null && currentSelectObj.lockingPriority >= 0)
-					currentSelectObj.warning(this);
+				else cannonStopFiring();
 			}
-			else cannonStopFiring();
+			else escape();//被咬尾，尝试逃离
 		}
 		else cannonStopFiring();
 	}
@@ -220,14 +221,10 @@ public class NPC extends Aircraft
 	)
 	{
 			currentMaxLockingPriority = 0;
-			if(missileMagazineLeft < missileMagazine)
-			{
-				missileOpenFire(false, null);
-			}
-			if(control_stick_acc < minAcc)
-				control_acc();
-			else if(control_stick_acc > minAcc)
-				control_dec();
+			//if(missileMagazineLeft < missileMagazine) missileOpenFire(false, null); //清空弹舱，重新装填
+			
+			if(control_stick_acc < minAcc)      control_acc();
+			else if(control_stick_acc > minAcc) control_dec();
 			
 			if(--goStreetTime > 0)
 			{
@@ -303,12 +300,15 @@ public class NPC extends Aircraft
 				roll_up_dn_Time = (short) (Math.random() * time_up_dn);
 				turnUp  = (Math.random() > 0.5? true : false);
 			}
-		
 	}
 
 	public void cruise()
 	{
 		cruise(8, 30, 11.2, 750, 500, 250);
+	}
+	
+	public void escape() {
+		cruise(4, 30, 14, 500, 500, 250);
 	}
 	
 	@Override
@@ -359,7 +359,6 @@ public class NPC extends Aircraft
 			}
 			
 			fired.add(m);
-	
 			
 			colorFlash(255, 255, 255, 0, 64, 96, (short)6);
 			if(++cannonGunFlg == 4)
@@ -394,23 +393,26 @@ public class NPC extends Aircraft
 			for(ThreeDs a : aircrafts)
 			{
 				aJet = (Aircraft) a;
-				if(aJet.camp == camp)
+				if(aJet.camp == camp  ||  !aJet.isAlive)
 					continue;
 				
 				range_to_Scr = CharFrapsCamera.getXY_onCamera
 				(
 					aJet.location[0], aJet.location[1], aJet.location[2], 
-					scrResolution[0], scrResolution[1], location, cameraRollAngle, point_on_Scr, 2.2
+					scrResolution[0], scrResolution[1], location, cameraRollAngle, point_on_Scr, 2.6
 				);
 				
 				if
 				(
-					range_to_Scr > 0    && range_to_Scr < maxSearchingRange       &&    
-					point_on_Scr[0] > 0 && point_on_Scr[0] < scrResolution[0]     &&
+					range_to_Scr    > 0 && range_to_Scr    < maxSearchingRange &&    
+					point_on_Scr[0] > 0 && point_on_Scr[0] < scrResolution[0]  &&
 					point_on_Scr[1] > 0 && point_on_Scr[1] < scrResolution[1]
 					
 				)	
 				{
+					//point_on_Old[0] = point_on_Scr[0];
+					//point_on_Old[1] = point_on_Scr[1];
+					
 					if(currentSelectObj == null || currentMaxLockingPriority < Math.abs(aJet.lockingPriority) && !currentSelectObj.ID.equals(aJet.ID))
 					{
 						if(aJet.lockingPriority >= 0)
@@ -423,6 +425,7 @@ public class NPC extends Aircraft
 					}
 				}
 			}
+			
 			if(!lockingSelected)
 			{
 				currentMaxLockingPriority = 0;
@@ -435,7 +438,7 @@ public class NPC extends Aircraft
 				currentSelectObj.warning(this);
 		}
 		
-		if(tracingTarget != null || (lockedByEnemy && locked_By.isAlive))
+		if(tracingTarget != null && tracingTarget.isAlive || lockedByEnemy && locked_By.isAlive)
 			trace();
 		else
 		{
@@ -446,7 +449,7 @@ public class NPC extends Aircraft
 		if(--lockingLife <= 0)
 		{
 			lockedByEnemy = false;
-			locked_By = null;
+			locked_By     = null;
 		}
 		defaultGo();
 	}

@@ -27,6 +27,10 @@ public class CharTimeSpace extends CharWorld
 		this(resolution_X, resolution_Y, refresh_rate, 9.8);
 	}
 	
+	public void buffStatic() {
+		visualManager.buff();
+	}
+	
 	@Override
 	public void printNew()
 	{

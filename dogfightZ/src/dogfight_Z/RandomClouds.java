@@ -32,6 +32,7 @@ public class RandomClouds extends CharObject implements Runnable, ThreeDs
 		
 		location_player = Location;
 		location = new double[3];
+		
 		location[0] = Math.random();
 		if(((int)(location[0] * 1000000) & 1) == 0)
 			location[0] = -location[0];
@@ -42,13 +43,13 @@ public class RandomClouds extends CharObject implements Runnable, ThreeDs
 		if(((int)(location[2] * 1000000) & 1) == 0)
 			location[2] = -location[2];
 		
-		location[0] = /*location_player[0] < hight - visibility? hight + location_player[0] - location[0] * 2 * size[1] :*/ hight - location[0] * 2 * size[1];
+		location[0] = hight - location[0] * 2 * size[1];
 		location[1] = location[1] * visibility + location_player[1];
 		location[2] = location[2] * visibility + location_player[2];
 		
 		roll_angle[0] = roll_angle[1] = roll_angle[2] = 0.0;
 		
-		int count = (int)(size_X * size_Y * size_Z * max_density)/100000;
+		int count = (int)(size_X * size_Y * size_Z * max_density) >> 16;
 		
 		double newPonit[];
 		
@@ -102,13 +103,13 @@ public class RandomClouds extends CharObject implements Runnable, ThreeDs
 		location[0] = /*location_player[0] < hight - visibility? hight + location_player[0] - location[0] * 2 * size[1] :*/ hight - location[0] * 2 * size[1];
 		location[1] = location[1] * visibility + location_player[1];
 		location[2] = location[2] * visibility + location_player[2];
-		
+		/*
 		for(int i=0 ; i<points_count ; ++i)
 		{
 			points.get(i)[0] = Math.random() * size[0];
 			points.get(i)[1] = Math.random() * size[1];
 			points.get(i)[2] = Math.random() * size[2];
-		}
+		}*/
 	}
 
 	@Override
@@ -117,4 +118,3 @@ public class RandomClouds extends CharObject implements Runnable, ThreeDs
 		reConstruct();
 	}
 }
-

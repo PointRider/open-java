@@ -17,12 +17,14 @@ import graphic_Z.HUDs.HUD;
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Worlds.CharWorld;
+import graphic_Z.utils.HzController;
 
 public class CharVisualManager extends VisualManager<CharWorld> implements Runnable
 {
 	public		char	point[];			//点样式
 	protected	char	blank;				//空白样式
 	public		char	fraps_buffer[][];			//帧缓冲，实体
+	public      char    emptyLine[];
 	protected	List<CharFrapsCamera> cameras;
 	protected	JTextArea	mainScr;		//在主屏幕引用
 	public		List<Iterable<ThreeDs>> staticObjLists;
@@ -33,16 +35,18 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	private Thread tmpThread;
 	//private Thread staticObjExposureThread;
 	
-	public CharVisualManager(short resolution_X, short resolution_Y, CharWorld inWhichWorld, JTextArea	main_scr)
+	public CharVisualManager(short resolution_X, short resolution_Y, CharWorld inWhichWorld, JTextArea main_scr)
 	{
 		super(resolution_X, resolution_Y, inWhichWorld);
 		
 		mainCameraFeedBack = null;
-		scr_show = new StringBuilder(resolution_X * resolution_Y);
-		refreshDelay = inWorld.refreshDelay;
+		scr_show        = new StringBuilder(resolution_X * resolution_Y);
+		refreshHz       = inWorld.refreshHz;
 		staticObjLists	= inWorld.objectsManager.staticObjLists;
 		dynamicObjLists	= inWorld.objectsManager.dynamicObjLists;
 		selfDisposable  = inWorld.objectsManager.selfDisposable;
+
+		hzController    = new HzController(refreshHz);
 		//point = '*';					//default
 		point = new char[8];
 		point[0] = '@';
@@ -57,9 +61,13 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		blank = ' ';					//default
 		
 		fraps_buffer = new char[resolution_Y][];
+		emptyLine    = new char[resolution_X];
 		
 		for(short i=0 ; i<resolution_Y ; ++i)
 			fraps_buffer[i] = new char[resolution_X];
+
+		for(short i=0 ; i<resolution_X ; ++i)
+			emptyLine[i] = blank;
 		
 		cameras = new ArrayList<CharFrapsCamera>();
 
@@ -193,44 +201,53 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		return newBar;
 	}
 	
-	public void run() { 
-		try{Thread.sleep(refreshDelay);} catch(InterruptedException e) {}
+	public void run() {
+		refresh();
+		//try{Thread.sleep(refreshDelay);} catch(InterruptedException e) {}
 	}
 	
-	public void srun()
+	public void refresh()
 	{
-		for(int i=0 ; i<resolution[1] ; ++i) for(int j=0 ; j<resolution[0] ; ++j) {
-			fraps_buffer[i][j] = blank;
-		}
 		
 		
-		for(CharFrapsCamera aCamera : cameras)
-		{
-			Thread staticObjExposureThread = new Thread(aCamera);
-			staticObjExposureThread.start();
+		for(CharFrapsCamera aCamera : cameras) {
+			//new Thread(aCamera).start();
 
 			for(Iterable<Dynamic> eachList:dynamicObjLists)
 				aCamera.exposure(eachList, 0);
 			for(Iterable<Dynamic> eachList:selfDisposable)
 				aCamera.exposure(eachList, 0);
+			
 			mainCameraFeedBack = aCamera.exposure();
 		}
-		for
-		(
+		
+		for	(
 			Iterator<HUD> iter = HUDs.iterator();
 			iter.hasNext();
 			iter.next().printNew()
 		);
 	}
 	
-	public void printNew()	//关于颜色、多摄像机的改进待做(包括裸眼3D)
-	{
-		tmpThread = new Thread(this);
+	public void buff() {
+		tmpThread = new Thread(hzController);
+		tmpThread.setPriority(Thread.MAX_PRIORITY);
 		tmpThread.start();
 		
-		srun();
+		for(int i=0 ; i<resolution[1] ; ++i)
+			System.arraycopy(emptyLine, 0, fraps_buffer[i], 0, resolution[0]);
+		
+		for(CharFrapsCamera aCamera : cameras) new Thread(aCamera).start();
+	}
+	
+	public void printNew()	//关于颜色、多摄像机的改进待做(包括裸眼3D)
+	{
+		if(tmpThread == null) return;
+		
+		refresh();
 
 		try{tmpThread.join();} catch (InterruptedException e) {}
+		tmpThread = null;
+		
 		boolean firstInLine, firstLine;
 		
 		scr_show.delete(0, scr_show.length());

@@ -126,17 +126,17 @@ public class Aircraft extends CharMessObject
 
 	public Aircraft
 	(
-		Game theGame,
-		String modelFile, 
-		double Mess, 
-		short Camp,
+		Game                   theGame,
+		String                 modelFile, 
+		double                 Mess, 
+		short                  Camp,
 		PriorityQueue<Dynamic> firedAmmo, 
 		PriorityQueue<Dynamic> Effects, 
 		LinkedList<ThreeDs>	   delete_que,
 		LinkedList<ThreeDs>	   add_que,
 		HashSet<ThreeDs>	   Aircrafts,
 		CharFrapsCamera		   MainCamera, 
-		String id
+		String                 id
 	)
 	{
 		super(modelFile, Mess);
@@ -615,8 +615,8 @@ public class Aircraft extends CharMessObject
 		turn_lr(velocity_roll[1]);
 		roll_lr(velocity_roll[2]);
 		//-----------------------------------
-		engine_rpm	=  getCurrentRPM(max_rpm, control_stick_acc);
-		double F	=  getCurrentForce(maxAccForce, max_rpm, engine_rpm);
+		engine_rpm = getCurrentRPM(max_rpm, control_stick_acc);
+		double F   = getCurrentForce(maxAccForce, max_rpm, engine_rpm);
 		
 		if(isPushing)
 		{
@@ -641,18 +641,16 @@ public class Aircraft extends CharMessObject
 		
 		if(speed < minStableSpeed)
 		{
-			//motionRate = 1;
-			motionRate = speed / minStableSpeed * 0.8;
+			motionRate = speed * 0.8 / minStableSpeed;
 			if(location[0] < 0)
-				location[0] += CharTimeSpace.g * (minStableSpeed - speed) / minStableSpeed;
+				location[0] += CharTimeSpace.g * (1.0 - speed / minStableSpeed);
 			else location[0] = 0;
 		}
 		else 
 		{
 			motionRate = 0.8;
-			
-			if
-			(
+			if(location[0] > 0) location[0] = 0;
+			if (
 				Math.abs(velocity_roll[0]) > 0.7 * maxVelRollUp ||
 				Math.abs(velocity_roll[2]) > 0.7 * maxVelRollLR
 			)	wingsEffectRun();
@@ -878,7 +876,7 @@ public class Aircraft extends CharMessObject
 			lockedByEnemy = false;
 			locked_By = null;
 		}
-		
+
 		playersCameraManage();
 	}
 	

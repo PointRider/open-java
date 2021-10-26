@@ -42,22 +42,17 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		YcenterI = resolution[1] >> 1;
 	}
 	
-	public static double rad(double x)
-	{
-		return x * (Math.PI / 180.0);
+	public static double rad(double x) {
+		return x * Math.PI / 180.0;
 	}
 	
 	public static double range(double p1[], double p2[])
 	{
-		return Math.abs
-		(
-			Math.sqrt
-			(
-				(p2[0]-p1[0])*(p2[0]-p1[0]) +
-				(p2[1]-p1[1])*(p2[1]-p1[1]) +
-				(p2[2]-p1[2])*(p2[2]-p1[2]) 
-			)
-		);
+		double d1 = (p2[0]-p1[0]);
+		double d2 = (p2[1]-p1[1]);
+		double d3 = (p2[2]-p1[2]);
+		
+		return Math.sqrt(d1*d1 + d2*d2 + d3*d3);
 	}
 	
 	public static double getXY_onCamera
@@ -103,6 +98,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		if(Z0>=0 && result!=null)
 		{
 			tmp1 = Xcenter*FOV/(Xcenter+temp*Z0);
+			
 			X0 = X0 * tmp1;
 			Y0 = Y0 * tmp1;
 			
@@ -128,7 +124,9 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	
 	public static double rangeXY(double x0, double y0, double x2, double y2)
 	{
-		return Math.sqrt((x2-x0)*(x2-x0)+(y2-y0)*(y2-y0));
+		x2 -= x0;
+		y2 -= y0;
+		return Math.sqrt(x2*x2 + y2*y2);
 	}
 	
 	public void getXY_onCamera

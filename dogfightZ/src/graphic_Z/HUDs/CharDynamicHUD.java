@@ -8,11 +8,11 @@ import graphic_Z.utils.GraphicUtils;
 
 public class CharDynamicHUD extends CharHUD
 {
-	protected short size[];
-	public short location[];
-	public double angle;
-	public final short center_X;
-	public final short center_Y;
+	protected int   size[];
+	public int      location[];
+	public double   angle;
+	public final    int center_X;
+	public final    int center_Y;
 	public boolean transparentAtSpace;
 	
 	public CharDynamicHUD
@@ -59,17 +59,17 @@ public class CharDynamicHUD extends CharHUD
 				HUDImg[i][j] = ' ';
 		}
 		
-		size = new short[2];
+		size = new int[2];
 		size[0] = size_X;
 		size[1] = size_Y;
 		
-		location= new short[2];
+		location= new int[2];
 		location[0] = Location_X;
 		location[1] = Location_Y;
 		
 		angle	= Angle_X;
-		center_X = (short) (size[0]/2);
-		center_Y = (short) (size[1]/2);
+		center_X = size[0] >> 1;
+		center_Y = size[1] >> 1;
 	}
 	
 	public CharDynamicHUD
@@ -94,9 +94,11 @@ public class CharDynamicHUD extends CharHUD
 		short size_Y
 	) {this(HUDImgFile, frapsBuffer, HUDLayer, scrResolution, size_X, size_Y, (short)0, (short)0, 0.0, true);}
 	
-	protected double distance(double x0, double y0, short x2, short y2)
+	protected double distance(double x0, double y0, int x2, int y2)
 	{
-		return Math.sqrt((x2-x0)*(x2-x0)+(y2-y0)*(y2-y0));
+		x2 -= x0;
+		y2 -= y0;
+		return Math.sqrt(x2*x2 + y2*y2);
 	}
 	
 	@Override
@@ -108,18 +110,18 @@ public class CharDynamicHUD extends CharHUD
 			double x0, y0;
 			double r, X, Y, tmp;
 			
-			for(short y=0 ; y<size[1] ; ++y)
+			for(int y=0 ; y<size[1] ; ++y)
 			{
-				for(short x=0 ; x<size[0] ; ++x)
+				for(int x=0 ; x<size[0] ; ++x)
 				{
 					if(HUDImg[y][x] != ' ' || !transparentAtSpace)
 					{
-						x0 = (short) (x-center_X);
-						y0 = (short) (y-center_Y);
+						x0 = x-center_X;
+						y0 = y-center_Y;
 						
 						if(angle != 0)
 						{
-							r  = distance(x0, y0, (short)0, (short)0);
+							r  = distance(x0, y0, 0, 0);
 							
 							tmp = Math.atan(y0/x0)+Math.toRadians(angle);
 							X = GraphicUtils.cos(tmp) * r;

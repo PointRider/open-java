@@ -4,13 +4,15 @@ import java.util.TreeSet;
 
 import graphic_Z.Cameras.TDCamera;
 import graphic_Z.HUDs.HUD;
+import graphic_Z.utils.HzController;
 
 public abstract class VisualManager<WorldType>
 {
 	public short resolution[];			//分辨率(x,y)
 	protected TreeSet<HUD> HUDs;
 	protected WorldType inWorld;		//视觉所在世界
-	public int refreshDelay;
+	public int refreshHz;
+	protected HzController hzController;
 	
 	public abstract void printNew();
 	

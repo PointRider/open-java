@@ -83,11 +83,11 @@ public class Radar extends CharDynamicHUD
 	@Override
 	public void printNew()
 	{
+		if(!visible) return;
 		if(nowAngle == 270)
 			makeNewReady();
 		nowAngle+=6;
 		
-
 		painter.angle = nowAngle;
 		painter.printNew();
 		

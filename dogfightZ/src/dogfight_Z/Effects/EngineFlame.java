@@ -1,5 +1,7 @@
 package dogfight_Z.Effects;
 
+import java.util.ArrayList;
+
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Objects.CharObject;
 
@@ -12,6 +14,54 @@ public class EngineFlame extends CharObject implements Dynamic
 	//public boolean haveMess;
 	//public double  resistanceRate;
 	
+	private static ArrayList<double[]> missileModelData;
+	static {
+		missileModelData = new ArrayList<double[]>();
+		
+		double newPonit[];
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 0;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 0;
+		newPonit[2] = 1;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 0;
+		newPonit[2] = -1;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 1;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = -1;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 1;
+		newPonit[1] = 0;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = -1;
+		newPonit[1] = 0;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+	}
+	
 	public EngineFlame(double Location[], long lifeTime)
 	{
 		super(null);
@@ -19,52 +69,9 @@ public class EngineFlame extends CharObject implements Dynamic
 		location[0] = Location[0];
 		location[1] = Location[1];
 		location[2] = Location[2];
-		
-		double newPonit[];
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = 1;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = -1;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 1;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = -1;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 1;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = -1;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		points_count = 7;
+
+		points = missileModelData;
+		points_count = missileModelData.size();
 		
 		lifeLeft = life = lifeTime;
 		lifeTo = life + System.currentTimeMillis() / 1000;

@@ -1,5 +1,6 @@
 package dogfight_Z.Ammo;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 
@@ -20,6 +21,55 @@ public class Decoy extends Aircraft implements Dynamic
 	public boolean end;
 	public double Roll_angle_Aircraft[];
 	
+private static ArrayList<double[]> missileModelData;
+	
+	static {
+		missileModelData = new ArrayList<double[]>();
+		
+		double newPonit[];
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 0;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 0;
+		newPonit[2] = 1;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 0;
+		newPonit[2] = -1;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = 1;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 0;
+		newPonit[1] = -1;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = 1;
+		newPonit[1] = 0;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+		
+		newPonit = new double[3];
+		newPonit[0] = -1;
+		newPonit[1] = 0;
+		newPonit[2] = 0;
+		missileModelData.add(newPonit);
+	}
+	
 	public Decoy
 	(
 		short  campTo,
@@ -36,57 +86,16 @@ public class Decoy extends Aircraft implements Dynamic
 	{
 		super(null, null, 0.0, (short)-1, null, effect, del_que, null, null, null, "\nDecory" + Math.random());
 		camp = campTo;
-		specialDisplay = '\0';
+		specialDisplay = '*';
 		location[0] = Location[0];
 		location[1] = Location[1];
 		location[2] = Location[2];
 		
-		double newPonit[];
 		speed = Speed_aircraft;
 		Roll_angle_Aircraft = Roll_angle_aircraft;
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		points.add(newPonit);
 		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = 1;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = -1;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 1;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = -1;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 1;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = -1;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		points.add(newPonit);
-		
-		points_count = 7;
+		points = missileModelData;
+		points_count = missileModelData.size();
 		
 		lifeLeft = life = lifeTime;
 		lifeTo = life + System.currentTimeMillis() / 1000;
@@ -102,7 +111,7 @@ public class Decoy extends Aircraft implements Dynamic
 		resistanceRate = resistance_rate;
 		resistanceRate *= Math.random();
 		isAlive = true;
-		lockingPriority = (short) (-(2.0 + 10.0 * Math.random()));
+		lockingPriority = -128/*(short)-(2.0 + 10.0 * Math.random())*/;
 	}
 	
 	public Decoy
@@ -156,7 +165,7 @@ public class Decoy extends Aircraft implements Dynamic
 			location[1]	+= y;
 			location[2]	+= z;
 			
-			effects.add(new EngineFlame(location, (short)25, '\0'));
+			effects.add(new EngineFlame(location, (short)25, '*'));
 			--lifeLeft;
 		}
 	}
