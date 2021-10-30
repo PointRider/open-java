@@ -71,7 +71,7 @@ public class CharObject extends TDObject implements ThreeDs
 	public CharObject(String ModelFile) {
 		this(ModelFile, false);
 	}
-	
+
 	public void setLocation(double x, double y, double z)
 	{
 		location[0] = x;

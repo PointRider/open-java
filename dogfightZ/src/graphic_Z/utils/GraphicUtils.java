@@ -46,7 +46,7 @@ public class GraphicUtils
 		return x < 0? -x: x;
 	}
 	
-	public static void drawLine(char fraps_buffer[][], int x1, int y1, int x2, int y2, char pixel) {
+	public static void drawLine(char fraps_buffer[][], int x1, int y1, int x2, int y2, char pixel, boolean noRewrite) {
 		//DDA
 		if(fraps_buffer == null) return;
 		
@@ -67,12 +67,12 @@ public class GraphicUtils
 			if(x < x2) for(; x <= x2; y += k) {
 				drX = x++;
 				drY = (int)(y + 0.5);
-				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX)
-				fraps_buffer[drY][drX] = pixel;
+				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX && (!noRewrite  ||  fraps_buffer[drY][drX] == ' '))
+					fraps_buffer[drY][drX] = pixel;
 			} else for(; x >= x2; y-=k) {
 				drX = x--;
 				drY = (int)(y + 0.5);
-				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX)
+				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX && (!noRewrite  ||  fraps_buffer[drY][drX] == ' '))
 				fraps_buffer[drY][drX] = pixel;
 			}
 			
@@ -85,16 +85,20 @@ public class GraphicUtils
 			if(y < y2) for(; y <= y2; x+=k) {
 				drX = (int)(x + 0.5);
 				drY = y++;
-				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX)
-				fraps_buffer[drY][drX] = pixel;
+				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX && (!noRewrite  ||  fraps_buffer[drY][drX] == ' '))
+					fraps_buffer[drY][drX] = pixel;
 			} else for(; y >= y2; x-=k) {
 				drX = (int)(x + 0.5);
 				drY = y--;
-				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX)
-				fraps_buffer[drY][drX] = pixel;
+				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX && (!noRewrite  ||  fraps_buffer[drY][drX] == ' '))
+					fraps_buffer[drY][drX] = pixel;
 			}
 			
 		}
+	}
+	
+	public static void drawLine(char fraps_buffer[][], int x1, int y1, int x2, int y2, char pixel) {
+		drawLine(fraps_buffer, x1, y1, x2, y2, pixel, false);
 	}
 	/*
 	public static double sin(double i) {

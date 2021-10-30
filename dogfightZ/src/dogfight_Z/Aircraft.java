@@ -33,7 +33,7 @@ public class Aircraft extends CharMessObject
 	public double maxAccForce;			//最大推力(与mess一起决定最大加速度)
 	
 	public double control_stick_acc;	//当前引擎档位(通过getCurrentForce函数获得当前引擎推力)HashSet<ThreeDs>
-	public static final double maxShift = 16;	//最大操纵杆档位
+	public static final double maxShift = 32;	//最大操纵杆档位
 	
 	public double engine_rpm;			//引擎转速
 	public double max_rpm;				//最大转速
@@ -162,8 +162,8 @@ public class Aircraft extends CharMessObject
 		camp				= Camp;
 		HP					= 100;
 		max_rpm				= 14000;
-		maxSpeed			= 300;
-		maxAccForce			= 6000;
+		maxSpeed			= 600;
+		maxAccForce			= 18000;
 		maxPushTime			= 1000;
 		pushPower 			= 1500;
 		pushTimeLeft		= 1000;
@@ -488,11 +488,11 @@ public class Aircraft extends CharMessObject
 			cannonLocation[2] = 0;
 			
 			if(cannonGunFlg % 2 == 0)
-				cannonLocation[1] += 160;
-			else cannonLocation[1] -= 160;
+				cannonLocation[1] += 320;
+			else cannonLocation[1] -= 320;
 			if(cannonGunFlg < 2)
-				cannonLocation[0] += 30;
-			else cannonLocation[0] -= 30;
+				cannonLocation[0] += 180;
+			else cannonLocation[0] -= 60;
 			
 			getXYZ_afterRolling
 			(
@@ -512,7 +512,7 @@ public class Aircraft extends CharMessObject
 			{
 				m = new Missile
 				(
-					(short)1280, speed/2+5, 256, resistanceRate_normal, 
+					(short)1280, speed/2+5, 512, resistanceRate_normal, 
 					cannonLocation, roll_angle, 20, 512, 3.0, this, target, mainCamera
 				);
 			}
@@ -520,7 +520,7 @@ public class Aircraft extends CharMessObject
 			{
 				m = new Missile
 				(
-					(short)1280, speed/2+5, 256, resistanceRate_normal, 
+					(short)1280, speed/2+5, 512, resistanceRate_normal, 
 					cannonLocation, roll_angle, 20, 512, 3.0, this, target, null
 				);
 			}
@@ -557,13 +557,13 @@ public class Aircraft extends CharMessObject
 	
 	public void wingsEffectRun()
 	{
-		effectMakingLocation[0][0] = 80;
-		effectMakingLocation[0][1] = 160;
-		effectMakingLocation[0][2] = -80;
+		effectMakingLocation[0][0] = 120;
+		effectMakingLocation[0][1] = 320;
+		effectMakingLocation[0][2] = -240;
 		
-		effectMakingLocation[1][0] = 80;
-		effectMakingLocation[1][1] = -160;
-		effectMakingLocation[1][2] = -80;
+		effectMakingLocation[1][0] = 120;
+		effectMakingLocation[1][1] = -320;
+		effectMakingLocation[1][2] = -240;
 		
 		getXYZ_afterRolling
 		(
@@ -685,11 +685,11 @@ public class Aircraft extends CharMessObject
 					cannonLocation[2] = 0;
 					
 					if(cannonGunFlg % 2 == 0)
-						cannonLocation[1] += 160;
-					else cannonLocation[1] -= 160;
+						cannonLocation[1] += 280;
+					else cannonLocation[1] -= 280;
 					if(cannonGunFlg < 2)
-						cannonLocation[0] += 30;
-					else cannonLocation[0] -= 30;
+						cannonLocation[0] += 120;
+					else cannonLocation[0] -= 120;
 					
 					getXYZ_afterRolling
 					(
@@ -708,12 +708,12 @@ public class Aircraft extends CharMessObject
 					(
 						new CannonAmmo
 						(
-							(short)600, camp, 50 + speed, resistanceRate_normal, 
+							(short)600, camp, 150 + speed, resistanceRate_normal, 
 							cannonLocation, roll_angle, aircrafts, effects, this
 						)
 					);
 					colorFlash(255, 224, 128, 0, 0, 0, (short)3);
-					cannonFireLoadTime = 1;
+					cannonFireLoadTime = 2;
 					
 					if(++cannonGunFlg == 4)
 						cannonGunFlg = 0;
@@ -756,9 +756,9 @@ public class Aircraft extends CharMessObject
 			cameraLocation[2] =  -150;
 			*/
 
-			cameraLocation[0] = -120;
+			cameraLocation[0] = -240;
 			cameraLocation[1] = 0;
-			cameraLocation[2] =  -480;
+			cameraLocation[2] =  -960;
 			
 			if(cameraRollAngle[0] < 0)
 			{
@@ -821,9 +821,9 @@ public class Aircraft extends CharMessObject
 			if(cameraLocationFlag > 1)
 				cameraLocationFlag = 0;
 			
-			cameraLocation[0] = -32;
+			cameraLocation[0] = -96;
 			cameraLocation[1] = 0;
-			cameraLocation[2] = -4;
+			cameraLocation[2] = -320;
 			
 			cameraRollAngle[0] = -roll_angle[0];
 			cameraRollAngle[1] = -roll_angle[1];

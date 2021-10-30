@@ -151,11 +151,11 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 			{
 				aJet = (Aircraft) T;
 				if(aJet.ID.charAt(0) != '\n')
-				if(CharFrapsCamera.range(location, aJet.location) < 320)
+				if(CharFrapsCamera.range(location, aJet.location) < 480)
 				{
 					if(aJet.camp != myCamp)
 					{
-						aJet.getDamage(15, from, "Cannon");
+						aJet.getDamage(5, from, "Cannon");
 						new ExplosionMaker(location, 10, (short)75, 0.01, 0.1, effects);
 						aJet.colorFlash(255, 255, 128, 127, 15, 15, (short)2);
 						from.colorFlash(255, 255, 128, 128, 96, 0, (short)2);

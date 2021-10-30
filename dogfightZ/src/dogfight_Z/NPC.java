@@ -345,7 +345,7 @@ public class NPC extends Aircraft
 			{
 				m = new Missile
 				(
-					(short)1280, speed/2+5, 256, resistanceRate_normal, 
+					(short)1280, speed/2+5, 512, resistanceRate_normal, 
 					cannonLocation, roll_angle, 20, 512, 3.0, this, target, mainCamera
 				);
 			}
@@ -353,7 +353,7 @@ public class NPC extends Aircraft
 			{
 				m = new Missile
 				(
-					(short)1280, speed/2+5, 256, resistanceRate_normal, 
+					(short)1280, speed/2+5, 512, resistanceRate_normal, 
 					cannonLocation, roll_angle, 20, 512, 3.0, this, target, null
 				);
 			}

@@ -34,7 +34,7 @@ public class CloudsManager implements Runnable
 			clouds.add
 			(
 				new RandomClouds
-				(location, visibility, -2000, 0.2)
+				(location, visibility, -2250, 0.1)
 			);
 		}
 		this.clouds         = clouds;
@@ -54,7 +54,7 @@ public class CloudsManager implements Runnable
 				for(int i=0 ; i<currentCloudsCount ; ++i) {
 					aCloud = (RandomClouds) clouds.get(i);
 					
-					if(range_YZ(aCloud.location, location) > visibility * 1.2)
+					if(range_YZ(aCloud.location, location) > visibility * 1.10)
 						aCloud.run();
 						//(new Thread(aCloud)).start();
 				}

@@ -146,7 +146,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 
 		double locationOfanObj[]  = aObject.getLocation();
 		double rge = range(locationOfanObj, location);
-		if(aObject.getVisible() == false || rge > visibility) return rge;
+		if(aObject.getVisible() == false || rge > visibility * 10) return rge;
 		
 		char spc     = aObject.getSpecialDisplayChar();
 		int  pcount  = aObject.getPointsCount();
@@ -273,7 +273,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 				if(index < 0) index = 0;
 				else if(index > 7) index = 7;
 				
-				GraphicUtils.drawLine(fraps_buffer, X1, Y1, X2, Y2, (spc =='\0'? inWorld.visualManager.point[index] : spc));
+				GraphicUtils.drawLine(fraps_buffer, X1, Y1, X2, Y2, (spc =='\0'? inWorld.visualManager.point[index] : spc), staticOver);
 			} else {
 				if(X1>=0 && Y1>=0 && X1<resolution[0] && Y1<resolution[1])
 				{
