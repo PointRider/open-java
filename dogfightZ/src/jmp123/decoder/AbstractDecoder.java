@@ -304,5 +304,4 @@ public abstract class AbstractDecoder {
 			pos = 0;
 		}
 	}
-
 }

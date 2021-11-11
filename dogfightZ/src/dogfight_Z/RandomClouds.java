@@ -98,7 +98,7 @@ public class RandomClouds extends CharObject implements Runnable, ThreeDs
 	{
 		super(null);
 
-		System.out.println("test");
+		//System.out.println("test");
 		visibility = Visibility;
 		hight = Hight;
 		

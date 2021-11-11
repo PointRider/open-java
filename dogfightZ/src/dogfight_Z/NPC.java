@@ -304,11 +304,11 @@ public class NPC extends Aircraft
 
 	public void cruise()
 	{
-		cruise(8, 30, 11.2, 750, 500, 250);
+		cruise(8, 30, 20, 750, 500, 250);
 	}
 	
 	public void escape() {
-		cruise(4, 30, 14, 500, 500, 250);
+		cruise(4, 30, 30, 500, 500, 250);
 	}
 	
 	@Override

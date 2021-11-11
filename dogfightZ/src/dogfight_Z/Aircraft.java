@@ -103,6 +103,7 @@ public class Aircraft extends CharMessObject
 	public double fov_3thPerson;
 	public double fov_pushing;
 	public double fov_current;
+	public double fov_gunFiring;
 	
 	public static double getCurrentForce(double maxAccForce, double max_rpm, double rpm)	//
 	{
@@ -144,7 +145,8 @@ public class Aircraft extends CharMessObject
 		killed				= dead = 0;
 		fov_1stPerson		= 2.6;
 		fov_3thPerson		= 2.6;
-		fov_pushing			= 2.8;
+		fov_pushing			= 2.9;
+		fov_gunFiring       = 1.0;
 		fov_current			= 2.6;
 		respwanAtTime		= 0;
 		specialDisplay		= '@';
@@ -479,6 +481,11 @@ public class Aircraft extends CharMessObject
 			isCannonFiring = true;
 	}
 	
+	public void cannonStopFiring()
+	{
+		isCannonFiring = false;
+	}
+	
 	public Missile missileOpenFire(boolean cameraTrace, Aircraft target)
 	{
 		if(missileMagazineLeft > 0 && isAlive)
@@ -538,11 +545,6 @@ public class Aircraft extends CharMessObject
 			return m;
 		}
 		else return null;
-	}
-	
-	public void cannonStopFiring()
-	{
-		isCannonFiring = false;
 	}
 	
 	public void colorFlash
@@ -758,7 +760,7 @@ public class Aircraft extends CharMessObject
 
 			cameraLocation[0] = -240;
 			cameraLocation[1] = 0;
-			cameraLocation[2] =  -960;
+			cameraLocation[2] = -960;
 			
 			if(cameraRollAngle[0] < 0)
 			{
@@ -849,22 +851,31 @@ public class Aircraft extends CharMessObject
 		}
 		else
 		{
-			switch(cameraLocationFlag)
-			{
+			if(isCannonFiring) {
+				if(fov_current > fov_gunFiring) fov_current -= 0.08;
+				else fov_current = fov_gunFiring;
+			} else switch(cameraLocationFlag) {
 				case 0:
-					if(fov_current > fov_3thPerson)
-						fov_current -= 0.005;
-					else if(fov_current < fov_3thPerson)
-						fov_current = fov_3thPerson;
-				break;
+					fov_current += (fov_3thPerson / fov_current - 1) / 8;
+					/*
+					if(fov_current > fov_3thPerson)      fov_current -= 0.005;
+					else if(fov_current < fov_3thPerson) fov_current += 0.005;
+					*/
+					break;
 				case 1:
-					if(fov_current > fov_1stPerson)
-						fov_current -= 0.005;
-					else if(fov_current < fov_1stPerson)
-						fov_current = fov_1stPerson;
-				break;
+					fov_current += (fov_1stPerson / fov_current - 1) / 8;
+					/*
+					if(fov_current > fov_1stPerson)      fov_current -= 0.005;
+					else if(fov_current < fov_1stPerson) fov_current += 0.005;
+					*/
+					break;
 			}
-			
+			/* x
+			 * = y + ((x - y) / 2)
+			 * = y + x/2 - y/2
+			 * = x/2 + y/2
+			 * = (x + y) / 2
+			 */
 		}
 		mainCamera.setFOV(fov_current);
 	}

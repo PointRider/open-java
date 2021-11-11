@@ -15,6 +15,8 @@ public class SoundTrack implements Runnable
 	private ArrayList<String> soundTrack;
 	private int currentPlayingIndex;
 	
+	private MiniPlayer player;
+	
 	public SoundTrack(String sountrack_info_file)
 	{
 		soundTrack = new ArrayList<String>();
@@ -59,7 +61,7 @@ public class SoundTrack implements Runnable
 	{
 		if(soundTrack.size() > 0)
 		{
-			MiniPlayer player = new MiniPlayer(new Audio());
+			player = new MiniPlayer(new Audio());
 			
 			try
 			{
@@ -79,5 +81,4 @@ public class SoundTrack implements Runnable
 			}
 		}
 	}
-
 }

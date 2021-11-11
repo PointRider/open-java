@@ -539,8 +539,13 @@ public class Game extends CharTimeSpace implements Runnable
 		SinglePoint xy;
 		xy = eventManager.popAMouseOpreation();
 		
-		myJet.control_roll_lr((double)(-xy.x)/96.0);
-		myJet.control_roll_up_dn((double)(-xy.y)/96.0);
+		if(myJet.isCannonFiring) {
+			myJet.control_roll_lr((double)(-xy.x)/192.0);
+			myJet.control_roll_up_dn((double)(-xy.y)/192.0);
+		} else {
+			myJet.control_roll_lr((double)(-xy.x)/96.0);
+			myJet.control_roll_up_dn((double)(-xy.y)/96.0);
+		}
 		
 		flgWheelUp = flgWheelDn = false;
 		while(!eventManager.EventFrapsQueue_keyboard.isEmpty())
@@ -686,32 +691,29 @@ public class Game extends CharTimeSpace implements Runnable
 			}
 		}
 		
-		if(keyState_W)
-			myJet.control_acc(0.03);
+		if(keyState_W) myJet.control_acc(0.05);
 		
-		if(keyState_A)
-			myJet.control_turn_lr(-0.5);
 		
-		if(keyState_D)
-			myJet.control_turn_lr(0.5);
+		if(keyState_A) {
+			if(myJet.isCannonFiring) myJet.control_turn_lr(-0.25);
+			else myJet.control_turn_lr(-0.5);
+		}
 		
-		if(keyState_X)
-			myJet.makeDecoy();
+		if(keyState_D) {
+			if(myJet.isCannonFiring) myJet.control_turn_lr(0.25);
+			else myJet.control_turn_lr(0.5);
+		}
 		
-		if(keyState_S)
-			myJet.control_brk();
-		else
-			myJet.control_stop_breaking();
+		if(keyState_X) myJet.makeDecoy();
 		
-		if(keyState_SHIFT)
-			myJet.control_push();
-		else
-			myJet.control_stop_pushing();
+		if(keyState_S) myJet.control_brk();
+		else myJet.control_stop_breaking();
 		
-		if(keyState_SPACE)
-			myJet.cannonOpenFire();
-		else
-			myJet.cannonStopFiring();
+		if(keyState_SHIFT) myJet.control_push();
+		else myJet.control_stop_pushing();
+		
+		if(keyState_SPACE) myJet.cannonOpenFire();
+		else myJet.cannonStopFiring();
 		
 		scoreShow.visible = keyState_TAB;
 		mainCamera.setReversed(keyState_V);
@@ -823,6 +825,7 @@ public class Game extends CharTimeSpace implements Runnable
 			//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 		}
 		
+		buffStatic();
 		EndScreen.visible = true;
 		scoreShow.visible = true;
 		printNew();
@@ -838,5 +841,10 @@ public class Game extends CharTimeSpace implements Runnable
 			fw.write(Integer.toString(myJet.dead));
 			fw.write('\n');
 		}	catch(IOException exc){}
+	}
+	
+	protected void finalize() throws Throwable{
+		cloudManThread.interrupt();
+		bgmThread.interrupt();
 	}
 }
