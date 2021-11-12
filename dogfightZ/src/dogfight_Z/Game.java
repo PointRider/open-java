@@ -540,8 +540,8 @@ public class Game extends CharTimeSpace implements Runnable
 		xy = eventManager.popAMouseOpreation();
 		
 		if(myJet.isCannonFiring) {
-			myJet.control_roll_lr((double)(-xy.x)/192.0);
-			myJet.control_roll_up_dn((double)(-xy.y)/192.0);
+			myJet.control_roll_lr((double)(-xy.x)/224.0);
+			myJet.control_roll_up_dn((double)(-xy.y)/224.0);
 		} else {
 			myJet.control_roll_lr((double)(-xy.x)/96.0);
 			myJet.control_roll_up_dn((double)(-xy.y)/96.0);
@@ -695,12 +695,12 @@ public class Game extends CharTimeSpace implements Runnable
 		
 		
 		if(keyState_A) {
-			if(myJet.isCannonFiring) myJet.control_turn_lr(-0.25);
+			if(myJet.isCannonFiring) myJet.control_turn_lr(-0.1875);
 			else myJet.control_turn_lr(-0.5);
 		}
 		
 		if(keyState_D) {
-			if(myJet.isCannonFiring) myJet.control_turn_lr(0.25);
+			if(myJet.isCannonFiring) myJet.control_turn_lr(0.1875);
 			else myJet.control_turn_lr(0.5);
 		}
 		

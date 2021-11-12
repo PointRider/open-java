@@ -195,14 +195,14 @@ public class Aircraft extends CharMessObject
 		aircrafts			= Aircrafts;
 		
 		missileMagazine		= 4;
-		missileMagazineLeft	= 0;
+		missileMagazineLeft	= 4;
 		missileReloadingTime	= 500;
 		missileReloadingTimeLeft= 500;
 		
-		cannonMagazine		= 500;
-		cannonMagazineLeft	= 0;
-		cannonReloadingTime		= 250;
-		cannonReloadingTimeLeft	= 250;
+		cannonMagazine		= 360;
+		cannonMagazineLeft	= 360;
+		cannonReloadingTime		= 500;
+		cannonReloadingTimeLeft	= 500;
 		
 		decoyMagazine		= 1;
 		decoyMagazineLeft	= 1;
@@ -333,6 +333,7 @@ public class Aircraft extends CharMessObject
 		HP -= damage;
 		if(HP <= 0)
 		{
+			isPushing = false;
 			if(isAlive)
 			{
 				lockingPriority = 0;
@@ -710,7 +711,7 @@ public class Aircraft extends CharMessObject
 					(
 						new CannonAmmo
 						(
-							(short)600, camp, 150 + speed, resistanceRate_normal, 
+							(short)600, camp, 400 + speed, resistanceRate_normal, 
 							cannonLocation, roll_angle, aircrafts, effects, this
 						)
 					);
@@ -736,8 +737,10 @@ public class Aircraft extends CharMessObject
 		
 		if(missileReloadingTimeLeft > 0)
 		{
-			if(--missileReloadingTimeLeft == 0)
+			if(--missileReloadingTimeLeft == 0) {
 				missileMagazineLeft = missileMagazine;
+				lockingPriority = lockingPriority_backup;
+			}
 		}
 		
 		if(decoyReloadingTimeLeft > 0)
@@ -810,9 +813,9 @@ public class Aircraft extends CharMessObject
 			}
 			else t3 = -roll_angle[2];
 			
-			t1 /= 8;
-			t2 /= 8;
-			t3 /= 8;
+			t1 /= 6;
+			t2 /= 6;
+			t3 /= 6;
 			
 			cameraRollAngle[0] = (cameraRollAngle[0] + t1) % 360;
 			cameraRollAngle[1] = (cameraRollAngle[1] + t2) % 360;
@@ -918,6 +921,7 @@ public class Aircraft extends CharMessObject
 	
 	public void randomRespawn()
 	{
+		lockingPriority = 0;
 		setLocation
 		(
 			0,
@@ -933,13 +937,13 @@ public class Aircraft extends CharMessObject
 		
 		speed = 0;
 		missileMagazineLeft	= 0;
-		missileReloadingTimeLeft= 500;
+		missileReloadingTimeLeft = missileReloadingTime;
 		
-		cannonMagazineLeft	= 0;
-		cannonReloadingTimeLeft	= 250;
+		cannonMagazineLeft	= cannonMagazine;
+		cannonReloadingTimeLeft	= 0;
 		
-		decoyMagazineLeft	= 1;
-		decoyReloadingTimeLeft	= 500;
+		decoyMagazineLeft	= decoyMagazine;
+		decoyReloadingTimeLeft	= 0;
 		
 		velocity_roll[0] = 0.0;
 		velocity_roll[1] = 0.0;
@@ -949,7 +953,6 @@ public class Aircraft extends CharMessObject
 		
 		HP = 100;
 		pushTimeLeft = maxPushTime;
-		lockingPriority = lockingPriority_backup;
 		
 		visible = true;
 		isAlive = true;
@@ -957,12 +960,14 @@ public class Aircraft extends CharMessObject
 	
 	public void pollBack()
 	{
+		/*
 		setLocation
 		(
 			Math.abs(location[0]) > game.visibility? -1500 : -Math.abs(location[0]),
 			game.mainCamera.location[1] + Math.random() * game.mainCamera.maxSearchingRange * (Math.random()>0.5? -1 : 1),
 			game.mainCamera.location[2] + Math.random() * game.mainCamera.maxSearchingRange * (Math.random()>0.5? -1 : 1)
-		);
+		);*/
+		HP = 0;
 	}
 	
 	@Override

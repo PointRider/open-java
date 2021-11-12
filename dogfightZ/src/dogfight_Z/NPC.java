@@ -304,11 +304,11 @@ public class NPC extends Aircraft
 
 	public void cruise()
 	{
-		cruise(8, 30, 20, 750, 500, 250);
+		cruise(8, 30, 18, 750, 500, 250);
 	}
 	
 	public void escape() {
-		cruise(4, 30, 30, 500, 500, 250);
+		cruise(4, 30, 22, 500, 500, 250);
 	}
 	
 	@Override
@@ -415,7 +415,7 @@ public class NPC extends Aircraft
 					
 					if(currentSelectObj == null || currentMaxLockingPriority < Math.abs(aJet.lockingPriority) && !currentSelectObj.ID.equals(aJet.ID))
 					{
-						if(aJet.lockingPriority >= 0)
+						if(aJet.lockingPriority > 0)
 							tracingTarget			= aJet;
 						currentMaxLockingPriority	= (short) Math.abs(aJet.lockingPriority);
 						currentSelectObj			= aJet;
@@ -434,11 +434,11 @@ public class NPC extends Aircraft
 				tracingTarget			  = null;
 			}
 			
-			if(currentSelectObj!=null && currentSelectObj.lockingPriority >= 0)
+			if(currentSelectObj!=null && currentSelectObj.lockingPriority > 0)
 				currentSelectObj.warning(this);
 		}
 		
-		if(tracingTarget != null && tracingTarget.isAlive || lockedByEnemy && locked_By.isAlive)
+		if(tracingTarget != null && tracingTarget.isAlive && tracingTarget.lockingPriority > 0 || lockedByEnemy && locked_By.isAlive)
 			trace();
 		else
 		{

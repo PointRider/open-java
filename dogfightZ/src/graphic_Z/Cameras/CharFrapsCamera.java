@@ -165,7 +165,8 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		final double temp = GraphicUtils.tan(FOV/2.0);
 		int p1[], p2[];
 		
-		for(int i=0 ; i<pcount ; ++i)				//for each point
+		//   x r/v
+		for(int i=0 ; i<pcount ; i += Math.max(5 * (rge / visibility), 1)) //for each point
 		{
 			aPointOfanObj = aObject.getPoint(i);
 			
@@ -268,19 +269,19 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 				
 				if(Z1 < 0  ||  Z2 < 0) return rge;
 				
-				index = (int)Z1 >> 6;
+				index = (int)((Z1 * 38) / visibility);
 				
 				if(index < 0) index = 0;
-				else if(index > 7) index = 7;
+				else if(index > 18) index = 18;
 				
 				GraphicUtils.drawLine(fraps_buffer, X1, Y1, X2, Y2, (spc =='\0'? inWorld.visualManager.point[index] : spc), staticOver);
 			} else {
 				if(X1>=0 && Y1>=0 && X1<resolution[0] && Y1<resolution[1])
 				{
-					index = (int)Z1 >> 6;
+					index = (int)((Z1 * 38) / visibility);
 					
 					if(index < 0) index = 0;
-					else if(index > 7) index = 7;
+					else if(index > 18) index = 18;
 					
 					if(!staticOver  ||  fraps_buffer[Y1][X1] == ' ')
 						fraps_buffer[Y1][X1] = (spc =='\0'? inWorld.visualManager.point[index] : spc);

@@ -48,15 +48,26 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 
 		hzController    = new HzController(refreshHz);
 		//point = '*';					//default
-		point = new char[8];
+		point = new char[19];
 		point[0] = '@';
 		point[1] = '0';
-		point[2] = 'O';
-		point[3] = 'o';
-		point[4] = '*';
-		point[5] = '+';
-		point[6] = '\'';
-		point[7] = '.';
+		point[2] = 'G';
+		point[3] = 'Q';
+		point[4] = 'O';
+		point[5] = 'o';
+		point[6] = '*';
+		point[7] = '+';
+		point[8] = '=';
+		point[9] = '^';
+		point[10] = ';';
+		point[11] = '"';
+		point[12] = ':';
+		point[13] = '~';
+		point[14] = '-';
+		point[15] = ',';
+		point[16] = '`';
+		point[17] = '\'';
+		point[18] = '.';
 		
 		blank = ' ';					//default
 		
