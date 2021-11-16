@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.JTextArea;
 
@@ -21,18 +23,19 @@ import graphic_Z.utils.HzController;
 
 public class CharVisualManager extends VisualManager<CharWorld> implements Runnable
 {
-	public		char	point[];			//点样式
-	protected	char	blank;				//空白样式
-	public		char	fraps_buffer[][];			//帧缓冲，实体
-	public      char    emptyLine[];
-	protected	List<CharFrapsCamera> cameras;
-	protected	JTextArea	mainScr;		//在主屏幕引用
-	public		List<Iterable<ThreeDs>> staticObjLists;
-	public		List<Iterable<Dynamic>> dynamicObjLists;
+	public		char	                     point[];			//点样式
+	protected	char	                     blank;				//空白样式
+	public		char	                     fraps_buffer[][];			//帧缓冲，实体
+	public      char                         emptyLine[];
+	protected	List<CharFrapsCamera>        cameras;
+	protected	JTextArea	                 mainScr;		//在主屏幕引用
+	public		List<Iterable<ThreeDs>>      staticObjLists;
+	public		List<Iterable<Dynamic>>      dynamicObjLists;
 	public		List<PriorityQueue<Dynamic>> selfDisposable;
-	public		Object	mainCameraFeedBack;
-	private StringBuilder scr_show;
-	private Thread tmpThread;
+	public		Object	                     mainCameraFeedBack;
+	private     StringBuilder                scr_show;
+	private     Thread                       tmpThread;
+	private     ExecutorService              epool;
 	//private Thread staticObjExposureThread;
 	
 	public CharVisualManager(short resolution_X, short resolution_Y, CharWorld inWhichWorld, JTextArea main_scr)
@@ -83,6 +86,13 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		cameras = new ArrayList<CharFrapsCamera>();
 
 		mainScr = main_scr;
+		
+		epool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+	}
+
+	@Override
+	protected void finalize() throws Throwable { 
+		epool.shutdownNow();
 	}
 	
 	public void newCamera()
@@ -240,14 +250,17 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	}
 	
 	public void buff() {
+		
 		tmpThread = new Thread(hzController);
 		tmpThread.setPriority(Thread.MAX_PRIORITY);
 		tmpThread.start();
-		
 		for(int i=0 ; i<resolution[1] ; ++i)
 			System.arraycopy(emptyLine, 0, fraps_buffer[i], 0, resolution[0]);
 		
-		for(CharFrapsCamera aCamera : cameras) new Thread(aCamera).start();
+		for(CharFrapsCamera aCamera : cameras) {
+			epool.execute(aCamera);
+			//new Thread(aCamera).start();
+		}
 	}
 	
 	public void printNew()	//关于颜色、多摄像机的改进待做(包括裸眼3D)

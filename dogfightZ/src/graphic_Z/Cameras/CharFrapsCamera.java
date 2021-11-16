@@ -43,7 +43,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	}
 	
 	public static double rad(double x) {
-		return x * Math.PI / 180.0;
+		return x * (Math.PI / 180.0);
 	}
 	
 	public static double range(double p1[], double p2[])

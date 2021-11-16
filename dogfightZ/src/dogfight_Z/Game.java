@@ -425,6 +425,7 @@ public class Game extends CharTimeSpace implements Runnable
 		soundTrack = new SoundTrack(bgm_file);
 		bgmThread = new Thread(soundTrack);
 		bgmThread.start();
+		
 	}
 	
 	public void addKillTip(Aircraft killer, Aircraft deader, String WeaponName)

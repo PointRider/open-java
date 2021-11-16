@@ -1,6 +1,8 @@
 package dogfight_Z;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.utils.HzController;
@@ -14,7 +16,9 @@ public class CloudsManager implements Runnable
 	private double visibility;
 	private double location[];
 	private HzController rateController;
+	//private ExecutorService hzPool;
 	private Thread rateSynThread;
+	private ExecutorService epool;
 	
 	public CloudsManager(ArrayList<ThreeDs> clouds, HzController rateController, double location[], double visibility) {
 		double random1, random2, random3;
@@ -41,6 +45,14 @@ public class CloudsManager implements Runnable
 		this.rateController = rateController;
 		this.location       = location;
 		this.visibility     = visibility;
+		
+		//hzPool = Executors.newSingleThreadExecutor();
+		epool  = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+	}
+	
+	@Override
+	protected void finalize() throws Throwable { 
+		epool.shutdownNow();
 	}
 
 	@Override
@@ -50,12 +62,14 @@ public class CloudsManager implements Runnable
 			while(true) {
 				rateSynThread = new Thread(rateController);
 				rateSynThread.setPriority(Thread.MAX_PRIORITY);
+				//hzPool.execute(rateSynThread);
 				rateSynThread.start();
 				for(int i=0 ; i<currentCloudsCount ; ++i) {
 					aCloud = (RandomClouds) clouds.get(i);
 					
 					if(range_YZ(aCloud.location, location) > visibility * 1.10)
-						aCloud.run();
+						epool.execute(aCloud);
+						//aCloud.run();
 						//(new Thread(aCloud)).start();
 				}
 				rateSynThread.join();
