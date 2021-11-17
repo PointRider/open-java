@@ -104,7 +104,7 @@ public class Game extends CharTimeSpace implements Runnable
 	
 	private final int resolution_min = Math.min(visualManager.getResolution_X(), visualManager.getResolution_Y()) / 2;
 	private int keyPressed;
-	private int scrSize = 16;
+	private int scrSize = 10;
 	private boolean flgWheelUp, flgWheelDn;
 	private Aircraft lockedEnemy = null;
 	//--------------------------------
@@ -327,9 +327,6 @@ public class Game extends CharTimeSpace implements Runnable
 					visualManager.staticObjLists
 				);
 
-		mainCamera.hudWarning_missile.location[0] = 95;
-		mainCamera.hudWarning_missile.location[1] = 31;
-
 		//mainCamera.connectLocationAndAngle(missileTestTarget2.location, missileTestTarget2.cameraRollAngle);
 		mainCamera.connectLocationAndAngle(myJet.cameraLocation, myJet.cameraRollAngle);
 		myJet.mainCamera = mainCamera;
@@ -345,39 +342,46 @@ public class Game extends CharTimeSpace implements Runnable
 		missileTestTarget2.randomRespawn();
 		*/
 		//----------------[HUDs]----------------
-		lbl1 = visualManager.newLabel(" ", (short)89, (short)23, (short)100);
-		lbl2 = visualManager.newLabel(" ", (short)89, (short)24, (short)101);
-		lbl3 = visualManager.newLabel(" ", (short)89, (short)25, (short)102);
-		lbl4 = visualManager.newLabel(" ", (short)89, (short)26, (short)103);
-			   visualManager.newLabel("HP:[                    ]", (short)75, (short)40, (short)204);
-			   visualManager.newLabel("AB:[                    ]", (short)75, (short)42, (short)207);
-			   visualManager.newLabel("CN:[                    ]", (short)75, (short)44, (short)206);
-			   visualManager.newLabel("MS:[                    ]", (short)75, (short)46, (short)208);
-			   visualManager.newLabel("DC:[                    ]", (short)75, (short)48, (short)256);
+		
+		final int progressBarLocationBaseX = (int) (resolution_X * 0.75);
+		final int progressBarLocationBaseY = (int) (resolution_Y * 0.65);
+
+		mainCamera.hudWarning_missile.location[0] = (short)(resolution_X - 16);
+		mainCamera.hudWarning_missile.location[1] = (short)(resolution_Y * 0.5);
+		
+		lbl1 = visualManager.newLabel(" ", (short)(resolution_X - 18), (short)(resolution_Y * 0.3), (short)100);
+		lbl2 = visualManager.newLabel(" ", (short)(resolution_X - 18), (short)(resolution_Y * 0.3 + 1), (short)101);
+		lbl3 = visualManager.newLabel(" ", (short)(resolution_X - 18), (short)(resolution_Y * 0.3 + 2), (short)102);
+		lbl4 = visualManager.newLabel(" ", (short)(resolution_X - 18), (short)(resolution_Y * 0.3 + 3), (short)103);
+			   visualManager.newLabel("HP:[                    ]", (short)progressBarLocationBaseX, (short)progressBarLocationBaseY, (short)204);
+			   visualManager.newLabel("AB:[                    ]", (short)progressBarLocationBaseX, (short)(progressBarLocationBaseY + 2), (short)207);
+			   visualManager.newLabel("CN:[                    ]", (short)progressBarLocationBaseX, (short)(progressBarLocationBaseY + 4), (short)206);
+			   visualManager.newLabel("MS:[                    ]", (short)progressBarLocationBaseX, (short)(progressBarLocationBaseY + 6), (short)208);
+			   visualManager.newLabel("DC:[                    ]", (short)progressBarLocationBaseX, (short)(progressBarLocationBaseY + 8), (short)256);
 		//lbl5 = visualManager.newLabel(" ", (short)20, (short)25, (short)156);
 		//lbl6 = visualManager.newLabel(" ", (short)20, (short)26, (short)157);
 				
-		lblRespawnTimeLeft = visualManager.newLabel(" ", (short)((resolution_X>>1) - 9), (short)37, (short)999);
+		lblRespawnTimeLeft = visualManager.newLabel(" ", (short)((resolution_X>>1) - 9), (short)(resolution_Y * 0.3), (short)999);
 		lblGameTimeLeft = visualManager.newLabel(" ", (short)((resolution_X>>1) - 11), (short)3, (short)998);
 		lblKillTipList = visualManager.newLabel(" ", (short)3, (short)3, (short)123);
 		
-		hud_HP_progressBar			= visualManager.newProgressBar((short)79, (short)40, (short)205, (short)20, '|', CharProgressBar.Direction.horizon, 1.0);
-		hud_pushTime_progressBar	= visualManager.newProgressBar((short)79, (short)42, (short)209, (short)20, '|', CharProgressBar.Direction.horizon, 1.0);
+		hud_HP_progressBar			= visualManager.newProgressBar((short)(progressBarLocationBaseX + 4), (short)progressBarLocationBaseY, (short)205, (short)20, '|', CharProgressBar.Direction.horizon, 1.0);
+		hud_pushTime_progressBar	= visualManager.newProgressBar((short)(progressBarLocationBaseX + 4), (short)(progressBarLocationBaseY + 2), (short)209, (short)20, '|', CharProgressBar.Direction.horizon, 1.0);
+		
+		hud_cannon_progressBar = visualManager.newProgressBar((short)(progressBarLocationBaseX + 4), (short)(progressBarLocationBaseY + 4), (short)210, (short)20, '|', CharProgressBar.Direction.horizon, 1.0);
+		hud_cannonReloading_progressBar = visualManager.newProgressBar((short)progressBarLocationBaseX, (short)(progressBarLocationBaseY + 5), (short)212, (short)25, '-', CharProgressBar.Direction.horizon, 1.0);
+		hud_missile_progressBar = visualManager.newProgressBar((short)(progressBarLocationBaseX + 4), (short)(progressBarLocationBaseY + 6), (short)214, (short)20, '|', CharProgressBar.Direction.horizon, 1.0);
+		hud_missileReloading_progressBar = visualManager.newProgressBar((short)progressBarLocationBaseX, (short)(progressBarLocationBaseY + 7), (short)216, (short)25, '-', CharProgressBar.Direction.horizon, 1.0);
+		hud_decoy_progressBar = visualManager.newProgressBar((short)(progressBarLocationBaseX + 4), (short)(progressBarLocationBaseY + 8), (short)218, (short)20, '|', CharProgressBar.Direction.horizon, 1.0);
+		hud_decoyReloading_progressBar = visualManager.newProgressBar((short)progressBarLocationBaseX, (short)(progressBarLocationBaseY + 9), (short)220, (short)25, '-', CharProgressBar.Direction.horizon, 1.0);
+		
 		hud_roll_up_dn_angle		= visualManager.newDynamicHUD(hud_file1, (short)21, (short)51, (short)33);
 		hud_roll_up_dn_scrollBar	= visualManager.newLoopingScrollBar(hud_file2, (short)50, (short)72, (short)4, (short)43, CharLoopingScrollBar.Direction.vertical);
 		hud_turn_lr_scrollBar		= visualManager.newLoopingScrollBar(hud_file3, (short)32, (short)72, (short)2, (short)71, CharLoopingScrollBar.Direction.horizon);
-		hud_turn_lr_scrollBar.location[1] = 54;
-		hud_roll_up_dn_scrollBar.location[0] = 30;
-		
-		hud_cannon_progressBar = visualManager.newProgressBar((short)79, (short)44, (short)210, (short)20, '|', CharProgressBar.Direction.horizon, 1.0);
-		hud_cannonReloading_progressBar = visualManager.newProgressBar((short)75, (short)45, (short)212, (short)25, '-', CharProgressBar.Direction.horizon, 1.0);
-		hud_missile_progressBar = visualManager.newProgressBar((short)79, (short)46, (short)214, (short)20, '|', CharProgressBar.Direction.horizon, 1.0);
-		hud_missileReloading_progressBar = visualManager.newProgressBar((short)75, (short)47, (short)216, (short)25, '-', CharProgressBar.Direction.horizon, 1.0);
-		hud_decoy_progressBar = visualManager.newProgressBar((short)79, (short)48, (short)218, (short)20, '|', CharProgressBar.Direction.horizon, 1.0);
-		hud_decoyReloading_progressBar = visualManager.newProgressBar((short)75, (short)49, (short)220, (short)25, '-', CharProgressBar.Direction.horizon, 1.0);
-		
-		visualManager.newHUD(hud_file4, (short)40);
-		
+		hud_turn_lr_scrollBar.location[1] = resolution_Y - 1;
+		hud_roll_up_dn_scrollBar.location[0] = (int) (resolution_Y * 0.4);
+		visualManager.newImage(hud_file4, (short)32767, (short)65, (short)11, (short)((resolution_X >> 1) - (65 >> 1)), (short)((resolution_Y >> 1) - (11 >> 1)));
+		//"107"  "57" 160 84
 		hud_Radar = new Radar
 		(
 			hud_file10, 
@@ -633,10 +637,10 @@ public class Game extends CharTimeSpace implements Runnable
 					keyState_SHIFT = false;
 				break;
 				
-				case KeyEvent.VK_F://Tab
+				case KeyEvent.VK_F:
 					keyState_TAB = true;
 				break;
-				case -KeyEvent.VK_F://-Tab
+				case -KeyEvent.VK_F:
 					keyState_TAB = false;
 				break;
 				/*
@@ -660,10 +664,10 @@ public class Game extends CharTimeSpace implements Runnable
 					mainCamera.connectLocationAndAngle(myJet.cameraLocation, myJet.cameraRollAngle);
 				break;
 				
-				case KeyEvent.VK_V://Tab
+				case KeyEvent.VK_V:
 					keyState_V = true;
 				break;
-				case -KeyEvent.VK_V://-Tab
+				case -KeyEvent.VK_V:
 					keyState_V = false;
 				break;
 				
@@ -674,6 +678,13 @@ public class Game extends CharTimeSpace implements Runnable
 				case 91://[
 					if(scrSize > 1)scrSize -= 1;
 					eventManager.setScrZoom(scrSize);
+				break;
+
+				case 44://,
+					mainCamera.resizeScreen((short) (visualManager.resolution[0] - 1), visualManager.resolution[1]);
+				break;
+				case 46://.
+					mainCamera.resizeScreen((short) (visualManager.resolution[0] + 1), visualManager.resolution[1]);
 				break;
 				
 				case KeyEvent.VK_E:

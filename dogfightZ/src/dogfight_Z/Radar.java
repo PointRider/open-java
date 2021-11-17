@@ -20,6 +20,12 @@ public class Radar extends CharDynamicHUD
 	public int nowAngle;
 	public CharDynamicHUD painter;
 	
+	@Override
+	public void reSizeScreen(short resolution[], char fraps_buffer[][]) {
+		super.reSizeScreen(resolution, fraps_buffer);
+		painter.reSizeScreen(resolution, fraps_buffer);
+	}
+	
 	public Radar
 	(
 		String HUDImgFile, 
@@ -98,8 +104,8 @@ public class Radar extends CharDynamicHUD
 			x = (int)(GraphicUtils.cos(theta) * i);
 			y = (int)(GraphicUtils.sin(theta) * i);
 			
-			x += center_X;
-			y += center_Y;
+			x += centerX;
+			y += centerY;
 
 			HUDImg[y][x] = back[y][x];
 		}
@@ -133,8 +139,8 @@ public class Radar extends CharDynamicHUD
 				x = (int) (tmp_double_xy[0] * r / maxSearchRange);
 				y = (int) (tmp_double_xy[1] * r / maxSearchRange);
 				
-				x += center_X;
-				y += center_Y + 1;
+				x += centerX;
+				y += centerY + 1;
 				
 				if(Math.abs(myself.roll_angle[1]) < 90)
 					 y = size[1] - y;
@@ -150,6 +156,6 @@ public class Radar extends CharDynamicHUD
 			}
 		}
 		
-		back[center_X][center_Y] = '+';
+		back[centerX][centerY] = '+';
 	}
 }

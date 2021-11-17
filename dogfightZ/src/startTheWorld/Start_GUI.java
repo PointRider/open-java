@@ -180,7 +180,7 @@ public class Start_GUI extends JFrame {
 								"resources/Crosshair2.hud",
 								"resources/LoopingScrollBar1.hud",
 								"resources/LoopingScrollBar3.hud",
-								"resources/HUD2.hud",
+								"resources/HUD3.hud",
 								"resources/MyJetHUD_Friend.hud",
 								"resources/MyJetHUD_Enemy.hud",
 								"resources/MyJetHUD_Locking.hud",
@@ -193,7 +193,7 @@ public class Start_GUI extends JFrame {
 								"resources/config_NPC.cfg",
 								"resources/gameRecord.rec",
 								"resources/config_OST.cfg",
-								"107", "57", "64"
+								"160", "83", "64"
 							);
 							try
 							{

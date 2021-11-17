@@ -66,7 +66,7 @@ public class EventManager extends JFrame
 		mainScr.setEditable(false);
 		mainScr.setFocusable(false);
 		mainScr.setText("Loading...\nPlease wait.");
-		mainScr.setFont(new Font("Consolas", Font.PLAIN, 16));
+		mainScr.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
 		mainScr.setBackground(new Color(0, 0, 0));
 		mainScr.setForeground(new Color(255, 255, 255));
 		//mainScr.setBackground(new Color(255, 200, 64));
@@ -94,7 +94,7 @@ public class EventManager extends JFrame
 	
 	public void setScrZoom(int size)
 	{
-		mainScr.setFont(new Font("Consolas", Font.PLAIN, size));
+		mainScr.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, size));
 	}
 
 	public int popAKeyOpreation()

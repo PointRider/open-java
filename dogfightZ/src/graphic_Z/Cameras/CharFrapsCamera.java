@@ -5,6 +5,7 @@ import java.util.List;
 
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
+import graphic_Z.Managers.CharVisualManager;
 import graphic_Z.Worlds.CharWorld;
 import graphic_Z.utils.GraphicUtils;
 
@@ -166,7 +167,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		int p1[], p2[];
 		
 		//   x r/v
-		for(int i=0 ; i<pcount ; i += Math.max(5 * (rge / visibility), 1)) //for each point
+		for(int i=0 ; i<pcount ;) //for each point
 		{
 			aPointOfanObj = aObject.getPoint(i);
 			
@@ -272,24 +273,31 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 				index = (int)((Z1 * 38) / visibility);
 				
 				if(index < 0) index = 0;
-				else if(index > 18) index = 18;
+				else if(index > CharVisualManager.POINTLEVEL) index = CharVisualManager.POINTLEVEL;
 				
 				GraphicUtils.drawLine(fraps_buffer, X1, Y1, X2, Y2, (spc =='\0'? inWorld.visualManager.point[index] : spc), staticOver);
+				++i;
 			} else {
 				if(X1>=0 && Y1>=0 && X1<resolution[0] && Y1<resolution[1])
 				{
 					index = (int)((Z1 * 38) / visibility);
-					
+
 					if(index < 0) index = 0;
-					else if(index > 18) index = 18;
+					else if(index > CharVisualManager.POINTLEVEL) index = CharVisualManager.POINTLEVEL;
 					
 					if(!staticOver  ||  fraps_buffer[Y1][X1] == ' ')
 						fraps_buffer[Y1][X1] = (spc =='\0'? inWorld.visualManager.point[index] : spc);
 				}
+				i += Math.max(5 * (rge / visibility), 1);
 			}
-			
 		}
 		return rge;
+	}
+
+	public void resizeScreen(short x, short y) {
+		inWorld.visualManager.reSizeScreen(x, y);
+		resolution   = inWorld.visualManager.resolution;
+		fraps_buffer = inWorld.visualManager.fraps_buffer;
 	}
 	
 	interface XYLambdaI {

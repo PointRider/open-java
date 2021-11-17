@@ -12,6 +12,7 @@ import javax.swing.JTextArea;
 import graphic_Z.Cameras.CharFrapsCamera;
 import graphic_Z.HUDs.CharDynamicHUD;
 import graphic_Z.HUDs.CharHUD;
+import graphic_Z.HUDs.CharImage;
 import graphic_Z.HUDs.CharLabel;
 import graphic_Z.HUDs.CharLoopingScrollBar;
 import graphic_Z.HUDs.CharProgressBar;
@@ -27,6 +28,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	protected	char	                     blank;				//空白样式
 	public		char	                     fraps_buffer[][];			//帧缓冲，实体
 	public      char                         emptyLine[];
+	public      static final int             POINTLEVEL = 19;
 	protected	List<CharFrapsCamera>        cameras;
 	protected	JTextArea	                 mainScr;		//在主屏幕引用
 	public		List<Iterable<ThreeDs>>      staticObjLists;
@@ -51,26 +53,27 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 
 		hzController    = new HzController(refreshHz);
 		//point = '*';					//default
-		point = new char[19];
-		point[0] = '@';
-		point[1] = '0';
-		point[2] = 'G';
-		point[3] = 'Q';
-		point[4] = 'O';
-		point[5] = 'o';
-		point[6] = '*';
-		point[7] = '+';
-		point[8] = '=';
-		point[9] = '^';
-		point[10] = ';';
-		point[11] = '"';
-		point[12] = ':';
-		point[13] = '~';
-		point[14] = '-';
-		point[15] = ',';
-		point[16] = '`';
-		point[17] = '\'';
-		point[18] = '.';
+		point = new char[POINTLEVEL + 1];
+		point[0]  = '@';
+		point[1]  = '0';
+		point[2]  = 'G';
+		point[3]  = '$';
+		point[4]  = 'Q';
+		point[5]  = 'O';
+		point[6]  = 'o';
+		point[7]  = '*';
+		point[8]  = '+';
+		point[9]  = '=';
+		point[10] = '^';
+		point[11] = ';';
+		point[12] = '"';
+		point[13] = ':';
+		point[14] = '~';
+		point[15] = '-';
+		point[16] = ',';
+		point[17] = '`';
+		point[18] = '\'';
+		point[19] = '.';
 		
 		blank = ' ';					//default
 		
@@ -88,6 +91,29 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		mainScr = main_scr;
 		
 		epool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+	}
+	
+	public void reSizeScreen(short x, short y) {
+		
+		fraps_buffer = new char[y][];
+		emptyLine    = new char[x];
+		
+		for(short i=0 ; i<y ; ++i)
+			fraps_buffer[i] = new char[x];
+
+		for(short i=0 ; i<x ; ++i)
+			emptyLine[i] = blank;
+		
+		scr_show = new StringBuilder(x * y);
+		
+		resolution[0] = x;
+		resolution[1] = y;
+		
+		CharHUD ahud = null;
+		for(HUD hud : HUDs) {
+			ahud = (CharHUD) hud;
+			ahud.reSizeScreen(resolution, fraps_buffer);
+		}
 	}
 
 	@Override
@@ -154,6 +180,24 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	public void newDynamicHUD(CharDynamicHUD newHud)
 	{
 		HUDs.add(newHud);
+	}
+	
+	public void newImage(CharImage newHud)
+	{
+		HUDs.add(newHud);
+	}
+	
+	public CharImage newImage(String HUDImgFile, short HUDLayer, short size_X, short size_Y, short locatX, short locatY) {
+		CharImage newHud = new CharImage (
+			HUDImgFile, 
+			fraps_buffer, 
+			size_X, size_Y,
+			locatX, locatY,
+			HUDLayer, resolution, true
+		);
+		
+		HUDs.add(newHud);
+		return newHud;
 	}
 	
 	public CharLoopingScrollBar newLoopingScrollBar

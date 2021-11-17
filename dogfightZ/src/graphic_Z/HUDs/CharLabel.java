@@ -1,13 +1,13 @@
 package graphic_Z.HUDs;
 
-public class CharLabel extends HUD
+public class CharLabel extends CharHUD
 {
 	protected short location[];
 	protected String text;
-	protected char fraps_buffer[][];	//帧缓冲区(引用，实体在CharVisualManager中)
+	//protected char fraps_buffer[][];	//帧缓冲区(引用，实体在CharVisualManager中)
 	
-	public boolean transparentAtSpace;
-	
+	//public boolean transparentAtSpace;
+	//String HUDImgFile, char frapsBuffer[][], short HUDLayer, short scrResolution[], boolean transparent_at_space
 	public CharLabel
 	(
 		char frapsBuffer[][], 
@@ -16,6 +16,7 @@ public class CharLabel extends HUD
 		boolean transparentAtSpace
 	)
 	{
+		super(null, frapsBuffer, HUDLayer, scrResolution, transparentAtSpace);
 		resolution = scrResolution;
 		layer		 = HUDLayer;
 		fraps_buffer = frapsBuffer;

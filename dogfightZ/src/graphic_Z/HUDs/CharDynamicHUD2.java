@@ -1,13 +1,21 @@
 package graphic_Z.HUDs;
 
+import java.io.EOFException;
+import java.io.FileReader;
+import java.io.IOException;
+
 import graphic_Z.utils.GraphicUtils;
 
-public class CharDynamicHUD extends CharImage
+public class CharDynamicHUD2 extends CharHUD
 {
-	public double  angle;
-	public boolean transparentAtSpace;
+	protected       int     size[];
+	public          int     location[];
+	public          double  angle;
+	public    final int     center_X;
+	public    final int     center_Y;
+	public          boolean transparentAtSpace;
 	
-	public CharDynamicHUD
+	public CharDynamicHUD2
 	(
 		String HUDImgFile, 
 		char[][] frapsBuffer, 
@@ -21,12 +29,50 @@ public class CharDynamicHUD extends CharImage
 		boolean transparent_at_space
 	)
 	{
-		super(HUDImgFile, frapsBuffer, size_X, size_Y, Location_X, Location_Y, HUDLayer, scrResolution, true);
+		super(null, frapsBuffer, HUDLayer, scrResolution, true);
 		transparentAtSpace = transparent_at_space;
+		HUDImg = new char[size_Y][size_X];
+		
+		if(HUDImgFile != null) try(FileReader data = new FileReader(HUDImgFile))
+		{
+			for(int i=0 ; i<size_Y ; ++i)
+			{
+				for(int j=0 ; j<size_X ; ++j)
+				{
+					if(j != 0)
+						data.read();
+					HUDImg[i][j] = (char) data.read();
+				}
+				data.read();data.read();
+			}
+		}
+		catch(EOFException exc)
+		{
+		}
+		catch(IOException exc)
+		{
+			System.out.println("HUD load fault.");
+		}
+		else for(int i=0 ; i<size_Y ; ++i)
+		{
+			for(int j=0 ; j<size_X ; ++j)
+				HUDImg[i][j] = ' ';
+		}
+		
+		size = new int[2];
+		size[0] = size_X;
+		size[1] = size_Y;
+		
+		location= new int[2];
+		location[0] = Location_X;
+		location[1] = Location_Y;
+		
 		angle	= Angle_X;
+		center_X = size[0] >> 1;
+		center_Y = size[1] >> 1;
 	}
 	
-	public CharDynamicHUD
+	public CharDynamicHUD2
 	(
 		String HUDImgFile, 
 		char[][] frapsBuffer, 
@@ -38,7 +84,7 @@ public class CharDynamicHUD extends CharImage
 		short Location_Y
 	) {this(HUDImgFile, frapsBuffer, HUDLayer, scrResolution, size_X, size_Y, Location_X, Location_Y, 0.0, true);}
 	
-	public CharDynamicHUD
+	public CharDynamicHUD2
 	(
 		String HUDImgFile, 
 		char[][] frapsBuffer, 
@@ -70,8 +116,8 @@ public class CharDynamicHUD extends CharImage
 				{
 					if(HUDImg[y][x] != ' ' || !transparentAtSpace)
 					{
-						x0 = x-centerX;
-						y0 = y-centerY;
+						x0 = x-center_X;
+						y0 = y-center_Y;
 						
 						if(angle != 0)
 						{

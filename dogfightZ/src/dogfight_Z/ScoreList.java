@@ -29,6 +29,12 @@ public class ScoreList extends CharDynamicHUD
 		camp = players_camp;
 	}
 	
+
+	public void reSizeScreen(short resolution[], char fraps_buffer[][]) {
+		super.reSizeScreen(resolution, fraps_buffer);
+		temp.reSizeScreen(resolution, fraps_buffer);
+	}
+	
 	@Override
 	public void printNew()
 	{
@@ -38,34 +44,34 @@ public class ScoreList extends CharDynamicHUD
 			int line = 0;
 			
 			temp.setText("Name");
-			temp.setLocation((short)(location[0] + 3 - center_X), (short)(location[1] + 2 + line - center_Y));
+			temp.setLocation((short)(location[0] + 3 - centerX), (short)(location[1] + 2 + line - centerY));
 			temp.printNew();
 			temp.setText("Camp");
-			temp.setLocation((short)(location[0] - 3), (short)(location[1] + 2 + line - center_Y));
+			temp.setLocation((short)(location[0] - 3), (short)(location[1] + 2 + line - centerY));
 			temp.printNew();
 			temp.setText("Killed");
-			temp.setLocation((short)(location[0] + 8), (short)(location[1] + 2 + line - center_Y));
+			temp.setLocation((short)(location[0] + 8), (short)(location[1] + 2 + line - centerY));
 			temp.printNew();
 			temp.setText("Dead");
-			temp.setLocation((short)(location[0] + 16), (short)(location[1] + 2 + line - center_Y));
+			temp.setLocation((short)(location[0] + 16), (short)(location[1] + 2 + line - centerY));
 			temp.printNew();
 			
 			for(Aircraft a : list)
 			{
 				temp.setText(a.ID);
-				temp.setLocation((short)(location[0] + 3 - center_X), (short)(location[1] + 4 + line - center_Y));
+				temp.setLocation((short)(location[0] + 3 - centerX), (short)(location[1] + 4 + line - centerY));
 				temp.printNew();
 				
 				temp.setText(a.camp + ":" + (a.camp == camp? "Friend" : "Enemy"));
-				temp.setLocation((short)(location[0] - 3), (short)(location[1] + 4 + line - center_Y));
+				temp.setLocation((short)(location[0] - 3), (short)(location[1] + 4 + line - centerY));
 				temp.printNew();
 				
 				temp.setText(Integer.toString(a.killed));
-				temp.setLocation((short)(location[0] + 8), (short)(location[1] + 4 + line - center_Y));
+				temp.setLocation((short)(location[0] + 8), (short)(location[1] + 4 + line - centerY));
 				temp.printNew();
 				
 				temp.setText(Integer.toString(a.dead));
-				temp.setLocation((short)(location[0] + 16), (short)(location[1] + 4 + line - center_Y));
+				temp.setLocation((short)(location[0] + 16), (short)(location[1] + 4 + line - centerY));
 				temp.printNew();
 				
 				++line;

@@ -534,7 +534,6 @@ public class Aircraft extends CharMessObject
 			}
 			
 			fired.add(m);
-	
 			
 			colorFlash(255, 255, 255, 0, 64, 96, (short)6);
 			if(++cannonGunFlg == 4)

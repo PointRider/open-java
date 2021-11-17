@@ -68,6 +68,25 @@ public class PlayersJetCamera extends CharFrapsCamera
 		hudDistance = new CharLabel(frapsBuffer, (short)0, resolution_XY, true);
 	}
 	
+	/*
+	 public CharDynamicHUD hudFriends;
+	public CharDynamicHUD hudLocking;
+	public CharDynamicHUD hudEnemy;
+	public CharDynamicHUD hudLocked;
+	public CharLabel	  hudDistance;
+	public CharDynamicHUD hudWarning_missile; 
+	 */
+	
+	public void resizeScreen(short x, short y) {
+		super.resizeScreen(x, y);
+		hudFriends.reSizeScreen(inWorld.visualManager.resolution, inWorld.visualManager.fraps_buffer);
+		hudLocking.reSizeScreen(inWorld.visualManager.resolution, inWorld.visualManager.fraps_buffer);
+		hudEnemy.reSizeScreen(inWorld.visualManager.resolution, inWorld.visualManager.fraps_buffer);
+		hudLocked.reSizeScreen(inWorld.visualManager.resolution, inWorld.visualManager.fraps_buffer);
+		hudDistance.reSizeScreen(inWorld.visualManager.resolution, inWorld.visualManager.fraps_buffer);
+		hudWarning_missile.reSizeScreen(inWorld.visualManager.resolution, inWorld.visualManager.fraps_buffer);
+	}
+	
 	public void warning_lockedByMissile()
 	{
 		hudWarning_missile.printNew();
@@ -136,7 +155,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 					hudFriends.location[0] = (short) point_on_Scr[0];
 					hudFriends.location[1] = (short) point_on_Scr[1];
 					hudFriends.printNew();	//盖章
-					hudDistance.setLocation((short)(hudFriends.location[0] - hudFriends.center_X), (short)(hudFriends.location[1] + hudFriends.center_Y + 1));
+					hudDistance.setLocation((short)(hudFriends.location[0] - hudFriends.centerX), (short)(hudFriends.location[1] + hudFriends.centerY + 1));
 					hudDistance.printNew();
 				}
 				else //敌军
@@ -153,7 +172,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 						hudLocking.location[1] = (short) point_on_Scr[1];
 						hudLocking.printNew();	//盖章
 						GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, (int)point_on_Scr[0], (int)point_on_Scr[1], linePixel);
-						hudDistance.setLocation((short)(point_on_Scr[0] - hudLocking.center_X), (short)(point_on_Scr[1] + hudLocking.center_Y));
+						hudDistance.setLocation((short)(point_on_Scr[0] - hudLocking.centerX), (short)(point_on_Scr[1] + hudLocking.centerY));
 						hudDistance.printNew();
 					}
 					else //未发生优先级切换
@@ -169,7 +188,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 								GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, (int)point_on_Scr[0], (int)point_on_Scr[1], linePixel);
 								a.warning(myJet);
 								
-								hudDistance.setLocation((short)(point_on_Scr[0] - hudLocked.center_X), (short)(point_on_Scr[1] + hudLocked.center_Y));
+								hudDistance.setLocation((short)(point_on_Scr[0] - hudLocked.centerX), (short)(point_on_Scr[1] + hudLocked.centerY));
 								hudDistance.printNew();
 							}
 							else//正在锁定
@@ -184,7 +203,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 									GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, (int)point_on_Scr[0], (int)point_on_Scr[1], linePixel);
 									a.warning(myJet);
 									
-									hudDistance.setLocation((short)(point_on_Scr[0] - hudLocked.center_X), (short)(point_on_Scr[1] + hudLocked.center_Y));
+									hudDistance.setLocation((short)(point_on_Scr[0] - hudLocked.centerX), (short)(point_on_Scr[1] + hudLocked.centerY));
 									hudDistance.printNew();
 									
 									lockTimeLeft = lockTime;
@@ -198,7 +217,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 									GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, (int)point_on_Scr[0], (int)point_on_Scr[1], linePixel);
 									a.warning(myJet);
 									
-									hudDistance.setLocation((short)(point_on_Scr[0] - hudLocking.center_X), (short)(point_on_Scr[1] + hudLocking.center_Y));
+									hudDistance.setLocation((short)(point_on_Scr[0] - hudLocking.centerX), (short)(point_on_Scr[1] + hudLocking.centerY));
 									hudDistance.printNew();
 								}
 							}
@@ -208,7 +227,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 							hudEnemy.location[0] = (short) point_on_Scr[0];
 							hudEnemy.location[1] = (short) point_on_Scr[1];
 							hudEnemy.printNew();//盖章
-							hudDistance.setLocation((short)(point_on_Scr[0] - hudEnemy.center_X), (short)(point_on_Scr[1] + hudEnemy.center_Y));
+							hudDistance.setLocation((short)(point_on_Scr[0] - hudEnemy.centerX), (short)(point_on_Scr[1] + hudEnemy.centerY));
 							hudDistance.printNew();
 						}
 					}

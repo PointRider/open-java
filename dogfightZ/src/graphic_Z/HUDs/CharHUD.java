@@ -9,40 +9,35 @@ public class CharHUD extends HUD
 	protected char HUDImg[][];
 	protected char fraps_buffer[][];	//帧缓冲区(引用，实体在CharVisualManager中)
 	protected boolean transparentAtSpace;
-	public CharHUD(String HUDImgFile, char frapsBuffer[][], short HUDLayer, short scrResolution[],boolean transparent_at_space)
+	public CharHUD(String HUDImgFile, char frapsBuffer[][], short HUDLayer, short scrResolution[], boolean transparent_at_space)
 	{
 		visible = true;
 		resolution = scrResolution;
 		transparentAtSpace = transparent_at_space;
-		
 		if(HUDImgFile != null)
 		{
 			HUDImg = new char[resolution[1]][resolution[0]];
 			
-			try(FileReader data = new FileReader(HUDImgFile))
-			{
-				for(int i=0 ; i<resolution[1] ; ++i)
-				{
-					for(int j=0 ; j<resolution[0] ; ++j)
-					{
-						if(j != 0)
-							data.read();
+			try(FileReader data = new FileReader(HUDImgFile)) {
+				for(int i=0 ; i<resolution[1] ; ++i) {
+					for(int j=0 ; j<resolution[0] ; ++j) {
+						if(j != 0) data.read();
 						HUDImg[i][j] = (char) data.read();
 					}
 					data.read();data.read();
 				}
-			}
-			catch(EOFException exc)
-			{
-			}
-			catch(IOException exc)
-			{
+			} catch(EOFException exc) {} catch(IOException exc) {
 				System.out.println("HUD load fault.");
 			}
 		}
 		
 		layer		 = HUDLayer;
 		fraps_buffer = frapsBuffer;
+	}
+	
+	public void reSizeScreen(short resolution[], char fraps_buffer[][]) {
+		super.resolution = resolution;
+		this.fraps_buffer = fraps_buffer;
 	}
 	
 	public void printNew()
