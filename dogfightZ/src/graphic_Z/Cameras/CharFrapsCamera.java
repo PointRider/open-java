@@ -12,10 +12,10 @@ import graphic_Z.utils.GraphicUtils;
 public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 {
 	//private static	final double PI = Math.PI;
-	public	short	resolution[];			//分辨率(x,y)(引用，实体在CharVisualManager中)
-	public	char	fraps_buffer[][];		//帧缓冲区(引用，实体在CharVisualManager中)
-	public			List<Iterable<ThreeDs>> staticObjLists;
-	public			LinkedList<Thread> ThreadSyncQueue;
+	public int	                   resolution[];			//分辨率(x,y)(引用，实体在CharVisualManager中)
+	public char	                   fraps_buffer[][];		//帧缓冲区(引用，实体在CharVisualManager中)
+	public List<Iterable<ThreeDs>> staticObjLists;
+	public LinkedList<Thread>      ThreadSyncQueue;
 
 	//----buffered data----
 	protected int XcenterI; 
@@ -26,7 +26,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	(
 		double	FOV, 
 		double	visblt,
-		short	resolution_XY[],
+		int	resolution_XY[],
 		char	frapsBuffer[][],
 		CharWorld inWhichWorld,
 		List<Iterable<ThreeDs>> static_objLists
@@ -71,7 +71,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		int    Xcenter = resolution_X >> 1, 
 			   Ycenter = resolution_Y >> 1;
 		
-		double tmp1, tmp2, temp=GraphicUtils.tan(FOV/2.0);
+		double cos$, sin$, temp=GraphicUtils.tan(FOV/2.0);
 		double cr0 = rad(cameraRollAngl[0]);
 		double cr1 = rad(cameraRollAngl[1]);
 		double cr2 = rad(cameraRollAngl[2]);
@@ -81,6 +81,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		Z0 -= cameraLocation[2];
 		
 		//---围绕摄像机旋转(或相对的，摄像机原地左右上下转动)---
+		/*
 		tmp1 = Math.atan2(Y0, Z0)+cr0;
 		tmp2 = Math.sqrt(Z0*Z0+Y0*Y0);
 		Z = GraphicUtils.cos(tmp1)*tmp2;
@@ -94,21 +95,38 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		Z = GraphicUtils.sin(tmp1)*tmp2;
 		Z0 = Z;
 		X0 = X;
+		*/
+
+		cos$ = GraphicUtils.cos(cr0);
+		sin$ = GraphicUtils.sin(cr0);
+		Z = cos$ * Z0 - sin$ * Y0;
+		Y = sin$ * Z0 + cos$ * Y0;
+		Z0 = Z;
+		Y0 = Y;
+
+		cos$ = GraphicUtils.cos(cr1);
+		sin$ = GraphicUtils.sin(cr1);
+		X = cos$ * X0 - sin$ * Z0;
+		Z = sin$ * X0 + cos$ * Z0;
+		X0 = X;
+		Z0 = Z;
 		//---旋转结束---
 		
 		if(Z0>=0 && result!=null)
 		{
-			tmp1 = Xcenter*FOV/(Xcenter+temp*Z0);
-			
-			X0 = X0 * tmp1;
-			Y0 = Y0 * tmp1;
+			//借用cos$作为临时变量计算小孔成像
+			cos$ = Xcenter*FOV/(Xcenter+temp*Z0);
+			X0 = X0 * cos$;
+			Y0 = Y0 * cos$;
 			
 			//屏幕视角绕Z轴转动
-			tmp1 = Math.atan2(Y0, X0)+cr2;
-			tmp2 = Math.sqrt(X0*X0+Y0*Y0);
-			X = GraphicUtils.cos(tmp1)*tmp2;
-			Y = GraphicUtils.sin(tmp1)*tmp2;
-
+			cos$ = GraphicUtils.cos(cr2);
+			sin$ = GraphicUtils.sin(cr2);
+			X = cos$ * X0 - sin$ * Y0;
+			Y = sin$ * X0 + cos$ * Y0;
+			X0 = X;
+			Y0 = Y;
+			
 			X1 = (short) (Y+Xcenter);
 			Y1 = (short) (X+Ycenter);
 			
@@ -172,20 +190,19 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 			aPointOfanObj = aObject.getPoint(i);
 			
 			XYLambdaI getPoint = (double X0, double Y0, double Z0) -> {
-				double X, Y, Z, tmp1, tmp2;
+				double X, Y, Z/*, tmp1, tmp2*/, cos$, sin$;
 				//获取点随着物体分别绕X、Y、Z坐标轴滚动前的原坐标
 				/*
 				X0 = aPointOfanObj[0];
 				Y0 = aPointOfanObj[1];
 				Z0 = aPointOfanObj[2];
 				*/
+				//---自身旋转---
+				/*
 				tmp1 = Math.atan2(Y0, X0)+r2;
 				tmp2 = Math.sqrt(X0*X0+Y0*Y0);
-				//---自身旋转---
 				X = GraphicUtils.cos(tmp1)*tmp2;
 				Y = GraphicUtils.sin(tmp1)*tmp2;
-				Y0 = Y;
-				X0 = X;
 				
 				tmp1 = Math.atan2(Z0, X0)+r1;
 				tmp2 = Math.sqrt(X0*X0+Z0*Z0);
@@ -202,13 +219,36 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 				Y = GraphicUtils.sin(tmp1)*tmp2;
 				Y0 = Y;
 				Z0 = Z;
+				*/
+				cos$ = GraphicUtils.cos(r2);
+				sin$ = GraphicUtils.sin(r2);
+				X = cos$ * X0 - sin$ * Y0;
+				Y = sin$ * X0 + cos$ * Y0;
+				X0 = X;
+				Y0 = Y;
+
+				cos$ = GraphicUtils.cos(r1);
+				sin$ = GraphicUtils.sin(r1);
+				X = cos$ * X0 - sin$ * Z0;
+				Z = sin$ * X0 + cos$ * Z0;
+				X0 = X;
+				Z0 = Z;
+
+				cos$ = GraphicUtils.cos(r0);
+				sin$ = GraphicUtils.sin(r0);
+				Z = cos$ * Z0 - sin$ * Y0;
+				Y = sin$ * Z0 + cos$ * Y0;
+				Z0 = Z;
+				Y0 = Y;
 				//---旋转结束---
 				
+				//---获得物体每个点相对于摄像机的相对坐标
 				X0 += locationOfanObj[0] - location[0];
 				Y0 += locationOfanObj[1] - location[1];
 				Z0 += locationOfanObj[2] - location[2];
 				
 				//---围绕摄像机旋转(或相对的，摄像机原地左右上下转动)---
+				/*
 				tmp1 = Math.atan2(Y0, Z0) + cr0;
 				tmp2 = Math.sqrt(Z0*Z0+Y0*Y0);
 				Z = GraphicUtils.cos(tmp1)*tmp2;
@@ -222,19 +262,44 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 				Z = GraphicUtils.sin(tmp1)*tmp2;
 				Z0 = Z;
 				X0 = X;
+				*/
+				
+				cos$ = GraphicUtils.cos(cr0);
+				sin$ = GraphicUtils.sin(cr0);
+				Z = cos$ * Z0 - sin$ * Y0;
+				Y = sin$ * Z0 + cos$ * Y0;
+				Z0 = Z;
+				Y0 = Y;
+
+				cos$ = GraphicUtils.cos(cr1);
+				sin$ = GraphicUtils.sin(cr1);
+				X = cos$ * X0 - sin$ * Z0;
+				Z = sin$ * X0 + cos$ * Z0;
+				X0 = X;
+				Z0 = Z;
 				//---旋转结束---
 				
 				if(Z0>=0)
 				{
-					tmp1 = XcenterI*FOV/(XcenterI+temp*Z0);
-					X0 = X0 * tmp1;
-					Y0 = Y0 * tmp1;
-					
+					//借用cos$作临时变量，计算小孔成像
+					cos$ = XcenterI*FOV/(XcenterI+temp*Z0);
+					X0 = X0 * cos$;
+					Y0 = Y0 * cos$;
+					/*
 					//屏幕视角绕Z轴转动
 					tmp1 = Math.atan2(Y0, X0) + cr2;
 					tmp2 = Math.sqrt(X0*X0+Y0*Y0);
 					X = GraphicUtils.cos(tmp1)*tmp2;
 					Y = GraphicUtils.sin(tmp1)*tmp2;
+					*/
+
+					cos$ = GraphicUtils.cos(cr2);
+					sin$ = GraphicUtils.sin(cr2);
+					X = cos$ * X0 - sin$ * Y0;
+					Y = sin$ * X0 + cos$ * Y0;
+					X0 = X;
+					Y0 = Y;
+					
 					/*
 					X1 = ((int)Y+XcenterI);
 					Y1 = ((int)X+YcenterI);
@@ -294,7 +359,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		return rge;
 	}
 
-	public void resizeScreen(short x, short y) {
+	public void resizeScreen(int x, int y) {
 		inWorld.visualManager.reSizeScreen(x, y);
 		resolution   = inWorld.visualManager.resolution;
 		fraps_buffer = inWorld.visualManager.fraps_buffer;

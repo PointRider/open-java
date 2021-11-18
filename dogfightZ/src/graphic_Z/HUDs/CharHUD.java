@@ -9,7 +9,7 @@ public class CharHUD extends HUD
 	protected char HUDImg[][];
 	protected char fraps_buffer[][];	//帧缓冲区(引用，实体在CharVisualManager中)
 	protected boolean transparentAtSpace;
-	public CharHUD(String HUDImgFile, char frapsBuffer[][], short HUDLayer, short scrResolution[], boolean transparent_at_space)
+	public CharHUD(String HUDImgFile, char frapsBuffer[][], int HUDLayer, int scrResolution[], boolean transparent_at_space)
 	{
 		visible = true;
 		resolution = scrResolution;
@@ -35,7 +35,7 @@ public class CharHUD extends HUD
 		fraps_buffer = frapsBuffer;
 	}
 	
-	public void reSizeScreen(short resolution[], char fraps_buffer[][]) {
+	public void reSizeScreen(int resolution[], char fraps_buffer[][]) {
 		super.resolution = resolution;
 		this.fraps_buffer = fraps_buffer;
 	}

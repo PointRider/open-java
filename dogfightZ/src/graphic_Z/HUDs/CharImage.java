@@ -14,12 +14,12 @@ public class CharImage extends CharHUD
 	public CharImage(
 		String HUDImgFile, 
 		char[][] frapsBuffer,
-		short sizeX,
-		short sizeY,
-		short locationX,
-		short locationY, 
-		short HUDLayer, 
-		short[] scrResolution,
+		int sizeX,
+		int sizeY,
+		int locationX,
+		int locationY, 
+		int HUDLayer, 
+		int[] scrResolution,
 		boolean transparent_at_space
 	) {
 		super(null, frapsBuffer, HUDLayer, scrResolution, transparent_at_space);

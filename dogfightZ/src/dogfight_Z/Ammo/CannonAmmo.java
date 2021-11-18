@@ -2,6 +2,7 @@ package dogfight_Z.Ammo;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 import dogfight_Z.Aircraft;
@@ -17,17 +18,17 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 {
 	protected	 boolean	actived;
 	
-	public static short 	maxLife = 500;
-	public		  short		life;
-	public		  short		myCamp;
-	public		  short		lifeLeft;
+	public static int    	maxLife = 500;
+	public		  int		life;
+	public		  int		myCamp;
+	public		  int		lifeLeft;
 	public		  long		lifeTo;
 	public		  double	speed;
 	public		  double	resistanceRate;
 	public		  double[]	temp;
-	public PriorityQueue<Dynamic> effects;
+	public        PriorityQueue<Dynamic> effects;
 	public		  Aircraft	from;
-	public		  HashSet<ThreeDs> aircrafts;
+	public		  LinkedList<ThreeDs> aircrafts;
 	
 	private static ArrayList<double[]> missileModelData;
 	static {
@@ -79,13 +80,13 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 	
 	public CannonAmmo
 	(
-		short  lifeTime,
-		short  my_camp,
+		int    lifeTime,
+		int    my_camp,
 		double Speed,
 		double resistance_rate,
 		double Location[],
 		double Roll_angle[],
-		HashSet<ThreeDs> Aircrafts,
+		LinkedList<ThreeDs> Aircrafts,
 		PriorityQueue<Dynamic> Effects,
 		Aircraft souce
 	)
@@ -137,11 +138,12 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 		{
 			//------------[go street]------------
 			r1 = Math.toRadians(roll_angle[1]);
-			r2 = GraphicUtils.cos(Math.toRadians(roll_angle[0]));
+			r2 = Math.toRadians(roll_angle[0]);
 			t  = GraphicUtils.cos(r1) * speed;
-			x  = GraphicUtils.tan(r1) * t;
-			y  = GraphicUtils.sin(Math.toRadians(roll_angle[0])) * t;
-			z  = r2 * t;
+			//x  = GraphicUtils.tan(r1) * t;
+			x  = GraphicUtils.sin(r1) * speed;
+			y  = GraphicUtils.sin(r2) * t;
+			z  = GraphicUtils.cos(r2) * t;
 			
 			location[0]	-= x;
 			location[1]	+= y;
@@ -189,5 +191,11 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 	public long getLife()
 	{
 		return lifeTo;
+	}
+	
+	public int getHash()
+	{
+		// TODO 自动生成的方法存根
+		return this.hashCode();
 	}
 }

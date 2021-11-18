@@ -1,7 +1,9 @@
 package graphic_Z.Managers;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.PriorityQueue;
 
 import graphic_Z.Interfaces.Dynamic;
@@ -11,7 +13,7 @@ import graphic_Z.Objects.CharObject;
 
 public class CharObjectsManager extends TDObjectsManager
 {
-	public HashSet<ThreeDs> objects;
+	public LinkedList<ThreeDs> objects;
 	public List<Iterable<ThreeDs>> staticObjLists;
 	public List<Iterable<Dynamic>> dynamicObjLists;
 	public List<PriorityQueue<Dynamic>> selfDisposable;
@@ -19,10 +21,10 @@ public class CharObjectsManager extends TDObjectsManager
 	public CharObjectsManager()
 	{
 		count = 0;
-		objects = new HashSet<ThreeDs>();
-		staticObjLists = new ArrayList<Iterable<ThreeDs>>();
-		dynamicObjLists= new ArrayList<Iterable<Dynamic>>();
-		selfDisposable= new ArrayList<PriorityQueue<Dynamic>>();
+		objects         = new LinkedList<ThreeDs>();
+		staticObjLists  = new ArrayList<Iterable<ThreeDs>>();
+		dynamicObjLists = new ArrayList<Iterable<Dynamic>>();
+		selfDisposable  = new ArrayList<PriorityQueue<Dynamic>>();
 	}
 	
 	public Iterable<ThreeDs> newStaticObjectList(Iterable<ThreeDs> objLst)
@@ -43,13 +45,15 @@ public class CharObjectsManager extends TDObjectsManager
 		return objLst;
 	}
 	
-	public CharObject newObject(ThreeDs newObj)
+	public ListIterator<ThreeDs> newObject(ThreeDs newObj)
 	{
-		objects.add(newObj);
-		return (CharObject) newObj;
+		objects.addLast(newObj);
+		ListIterator<ThreeDs> it = objects.listIterator();
+		it.next();
+		return null;
 	}
 	
-	public CharObject newObject(String modelFile)
+	public ListIterator<ThreeDs> newObject(String modelFile)
 	{
 		return newObject(new CharObject(modelFile));
 	}
@@ -69,7 +73,7 @@ public class CharObjectsManager extends TDObjectsManager
 	{
 		objects.remove(obj);
 	}
-
+	
 	public void printNew()
 	{
 		// TODO 自动生成的方法存根
@@ -83,8 +87,6 @@ public class CharObjectsManager extends TDObjectsManager
 		
 		for(ThreeDs aObj:objects)
 			aObj.go();
-		
-		
 	}
 	
 }

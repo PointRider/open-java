@@ -5,23 +5,23 @@ public class CharLoopingScrollBar extends CharDynamicHUD
 	public enum Direction{horizon, vertical};
 	
 	public Direction direction;
-	public short size_show;
-	public short value;
+	public int size_show;
+	public int value;
 	
 	public CharLoopingScrollBar
 	(
-		String		HUDImgFile, 
-		char[][]	frapsBuffer, 
-		short		HUDLayer, 
-		short[]		scrResolution,
-		short		size_X,
-		short		size_Y,
-		short		Location_X,
-		short		Location_Y,
-		Direction	barDirection,
+		String    HUDImgFile, 
+		char[][]  frapsBuffer, 
+		int       HUDLayer, 
+		int[]     scrResolution,
+		int       size_X,
+		int       size_Y,
+		int       Location_X,
+		int       Location_Y,
+		Direction barDirection,
 		//----------------------
-		short		Value,
-		short		size_Show
+		int       Value,
+		int       size_Show
 		//----------------------
 	)
 	{
@@ -41,15 +41,15 @@ public class CharLoopingScrollBar extends CharDynamicHUD
 	(
 		String		HUDImgFile, 
 		char[][]	frapsBuffer, 
-		short		HUDLayer, 
-		short[]		scrResolution,
-		short		size_X,
-		short		size_Y,
-		short		Location_X,
-		short		Location_Y,
+		int		HUDLayer, 
+		int[]		scrResolution,
+		int		size_X,
+		int		size_Y,
+		int		Location_X,
+		int		Location_Y,
 		//----------------------
-		short		Value,
-		short		size_Show
+		int		Value,
+		int		size_Show
 		//----------------------
 	)
 	{

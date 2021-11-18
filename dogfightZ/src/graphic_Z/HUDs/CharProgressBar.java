@@ -12,12 +12,12 @@ public class CharProgressBar extends CharLabel
 	public CharProgressBar
 	(
 		char[][]	frapsBuffer, 
-		short		HUDLayer, 
-		short[] 	scrResolution,
-		short		location_X, 
-		short		location_Y,
+		int		HUDLayer, 
+		int[] 	scrResolution,
+		int		location_X, 
+		int		location_Y,
 		//-----------------------
-		short		Size, 
+		int		Size, 
 		char		Visual,
 		Direction	barDirection,
 		double		Value
@@ -35,12 +35,12 @@ public class CharProgressBar extends CharLabel
 	public CharProgressBar
 	(
 		char[][]	frapsBuffer, 
-		short		HUDLayer, 
-		short[] 	scrResolution,
-		short		location_X, 
-		short		location_Y,
+		int		HUDLayer, 
+		int[] 	scrResolution,
+		int		location_X, 
+		int		location_Y,
 		//-----------------------
-		short		Size, 
+		int		Size, 
 		char		Visual,
 		Direction	barDirection
 		//-----------------------
@@ -60,13 +60,13 @@ public class CharProgressBar extends CharLabel
 		{
 			if(direction == Direction.horizon) for
 			(
-				short x=location[0], i=0; 
+				int x=location[0], i=0; 
 				x<resolution[0] && i<size*value; 
 				++i, ++x
 			)	fraps_buffer[location[1]][x] = visual;
 			else for
 			(
-				short y=location[1], i=0; 
+				int y=location[1], i=0; 
 				y<resolution[0] && i<size*value; 
 				++i, --y
 			)	fraps_buffer[y][location[0]] = visual;

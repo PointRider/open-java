@@ -2,8 +2,8 @@ package graphic_Z.HUDs;
 
 public abstract class HUD implements Comparable<HUD>
 {
-	protected short resolution[];
-	protected short layer;				//layer越大，层越浅
+	protected int resolution[];
+	protected int layer;				//layer越大，层越浅
 	public	  boolean visible;
 	
 	public abstract void printNew();

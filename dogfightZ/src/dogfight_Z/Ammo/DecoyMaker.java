@@ -1,6 +1,7 @@
 package dogfight_Z.Ammo;
 
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.PriorityQueue;
 
 import graphic_Z.Interfaces.Dynamic;
@@ -14,16 +15,16 @@ public class DecoyMaker
 	
 	public DecoyMaker
 	(
-		short  camp,
+		int  camp,
 		double location[], 
 		double rollAngle_aircraft[],
 		double speedAircraft,
 		double velocity,
-		short lifeTime, 
+		int lifeTime, 
 		double density, 
 		double resistanceRate, 
-		LinkedList<ThreeDs>	   add_que,
-		LinkedList<ThreeDs>	   del_que,
+		LinkedList<ThreeDs>	              add_que,
+		LinkedList<ListIterator<ThreeDs>> del_que,
 		PriorityQueue<Dynamic> effect
 	)
 	{
@@ -62,17 +63,17 @@ public class DecoyMaker
 		double rollAngle_aircraft[],
 		double speedAircraft,
 		double velocity,
-		short lifeTime, 
+		int    lifeTime, 
 		double density, 
 		double resistanceRate, 
 		LinkedList<ThreeDs>	   add_que,
-		LinkedList<ThreeDs>	   del_que,
+		LinkedList<ListIterator<ThreeDs>> del_que,
 		PriorityQueue<Dynamic> effect
 	)
 	{
 		this
 		(
-			(short)(-1), location, rollAngle_aircraft, 
+			-1, location, rollAngle_aircraft, 
 			speedAircraft, velocity, lifeTime, density,
 			resistanceRate, add_que, del_que, effect
 		);

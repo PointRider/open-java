@@ -12,9 +12,9 @@ import graphic_Z.utils.GraphicUtils;
 public class Missile extends Aircraft implements Dynamic
 {
 	protected	  boolean	actived;
-	public static short		maxLife = 500;
-	public		  short		life;
-	public		  short		lifeLeft;
+	public static int		maxLife = 500;
+	public		  int		life;
+	public		  int		lifeLeft;
 	public		  long		lifeTo;
 	//public 		  double 	guideLocation[];
 	public		  double 	startGuideTime;
@@ -83,7 +83,7 @@ public class Missile extends Aircraft implements Dynamic
 	public Missile
 	(
 		//String modelFile, 
-		short  lifeTime,
+		int    lifeTime,
 		double Speed,
 		double maxSpeed,
 		double resistance_rate,
@@ -104,7 +104,7 @@ public class Missile extends Aircraft implements Dynamic
 	(
 		//String modelFile, 
 		//double Mess,
-		short lifeTime,
+		int    lifeTime,
 		double Speed,
 		double max_speed,
 		double resistance_rate,
@@ -176,8 +176,8 @@ public class Missile extends Aircraft implements Dynamic
 				guideResolution, guideResolution, location, cameraRollAngle, point_on_Scr, guideFOV
 			);
 			
-			double lrRangeToCenterOnScreen		= point_on_Scr[0] - halfAResolution;
-			double up_dnRangeToCenterOnScreen	= point_on_Scr[1] - halfAResolution;
+			double lrRangeToCenterOnScreen    = point_on_Scr[0] - halfAResolution;
+			double up_dnRangeToCenterOnScreen = point_on_Scr[1] - halfAResolution;
 			
 			double range_diff = range_old - range;
 			double range_diff2 = range_diff * range_diff;
@@ -267,10 +267,8 @@ public class Missile extends Aircraft implements Dynamic
 	@Override
 	public void go()
 	{
-		if(!actived)
-			return;
-		if(lifeLeft <= 0)
-		{
+		if(!actived) return;
+		if(lifeLeft <= 0) {
 			disable();
 			return;
 		}
@@ -368,6 +366,13 @@ public class Missile extends Aircraft implements Dynamic
 	@Override
 	public void pollBack()
 	{
+	}
+
+	@Override
+	public int getHash()
+	{
+		// TODO 自动生成的方法存根
+		return this.hashCode();
 	}
 }
 

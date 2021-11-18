@@ -8,7 +8,7 @@ import graphic_Z.utils.HzController;
 
 public abstract class VisualManager<WorldType>
 {
-	public short resolution[];			//分辨率(x,y)
+	public int resolution[];			//分辨率(x,y)
 	protected TreeSet<HUD> HUDs;
 	protected WorldType inWorld;		//视觉所在世界
 	public int refreshHz;
@@ -16,26 +16,26 @@ public abstract class VisualManager<WorldType>
 	
 	public abstract void printNew();
 	
-	public VisualManager(short resolution_X, short resolution_Y, WorldType inWhichWorld)
+	public VisualManager(int resolution_X, int resolution_Y, WorldType inWhichWorld)
 	{
-		resolution	  = new short[2];
+		resolution	  = new int[2];
 		resolution[0] = resolution_X;
 		resolution[1] = resolution_Y;
 		HUDs		  = new TreeSet<HUD>();
 		inWorld		  = inWhichWorld;
 	}
 	
-	public short getResolution_X()
+	public int getResolution_X()
 	{
 		return resolution[0];
 	}
 	
-	public short getResolution_Y()
+	public int getResolution_Y()
 	{
 		return resolution[1];
 	}
 	
 	@SuppressWarnings("rawtypes")
 	public abstract TDCamera newCamera(double FOV);
-	public abstract HUD newHUD(String HUDImgFile, short HUDLayer);
+	public abstract HUD newHUD(String HUDImgFile, int HUDLayer);
 }

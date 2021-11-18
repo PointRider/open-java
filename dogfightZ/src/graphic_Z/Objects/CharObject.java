@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import graphic_Z.Interfaces.ThreeDs;
 
@@ -13,7 +14,7 @@ public class CharObject extends TDObject implements ThreeDs
 	public int points_count;			//物体点个数
 	public List<double[]> points;		//物体每个点坐标
 	private boolean lineConstruct;
-	
+	protected ListIterator<ThreeDs> myPosition;
 	/*
 	public CharObject(CharObject another)
 	{
@@ -37,6 +38,7 @@ public class CharObject extends TDObject implements ThreeDs
 	public CharObject(String ModelFile, boolean lineConstruct)
 	{
 		super();
+		myPosition = null;
 		this.lineConstruct = lineConstruct;
 		specialDisplay = '\0';
 		points = new ArrayList<double[]>();
@@ -140,5 +142,10 @@ public class CharObject extends TDObject implements ThreeDs
 	@Override
 	public boolean constructWithLine() {
 		return lineConstruct;
+	}
+
+	@Override
+	public void setIterator(ListIterator<ThreeDs> itr) {
+		myPosition = itr;
 	}
 }

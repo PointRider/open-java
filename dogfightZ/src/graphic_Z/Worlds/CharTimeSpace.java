@@ -5,12 +5,12 @@ public class CharTimeSpace extends CharWorld
 	public static double  g;			//重力加速度
 	//public static double valRate;	//帧速率
 	
-	public CharTimeSpace(short resolution_X, short resolution_Y)
+	public CharTimeSpace(int resolution_X, int resolution_Y)
 	{
 		super(resolution_X, resolution_Y);
 	}
 	
-	public CharTimeSpace(short resolution_X, short resolution_Y, int refresh_rate, double g)
+	public CharTimeSpace(int resolution_X, int resolution_Y, int refresh_rate, double g)
 	{
 		super(resolution_X, resolution_Y, refresh_rate);
 		CharTimeSpace.g = g;
@@ -22,7 +22,7 @@ public class CharTimeSpace extends CharWorld
 		this(resolution_X, resolution_Y, refresh_rate, g, 36);
 	}
 	*/
-	public CharTimeSpace(short resolution_X, short resolution_Y, int refresh_rate)
+	public CharTimeSpace(int resolution_X, int resolution_Y, int refresh_rate)
 	{
 		this(resolution_X, resolution_Y, refresh_rate, 9.8);
 	}
@@ -48,10 +48,6 @@ public class CharTimeSpace extends CharWorld
 		//Thread objectsPrintNew = new Thread(objectsManager);
 		//objectsPrintNew.start();
 		objectsManager.printNew();
-		
-		
-		
-		
 		/*
 		try
 		{

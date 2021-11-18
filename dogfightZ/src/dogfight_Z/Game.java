@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.PriorityQueue;
 
 import dogfight_Z.Ammo.Missile;
@@ -73,15 +74,15 @@ public class Game extends CharTimeSpace implements Runnable
 	public ArrayList<ThreeDs>	clouds;
 	public PriorityQueue<Dynamic> firedAmmo;
 	public PriorityQueue<Dynamic> effects;
-	public LinkedList<ThreeDs>	deleteQue;
+	public LinkedList<ListIterator<ThreeDs>>	deleteQue;
 	public LinkedList<ThreeDs>	waitToAddQue;
 	public LinkedList<String>	killTipList;
 	public int					killTipListUpdateTimeLeft;
 	public int					killTipListUpdateTime;
 	public int					maxKillTipCount;
 
-	public short respawnTime;
-	public short colorChangedTime;
+	public int respawnTime;
+	public int colorChangedTime;
 	
 	public StringBuilder tmp;
 	//public ArrayList<HashSet<Aircraft>> camps;
@@ -102,7 +103,7 @@ public class Game extends CharTimeSpace implements Runnable
 	public short playersCamp;
 	public long  gameTimeUsed;
 	
-	private final int resolution_min = Math.min(visualManager.getResolution_X(), visualManager.getResolution_Y()) / 2;
+	private final int resolution_min = Math.min(visualManager.getResolution_X(), visualManager.getResolution_Y()) >> 1;
 	private int keyPressed;
 	private int scrSize = 10;
 	private boolean flgWheelUp, flgWheelDn;
@@ -131,7 +132,7 @@ public class Game extends CharTimeSpace implements Runnable
 		double Mess,
 		double searching_visibility,
 		double max_motionRate,
-		short  camp
+		int    camp
 	)
 	{
 		NPC npc = new NPC
@@ -178,13 +179,23 @@ public class Game extends CharTimeSpace implements Runnable
 		String cfg_file,
 		String rec_file,
 		String bgm_file,
-		short resolution_X, 
-		short resolution_Y, 
+		int resolution_X, 
+		int resolution_Y, 
 		int refresh_rate
 	)
 	{
 		super(resolution_X, resolution_Y, refresh_rate);
 		eventManager.setTitle("dogfight_Z");
+		
+		try{
+			Class.forName("dogfight_Z.Ammo.CannonAmmo");
+			Class.forName("dogfight_Z.Ammo.Decoy");
+			Class.forName("dogfight_Z.Ammo.Missile");
+			Class.forName("dogfight_Z.Effects.EngineFlame");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 		initRank();
 		
 		cfgFile = cfg_file;
@@ -203,7 +214,7 @@ public class Game extends CharTimeSpace implements Runnable
 		objectsManager.newSelfDisposableObjList(effects);
 		
 		killTipList = new LinkedList<String>();
-		deleteQue = new LinkedList<ThreeDs>();
+		deleteQue = new LinkedList<ListIterator<ThreeDs>>();
 		waitToAddQue = new LinkedList<ThreeDs>();
 
 		playersCamp = 0;
@@ -213,11 +224,11 @@ public class Game extends CharTimeSpace implements Runnable
 		(
 			hud_file12,
 			visualManager.fraps_buffer,
-			(short)1001,
+			1001,
 			visualManager.resolution,
-			(short)44, (short)27,
-			(short)(resolution_X / 2),
-			(short)(resolution_Y / 2),
+			44, 27,
+			(resolution_X >> 1),
+			(resolution_Y >> 1),
 			false, scoreList, playersCamp
 		);
 		
@@ -285,7 +296,7 @@ public class Game extends CharTimeSpace implements Runnable
 		mainCamera = new PlayersJetCamera
 				(
 					fov, visibility, 
-					visibility * 10, (short)0, (short)100, 
+					visibility * 10, 0, 100, 
 					visualManager.resolution, 
 					visualManager.fraps_buffer,
 					this, myJet, 
@@ -293,36 +304,36 @@ public class Game extends CharTimeSpace implements Runnable
 					(
 						hud_file5,
 						visualManager.fraps_buffer,
-						(short)0, visualManager.resolution,
-						(short)6, (short)5
+						0, visualManager.resolution,
+						6, 5
 					),
 					new CharDynamicHUD
 					(
 						hud_file6,
 						visualManager.fraps_buffer,
-						(short)0, visualManager.resolution,
-						(short)5, (short)6
+						0, visualManager.resolution,
+						5, 6
 					),
 					new CharDynamicHUD
 					(
 						hud_file7,
 						visualManager.fraps_buffer,
-						(short)0, visualManager.resolution,
-						(short)5, (short)6
+						0, visualManager.resolution,
+						5, 6
 					),
 					new CharDynamicHUD
 					(
 						hud_file8,
 						visualManager.fraps_buffer,
-						(short)0, visualManager.resolution,
-						(short)5, (short)6
+						0, visualManager.resolution,
+						5, 6
 					),
 					new CharDynamicHUD
 					(
 						hud_file9,
 						visualManager.fraps_buffer,
-						(short)0, visualManager.resolution,
-						(short)7, (short)6
+						0, visualManager.resolution,
+						7, 6
 					),
 					visualManager.staticObjLists
 				);
@@ -346,49 +357,49 @@ public class Game extends CharTimeSpace implements Runnable
 		final int progressBarLocationBaseX = (int) (resolution_X * 0.75);
 		final int progressBarLocationBaseY = (int) (resolution_Y * 0.65);
 
-		mainCamera.hudWarning_missile.location[0] = (short)(resolution_X - 16);
-		mainCamera.hudWarning_missile.location[1] = (short)(resolution_Y * 0.5);
+		mainCamera.hudWarning_missile.location[0] = (resolution_X - 16);
+		mainCamera.hudWarning_missile.location[1] = (resolution_Y >> 1);
 		
-		lbl1 = visualManager.newLabel(" ", (short)(resolution_X - 18), (short)(resolution_Y * 0.3), (short)100);
-		lbl2 = visualManager.newLabel(" ", (short)(resolution_X - 18), (short)(resolution_Y * 0.3 + 1), (short)101);
-		lbl3 = visualManager.newLabel(" ", (short)(resolution_X - 18), (short)(resolution_Y * 0.3 + 2), (short)102);
-		lbl4 = visualManager.newLabel(" ", (short)(resolution_X - 18), (short)(resolution_Y * 0.3 + 3), (short)103);
-			   visualManager.newLabel("HP:[                    ]", (short)progressBarLocationBaseX, (short)progressBarLocationBaseY, (short)204);
-			   visualManager.newLabel("AB:[                    ]", (short)progressBarLocationBaseX, (short)(progressBarLocationBaseY + 2), (short)207);
-			   visualManager.newLabel("CN:[                    ]", (short)progressBarLocationBaseX, (short)(progressBarLocationBaseY + 4), (short)206);
-			   visualManager.newLabel("MS:[                    ]", (short)progressBarLocationBaseX, (short)(progressBarLocationBaseY + 6), (short)208);
-			   visualManager.newLabel("DC:[                    ]", (short)progressBarLocationBaseX, (short)(progressBarLocationBaseY + 8), (short)256);
+		lbl1 = visualManager.newLabel(" ", (resolution_X - 18), (int)(resolution_Y * 0.3), 100);
+		lbl2 = visualManager.newLabel(" ", (resolution_X - 18), (int)(resolution_Y * 0.3 + 1), 101);
+		lbl3 = visualManager.newLabel(" ", (resolution_X - 18), (int)(resolution_Y * 0.3 + 2), 102);
+		lbl4 = visualManager.newLabel(" ", (resolution_X - 18), (int)(resolution_Y * 0.3 + 3), 103);
+			   visualManager.newLabel("HP:[                    ]", progressBarLocationBaseX, progressBarLocationBaseY, 204);
+			   visualManager.newLabel("AB:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 2), 207);
+			   visualManager.newLabel("CN:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 4), 206);
+			   visualManager.newLabel("MS:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 6), 208);
+			   visualManager.newLabel("DC:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 8), 256);
 		//lbl5 = visualManager.newLabel(" ", (short)20, (short)25, (short)156);
 		//lbl6 = visualManager.newLabel(" ", (short)20, (short)26, (short)157);
 				
-		lblRespawnTimeLeft = visualManager.newLabel(" ", (short)((resolution_X>>1) - 9), (short)(resolution_Y * 0.3), (short)999);
-		lblGameTimeLeft = visualManager.newLabel(" ", (short)((resolution_X>>1) - 11), (short)3, (short)998);
-		lblKillTipList = visualManager.newLabel(" ", (short)3, (short)3, (short)123);
+		lblRespawnTimeLeft = visualManager.newLabel(" ", ((resolution_X>>1) - 9), (int)(resolution_Y * 0.3), 999);
+		lblGameTimeLeft = visualManager.newLabel(" ", ((resolution_X>>1) - 11), 3, 998);
+		lblKillTipList = visualManager.newLabel(" ", 3, 3, 123);
 		
-		hud_HP_progressBar			= visualManager.newProgressBar((short)(progressBarLocationBaseX + 4), (short)progressBarLocationBaseY, (short)205, (short)20, '|', CharProgressBar.Direction.horizon, 1.0);
-		hud_pushTime_progressBar	= visualManager.newProgressBar((short)(progressBarLocationBaseX + 4), (short)(progressBarLocationBaseY + 2), (short)209, (short)20, '|', CharProgressBar.Direction.horizon, 1.0);
+		hud_HP_progressBar			= visualManager.newProgressBar((progressBarLocationBaseX + 4), progressBarLocationBaseY, 205, 20, '|', CharProgressBar.Direction.horizon, 1.0);
+		hud_pushTime_progressBar	= visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 2), 209, 20, '|', CharProgressBar.Direction.horizon, 1.0);
 		
-		hud_cannon_progressBar = visualManager.newProgressBar((short)(progressBarLocationBaseX + 4), (short)(progressBarLocationBaseY + 4), (short)210, (short)20, '|', CharProgressBar.Direction.horizon, 1.0);
-		hud_cannonReloading_progressBar = visualManager.newProgressBar((short)progressBarLocationBaseX, (short)(progressBarLocationBaseY + 5), (short)212, (short)25, '-', CharProgressBar.Direction.horizon, 1.0);
-		hud_missile_progressBar = visualManager.newProgressBar((short)(progressBarLocationBaseX + 4), (short)(progressBarLocationBaseY + 6), (short)214, (short)20, '|', CharProgressBar.Direction.horizon, 1.0);
-		hud_missileReloading_progressBar = visualManager.newProgressBar((short)progressBarLocationBaseX, (short)(progressBarLocationBaseY + 7), (short)216, (short)25, '-', CharProgressBar.Direction.horizon, 1.0);
-		hud_decoy_progressBar = visualManager.newProgressBar((short)(progressBarLocationBaseX + 4), (short)(progressBarLocationBaseY + 8), (short)218, (short)20, '|', CharProgressBar.Direction.horizon, 1.0);
-		hud_decoyReloading_progressBar = visualManager.newProgressBar((short)progressBarLocationBaseX, (short)(progressBarLocationBaseY + 9), (short)220, (short)25, '-', CharProgressBar.Direction.horizon, 1.0);
+		hud_cannon_progressBar = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 4), 210, 20, '|', CharProgressBar.Direction.horizon, 1.0);
+		hud_cannonReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 5), 212, 25, '-', CharProgressBar.Direction.horizon, 1.0);
+		hud_missile_progressBar = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 6), 214, 20, '|', CharProgressBar.Direction.horizon, 1.0);
+		hud_missileReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 7), 216, 25, '-', CharProgressBar.Direction.horizon, 1.0);
+		hud_decoy_progressBar = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 8), 218, 20, '|', CharProgressBar.Direction.horizon, 1.0);
+		hud_decoyReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 9), 220, 25, '-', CharProgressBar.Direction.horizon, 1.0);
 		
-		hud_roll_up_dn_angle		= visualManager.newDynamicHUD(hud_file1, (short)21, (short)51, (short)33);
-		hud_roll_up_dn_scrollBar	= visualManager.newLoopingScrollBar(hud_file2, (short)50, (short)72, (short)4, (short)43, CharLoopingScrollBar.Direction.vertical);
-		hud_turn_lr_scrollBar		= visualManager.newLoopingScrollBar(hud_file3, (short)32, (short)72, (short)2, (short)71, CharLoopingScrollBar.Direction.horizon);
+		hud_roll_up_dn_angle		= visualManager.newDynamicHUD(hud_file1, 21, 51, 33);
+		hud_roll_up_dn_scrollBar	= visualManager.newLoopingScrollBar(hud_file2, 50, 72, 4, 43, CharLoopingScrollBar.Direction.vertical);
+		hud_turn_lr_scrollBar		= visualManager.newLoopingScrollBar(hud_file3, 32, 72, 2, 71, CharLoopingScrollBar.Direction.horizon);
 		hud_turn_lr_scrollBar.location[1] = resolution_Y - 1;
 		hud_roll_up_dn_scrollBar.location[0] = (int) (resolution_Y * 0.4);
-		visualManager.newImage(hud_file4, (short)32767, (short)65, (short)11, (short)((resolution_X >> 1) - (65 >> 1)), (short)((resolution_Y >> 1) - (11 >> 1)));
+		visualManager.newImage(hud_file4, 32767, 65, 11, ((resolution_X >> 1) - (65 >> 1)), ((resolution_Y >> 1) - (11 >> 1)));
 		//"107"  "57" 160 84
 		hud_Radar = new Radar
 		(
 			hud_file10, 
 			hud_file11,
-			visualManager.fraps_buffer, (short)124, visualManager.resolution, 
-			(short)21, (short)(visualManager.resolution[0] - 12), 
-			(short)11, myJet, objectsManager.objects, visibility * 10
+			visualManager.fraps_buffer, 124, visualManager.resolution, 
+			21, (visualManager.resolution[0] - 12), 
+			11, myJet, objectsManager.objects, visibility * 10
 		);
 		visualManager.newDynamicHUD(hud_Radar);
 		//-------------------------------------
@@ -452,7 +463,7 @@ public class Game extends CharTimeSpace implements Runnable
 	(
 		int R_Fore, int G_Fore, int B_Fore, 
 		int R_Back, int G_Back, int B_Back, 
-		short time, Aircraft source
+		int time, Aircraft source
 	)
 	{
 		if(source.ID.equals(myJet.ID))
@@ -497,14 +508,14 @@ public class Game extends CharTimeSpace implements Runnable
 			hud_roll_up_dn_angle.visible = hud_roll_up_dn_scrollBar.visible = hud_turn_lr_scrollBar.visible = 
 					hud_Radar.visible = lbl1.visible = lbl2.visible = lbl3.visible = lbl4.visible = true;
 			//------------[Dynamic HUDs]------------
-
+			
 			hud_roll_up_dn_angle.angle = Math.abs(myJet.roll_angle[1]) > 90.0? myJet.roll_angle[2] + 180 : myJet.roll_angle[2];
 			
-			hud_roll_up_dn_angle.location[0] = (short) (GraphicUtils.sin(Math.toRadians(myJet.roll_angle[2])) * GraphicUtils.sin(Math.toRadians(Math.abs(myJet.roll_angle[1]) > 90.0? -myJet.roll_angle[1] : myJet.roll_angle[1])) * - resolution_min + (visualManager.getResolution_X()>>1));
-			hud_roll_up_dn_angle.location[1] = (short) (GraphicUtils.cos(Math.toRadians(myJet.roll_angle[2])) * GraphicUtils.sin(Math.toRadians(Math.abs(myJet.roll_angle[1]) > 90.0?  myJet.roll_angle[1] :-myJet.roll_angle[1])) * - resolution_min + (visualManager.getResolution_Y()>>1));
+			hud_roll_up_dn_angle.location[0] = (int) (GraphicUtils.sin(Math.toRadians(myJet.roll_angle[2])) * GraphicUtils.sin(Math.toRadians(Math.abs(myJet.roll_angle[1]) > 90.0? -myJet.roll_angle[1] : myJet.roll_angle[1])) * - resolution_min + (visualManager.getResolution_X()>>1));
+			hud_roll_up_dn_angle.location[1] = (int) (GraphicUtils.cos(Math.toRadians(myJet.roll_angle[2])) * GraphicUtils.sin(Math.toRadians(Math.abs(myJet.roll_angle[1]) > 90.0?  myJet.roll_angle[1] :-myJet.roll_angle[1])) * - resolution_min + (visualManager.getResolution_Y()>>1));
 			
-			hud_roll_up_dn_scrollBar.value = (short) (myJet.roll_angle[1] / 360 * 72);
-			hud_turn_lr_scrollBar.value    = (short) (-myJet.roll_angle[0] / 360 * 72);
+			hud_roll_up_dn_scrollBar.value = (int) (myJet.roll_angle[1] / 360 * 72);
+			hud_turn_lr_scrollBar.value    = (int) (-myJet.roll_angle[0] / 360 * 72);
 		}
 		else
 		{
@@ -681,10 +692,10 @@ public class Game extends CharTimeSpace implements Runnable
 				break;
 
 				case 44://,
-					mainCamera.resizeScreen((short) (visualManager.resolution[0] - 1), visualManager.resolution[1]);
+					mainCamera.resizeScreen((visualManager.resolution[0] - 1), visualManager.resolution[1]);
 				break;
 				case 46://.
-					mainCamera.resizeScreen((short) (visualManager.resolution[0] + 1), visualManager.resolution[1]);
+					mainCamera.resizeScreen((visualManager.resolution[0] + 1), visualManager.resolution[1]);
 				break;
 				
 				case KeyEvent.VK_E:
@@ -809,11 +820,20 @@ public class Game extends CharTimeSpace implements Runnable
 			hud_turn_lr_scrollBar.value = (short) (-missileTestTarget2.roll_angle[0] / 360 * 72);
 			*/
 			//--------------------------------------
-			while(!deleteQue.isEmpty())
-				objectsManager.remove(deleteQue.poll());
-			while(!waitToAddQue.isEmpty())
-				objectsManager.newObject(waitToAddQue.poll());
-
+			
+			/*while(!deleteQue.isEmpty()) {
+				ListIterator<ThreeDs> t = deleteQue.poll();
+				System.out.println(objectsManager.objects.get(0).toString());
+				
+				t.remove();
+				System.out.println("removed one");
+			}*/
+			
+			while(!waitToAddQue.isEmpty()) {
+				ThreeDs obj = waitToAddQue.poll();
+				obj.setIterator(objectsManager.newObject(obj));
+			}
+			
 			//----------------[ammos]---------------
 			while(!firedAmmo.isEmpty() && firedAmmo.peek().deleted())
 				firedAmmo.poll();

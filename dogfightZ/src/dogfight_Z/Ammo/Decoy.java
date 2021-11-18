@@ -2,6 +2,7 @@ package dogfight_Z.Ammo;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.PriorityQueue;
 
 import dogfight_Z.Aircraft;
@@ -15,8 +16,8 @@ public class Decoy extends Aircraft implements Dynamic
 {
 	public double  velocity;
 	public double  resistanceRate;
-	public short lifeLeft;
-	public short life;
+	public int   lifeLeft;
+	public int   life;
 	public long lifeTo;
 	public boolean end;
 	public double Roll_angle_Aircraft[];
@@ -72,15 +73,15 @@ private static ArrayList<double[]> missileModelData;
 	
 	public Decoy
 	(
-		short  campTo,
-		short  lifeTime,
+		int  campTo,
+		int  lifeTime,
 		double Speed,
 		double Speed_aircraft,
 		double resistance_rate,
 		double Location[],
 		double Roll_angle[],
 		double Roll_angle_aircraft[],
-		LinkedList<ThreeDs>	   del_que,
+		LinkedList<ListIterator<ThreeDs>>	   del_que,
 		PriorityQueue<Dynamic> effect
 	)
 	{
@@ -123,13 +124,13 @@ private static ArrayList<double[]> missileModelData;
 		double Location[],
 		double Roll_angle[],
 		double Roll_angle_aircraft[],
-		LinkedList<ThreeDs>	   del_que,
+		LinkedList<ListIterator<ThreeDs>> del_que,
 		PriorityQueue<Dynamic> effect
 	)
 	{
 		this
 		(
-			(short)(-1), lifeTime, Speed, Speed_aircraft, 
+			-1, lifeTime, Speed, Speed_aircraft, 
 			resistance_rate, Location, Roll_angle, 
 			Roll_angle_aircraft, del_que, effect
 		);
@@ -138,8 +139,7 @@ private static ArrayList<double[]> missileModelData;
 	@Override
 	public void go()
 	{
-		if(lifeLeft <= 0)
-			disable();
+		if(lifeLeft <= 0) disable();
 		else
 		{
 			double x, y, z, t = GraphicUtils.cos(Math.toRadians(roll_angle[1])) * velocity;
@@ -175,8 +175,9 @@ private static ArrayList<double[]> missileModelData;
 		lockingPriority = 0;
 		visible = false;
 		isAlive = false;
-		end = true;
-		deleteQue.add(this);
+		end = true;/*
+		if(myPosition != null) deleteQue.add(myPosition);
+		else System.err.println("null");*/
 	}
 
 	@Override
@@ -210,5 +211,10 @@ private static ArrayList<double[]> missileModelData;
 	@Override
 	public void pollBack()
 	{
+	}
+	public int getHash()
+	{
+		// TODO 自动生成的方法存根
+		return this.hashCode();
 	}
 }

@@ -7,17 +7,17 @@ public class ScoreList extends CharDynamicHUD
 {
 	public Iterable<Aircraft> list;
 	private CharLabel temp;
-	private short camp;
+	private int camp;
 	public ScoreList
 	(
 		String backGroundImgFile, 
 		char[][] frapsBuffer, 
-		short HUDLayer, 
-		short[] scrResolution,
-		short size_X,
-		short size_Y,
-		short Location_X,
-		short Location_Y,
+		int HUDLayer, 
+		int[] scrResolution,
+		int size_X,
+		int size_Y,
+		int Location_X,
+		int Location_Y,
 		boolean transparent_at_space,
 		Iterable<Aircraft> thelist,
 		short players_camp
@@ -25,12 +25,12 @@ public class ScoreList extends CharDynamicHUD
 	{
 		super(backGroundImgFile, frapsBuffer, HUDLayer, scrResolution, size_X, size_Y, Location_X, Location_Y, 0.0, transparent_at_space);
 		list = thelist;
-		temp = new CharLabel(frapsBuffer, (short)0, scrResolution, true);
+		temp = new CharLabel(frapsBuffer, 0, scrResolution, true);
 		camp = players_camp;
 	}
 	
 
-	public void reSizeScreen(short resolution[], char fraps_buffer[][]) {
+	public void reSizeScreen(int resolution[], char fraps_buffer[][]) {
 		super.reSizeScreen(resolution, fraps_buffer);
 		temp.reSizeScreen(resolution, fraps_buffer);
 	}

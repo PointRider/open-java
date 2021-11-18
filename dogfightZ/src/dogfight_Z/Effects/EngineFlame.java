@@ -124,4 +124,11 @@ public class EngineFlame extends CharObject implements Dynamic
 		return lifeTo;
 	}
 
+	@Override
+	public int getHash()
+	{
+		// TODO 自动生成的方法存根
+		return this.hashCode();
+	}
+
 }

@@ -6,9 +6,9 @@ import graphic_Z.Managers.VisualManager;
 
 public abstract class TDWorld<WorldType, ObjectType, HUDType>
 {
-	public TDObjectsManager				objectsManager;
-	public VisualManager<WorldType>		visualManager;
-	public EventManager					eventManager;
+	public TDObjectsManager         objectsManager;
+	public VisualManager<WorldType> visualManager;
+	public EventManager             eventManager;
 	
 	public int refreshHz;
 	

@@ -8,10 +8,10 @@ import graphic_Z.Objects.CharObject;
 
 public class CharWorld extends TDWorld<CharWorld, CharObject, CharHUD>
 {
-	public CharObjectsManager	objectsManager;
-	public CharVisualManager	visualManager;
+	public CharObjectsManager objectsManager;
+	public CharVisualManager  visualManager;
 	
-	public CharWorld(short resolution_X, short resolution_Y)
+	public CharWorld(int resolution_X, int resolution_Y)
 	{
 		super(60);				//default
 		
@@ -21,7 +21,7 @@ public class CharWorld extends TDWorld<CharWorld, CharObject, CharHUD>
 
 	}
 	
-	public CharWorld(short resolution_X, short resolution_Y, int refresh_rate)
+	public CharWorld(int resolution_X, int resolution_Y, int refresh_rate)
 	{
 		super(refresh_rate);
 		eventManager = new EventManager();

@@ -4,6 +4,7 @@ import java.io.EOFException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import graphic_Z.HUDs.CharDynamicHUD;
 import graphic_Z.Interfaces.ThreeDs;
@@ -12,7 +13,7 @@ import graphic_Z.utils.GraphicUtils;
 public class Radar extends CharDynamicHUD
 {
 	public Aircraft myself;
-	public HashSet<ThreeDs> aircrafts;
+	public LinkedList<ThreeDs> aircrafts;
 	public double maxSearchRange;
 	public double tmp_double_xy[];
 	public char Img[][];
@@ -21,7 +22,7 @@ public class Radar extends CharDynamicHUD
 	public CharDynamicHUD painter;
 	
 	@Override
-	public void reSizeScreen(short resolution[], char fraps_buffer[][]) {
+	public void reSizeScreen(int resolution[], char fraps_buffer[][]) {
 		super.reSizeScreen(resolution, fraps_buffer);
 		painter.reSizeScreen(resolution, fraps_buffer);
 	}
@@ -31,13 +32,13 @@ public class Radar extends CharDynamicHUD
 		String HUDImgFile, 
 		String HUDPainterImg,
 		char[][] frapsBuffer, 
-		short HUDLayer, 
-		short[] scrResolution,
-		short size,
-		short Location_X,
-		short Location_Y,
+		int HUDLayer, 
+		int[] scrResolution,
+		int size,
+		int Location_X,
+		int Location_Y,
 		Aircraft myJet,
-		HashSet<ThreeDs> aircraftsList,
+		LinkedList<ThreeDs> aircraftsList,
 		double maxSearch_range
 	)
 	{
@@ -97,7 +98,7 @@ public class Radar extends CharDynamicHUD
 		painter.angle = nowAngle;
 		painter.printNew();
 		
-		int x, y, r=size[0]/2;
+		int x, y, r = (size[0]>>1);
 		double theta = Math.toRadians(nowAngle);
 		for(int i=0 ; i<r ; ++i)
 		{
@@ -116,7 +117,7 @@ public class Radar extends CharDynamicHUD
 	public void makeNewReady()
 	{
 		Aircraft aTarget = null;
-		double range, r=size[0] / 2;
+		double range, r = (size[0]>>1);
 		int x, y;
 		
 		for(int i=0 ; i<size[1] ; ++i)

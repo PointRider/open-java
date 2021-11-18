@@ -2,6 +2,7 @@ package dogfight_Z;
 
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.PriorityQueue;
 
 import dogfight_Z.Ammo.Missile;
@@ -13,8 +14,8 @@ import graphic_Z.utils.GraphicUtils;
 public class NPC extends Aircraft
 {
 	//------------------------------------------
-	private short		missileFireWaitingTime;
-	private short		missileFireWaitingTimeLeft;
+	private int		missileFireWaitingTime;
+	private int		missileFireWaitingTimeLeft;
 	//---------------[tracing]------------------
 	public double searching_visibility;
 	public Aircraft		tracingTarget;
@@ -25,16 +26,16 @@ public class NPC extends Aircraft
 	public Aircraft		currentSelectObj;
 	public boolean		locked;
 	public boolean		lockingSelected;
-	public short		lockTime;
-	public short		lockTimeLeft;
-	public short		currentMaxLockingPriority;
-	public short		scrResolution[];
+	public int		lockTime;
+	public int		lockTimeLeft;
+	public int		currentMaxLockingPriority;
+	public int		scrResolution[];
 	public double		point_on_Scr[];
 	//public double		point_on_Old[];
 	//---------------[cruise]-------------------
-	private short		goStreetTime;
-	private short		turnLRTime;
-	private short		roll_up_dn_Time;
+	private int		goStreetTime;
+	private int		turnLRTime;
+	private int		roll_up_dn_Time;
 	private boolean		turnRight;
 	private boolean		turnUp;
 	//------------------------------------------
@@ -48,18 +49,18 @@ public class NPC extends Aircraft
 		double					Mess, 
 		double					searching_visibility,
 		double					max_motionRate,
-		short					scrResolution_X,
-		short 					scrResolution_Y,
-		short					camp,
+		int					    scrResolution_X,
+		int 					scrResolution_Y,
+		int					    camp,
 		PriorityQueue<Dynamic>	firedAmmo, 
 		PriorityQueue<Dynamic>	Effects,  
 		LinkedList<ThreeDs>		add_que,
-		LinkedList<ThreeDs>		delete_que,
-		HashSet<ThreeDs>		Aircrafts
+		LinkedList<ListIterator<ThreeDs>>		delete_que,
+		LinkedList<ThreeDs>		Aircrafts
 	)
 	{
 		super(theGame, modelFile, Mess, camp, firedAmmo, Effects, delete_que, add_que, Aircrafts, null, id, true);
-		scrResolution		= new short[2];
+		scrResolution		= new int[2];
 		point_on_Scr		= new double[2];
 		//point_on_Old		= new double[2];
 		maxMotionRate		= max_motionRate;

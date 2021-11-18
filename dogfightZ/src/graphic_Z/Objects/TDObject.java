@@ -22,8 +22,9 @@ public abstract class TDObject
 		double result[/*3*/]  //x, y, z
 	)
 	{
-		double X, Y, Z;
-		
+		double X, Y, Z, cos$, sin$, 
+			r2 = Math.toRadians(rz), r1 = Math.toRadians(ry), r0 = Math.toRadians(rx);
+		/*
 		X = GraphicUtils.cos(Math.atan(Y0/X0)+Math.toRadians(rz))*Math.sqrt(X0*X0+Y0*Y0);
 		Y = GraphicUtils.sin(Math.atan(Y0/X0)+Math.toRadians(rz))*Math.sqrt(X0*X0+Y0*Y0);
 		Y0 = (X0<0)?(-Y):Y;
@@ -36,10 +37,28 @@ public abstract class TDObject
 		Y = GraphicUtils.sin(Math.atan(Y0/Z0)+Math.toRadians(rx))*Math.sqrt(Z0*Z0+Y0*Y0);
 		Y0 = (Z0<0)?(-Y):Y;
 		Z0 = (Z0<0)?(-Z):Z;
+		*/
+		cos$ = GraphicUtils.cos(r2);
+		sin$ = GraphicUtils.sin(r2);
+		X = cos$ * X0 - sin$ * Y0;
+		Y = sin$ * X0 + cos$ * Y0;
+		X0 = X;
+		Y0 = Y;
+
+		cos$ = GraphicUtils.cos(r1);
+		sin$ = GraphicUtils.sin(r1);
+		X = cos$ * X0 - sin$ * Z0;
+		Z = sin$ * X0 + cos$ * Z0;
+		Z0 = Z;
+
+		cos$ = GraphicUtils.cos(r0);
+		sin$ = GraphicUtils.sin(r0);
+		Z = cos$ * Z0 - sin$ * Y0;
+		Y = sin$ * Z0 + cos$ * Y0;
 		
-		result[0] = X0;
-		result[1] = Y0;
-		result[2] = Z0;
+		result[0] = X;
+		result[1] = Y;
+		result[2] = Z;
 	}
 	
 	public static void getXYZ_beforeRolling
@@ -47,9 +66,10 @@ public abstract class TDObject
 		double X0, double Y0, double Z0,
 		double rx, double ry, double rz,
 		
-		double result[/*3*/]  //x, y, z
+		double result[]  //x, y, z
 	)
 	{
+		/*
 		double X, Y, Z;
 		
 		Z = GraphicUtils.cos(Math.atan(Y0/Z0)+Math.toRadians(-rx))*Math.sqrt(Z0*Z0+Y0*Y0);
@@ -64,10 +84,31 @@ public abstract class TDObject
 		Y = GraphicUtils.sin(Math.atan(Y0/X0)+Math.toRadians(-rz))*Math.sqrt(X0*X0+Y0*Y0);
 		Y0 = (X0<0)?(-Y):Y;
 		X0 = (X0<0)?(-X):X;
+		*/
+		double X, Y, Z, cos$, sin$, 
+			r2 = -Math.toRadians(rz), r1 = -Math.toRadians(ry), r0 = -Math.toRadians(rx);
+
+		cos$ = GraphicUtils.cos(r0);
+		sin$ = GraphicUtils.sin(r0);
+		Z = cos$ * Z0 - sin$ * Y0;
+		Y = sin$ * Z0 + cos$ * Y0;
+		Z0 = Z;
+		Y0 = Y;
+	
+		cos$ = GraphicUtils.cos(r1);
+		sin$ = GraphicUtils.sin(r1);
+		X = cos$ * X0 - sin$ * Z0;
+		Z = sin$ * X0 + cos$ * Z0;
+		X0 = X;
 		
-		result[0] = X0;
-		result[1] = Y0;
-		result[2] = Z0;
+		cos$ = GraphicUtils.cos(r2);
+		sin$ = GraphicUtils.sin(r2);
+		X = cos$ * X0 - sin$ * Y0;
+		Y = sin$ * X0 + cos$ * Y0;
+			
+		result[0] = X;
+		result[1] = Y;
+		result[2] = Z;
 	}
 	
 	public TDObject()

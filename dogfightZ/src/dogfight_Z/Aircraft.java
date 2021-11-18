@@ -2,6 +2,7 @@ package dogfight_Z;
 
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.PriorityQueue;
 
 import dogfight_Z.Ammo.CannonAmmo;
@@ -19,13 +20,13 @@ import graphic_Z.utils.GraphicUtils;
 public class Aircraft extends CharMessObject
 {
 	public String ID;
-	public short HP;
-	public short camp;
-	public short lockingPriority;
-	public short lockingPriority_backup;
+	public int HP;
+	public int camp;
+	public int lockingPriority;
+	public int lockingPriority_backup;
 	public Game	 game;
-	public LinkedList<ThreeDs> deleteQue;
-	public HashSet<ThreeDs>	   aircrafts;
+	public LinkedList<ListIterator<ThreeDs>> deleteQue;
+	public LinkedList<ThreeDs>	   aircrafts;
 	public boolean isPlayer;
 	
 	public double speed;
@@ -66,7 +67,7 @@ public class Aircraft extends CharMessObject
 			
 	public PriorityQueue<Dynamic> fired;
 	public PriorityQueue<Dynamic> effects;
-	public short 	cameraLocationFlag;
+	public int 	cameraLocationFlag;
 	
 	//---------[state]----------
 	public boolean  isPushing;
@@ -84,16 +85,16 @@ public class Aircraft extends CharMessObject
 	//---------[ammo]-----------
 	public int		missileMagazine;				//单次挂载最大弹容量
 	public int		missileMagazineLeft;			//当前挂载导弹余量
-	public short	missileReloadingTime;			//重新挂载时间
-	public short	missileReloadingTimeLeft;		//重新挂载时间剩余
+	public int	missileReloadingTime;			//重新挂载时间
+	public int	missileReloadingTimeLeft;		//重新挂载时间剩余
 	public int		cannonMagazine;					//单次装填最大弹容量
 	public int		cannonMagazineLeft;				//当前装填炮弹余量
-	public short	cannonReloadingTime;			//重新装填时间
-	public short	cannonReloadingTimeLeft;		//重新装填时间剩余
+	public int	cannonReloadingTime;			//重新装填时间
+	public int	cannonReloadingTimeLeft;		//重新装填时间剩余
 	public int		decoyMagazine;					//单次诱饵弹装填最大弹容量
 	public int		decoyMagazineLeft;				//当前诱饵弹装填炮弹余量
-	public short	decoyReloadingTime;				//诱饵弹装填时间
-	public short	decoyReloadingTimeLeft;			//诱饵弹装填时间剩余
+	public int	decoyReloadingTime;				//诱饵弹装填时间
+	public int	decoyReloadingTimeLeft;			//诱饵弹装填时间剩余
 	public double	effectMakingLocation[][];
 	//--------------------------
 	public int killed;
@@ -130,12 +131,12 @@ public class Aircraft extends CharMessObject
 		Game                   theGame,
 		String                 modelFile, 
 		double                 Mess, 
-		short                  Camp,
+		int                    Camp,
 		PriorityQueue<Dynamic> firedAmmo, 
 		PriorityQueue<Dynamic> Effects, 
-		LinkedList<ThreeDs>	   delete_que,
+		LinkedList<ListIterator<ThreeDs>>	   delete_que,
 		LinkedList<ThreeDs>	   add_que,
-		HashSet<ThreeDs>	   Aircrafts,
+		LinkedList<ThreeDs>	   Aircrafts,
 		CharFrapsCamera		   MainCamera, 
 		String                 id,
 		boolean                line
@@ -217,19 +218,27 @@ public class Aircraft extends CharMessObject
 	
 	public void getRelativePosition_XY(double y, double z, double result[])
 	{
-		double Y, Z;
+		double Y, Z, cos$, sin$, r0 = Math.toRadians(cameraRollAngle[0]);
 		
 		y -= location[1];
 		z -= location[2];
-		
+		/*
 		Z = GraphicUtils.cos(Math.atan(y/z)+Math.toRadians(cameraRollAngle[0]))*Math.sqrt(z*z+y*y);
 		Y = GraphicUtils.sin(Math.atan(y/z)+Math.toRadians(cameraRollAngle[0]))*Math.sqrt(z*z+y*y);
+		*/
+		cos$ = GraphicUtils.cos(r0);
+		sin$ = GraphicUtils.sin(r0);
+		Z = cos$ * z - sin$ * y;
+		Y = sin$ * z + cos$ * y;
+		/*
+		z = Z;
+		y = Y;
 		
 		y = (z<0)?(-Y):Y;
 		z = (z<0)?(-Z):Z;
-		
-		result[0] = y;
-		result[1] = z;
+		*/
+		result[0] = Y;
+		result[1] = Z;
 	}
 	
 	public Aircraft
@@ -240,9 +249,9 @@ public class Aircraft extends CharMessObject
 		short Camp,
 		PriorityQueue<Dynamic> firedAmmo, 
 		PriorityQueue<Dynamic> Effects,  
-		LinkedList<ThreeDs>	   delete_que,
+		LinkedList<ListIterator<ThreeDs>>	   delete_que,
 		LinkedList<ThreeDs>	   add_que,
-		HashSet<ThreeDs>	   Aircrafts,
+		LinkedList<ThreeDs>	   Aircrafts,
 		CharFrapsCamera		   MainCamera,
 		boolean                line
 	)
@@ -467,7 +476,7 @@ public class Aircraft extends CharMessObject
 			new DecoyMaker
 			(
 				camp, location, roll_angle, speed, 10, 
-				(short)300, 0.02, 0.125, 
+				300, 0.02, 0.125, 
 				addWatingQueue, deleteQue, effects
 			);
 
@@ -520,7 +529,7 @@ public class Aircraft extends CharMessObject
 			{
 				m = new Missile
 				(
-					(short)1280, speed/2+5, 512, resistanceRate_normal, 
+					1280, speed/2+5, 512, resistanceRate_normal, 
 					cannonLocation, roll_angle, 20, 512, 3.0, this, target, mainCamera
 				);
 			}
@@ -528,14 +537,14 @@ public class Aircraft extends CharMessObject
 			{
 				m = new Missile
 				(
-					(short)1280, speed/2+5, 512, resistanceRate_normal, 
+					1280, speed/2+5, 512, resistanceRate_normal, 
 					cannonLocation, roll_angle, 20, 512, 3.0, this, target, null
 				);
 			}
 			
 			fired.add(m);
 			
-			colorFlash(255, 255, 255, 0, 64, 96, (short)6);
+			colorFlash(255, 255, 255, 0, 64, 96, 6);
 			if(++cannonGunFlg == 4)
 				cannonGunFlg = 0;
 
@@ -551,7 +560,7 @@ public class Aircraft extends CharMessObject
 	(
 		int R_Fore, int G_Fore, int B_Fore, 
 		int R_Back, int G_Back, int B_Back, 
-		short time
+		int time
 	)
 	{
 		game.colorFlash(R_Fore, G_Fore, B_Fore, R_Back, G_Back, B_Back, time, this);
@@ -597,19 +606,27 @@ public class Aircraft extends CharMessObject
 		effectMakingLocation[1][1] += location[1];
 		effectMakingLocation[1][2] += location[2];
 		
-		effects.add(new EngineFlame(effectMakingLocation[0], (short)50, '*'));
-		effects.add(new EngineFlame(effectMakingLocation[1], (short)50, '*'));
+		effects.add(new EngineFlame(effectMakingLocation[0], 50, '*'));
+		effects.add(new EngineFlame(effectMakingLocation[1], 50, '*'));
 	}
 	
 	public void doMotion()
 	{
 		//------------[go street]------------
-		double x, y, z, t, tmp = Math.toRadians(roll_angle[0]);
+		double x, y, z, t/*, tmp = Math.toRadians(roll_angle[0])*/;
+		/*
 		double r1 = Math.toRadians(roll_angle[1]), r2 = GraphicUtils.cos(tmp);
 		t = GraphicUtils.cos(r1) * speed;
 		x = GraphicUtils.tan(r1) * t;
 		y = GraphicUtils.sin(tmp) * t;
 		z = r2 * t;
+		*/
+		double r1 = Math.toRadians(roll_angle[1]);
+		double r2 = Math.toRadians(roll_angle[0]);
+		t  = GraphicUtils.cos(r1) * speed;
+		x  = GraphicUtils.sin(r1) * speed;
+		y  = GraphicUtils.sin(r2) * t;
+		z  = GraphicUtils.cos(r2) * t;
 		
 		location[0]	-= x;
 		location[1]	+= y;
@@ -655,11 +672,10 @@ public class Aircraft extends CharMessObject
 			motionRate = 0.8;
 			if(location[0] > 0) location[0] = 0;
 			if (
-				Math.abs(velocity_roll[0]) > 0.7 * maxVelRollUp ||
-				Math.abs(velocity_roll[2]) > 0.7 * maxVelRollLR
+				Math.abs(velocity_roll[0]) > 0.6 * maxVelRollUp ||
+				Math.abs(velocity_roll[2]) > 0.6 * maxVelRollLR
 			)	wingsEffectRun();
 		}
-		
 	}
 	
 	public void weaponSystemRun()
@@ -710,11 +726,11 @@ public class Aircraft extends CharMessObject
 					(
 						new CannonAmmo
 						(
-							(short)600, camp, 400 + speed, resistanceRate_normal, 
+							600, camp, 400 + speed, resistanceRate_normal, 
 							cannonLocation, roll_angle, aircrafts, effects, this
 						)
 					);
-					colorFlash(255, 224, 128, 0, 0, 0, (short)3);
+					colorFlash(255, 224, 128, 0, 0, 0, 3);
 					cannonFireLoadTime = 2;
 					
 					if(++cannonGunFlg == 4)

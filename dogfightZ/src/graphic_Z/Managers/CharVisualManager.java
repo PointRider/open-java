@@ -40,7 +40,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	private     ExecutorService              epool;
 	//private Thread staticObjExposureThread;
 	
-	public CharVisualManager(short resolution_X, short resolution_Y, CharWorld inWhichWorld, JTextArea main_scr)
+	public CharVisualManager(int resolution_X, int resolution_Y, CharWorld inWhichWorld, JTextArea main_scr)
 	{
 		super(resolution_X, resolution_Y, inWhichWorld);
 		
@@ -93,15 +93,15 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		epool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 	}
 	
-	public void reSizeScreen(short x, short y) {
+	public void reSizeScreen(int x, int y) {
 		
 		fraps_buffer = new char[y][];
 		emptyLine    = new char[x];
 		
-		for(short i=0 ; i<y ; ++i)
+		for(int i=0 ; i<y ; ++i)
 			fraps_buffer[i] = new char[x];
 
-		for(short i=0 ; i<x ; ++i)
+		for(int i=0 ; i<x ; ++i)
 			emptyLine[i] = blank;
 		
 		scr_show = new StringBuilder(x * y);
@@ -151,19 +151,19 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		return newCma;
 	}
 	
-	public CharHUD newHUD(String HUDImgFile, short HUDLayer, boolean transparentAtSpace)
+	public CharHUD newHUD(String HUDImgFile, int HUDLayer, boolean transparentAtSpace)
 	{
 		CharHUD newHud = new CharHUD(HUDImgFile, fraps_buffer, HUDLayer, resolution, transparentAtSpace);
 		HUDs.add(newHud);
 		return newHud;
 	}
 	
-	public CharHUD newHUD(String HUDImgFile, short HUDLayer)
+	public CharHUD newHUD(String HUDImgFile, int HUDLayer)
 	{
 		return newHUD(HUDImgFile, HUDLayer, true);
 	}
 	
-	public CharDynamicHUD newDynamicHUD(String HUDImgFile, short HUDLayer, short size_X, short size_Y)
+	public CharDynamicHUD newDynamicHUD(String HUDImgFile, int HUDLayer, int size_X, int size_Y)
 	{
 		CharDynamicHUD newHud = new CharDynamicHUD
 		(
@@ -187,7 +187,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		HUDs.add(newHud);
 	}
 	
-	public CharImage newImage(String HUDImgFile, short HUDLayer, short size_X, short size_Y, short locatX, short locatY) {
+	public CharImage newImage(String HUDImgFile, int HUDLayer, int size_X, int size_Y, int locatX, int locatY) {
 		CharImage newHud = new CharImage (
 			HUDImgFile, 
 			fraps_buffer, 
@@ -202,9 +202,9 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	
 	public CharLoopingScrollBar newLoopingScrollBar
 	(
-		String HUDImgFile, short HUDLayer, 
-		short size_X, short size_Y,
-		short size_Show, CharLoopingScrollBar.Direction direction
+		String HUDImgFile, int HUDLayer, 
+		int size_X, int size_Y,
+		int size_Show, CharLoopingScrollBar.Direction direction
 	)
 	{
 		CharLoopingScrollBar newHud = new CharLoopingScrollBar
@@ -212,15 +212,15 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 			HUDImgFile, fraps_buffer, 
 			HUDLayer, resolution, 
 			size_X, size_Y, 
-			(short)(resolution[0]/2), (short)(resolution[1]/2),
-			direction, (short)0, size_Show
+			(resolution[0]>>1), (resolution[1]>>1),
+			direction, 0, size_Show
 		);
 		
 		HUDs.add(newHud);
 		return newHud;
 	}
 	
-	public CharLabel newLabel(String Text, short location_X,  short location_Y, short HUDLayer)
+	public CharLabel newLabel(String Text, int location_X,  int location_Y, int HUDLayer)
 	{
 		CharLabel newLbl = 
 			new CharLabel(fraps_buffer, HUDLayer, resolution, Text, location_X, location_Y);
@@ -235,13 +235,13 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	
 	public CharProgressBar newProgressBar
 	(
-		short	location_X,  
-		short	location_Y, 
-		short	HUDLayer,
-		short	size,
-		char	visual,
+		int	   location_X,  
+		int	   location_Y, 
+		int	   HUDLayer,
+		int	   size,
+		char   visual,
 		CharProgressBar.Direction direction,
-		double	value
+		double value
 	)
 	{
 		CharProgressBar newBar = 
@@ -252,10 +252,10 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	
 	public CharProgressBar newProgressBar
 	(
-		short	location_X,  
-		short	location_Y, 
-		short	HUDLayer,
-		short	size,
+		int	location_X,  
+		int	location_Y, 
+		int	HUDLayer,
+		int	size,
 		char	visual,
 		CharProgressBar.Direction direction
 	)
@@ -273,8 +273,6 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	
 	public void refresh()
 	{
-		
-		
 		for(CharFrapsCamera aCamera : cameras) {
 			//new Thread(aCamera).start();
 
