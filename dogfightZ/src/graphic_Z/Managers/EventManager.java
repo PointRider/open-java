@@ -66,7 +66,7 @@ public class EventManager extends JFrame
 		mainScr.setEditable(false);
 		mainScr.setFocusable(false);
 		mainScr.setText("Loading...\nPlease wait.");
-		mainScr.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 10));
+		mainScr.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 8));
 		mainScr.setBackground(new Color(0, 0, 0));
 		mainScr.setForeground(new Color(255, 255, 255));
 		//mainScr.setBackground(new Color(255, 200, 64));

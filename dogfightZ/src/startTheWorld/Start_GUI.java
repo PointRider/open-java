@@ -193,7 +193,7 @@ public class Start_GUI extends JFrame {
 								"resources/config_NPC.cfg",
 								"resources/gameRecord.rec",
 								"resources/config_OST.cfg",
-								"160", "83", "64"
+								"192", "108", "64"
 							);
 							try
 							{

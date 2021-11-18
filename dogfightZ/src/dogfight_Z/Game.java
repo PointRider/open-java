@@ -109,7 +109,7 @@ public class Game extends CharTimeSpace implements Runnable
 	
 	private final int resolution_min = Math.min(visualManager.getResolution_X(), visualManager.getResolution_Y()) >> 1;
 	private int keyPressed;
-	private int scrSize = 10;
+	private int scrSize = 8;
 	private boolean flgWheelUp, flgWheelDn;
 	private Aircraft lockedEnemy = null;
 	//--------------------------------
@@ -228,7 +228,7 @@ public class Game extends CharTimeSpace implements Runnable
 		(
 			hud_file12,
 			visualManager.fraps_buffer,
-			1001,
+			32767,
 			visualManager.resolution,
 			44, 27,
 			(resolution_X >> 1),
@@ -393,7 +393,7 @@ public class Game extends CharTimeSpace implements Runnable
 		hud_turn_lr_scrollBar		= visualManager.newLoopingScrollBar(hud_file3, 32, 72, 2, 71, CharLoopingScrollBar.Direction.horizon);
 		hud_turn_lr_scrollBar.location[1] = resolution_Y - 1;
 		hud_roll_up_dn_scrollBar.location[0] = (int) (resolution_X * 0.2);
-		hud_crosshair = visualManager.newImage(hud_file4, 32767, 65, 11, ((resolution_X >> 1) - (65 >> 1)), ((resolution_Y >> 1) - (11 >> 1)));
+		hud_crosshair = visualManager.newImage(hud_file4, 32765, 65, 11, ((resolution_X >> 1) - (65 >> 1)), ((resolution_Y >> 1) - (11 >> 1)));
 		//"107"  "57" 160 84
 		hud_Radar = new Radar
 		(
