@@ -63,4 +63,10 @@ public class CharImage extends CharHUD
 			}
 		}
 	}
+	
+    public void setLocation(int X, int Y)
+    {
+        location[0] = X;
+        location[1] = Y;
+    }
 }

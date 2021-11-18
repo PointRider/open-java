@@ -175,9 +175,9 @@ private static ArrayList<double[]> missileModelData;
 		lockingPriority = 0;
 		visible = false;
 		isAlive = false;
-		end = true;/*
+		end = true;
 		if(myPosition != null) deleteQue.add(myPosition);
-		else System.err.println("null");*/
+		else System.err.println("null");
 	}
 
 	@Override

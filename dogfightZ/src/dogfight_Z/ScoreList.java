@@ -29,7 +29,14 @@ public class ScoreList extends CharDynamicHUD
 		camp = players_camp;
 	}
 	
-
+	/*
+    @Override
+    public void setLocation(int X, int Y)
+    {
+        super.setLocation(X, Y);
+        temp.setLocation(X, Y);
+    }
+	*/
 	public void reSizeScreen(int resolution[], char fraps_buffer[][]) {
 		super.reSizeScreen(resolution, fraps_buffer);
 		temp.reSizeScreen(resolution, fraps_buffer);

@@ -1,7 +1,5 @@
 package graphic_Z.Managers;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.PriorityQueue;
@@ -10,10 +8,11 @@ import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Objects.CharMessObject;
 import graphic_Z.Objects.CharObject;
+import graphic_Z.utils.LinkedListZ;
 
 public class CharObjectsManager extends TDObjectsManager
 {
-	public LinkedList<ThreeDs> objects;
+	public LinkedListZ<ThreeDs> objects;
 	public List<Iterable<ThreeDs>> staticObjLists;
 	public List<Iterable<Dynamic>> dynamicObjLists;
 	public List<PriorityQueue<Dynamic>> selfDisposable;
@@ -21,7 +20,7 @@ public class CharObjectsManager extends TDObjectsManager
 	public CharObjectsManager()
 	{
 		count = 0;
-		objects         = new LinkedList<ThreeDs>();
+		objects         = new LinkedListZ<ThreeDs>();
 		staticObjLists  = new ArrayList<Iterable<ThreeDs>>();
 		dynamicObjLists = new ArrayList<Iterable<Dynamic>>();
 		selfDisposable  = new ArrayList<PriorityQueue<Dynamic>>();
@@ -47,10 +46,7 @@ public class CharObjectsManager extends TDObjectsManager
 	
 	public ListIterator<ThreeDs> newObject(ThreeDs newObj)
 	{
-		objects.addLast(newObj);
-		ListIterator<ThreeDs> it = objects.listIterator();
-		it.next();
-		return null;
+		return objects.pushBack(newObj);
 	}
 	
 	public ListIterator<ThreeDs> newObject(String modelFile)

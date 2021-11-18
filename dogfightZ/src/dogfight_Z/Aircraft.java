@@ -1,6 +1,5 @@
 package dogfight_Z;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.PriorityQueue;
@@ -16,6 +15,7 @@ import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Objects.CharMessObject;
 import graphic_Z.Worlds.CharTimeSpace;
 import graphic_Z.utils.GraphicUtils;
+import graphic_Z.utils.LinkedListZ;
 
 public class Aircraft extends CharMessObject
 {
@@ -26,7 +26,7 @@ public class Aircraft extends CharMessObject
 	public int lockingPriority_backup;
 	public Game	 game;
 	public LinkedList<ListIterator<ThreeDs>> deleteQue;
-	public LinkedList<ThreeDs>	   aircrafts;
+	public LinkedListZ<ThreeDs>	   aircrafts;
 	public boolean isPlayer;
 	
 	public double speed;
@@ -136,7 +136,7 @@ public class Aircraft extends CharMessObject
 		PriorityQueue<Dynamic> Effects, 
 		LinkedList<ListIterator<ThreeDs>>	   delete_que,
 		LinkedList<ThreeDs>	   add_que,
-		LinkedList<ThreeDs>	   Aircrafts,
+		LinkedListZ<ThreeDs>   Aircrafts,
 		CharFrapsCamera		   MainCamera, 
 		String                 id,
 		boolean                line
@@ -251,7 +251,7 @@ public class Aircraft extends CharMessObject
 		PriorityQueue<Dynamic> Effects,  
 		LinkedList<ListIterator<ThreeDs>>	   delete_que,
 		LinkedList<ThreeDs>	   add_que,
-		LinkedList<ThreeDs>	   Aircrafts,
+		LinkedListZ<ThreeDs>   Aircrafts,
 		CharFrapsCamera		   MainCamera,
 		boolean                line
 	)

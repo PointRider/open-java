@@ -1,6 +1,5 @@
 package dogfight_Z;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.PriorityQueue;
@@ -10,6 +9,7 @@ import graphic_Z.Cameras.CharFrapsCamera;
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.utils.GraphicUtils;
+import graphic_Z.utils.LinkedListZ;
 
 public class NPC extends Aircraft
 {
@@ -56,7 +56,7 @@ public class NPC extends Aircraft
 		PriorityQueue<Dynamic>	Effects,  
 		LinkedList<ThreeDs>		add_que,
 		LinkedList<ListIterator<ThreeDs>>		delete_que,
-		LinkedList<ThreeDs>		Aircrafts
+		LinkedListZ<ThreeDs>	Aircrafts
 	)
 	{
 		super(theGame, modelFile, Mess, camp, firedAmmo, Effects, delete_que, add_que, Aircrafts, null, id, true);

@@ -363,6 +363,8 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		inWorld.visualManager.reSizeScreen(x, y);
 		resolution   = inWorld.visualManager.resolution;
 		fraps_buffer = inWorld.visualManager.fraps_buffer;
+        XcenterI = resolution[0] >> 1;
+        YcenterI = resolution[1] >> 1;
 	}
 	
 	interface XYLambdaI {

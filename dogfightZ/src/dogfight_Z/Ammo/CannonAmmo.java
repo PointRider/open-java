@@ -1,8 +1,6 @@
 package dogfight_Z.Ammo;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 import dogfight_Z.Aircraft;
@@ -13,6 +11,7 @@ import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Objects.CharMessObject;
 import graphic_Z.utils.GraphicUtils;
 //import graphic_Z.Worlds.CharTimeSpace;
+import graphic_Z.utils.LinkedListZ;
 
 public class CannonAmmo extends CharMessObject implements Dynamic
 {
@@ -28,7 +27,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 	public		  double[]	temp;
 	public        PriorityQueue<Dynamic> effects;
 	public		  Aircraft	from;
-	public		  LinkedList<ThreeDs> aircrafts;
+	public		  LinkedListZ<ThreeDs> aircrafts;
 	
 	private static ArrayList<double[]> missileModelData;
 	static {
@@ -86,7 +85,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 		double resistance_rate,
 		double Location[],
 		double Roll_angle[],
-		LinkedList<ThreeDs> Aircrafts,
+		LinkedListZ<ThreeDs> Aircrafts,
 		PriorityQueue<Dynamic> Effects,
 		Aircraft souce
 	)

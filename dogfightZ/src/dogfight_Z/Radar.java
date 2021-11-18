@@ -3,17 +3,16 @@ package dogfight_Z;
 import java.io.EOFException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.LinkedList;
 
 import graphic_Z.HUDs.CharDynamicHUD;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.utils.GraphicUtils;
+import graphic_Z.utils.LinkedListZ;
 
 public class Radar extends CharDynamicHUD
 {
 	public Aircraft myself;
-	public LinkedList<ThreeDs> aircrafts;
+	public LinkedListZ<ThreeDs> aircrafts;
 	public double maxSearchRange;
 	public double tmp_double_xy[];
 	public char Img[][];
@@ -38,7 +37,7 @@ public class Radar extends CharDynamicHUD
 		int Location_X,
 		int Location_Y,
 		Aircraft myJet,
-		LinkedList<ThreeDs> aircraftsList,
+		LinkedListZ<ThreeDs> aircraftsList,
 		double maxSearch_range
 	)
 	{
@@ -113,6 +112,13 @@ public class Radar extends CharDynamicHUD
 		nowAngle %= 360;
 		super.printNew();
 	}
+	
+	@Override
+    public void setLocation(int X, int Y)
+    {
+        super.setLocation(X, Y);
+        painter.setLocation(X, Y);
+    }
 	
 	public void makeNewReady()
 	{
