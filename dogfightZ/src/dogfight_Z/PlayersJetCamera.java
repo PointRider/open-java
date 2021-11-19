@@ -132,11 +132,11 @@ public class PlayersJetCamera extends CharFrapsCamera
 			if(rge > maxSearchingRange) try
 			{
 				Aircraft tmp = (Aircraft)aObject;
-				if(!tmp.ID.equals(myJet.ID))	//防止视角跟随导弹行进时将自己的进行战机拉回
+				if(!tmp.getID().equals(myJet.getID()))	//防止视角跟随导弹行进时将自己的进行战机拉回
 					tmp.pollBack();
 			} catch(ClassCastException e) {}
 			
-			if(a==null || a.ID.equals(myJet.ID) || !a.isAlive || !myJet.isAlive) continue;
+			if(a==null || a.getID().equals(myJet.getID()) || !a.isAlive || !myJet.isAlive) continue;
 			
 			double range_to_Scr = CharFrapsCamera.getXY_onCamera
 			(
@@ -178,7 +178,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 					}
 					else //未发生优先级切换
 					{
-						if(/*myJet.missileMagazineLeft > 0  &&  */currentSelectObj!=null && a!=null && currentSelectObj.ID.equals(a.ID)  &&  !reversed)//
+						if(/*myJet.missileMagazineLeft > 0  &&  */currentSelectObj!=null && a!=null && currentSelectObj.getID().equals(a.getID())  &&  !reversed)//
 						{//如果正在锁定或者已锁定了a
 							lockingSelected = true;//设置已选择锁定a的状态
 							if(locked)//已锁定

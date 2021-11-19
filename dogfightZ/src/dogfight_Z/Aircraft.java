@@ -19,7 +19,7 @@ import graphic_Z.utils.LinkedListZ;
 
 public class Aircraft extends CharMessObject
 {
-	public String ID;
+	private String ID;
 	public int HP;
 	public int camp;
 	public int lockingPriority;
@@ -973,6 +973,14 @@ public class Aircraft extends CharMessObject
 		isAlive = true;
 	}
 	
+	public void setID(String id) {
+	    this.ID = new String(id);
+	}
+
+    public String getID() {
+        return this.ID;
+    }
+    
 	public void pollBack()
 	{
 		/*

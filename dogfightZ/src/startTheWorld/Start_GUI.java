@@ -173,7 +173,7 @@ public class Start_GUI extends JFrame {
 					{
 						public void actionPerformed(ActionEvent e)
 						{
-							ProcessBuilder pb=new ProcessBuilder
+							ProcessBuilder pb = new ProcessBuilder
 							(
 								"java", "dogfight_Z.GameRun",
 								"resources/Jet.dat",
@@ -193,7 +193,7 @@ public class Start_GUI extends JFrame {
 								"resources/config_NPC.cfg",
 								"resources/gameRecord.rec",
 								"resources/config_OST.cfg",
-								"192", "108", "64"
+								"192", "108", "64", "8"
 							);
 							try
 							{

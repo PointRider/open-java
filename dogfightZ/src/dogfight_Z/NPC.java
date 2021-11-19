@@ -154,7 +154,7 @@ public class NPC extends Aircraft
 							CharFrapsCamera.rangeXY(point_on_Scr[0], point_on_Scr[1], halfAResolution_X, halfAResolution_Y) < 24
 						)
 						{
-							if(currentSelectObj == null || currentMaxLockingPriority < Math.abs(aJet.lockingPriority) && !currentSelectObj.ID.equals(aJet.ID))
+							if(currentSelectObj == null || currentMaxLockingPriority < Math.abs(aJet.lockingPriority) && !currentSelectObj.getID().equals(aJet.getID()))
 							{	//当前选择目标切换到优先级更高的	(发生切换)
 								if(aJet.lockingPriority > 0)
 									tracingTarget			= aJet;
@@ -166,7 +166,7 @@ public class NPC extends Aircraft
 							}
 							else
 							{
-								if(currentSelectObj!=null && aJet!=null && currentSelectObj.ID.equals(aJet.ID))
+								if(currentSelectObj!=null && aJet!=null && currentSelectObj.getID().equals(aJet.getID()))
 								{
 									lockingSelected = true;
 									if(locked)
@@ -414,7 +414,7 @@ public class NPC extends Aircraft
 					//point_on_Old[0] = point_on_Scr[0];
 					//point_on_Old[1] = point_on_Scr[1];
 					
-					if(currentSelectObj == null || currentMaxLockingPriority < Math.abs(aJet.lockingPriority) && !currentSelectObj.ID.equals(aJet.ID))
+					if(currentSelectObj == null || currentMaxLockingPriority < Math.abs(aJet.lockingPriority) && !currentSelectObj.getID().equals(aJet.getID()))
 					{
 						if(aJet.lockingPriority > 0)
 							tracingTarget			= aJet;
@@ -470,11 +470,11 @@ public class NPC extends Aircraft
 	
 	public void rename(String newName)
 	{
-		ID = newName;
+		setID(newName);
 	}
 	
 	public void rename()
 	{
-		ID = "NPC " + (int)(Math.random()*100);
+		setID("NPC " + (int)(Math.random()*100));
 	}
 }

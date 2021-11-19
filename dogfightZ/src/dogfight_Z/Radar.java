@@ -135,7 +135,7 @@ public class Radar extends CharDynamicHUD
 		for(ThreeDs a : aircrafts)
 		{
 			aTarget = (Aircraft) a;
-			if(aTarget.ID.equals(myself.ID) || aTarget.camp == -1 || !aTarget.isAlive)
+			if(aTarget.getID().equals(myself.getID()) || aTarget.camp == -1 || !aTarget.isAlive)
 				continue;
 			myself.getRelativePosition_XY(aTarget.location[1], aTarget.location[2], tmp_double_xy);
 			

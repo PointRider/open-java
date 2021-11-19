@@ -17,7 +17,6 @@ import dogfight_Z.Ammo.Missile;
 
 import graphic_Z.Common.SinglePoint;
 import graphic_Z.HUDs.CharDynamicHUD;
-import graphic_Z.HUDs.CharHUD;
 import graphic_Z.HUDs.CharImage;
 import graphic_Z.HUDs.CharLabel;
 import graphic_Z.HUDs.CharLoopingScrollBar;
@@ -54,7 +53,7 @@ public class Game extends CharTimeSpace implements Runnable
 	public CharLabel lblGameTimeLeft;
 	public CharLabel lblKillTipList;
 
-	public CharHUD 				EndScreen;
+	public CharLabel 			EndScreen;
 	
 	public CharDynamicHUD		hud_roll_up_dn_angle;
 	
@@ -164,290 +163,325 @@ public class Game extends CharTimeSpace implements Runnable
 		return npc;
 	}
 	
+	public void initClasses() {
+        try{
+            Class.forName("dogfight_Z.Ammo.CannonAmmo");
+            Class.forName("dogfight_Z.Ammo.Decoy");
+            Class.forName("dogfight_Z.Ammo.Missile");
+            Class.forName("dogfight_Z.Effects.EngineFlame");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+	}
+	
+	public void initUI(int fontSize) {
+        eventManager.setTitle("dogfightZ");
+        scrSize = fontSize;
+        eventManager.setScrZoom(fontSize);
+        killTipListUpdateTimeLeft = killTipListUpdateTime = 450;
+        maxKillTipCount       = 7;
+        colorChangedTime      = 0;
+	}
+	
+	public void initDatastructure(String hud_scoreListBG, int resolutionX, int resolutionY) {
+	    tmp = new StringBuilder();
+        firedAmmo = new PriorityQueue<Dynamic>();
+        objectsManager.newSelfDisposableObjList(firedAmmo);
+        effects = new PriorityQueue<Dynamic>();
+        objectsManager.newSelfDisposableObjList(effects);
+        
+        killTipList = new LinkedList<String>();
+        deleteQue = new LinkedList<ListIterator<ThreeDs>>();
+        waitToAddQue = new LinkedList<ThreeDs>();
+        
+        scoreShow = new ScoreList(
+                hud_scoreListBG,
+                visualManager.fraps_buffer,
+                32767,
+                visualManager.resolution,
+                44, 27,
+                resolutionX >> 1,
+                resolutionY >> 1,
+                false, scoreList, playersCamp
+            );
+	}
+	/*
+	 "resources/MyJetHUD_Friend.hud" 
+	 "resources/MyJetHUD_Enemy.hud" 
+	 "resources/MyJetHUD_Locking.hud" 
+	 "resources/MyJetHUD_Locked.hud" 
+	 "resources/MissileWarning.hud" 
+	 */
+	public void initMainCamera(
+	        String hud_friend,
+	        String hud_enemy,
+	        String hud_locking,
+	        String hud_locked,
+	        String hud_missileWarning
+	    ) {
+	    mainCamera = new PlayersJetCamera (
+            fov, visibility, 
+            visibility * 10, 0, 100, 
+            visualManager.resolution, 
+            visualManager.fraps_buffer,
+            this, myJet, 
+            new CharDynamicHUD (
+                hud_friend,
+                visualManager.fraps_buffer,
+                0, visualManager.resolution,
+                6, 5
+            ), 
+            new CharDynamicHUD (
+                hud_enemy,
+                visualManager.fraps_buffer,
+                0, visualManager.resolution,
+                5, 6
+            ),
+            new CharDynamicHUD (
+                hud_locking,
+                visualManager.fraps_buffer,
+                0, visualManager.resolution,
+                5, 6
+            ),
+            new CharDynamicHUD (
+                hud_locked,
+                visualManager.fraps_buffer,
+                0, visualManager.resolution,
+                5, 6
+            ),
+            new CharDynamicHUD (
+                hud_missileWarning,
+                visualManager.fraps_buffer,
+                0, visualManager.resolution,
+                7, 6
+            ),
+            visualManager.staticObjLists
+        );
+        visualManager.newCamera(mainCamera);
+	}
+	
+	public void initMe(
+	        String myJetModel_file, 
+            String hud_friend,
+            String hud_enemy,
+            String hud_locking,
+            String hud_locked,
+            String hud_missileWarning
+        ) {
+
+        myJet = new Aircraft(this, myJetModel_file, 10000, playersCamp, firedAmmo, effects, deleteQue, waitToAddQue, objectsManager.objects, null, "Me", true);
+        //myJet.setLocation(0, 0, 60);
+        scoreList.add(myJet);
+        objectsManager.newMessObject(myJet);
+
+        initMainCamera(hud_friend, hud_enemy, hud_locking, hud_locked, hud_missileWarning);
+
+        myJet.mainCamera = mainCamera;
+        mainCamera.connectLocationAndAngle(myJet.cameraLocation, myJet.cameraRollAngle);
+        myJet.randomRespawn();
+        myJet.visible = true;
+	}
+
+    /**
+     * myJet.setID(id)
+     * gameTime -> gameTimeUsed, gameStopTime
+     * ? x NPC(id, diff, camp)
+     */
+	public void initPlayers(String myJetModel_file, String cfg_file, String rec_file) {
+        long gameTime;
+        respawnTime  = 10;   //seconds
+        playersCamp  = 0;
+        maxAmmoCount = 400;
+        cfgFile = cfg_file;
+        recFile = rec_file;
+        try(FileReader reader = new FileReader(new File(cfgFile))) {
+            String tmp;
+            int c;
+            tmp = "";
+            while((c = reader.read()) != '\n')
+                tmp = tmp + (char)c;
+
+            myJet.setID(tmp);
+            
+            tmp = "";
+            while((c = reader.read()) != '\n' && c != -1)
+                tmp = tmp + (char)c;
+            
+            gameTime = Long.parseLong(tmp);
+            if(gameTime > 0)
+                gameStopTime = gameTime + System.currentTimeMillis()/1000;
+            else gameStopTime = -1;
+            
+            gameTimeUsed = gameTime;
+            
+            String id, diff, cmp;
+            if(c != -1) while(true)
+            {
+                tmp = "";
+                while((c = reader.read()) != -1 && c != '\n')
+                    tmp = tmp + (char)c;
+                
+                id = new String(tmp);
+                
+                tmp = "";
+                while((c = reader.read()) != '\n')
+                    tmp = tmp + (char)c;
+                diff = new String(tmp);
+                
+                tmp = "";
+                while((c = reader.read()) != '\n'  && c != -1)
+                    tmp = tmp + (char)c;
+                
+                cmp = new String(tmp);
+                newNPC(myJetModel_file, id, 10000, visibility * 10, Double.parseDouble(diff), Integer.parseInt(cmp)).randomRespawn();
+                
+                if(c == -1)
+                    break;
+            }
+        }   catch(IOException exc) {}
+	}
+	
+	public void initHUDs(
+	        int resolutionX, int resolutionY, 
+	        String hud_horizonIndicator,
+	        String hud_crosshairImg,
+	        String hud_loopingScrollBar_vertical,
+	        String hud_loopingScrollBar_horizon,
+	        String hud_radarBG,
+	        String hud_radarPrinter
+	    ) {
+	    scoreShow.visible = false;
+        visualManager.newDynamicHUD(scoreShow);
+        EndScreen = visualManager.newLabel("      TIME UP\nPress ESC Key To Exit.", ((resolutionX>>1) - 9), (int)(resolutionY * 0.3), 999);
+        EndScreen.visible = false;
+        
+        final int progressBarLocationBaseX = (int) (resolutionX * 0.75);
+        final int progressBarLocationBaseY = (int) (resolutionY * 0.65);
+
+        mainCamera.hudWarning_missile.location[0] = (resolutionX - 16);
+        mainCamera.hudWarning_missile.location[1] = (resolutionY >> 1);
+        
+        lbl1 = visualManager.newLabel(" ", (resolutionX - 18), (int)(resolutionY * 0.3), 100);
+        lbl2 = visualManager.newLabel(" ", (resolutionX - 18), (int)(resolutionY * 0.3 + 1), 101);
+        lbl3 = visualManager.newLabel(" ", (resolutionX - 18), (int)(resolutionY * 0.3 + 2), 102);
+        lbl4 = visualManager.newLabel(" ", (resolutionX - 18), (int)(resolutionY * 0.3 + 3), 103);
+        lbl5 = visualManager.newLabel("HP:[                    ]", progressBarLocationBaseX, progressBarLocationBaseY, 204);
+        lbl6 = visualManager.newLabel("AB:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 2), 207);
+        lbl7 = visualManager.newLabel("CN:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 4), 206);
+        lbl8 = visualManager.newLabel("MS:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 6), 208);
+        lbl9 = visualManager.newLabel("DC:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 8), 256);
+        
+        lblRespawnTimeLeft = visualManager.newLabel(" ", ((resolutionX>>1) - 9), (int)(resolutionY * 0.3), 999);
+        lblGameTimeLeft = visualManager.newLabel(" ", ((resolutionX>>1) - 11), 3, 998);
+        lblKillTipList = visualManager.newLabel(" ", 3, 3, 123);
+        
+        hud_HP_progressBar          = visualManager.newProgressBar((progressBarLocationBaseX + 4), progressBarLocationBaseY, 205, 20, '|', CharProgressBar.Direction.horizon, 1.0);
+        hud_pushTime_progressBar    = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 2), 209, 20, '|', CharProgressBar.Direction.horizon, 1.0);
+        
+        hud_cannon_progressBar = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 4), 210, 20, '|', CharProgressBar.Direction.horizon, 1.0);
+        hud_cannonReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 5), 212, 25, '-', CharProgressBar.Direction.horizon, 1.0);
+        hud_missile_progressBar = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 6), 214, 20, '|', CharProgressBar.Direction.horizon, 1.0);
+        hud_missileReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 7), 216, 25, '-', CharProgressBar.Direction.horizon, 1.0);
+        hud_decoy_progressBar = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 8), 218, 20, '|', CharProgressBar.Direction.horizon, 1.0);
+        hud_decoyReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 9), 220, 25, '-', CharProgressBar.Direction.horizon, 1.0);
+        
+        hud_roll_up_dn_angle        = visualManager.newDynamicHUD(hud_horizonIndicator, 21, 51, 33);
+        hud_roll_up_dn_scrollBar    = visualManager.newLoopingScrollBar(hud_loopingScrollBar_vertical, 50, 72, 4, 43, CharLoopingScrollBar.Direction.vertical);
+        hud_turn_lr_scrollBar       = visualManager.newLoopingScrollBar(hud_loopingScrollBar_horizon, 32, 72, 2, 71, CharLoopingScrollBar.Direction.horizon);
+        hud_turn_lr_scrollBar.location[1] = resolutionY - 1;
+        hud_roll_up_dn_scrollBar.location[0] = (int) (resolutionX * 0.2);
+        hud_crosshair = visualManager.newImage(hud_crosshairImg, 32765, 65, 11, ((resolutionX >> 1) - (65 >> 1)), ((resolutionY >> 1) - (11 >> 1)));
+        //"107"  "57" 160 84
+        hud_Radar = new Radar
+        (
+            hud_radarBG, 
+            hud_radarPrinter,
+            visualManager.fraps_buffer, 124, visualManager.resolution, 
+            21, (visualManager.resolution[0] - 12), 
+            11, myJet, objectsManager.objects, visibility * 10
+        );
+        visualManager.newDynamicHUD(hud_Radar);
+	}
+	
+	public void initClouds() {
+        clouds = new ArrayList<ThreeDs>();
+        objectsManager.newStaticObjectList(clouds);
+
+        cloudRefreshRateController = new HzController(refreshHz >> 1); //32Hz
+        cloudMan = new CloudsManager(clouds, cloudRefreshRateController, myJet.location, visibility);
+        cloudManThread = new Thread(cloudMan);
+	}
+	
+	public void initKeyboardAndMouse() {
+        Object mouse = new MouseWheelControl(eventManager.EventFrapsQueue_keyboard);
+        eventManager.mainScr.addMouseWheelListener((MouseWheelListener) mouse);
+        eventManager.mainScr.addMouseListener((MouseListener) mouse);
+        eventManager.addKeyListener(new ContinueListener(this, Thread.currentThread()));
+
+        keyState_W =
+        keyState_A =
+        keyState_S =
+        keyState_D =
+        keyState_X =
+        keyState_V =
+        keyState_TAB =
+        keyState_SPACE =
+        keyState_SHIFT = false;
+	}
+	
+	public void initSoundTrack(String bgm_file) {
+        soundTrack    = new SoundTrack(bgm_file);
+        bgmThread     = new Thread(soundTrack);
+	}
+	
 	public Game
 	(
 		String myJetModel_file,
-		String hud_file1,
-		String hud_file2,
-		String hud_file3,
-		String hud_file4,
-		String hud_file5,
-		String hud_file6,
-		String hud_file7,
-		String hud_file8,
-		String hud_file9,
-		String hud_file10,
-		String hud_file11,
-		String hud_file12,
-		String hud_file13,
+		String hud_horizonIndicator,
+		String hud_loopingScrollBar_vertical,
+		String hud_loopingScrollBar_horizon,
+		String hud_crosshairImg,
+        String hud_friend,
+        String hud_enemy,
+        String hud_locking,
+        String hud_locked,
+        String hud_missileWarning,
+		String hud_radarBG,
+		String hud_radarPrinter,
+		String hud_scoreListBG,
 		String cfg_file,
 		String rec_file,
 		String bgm_file,
-		int resolution_X, 
-		int resolution_Y, 
-		int refresh_rate
+		int resolutionX, 
+		int resolutionY, 
+		int refresh_rate,
+		int fontSize
 	)
 	{
-		super(resolution_X, resolution_Y, refresh_rate);
-		eventManager.setTitle("dogfight_Z");
+		super(resolutionX, resolutionY, refresh_rate);
 		
-		try{
-			Class.forName("dogfight_Z.Ammo.CannonAmmo");
-			Class.forName("dogfight_Z.Ammo.Decoy");
-			Class.forName("dogfight_Z.Ammo.Missile");
-			Class.forName("dogfight_Z.Effects.EngineFlame");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
+		initClasses();
+		initUI(fontSize);
 		initRank();
-		
-		cfgFile = cfg_file;
-		recFile = rec_file;
-		
-		EndScreen = visualManager.newHUD(hud_file13, (short)1000, false);
-		EndScreen.visible = false;
-		
-		killTipListUpdateTimeLeft = killTipListUpdateTime = 450;
-		maxKillTipCount		  = 7;
-		colorChangedTime	  = 0;
-		tmp = new StringBuilder();
-		firedAmmo = new PriorityQueue<Dynamic>();
-		objectsManager.newSelfDisposableObjList(firedAmmo);
-		effects = new PriorityQueue<Dynamic>();
-		objectsManager.newSelfDisposableObjList(effects);
-		
-		killTipList = new LinkedList<String>();
-		deleteQue = new LinkedList<ListIterator<ThreeDs>>();
-		waitToAddQue = new LinkedList<ThreeDs>();
-
-		playersCamp = 0;
-		respawnTime = 10;	//seconds
-		
-		scoreShow = new ScoreList
-		(
-			hud_file12,
-			visualManager.fraps_buffer,
-			32767,
-			visualManager.resolution,
-			44, 27,
-			(resolution_X >> 1),
-			(resolution_Y >> 1),
-			false, scoreList, playersCamp
-		);
-		
-		scoreShow.visible = false;
-		visualManager.newDynamicHUD(scoreShow);
-		
-		myJet = new Aircraft(this, myJetModel_file, 10000, playersCamp, firedAmmo, effects, deleteQue, waitToAddQue, objectsManager.objects, null, "Me", true);
-		//myJet.setLocation(0, 0, 60);
-		scoreList.add(myJet);
-		objectsManager.newMessObject(myJet);
-		
-		LinkedList<Aircraft> NPCs = new LinkedList<Aircraft>();
-		/*
-		missileTestTarget0 = newNPC(myJetModel_file, "Enemy 0", 10000, visibility * 10, 1, (short)1);
-		missileTestTarget1 = newNPC(myJetModel_file, "Enemy 1", 10000, visibility * 10, 1, (short)1);
-		missileTestTarget2 = newNPC(myJetModel_file, "Friend 0", 10000, visibility * 10, 1, playersCamp);
-		*/
-		long gameTime;
-		try(FileReader reader = new FileReader(new File(cfgFile)))
-		{
-			String tmp;
-			int c;
-			tmp = "";
-			while((c = reader.read()) != '\n')
-				tmp = tmp + (char)c;
-
-			myJet.ID = new String(tmp);
-			
-			tmp = "";
-			while((c = reader.read()) != '\n' && c != -1)
-				tmp = tmp + (char)c;
-			
-			gameTime = Long.parseLong(tmp);
-			if(gameTime > 0)
-				gameStopTime = gameTime + System.currentTimeMillis()/1000;
-			else gameStopTime = -1;
-			
-			gameTimeUsed = gameTime;
-			
-			String id, diff, cmp;
-			if(c != -1) while(true)
-			{
-				tmp = "";
-				while((c = reader.read()) != -1 && c != '\n')
-					tmp = tmp + (char)c;
-				
-				id = new String(tmp);
-				
-				tmp = "";
-				while((c = reader.read()) != '\n')
-					tmp = tmp + (char)c;
-				diff = new String(tmp);
-				
-				tmp = "";
-				while((c = reader.read()) != '\n'  && c != -1)
-					tmp = tmp + (char)c;
-				
-				cmp = new String(tmp);
-				NPCs.add(newNPC(myJetModel_file, id, 10000, visibility * 10, Double.parseDouble(diff), Short.parseShort(cmp)));
-				
-				if(c == -1)
-					break;
-			}
-		}	catch(IOException exc){}
-		mainCamera = new PlayersJetCamera
-				(
-					fov, visibility, 
-					visibility * 10, 0, 100, 
-					visualManager.resolution, 
-					visualManager.fraps_buffer,
-					this, myJet, 
-					new CharDynamicHUD
-					(
-						hud_file5,
-						visualManager.fraps_buffer,
-						0, visualManager.resolution,
-						6, 5
-					),
-					new CharDynamicHUD
-					(
-						hud_file6,
-						visualManager.fraps_buffer,
-						0, visualManager.resolution,
-						5, 6
-					),
-					new CharDynamicHUD
-					(
-						hud_file7,
-						visualManager.fraps_buffer,
-						0, visualManager.resolution,
-						5, 6
-					),
-					new CharDynamicHUD
-					(
-						hud_file8,
-						visualManager.fraps_buffer,
-						0, visualManager.resolution,
-						5, 6
-					),
-					new CharDynamicHUD
-					(
-						hud_file9,
-						visualManager.fraps_buffer,
-						0, visualManager.resolution,
-						7, 6
-					),
-					visualManager.staticObjLists
-				);
-
-		//mainCamera.connectLocationAndAngle(missileTestTarget2.location, missileTestTarget2.cameraRollAngle);
-		mainCamera.connectLocationAndAngle(myJet.cameraLocation, myJet.cameraRollAngle);
-		myJet.mainCamera = mainCamera;
-		visualManager.newCamera(mainCamera);
-		
-		myJet.randomRespawn();
-		
-		for(Aircraft a:NPCs)
-			a.randomRespawn();
-		/*
-		missileTestTarget0.randomRespawn();
-		missileTestTarget1.randomRespawn();
-		missileTestTarget2.randomRespawn();
-		*/
-		//----------------[HUDs]----------------
-		
-		final int progressBarLocationBaseX = (int) (resolution_X * 0.75);
-		final int progressBarLocationBaseY = (int) (resolution_Y * 0.65);
-
-		mainCamera.hudWarning_missile.location[0] = (resolution_X - 16);
-		mainCamera.hudWarning_missile.location[1] = (resolution_Y >> 1);
-		
-		lbl1 = visualManager.newLabel(" ", (resolution_X - 18), (int)(resolution_Y * 0.3), 100);
-		lbl2 = visualManager.newLabel(" ", (resolution_X - 18), (int)(resolution_Y * 0.3 + 1), 101);
-		lbl3 = visualManager.newLabel(" ", (resolution_X - 18), (int)(resolution_Y * 0.3 + 2), 102);
-		lbl4 = visualManager.newLabel(" ", (resolution_X - 18), (int)(resolution_Y * 0.3 + 3), 103);
-		lbl5 = visualManager.newLabel("HP:[                    ]", progressBarLocationBaseX, progressBarLocationBaseY, 204);
-		lbl6 = visualManager.newLabel("AB:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 2), 207);
-		lbl7 = visualManager.newLabel("CN:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 4), 206);
-		lbl8 = visualManager.newLabel("MS:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 6), 208);
-		lbl9 = visualManager.newLabel("DC:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 8), 256);
-				
-		lblRespawnTimeLeft = visualManager.newLabel(" ", ((resolution_X>>1) - 9), (int)(resolution_Y * 0.3), 999);
-		lblGameTimeLeft = visualManager.newLabel(" ", ((resolution_X>>1) - 11), 3, 998);
-		lblKillTipList = visualManager.newLabel(" ", 3, 3, 123);
-		
-		hud_HP_progressBar			= visualManager.newProgressBar((progressBarLocationBaseX + 4), progressBarLocationBaseY, 205, 20, '|', CharProgressBar.Direction.horizon, 1.0);
-		hud_pushTime_progressBar	= visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 2), 209, 20, '|', CharProgressBar.Direction.horizon, 1.0);
-		
-		hud_cannon_progressBar = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 4), 210, 20, '|', CharProgressBar.Direction.horizon, 1.0);
-		hud_cannonReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 5), 212, 25, '-', CharProgressBar.Direction.horizon, 1.0);
-		hud_missile_progressBar = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 6), 214, 20, '|', CharProgressBar.Direction.horizon, 1.0);
-		hud_missileReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 7), 216, 25, '-', CharProgressBar.Direction.horizon, 1.0);
-		hud_decoy_progressBar = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 8), 218, 20, '|', CharProgressBar.Direction.horizon, 1.0);
-		hud_decoyReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 9), 220, 25, '-', CharProgressBar.Direction.horizon, 1.0);
-		
-		hud_roll_up_dn_angle		= visualManager.newDynamicHUD(hud_file1, 21, 51, 33);
-		hud_roll_up_dn_scrollBar	= visualManager.newLoopingScrollBar(hud_file2, 50, 72, 4, 43, CharLoopingScrollBar.Direction.vertical);
-		hud_turn_lr_scrollBar		= visualManager.newLoopingScrollBar(hud_file3, 32, 72, 2, 71, CharLoopingScrollBar.Direction.horizon);
-		hud_turn_lr_scrollBar.location[1] = resolution_Y - 1;
-		hud_roll_up_dn_scrollBar.location[0] = (int) (resolution_X * 0.2);
-		hud_crosshair = visualManager.newImage(hud_file4, 32765, 65, 11, ((resolution_X >> 1) - (65 >> 1)), ((resolution_Y >> 1) - (11 >> 1)));
-		//"107"  "57" 160 84
-		hud_Radar = new Radar
-		(
-			hud_file10, 
-			hud_file11,
-			visualManager.fraps_buffer, 124, visualManager.resolution, 
-			21, (visualManager.resolution[0] - 12), 
-			11, myJet, objectsManager.objects, visibility * 10
-		);
-		visualManager.newDynamicHUD(hud_Radar);
-		//-------------------------------------
-		//--------------[clouds]---------------
-		clouds = new ArrayList<ThreeDs>();
-		objectsManager.newStaticObjectList(clouds);
-
-		cloudRefreshRateController = new HzController(refreshHz >> 1); //32Hz
-		cloudMan = new CloudsManager(clouds, cloudRefreshRateController, myJet.location, visibility);
-		cloudManThread = new Thread(cloudMan);
-		//-------------------------------------
-		Object mouse = new MouseWheelControl(eventManager.EventFrapsQueue_keyboard);
-		eventManager.mainScr.addMouseWheelListener((MouseWheelListener) mouse);
-		eventManager.mainScr.addMouseListener((MouseListener) mouse);
-		eventManager.addKeyListener(new ContinueListener(this, Thread.currentThread()));
-
-		maxAmmoCount   = 400;
-		
-		getIntoTheWorld();
-
-		myJet.visible = true;
-		
-		//printNew();
-		//---------------[keys]---------------
-		keyState_W =
-		keyState_A =
-		keyState_S =
-		keyState_D =
-		keyState_X =
-		keyState_V =
-		keyState_TAB =
-		keyState_SPACE =
-		keyState_SHIFT = false;
-		//------------------------------------
-
-		cloudManThread.start();
-		
-		soundTrack = new SoundTrack(bgm_file);
-		bgmThread = new Thread(soundTrack);
-		bgmThread.start();
-		
+		initDatastructure(hud_scoreListBG, resolutionX, resolutionY);
+		initMe(myJetModel_file, hud_friend, hud_enemy, hud_locking, hud_locked, hud_missileWarning);
+		initPlayers(myJetModel_file, cfg_file, rec_file);
+        initHUDs(resolutionX, resolutionY, 
+            hud_horizonIndicator,
+            hud_crosshairImg,
+            hud_loopingScrollBar_vertical,
+            hud_loopingScrollBar_horizon,
+            hud_radarBG,
+            hud_radarPrinter
+        );
+        initClouds();
+        initKeyboardAndMouse();
+        initSoundTrack(bgm_file);
 	}
 	
 	public void addKillTip(Aircraft killer, Aircraft deader, String WeaponName)
 	{
-		killTipList.addLast(killer.ID + " >>" + WeaponName + ">> " + deader.ID);
+		killTipList.addLast(killer.getID() + " >>" + WeaponName + ">> " + deader.getID());
 		if(killTipList.size() > maxKillTipCount)
 			killTipList.removeFirst();
 		
@@ -468,7 +502,7 @@ public class Game extends CharTimeSpace implements Runnable
 		int time, Aircraft source
 	)
 	{
-		if(source.ID.equals(myJet.ID))
+		if(source.getID().equals(myJet.getID()))
 		{
 			eventManager.mainScr.setForeground(new Color(R_Fore, G_Fore, B_Fore));
 			eventManager.mainScr.setBackground(new Color(R_Back, G_Back, B_Back));
@@ -513,7 +547,8 @@ public class Game extends CharTimeSpace implements Runnable
         lbl7.setLocation(progressBarLocationBaseX, progressBarLocationBaseY + 4);
         lbl8.setLocation(progressBarLocationBaseX, progressBarLocationBaseY + 6);
         lbl9.setLocation(progressBarLocationBaseX, progressBarLocationBaseY + 8);
-        
+
+        EndScreen.setLocation(((resolution_X>>1) - 9), (int)(resolution_Y * 0.3));
         lblRespawnTimeLeft.setLocation(((resolution_X>>1) - 9), (int)(resolution_Y * 0.3));
         lblGameTimeLeft.setLocation(((resolution_X>>1) - 11), 3);
         
@@ -802,10 +837,14 @@ public class Game extends CharTimeSpace implements Runnable
 	public void run()
 	{
 		//double tmp_double_arr_2[] = new double[2];
+	    
 		long leftTime = 0;
 		long hor, min, sec;
 		if(gameStopTime == -1)
 			lblGameTimeLeft.visible = false;
+		
+        cloudManThread.start();
+        bgmThread.start();
 		
 		//游戏主循环
 		while(gameStopTime == -1  ||  (leftTime = gameStopTime - System.currentTimeMillis()/1000) > 0)
@@ -818,65 +857,9 @@ public class Game extends CharTimeSpace implements Runnable
 				sec = (leftTime - hor*3600) % 60;
 				lblGameTimeLeft.setText("Round Time Left: " + Long.toString(hor) + ':' + Long.toString(min) + ':' + Long.toString(sec));
 			}
-			//if(!paused)
-			//{
-			//---------------[Labels]----------------
-			/*
-			lbl1.setText("0, r0: " + myJet.location[0] + ',' + myJet.roll_angle[0]);
-			lbl2.setText("1, r1: " + myJet.location[1] + ',' + myJet.roll_angle[1]);
-			lbl3.setText("2, r2: " + myJet.location[2] + ',' + myJet.roll_angle[2]);
-			*/
 			
 			updateKillList();
 			updateHUD();
-			
-			/*
-			//lbl1.setText("speed: " + missileTestTarget2.speed * 7.5);
-			lbl1.setText("r_z:   " + missileTestTarget2.roll_angle[2]);
-			lbl2.setText("shift: " + missileTestTarget2.control_stick_acc);
-			lbl3.setText("rpm:   " + Aircraft.getCurrentRPM(missileTestTarget2.max_rpm, missileTestTarget2.control_stick_acc));
-			lbl4.setText("hight: " + -missileTestTarget2.location[0]);
-			
-			hud_HP_progressBar.value = missileTestTarget2.HP / 100.0;
-			hud_pushTime_progressBar.value = missileTestTarget2.pushTimeLeft / missileTestTarget2.maxPushTime;
-			//--------------------------------------
-			
-			hud_cannon_progressBar.value = (double)missileTestTarget2.cannonMagazineLeft / (double)missileTestTarget2.cannonMagazine;
-			if(missileTestTarget2.cannonMagazineLeft == 0)
-			{
-				hud_cannonReloading_progressBar.visible = true;
-				hud_cannonReloading_progressBar.value = 1.0 - (double)missileTestTarget2.cannonReloadingTimeLeft / (double)missileTestTarget2.cannonReloadingTime;	
-			}
-			else hud_cannonReloading_progressBar.visible = false;
-			
-			hud_missile_progressBar.value = (double)missileTestTarget2.missileMagazineLeft / (double)missileTestTarget2.missileMagazine;
-			if(missileTestTarget2.missileMagazineLeft == 0)
-			{
-				hud_missileReloading_progressBar.visible = true;
-				hud_missileReloading_progressBar.value = 1.0 - (double)missileTestTarget2.missileReloadingTimeLeft / (double)missileTestTarget2.missileReloadingTime;	
-			}
-			else hud_missileReloading_progressBar.visible = false;
-			
-			hud_decoy_progressBar.value = (double)missileTestTarget2.decoyMagazineLeft / (double)missileTestTarget2.decoyMagazine;
-			if(missileTestTarget2.decoyMagazineLeft == 0)
-			{
-				hud_decoyReloading_progressBar.visible = true;
-				hud_decoyReloading_progressBar.value = 1.0 - (double)missileTestTarget2.decoyReloadingTimeLeft / (double)missileTestTarget2.decoyReloadingTime;	
-			}
-			else hud_decoyReloading_progressBar.visible = false;
-			*/
-			
-			/*
-			
-			hud_roll_up_dn_angle.angle = Math.abs(missileTestTarget2.roll_angle[1]) > 90.0? missileTestTarget2.roll_angle[2] + 180 : missileTestTarget2.roll_angle[2];
-			
-			hud_roll_up_dn_angle.location[0] = (short) (GraphicUtils.sin(Math.toRadians(missileTestTarget2.roll_angle[2])) * GraphicUtils.sin(Math.toRadians(Math.abs(missileTestTarget2.roll_angle[1]) > 90.0? -missileTestTarget2.roll_angle[1] : missileTestTarget2.roll_angle[1])) * -resolution_min + visualManager.getResolution_X()/2);
-			hud_roll_up_dn_angle.location[1] = (short) (GraphicUtils.cos(Math.toRadians(missileTestTarget2.roll_angle[2])) * GraphicUtils.sin(Math.toRadians(Math.abs(missileTestTarget2.roll_angle[1]) > 90.0?  missileTestTarget2.roll_angle[1] :-missileTestTarget2.roll_angle[1])) * -resolution_min + visualManager.getResolution_Y()/2);
-			
-			hud_roll_up_dn_scrollBar.value = (short) (missileTestTarget2.roll_angle[1] / 360 * 72);
-			hud_turn_lr_scrollBar.value = (short) (-missileTestTarget2.roll_angle[0] / 360 * 72);
-			*/
-			//--------------------------------------
 			
 			while(!deleteQue.isEmpty()) {
 			    deleteQue.poll().remove();
@@ -908,7 +891,7 @@ public class Game extends CharTimeSpace implements Runnable
 			printNew();
 			//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 		}
-		
+		myJet.visible = false;
 		buffStatic();
 		EndScreen.visible = true;
 		scoreShow.visible = true;
@@ -916,7 +899,7 @@ public class Game extends CharTimeSpace implements Runnable
 		
 		try(FileWriter fw = new FileWriter(new File(recFile), true))
 		{
-			fw.write(myJet.ID);
+			fw.write(myJet.getID());
 			fw.write('\n');
 			fw.write(Long.toString(gameTimeUsed));
 			fw.write('\n');

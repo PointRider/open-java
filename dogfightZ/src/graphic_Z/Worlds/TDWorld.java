@@ -17,8 +17,7 @@ public abstract class TDWorld<WorldType, ObjectType, HUDType>
 		refreshHz = refresh_rate;
 	}
 	
-	public void getIntoTheWorld()
-	{
+	public void getIntoGameWorld() {
 		eventManager.setVisible(true);
 	}
 	

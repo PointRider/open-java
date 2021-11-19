@@ -47,25 +47,25 @@ public class EventManager extends JFrame
 		keyResponse		= new KeyboardResponse(EventFrapsQueue_keyboard, maxKeyBufferSize);
 		mouseResponse	= new MouseResponse(EventFrapsQueue_mouse);
 		
-		PCScreenCenter_X = ((int)java.awt.Toolkit.getDefaultToolkit().getScreenSize().width / 2);
-		PCScreenCenter_Y = ((int)java.awt.Toolkit.getDefaultToolkit().getScreenSize().height / 2);
+		PCScreenCenter_X = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width >> 1);
+		PCScreenCenter_Y = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height >> 1);
 		
 		addKeyListener(keyResponse);
 		
-		setSize(PCScreenCenter_X * 2, PCScreenCenter_Y * 2);
+		setSize(PCScreenCenter_X << 1, PCScreenCenter_Y << 1);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		//---------------------------Setup GUI----------------------------------
 		setLocation(0, 0);
 		setUndecorated(true);
-		//setOpacity(0.8f);
+		//setOpacity(0.9f);
 		
 		mainScr = new JTextArea();
 		mainScr.setLocation(0, 0);
-		mainScr.setSize(PCScreenCenter_X * 2, PCScreenCenter_Y * 2);
+		mainScr.setSize(PCScreenCenter_X << 1, PCScreenCenter_Y << 1);
 		mainScr.setEditable(false);
 		mainScr.setFocusable(false);
-		mainScr.setText("Loading...\nPlease wait.");
+		mainScr.setText("Welcome to the game world !");
 		mainScr.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 8));
 		mainScr.setBackground(new Color(0, 0, 0));
 		mainScr.setForeground(new Color(255, 255, 255));

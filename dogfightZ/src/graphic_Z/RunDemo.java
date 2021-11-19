@@ -58,7 +58,7 @@ public class RunDemo
 		mainBox.velocity_roll[1] = 0;
 		int key;
 		
-		testWorld.getIntoTheWorld();
+		testWorld.getIntoGameWorld();
 		while(true)
 		{
 			testWorld.buffStatic();

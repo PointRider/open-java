@@ -65,7 +65,7 @@ public class ScoreList extends CharDynamicHUD
 			
 			for(Aircraft a : list)
 			{
-				temp.setText(a.ID);
+				temp.setText(a.getID());
 				temp.setLocation((short)(location[0] + 3 - centerX), (short)(location[1] + 4 + line - centerY));
 				temp.printNew();
 				
