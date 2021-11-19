@@ -189,7 +189,6 @@ public class Start_GUI extends JFrame {
 								"resources/RadarHUD.hud",
 								"resources/RaderPainter.hud",
 								"resources/ScoreHUD.hud",
-								"resources/GameOver.hud",
 								"resources/config_NPC.cfg",
 								"resources/gameRecord.rec",
 								"resources/config_OST.cfg",
