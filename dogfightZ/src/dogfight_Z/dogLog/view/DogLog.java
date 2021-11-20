@@ -85,6 +85,7 @@ public class DogLog extends JFrame {
                 DogMenu menu = menuStack.peek(), tmp = null;
                 Color c;
                 Operation o  = menu.putKeyHit(keyCode);
+                
                 if(o != null) {
                     if(o.isGoBack() && menu != baseMenu) {
                         menuStack.pop();

@@ -81,10 +81,30 @@ public class DogRegist extends Menu {
             15, 
             32
         );
+
+        lblUserPassConfirm = new CharLabel(
+            screenBuffer, 
+            1, 
+            resolution, 
+            " Confirm:", 
+            8, 
+            18,
+            false
+        );
         
+        pasUserPassConfirm = new CharPasswordEdit(
+            screenBuffer, 
+            resolution, 
+            20, 
+            18, 
+            32
+        );
+        
+        //--------------------------------------------
         textBoxes = new CharSingleLineTextEdit[] {
             tbUsername,
-            pasUserPass
+            pasUserPass,
+            pasUserPassConfirm
         };
         
     }
@@ -99,6 +119,9 @@ public class DogRegist extends Menu {
         case 1:
             pasUserPass.setSelected(true);
             break;
+        case 2:
+            pasUserPassConfirm.setSelected(true);
+            break;
         }
         
         clearScreenBuffer();
@@ -110,6 +133,9 @@ public class DogRegist extends Menu {
         
         lblUserPass.printNew();
         pasUserPass.printNew();
+        
+        lblUserPassConfirm.printNew();
+        pasUserPassConfirm.printNew();
         
         setScreen(screen);
     }
@@ -129,8 +155,12 @@ public class DogRegist extends Menu {
             indexDown();
             break;
         case KeyEvent.VK_ENTER:
-            //opt = new Operation(false, null, new Color(64, 96, 128));
-            //opt = entries[getSelectedIndex()].call();
+            if(selected >= 0  &&  selected < textBoxes.length) {
+                indexDown();
+            } else {
+                //opt = new Operation(false, null, new Color(64, 96, 128));
+                //opt = entries[getSelectedIndex()].call();
+            }
             break;
         default:
             if(selected >= 0  &&  selected < textBoxes.length) {
@@ -145,6 +175,7 @@ public class DogRegist extends Menu {
 
     @Override
     public Operation putKeyType(int keyChar) {
+        if(keyChar == '\n'  ||  keyChar == '\r') return null;
         int selected = getSelectedIndex();
         if(selected >= 0  &&  selected < textBoxes.length) {
             textBoxes[selected].setSelected(true);
