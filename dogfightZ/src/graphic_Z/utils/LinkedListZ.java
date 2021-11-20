@@ -76,6 +76,10 @@ public class LinkedListZ<ElementType> implements Iterable<ElementType>, Deque<El
         public boolean hasNext() {
             return current != fromList.entry;
         }
+        
+        public boolean at(Iterator another) {
+            return current == another.current;
+        }
 
         @Override
         public ElementType next() {

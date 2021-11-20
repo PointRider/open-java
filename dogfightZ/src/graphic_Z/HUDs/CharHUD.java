@@ -40,6 +40,7 @@ public class CharHUD extends HUD
 		this.fraps_buffer = fraps_buffer;
 	}
 	
+	@Override
 	public void printNew()
 	{
 		if(visible) for(int i=0 ; i<resolution[1] ; ++i) for(int j=0 ; j<resolution[0] ; ++j)

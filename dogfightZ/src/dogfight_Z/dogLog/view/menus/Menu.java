@@ -2,15 +2,16 @@ package dogfight_Z.dogLog.view.menus;
 
 import javax.swing.JTextArea;
 
-public abstract class MainMenu implements DogMenu {
+public abstract class Menu implements DogMenu {
     
-    protected final String  menuIndices[];
+    //protected final String  menuIndices[];
     protected int           resolution[];
     protected char          screenBuffer[][];
     private   StringBuilder screenBuilder;
     private   Integer       selectedIndex;
     private   Object        mutex;
     private   char          emptyLine[];
+    private   int           selectableCount;
     
     protected static final  String logoString = 
               "ooooo   oooo   ooooo oooooo oooo  ooooo oo  oo oooooo   @@@@@@\n"
@@ -21,10 +22,11 @@ public abstract class MainMenu implements DogMenu {
             + "==============================================================\n"
             + "=============================================================="; 
     
-    public MainMenu(String menuIndices[], int resolutionX, int resolutionY) {
+    public Menu(int selectableCount, int resolutionX, int resolutionY) {
         mutex              = new Object();
         resolution         = new int[2];
-        this.menuIndices   = menuIndices;
+        //this.menuIndices   = menuIndices;
+        this.selectableCount = selectableCount;
         this.resolution[0] = resolutionX;
         this.resolution[1] = resolutionY;
         selectedIndex      = 0;
@@ -51,13 +53,13 @@ public abstract class MainMenu implements DogMenu {
     
     public void indexUp() {
         synchronized(selectedIndex) {
-            if(selectedIndex-- == 0) selectedIndex = menuIndices.length - 1;
+            if(selectedIndex-- == 0) selectedIndex = selectableCount - 1;
         }
     }
     
     public void indexDown() {
         synchronized(selectedIndex) {
-            if(++selectedIndex >= menuIndices.length) selectedIndex = 0;
+            if(++selectedIndex >= selectableCount) selectedIndex = 0;
         }
     }
     
@@ -68,12 +70,6 @@ public abstract class MainMenu implements DogMenu {
     public final void clearScreenBuffer() {
         for(int i=0 ; i<resolution[1] ; ++i)
             System.arraycopy(emptyLine, 0, screenBuffer[i], 0, resolution[0]);
-    }
-
-    public static String loopChar(char c, int n) {
-        StringBuilder sb = new StringBuilder(n);
-        for(int i = 0; i < n; ++i) sb.append(c);
-        return sb.toString();
     }
     
     public final void setScreen(JTextArea screen) {
@@ -98,5 +94,7 @@ public abstract class MainMenu implements DogMenu {
     }
     
     @Override
-    public abstract Operating putKeyHit(int keyCode);
+    public abstract Operation putKeyHit(int keyCode);
+    @Override
+    public abstract Operation putKeyType(int keyChar);
 }

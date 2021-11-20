@@ -17,7 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
 import dogfight_Z.dogLog.view.menus.DogMenu;
-import dogfight_Z.dogLog.view.menus.Operating;
+import dogfight_Z.dogLog.view.menus.Operation;
 import dogfight_Z.dogLog.view.menus.PilotLog;
 
 public class DogLog extends JFrame {
@@ -68,14 +68,12 @@ public class DogLog extends JFrame {
 
             @Override
             public void keyTyped(KeyEvent e) {
-                // TODO 自动生成的方法存根
-                
+                menuStack.peek().putKeyType(e.getKeyChar());
             }
 
             @Override
             public void keyPressed(KeyEvent e) {
                 // TODO 自动生成的方法存根
-                
             }
 
             @Override
@@ -86,7 +84,7 @@ public class DogLog extends JFrame {
                 
                 DogMenu menu = menuStack.peek(), tmp = null;
                 Color c;
-                Operating o  = menu.putKeyHit(keyCode);
+                Operation o  = menu.putKeyHit(keyCode);
                 if(o != null) {
                     if(o.isGoBack() && menu != baseMenu) {
                         menuStack.pop();
@@ -99,6 +97,9 @@ public class DogLog extends JFrame {
                     if((c = o.getFlashColor()) != null) {
                         flashColor(c);
                     }
+                    if((c = o.getDoubleFlashColor()) != null) {
+                        doubleFlashColor(c);
+                    }
                 }
                 
                 menu.getPrintNew(mainScr);
@@ -108,6 +109,27 @@ public class DogLog extends JFrame {
     }
     
     private void flashColor(Color c) {
+        Color oldBg = new Color(0, 0, 0);
+        
+        new Thread(new Runnable(){
+
+            @Override
+            public void run() {
+                try {
+                    mainScr.setBackground(c);
+                    Thread.sleep(100);
+                    mainScr.setBackground(oldBg);
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    // TODO 自动生成的 catch 块
+                    e.printStackTrace();
+                }
+            }
+            
+        }).start();
+    }
+
+    private void doubleFlashColor(Color c) {
         Color oldBg = new Color(0, 0, 0);
         
         new Thread(new Runnable(){
@@ -130,7 +152,6 @@ public class DogLog extends JFrame {
             
         }).start();
     }
-    
     private void constructor() {
         baseMenu  = new PilotLog(64, 32);
         menuStack = new Stack<>();

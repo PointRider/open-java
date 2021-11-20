@@ -40,8 +40,9 @@ public class CharLabel extends CharHUD
 	)
 	{
 		this(frapsBuffer, HUDLayer, scrResolution, transparentAtSpace);
-		if(Text != null)
-			text = new String(Text);
+		//if(Text != null)
+		//	text = new String(Text);
+		text = Text;
 		location[0] = location_X;
 		location[1] = location_Y;
 	}
@@ -59,34 +60,52 @@ public class CharLabel extends CharHUD
 		this(frapsBuffer, HUDLayer, scrResolution, Text, location_X, location_Y, true);
 	}
 	
+	@Override
 	public void printNew()
 	{
 		if(visible)
 		{
 			char tmp;
 			for (
-				int x=location[0], i=0, j=0; 
-				x<resolution[0] && i<text.length(); 
+				int x=location[0], y=0, i=0, j=0; 
+			    (y = location[1] + j) < resolution[1] && x<resolution[0] && i<text.length(); 
 				++i, ++x
 			)	if ((tmp=(char)text.charAt(i)) != ' ' || transparentAtSpace == false) {
 				if(tmp == '\n') {
 					++j; x = location[0] - 1;
-				} else fraps_buffer[location[1] + j][x] = tmp;
+				} else fraps_buffer[y][x] = tmp;
 			}
 		}
 	}
+	
+    public void printChar(char c)
+    {
+        if(visible)
+        {
+            char tmp;
+            for (
+                int x=location[0], y=0, i=0, j=0; 
+                (y = location[1] + j) < resolution[1] && x<resolution[0] && i<text.length(); 
+                ++i, ++x
+            )   if ((tmp=(char)text.charAt(i)) != ' ' || transparentAtSpace == false) {
+                if(tmp == '\n') {
+                    ++j; x = location[0] - 1;
+                } else fraps_buffer[y][x] = c;
+            }
+        }
+    }
 	
 	public CharLabel
 	(
 		char frapsBuffer[][], 
 		int HUDLayer, 
 		int scrResolution[], 
-		int X, int Y
+		int locationX, int locationY
 	)
 	{
 		this(frapsBuffer, HUDLayer, scrResolution, true);
-		location[0] = X;
-		location[1] = Y;
+		location[0] = locationX;
+		location[1] = locationY;
 	}
 	
 	public final void setText(String Text)
@@ -94,9 +113,9 @@ public class CharLabel extends CharHUD
 		text = new String(Text);
 	}
 	
-	public void setLocation(int X, int Y)
+	public void setLocation(int locationX, int locationY)
 	{
-		location[0] = X;
-		location[1] = Y;
+		location[0] = locationX;
+		location[1] = locationY;
 	}
 }
