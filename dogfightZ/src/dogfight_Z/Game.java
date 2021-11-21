@@ -34,9 +34,6 @@ public class Game extends CharTimeSpace implements Runnable
 	
 	public PlayersJetCamera mainCamera;
 	public Aircraft myJet;
-	public Aircraft	missileTestTarget0;
-	public Aircraft	missileTestTarget1;
-	public Aircraft	missileTestTarget2;
 	
 	public CharLabel lbl1;
 	public CharLabel lbl2;
@@ -103,7 +100,7 @@ public class Game extends CharTimeSpace implements Runnable
 	public boolean keyState_SPACE;
 	public boolean keyState_SHIFT;
 	
-	public short playersCamp;
+	public int   playersCamp;
 	public long  gameTimeUsed;
 	
 	private final int resolution_min = Math.min(visualManager.getResolution_X(), visualManager.getResolution_Y()) >> 1;

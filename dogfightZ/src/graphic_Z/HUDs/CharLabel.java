@@ -68,12 +68,12 @@ public class CharLabel extends CharHUD
 			char tmp;
 			for (
 				int x=location[0], y=0, i=0, j=0; 
-			    (y = location[1] + j) < resolution[1] && x<resolution[0] && i<text.length(); 
+			    (y = location[1] + j) < resolution[1] && y >= 0 && x >= 0 && i<text.length(); 
 				++i, ++x
 			)	if ((tmp=(char)text.charAt(i)) != ' ' || transparentAtSpace == false) {
 				if(tmp == '\n') {
 					++j; x = location[0] - 1;
-				} else fraps_buffer[y][x] = tmp;
+				} else if(x < resolution[0]) fraps_buffer[y][x] = tmp;
 			}
 		}
 	}

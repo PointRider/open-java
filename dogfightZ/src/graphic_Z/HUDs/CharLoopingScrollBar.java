@@ -81,14 +81,14 @@ public class CharLoopingScrollBar extends CharDynamicHUD
 						{
 							x1 = x+location[0] - size_show / 2;
 							y1 = y+location[1] - size[1] / 2;
-							if(y1 < resolution[1] && x1 < resolution[0])
+							if(y1 >= 0  &&  x1 >= 0  &&  y1 < resolution[1]  &&  x1 < resolution[0])
 								fraps_buffer[y1][x1] = HUDImg[y][xi];
 						}
 						else
 						{
 							x1 = y+location[0] - size[1] / 2;
 							y1 = x+location[1] - size_show / 2;
-							if(y1 < resolution[1] && x1 < resolution[0])
+							if(y1 >= 0  &&  x1 >= 0  &&  y1 < resolution[1]  &&  x1 < resolution[0])
 								fraps_buffer[y1][x1] = HUDImg[y][xi];
 						}
 					}

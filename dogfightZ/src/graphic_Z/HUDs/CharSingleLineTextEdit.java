@@ -2,10 +2,11 @@ package graphic_Z.HUDs;
 
 import java.awt.event.KeyEvent;
 
+import dogfight_Z.dogLog.view.menus.Operation;
 import graphic_Z.utils.Common;
 import graphic_Z.utils.LinkedListZ;
 
-public class CharSingleLineTextEdit extends CharLabel implements KeyInputGetter, Selectable {
+public class CharSingleLineTextEdit extends CharLabel implements KeyInputGetter, Widget {
 
     private   CharLabel                       outerBoxNotSelected;
     private   CharLabel                       outerBoxSelected;
@@ -136,5 +137,11 @@ public class CharSingleLineTextEdit extends CharLabel implements KeyInputGetter,
     public String getText() {
         buff();
         return new String(super.text);
+    }
+
+    @Override
+    public Operation call() {
+        
+        return null;
     }
 }

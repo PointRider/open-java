@@ -57,12 +57,12 @@ public class PilotLog extends Menu {
         entries = new CharButton[indices.length];
         
         for(int cur = 0, length = 0; cur < indices.length; ++cur) {
-            
+            length = indices[cur].length();
             entries[cur] = new CharButton(
                 screenBuffer, 
                 resolution, 
                 indices[cur],
-                (resolution[0] >> 1) - ((length + 6) >> 1), 
+                (resolution[0] >> 1) - ((length + 4) >> 1), 
                 (resolution[1] >> 1) + (cur * 5),
                 buttonEvents[cur]
             );
@@ -97,6 +97,7 @@ public class PilotLog extends Menu {
             break;
         case KeyEvent.VK_ENTER:
             //opt = new Operation(false, null, new Color(64, 96, 128));
+            entries[getSelectedIndex()].setSelected(true);
             opt = entries[getSelectedIndex()].call();
             break;
         default:

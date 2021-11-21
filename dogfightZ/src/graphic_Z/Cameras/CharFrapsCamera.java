@@ -333,7 +333,10 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 				Y2 = p2[1];
 				Z2 = p2[2];
 				
-				if(Z1 < 0  ||  Z2 < 0) return rge;
+				if(Z1 < 0  ||  Z2 < 0) {
+				    ++i;
+				    continue; 
+				}
 				
 				index = (int)((Z1 * 38) / visibility);
 				
@@ -360,6 +363,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	}
 
 	public void resizeScreen(int x, int y) {
+	    if(x < 1 || y < 1) return;
 		inWorld.visualManager.reSizeScreen(x, y);
 		resolution   = inWorld.visualManager.resolution;
 		fraps_buffer = inWorld.visualManager.fraps_buffer;
@@ -377,7 +381,9 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	
 	public Object exposure(Iterable<ThreeDs> objList)
 	{
-		for(ThreeDs aObject:objList) exposureObject(aObject, rad(roll_angle[0]), rad(roll_angle[1]), rad(roll_angle[2]));
+		for(ThreeDs aObject:objList) {
+		    exposureObject(aObject, rad(roll_angle[0]), rad(roll_angle[1]), rad(roll_angle[2]));
+		}
 		return null;
 	}
 	

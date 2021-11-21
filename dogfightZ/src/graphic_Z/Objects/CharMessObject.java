@@ -1,7 +1,5 @@
 package graphic_Z.Objects;
 
-import graphic_Z.Worlds.CharTimeSpace;
-
 public class CharMessObject extends CharObject
 {
 	protected double mess;
@@ -55,7 +53,7 @@ public class CharMessObject extends CharObject
 		location[1] += velocity[1];
 		location[2] += velocity[2];
 		
-		roll_angle[0]+= velocity_roll[0] + CharTimeSpace.g;
+		roll_angle[0]+= velocity_roll[0];
 		roll_angle[1]+= velocity_roll[1];
 		roll_angle[2]+= velocity_roll[2];
 	}

@@ -11,4 +11,10 @@ public class Common {
         for(int i = 0; i < n; ++i) sb.append(c);
         return sb.toString();
     }
+
+    public static String loopStr(String s, int n) {
+        StringBuilder sb = new StringBuilder(n * s.length());
+        for(int i = 0; i < n; ++i) sb.append(s);
+        return sb.toString();
+    }
 }

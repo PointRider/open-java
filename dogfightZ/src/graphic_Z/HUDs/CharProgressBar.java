@@ -61,12 +61,16 @@ public class CharProgressBar extends CharLabel
 			if(direction == Direction.horizon) for
 			(
 				int x=location[0], i=0; 
+			    location[1] >= 0 && 
+			    location[1] < resolution[1] &&
 				x<resolution[0] && i<size*value; 
 				++i, ++x
 			)	fraps_buffer[location[1]][x] = visual;
 			else for
 			(
 				int y=location[1], i=0; 
+			    location[0] >= 0 && 
+                location[0] < resolution[0] &&
 				y<resolution[0] && i<size*value; 
 				++i, --y
 			)	fraps_buffer[y][location[0]] = visual;

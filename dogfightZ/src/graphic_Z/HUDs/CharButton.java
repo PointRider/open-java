@@ -1,9 +1,11 @@
 package graphic_Z.HUDs;
 
+import java.awt.event.KeyEvent;
+
 import dogfight_Z.dogLog.view.menus.Operation;
 import graphic_Z.utils.Common;
 
-public class CharButton extends CharLabel implements Operable, Selectable {
+public class CharButton extends CharLabel implements Operable, Widget {
 
     private CharLabel outerBoxSelected;
     private String    outerBoxSelectedText;
@@ -66,7 +68,7 @@ public class CharButton extends CharLabel implements Operable, Selectable {
     
     public void printNew(boolean selected) {
         if(selected) outerBoxSelected.printNew();
-        selected = false;
+        setSelected(false);
     }
     
     @Override
@@ -83,5 +85,20 @@ public class CharButton extends CharLabel implements Operable, Selectable {
     @Override
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    @Override
+    public boolean getInput(int keyChar) {
+        // TODO 自动生成的方法存根
+        return false;
+    }
+
+    @Override
+    public boolean getControl(int keyCode) {
+        if(keyCode == KeyEvent.VK_ENTER) {
+            call();
+            return true;
+        }
+        return false;
     }
 }

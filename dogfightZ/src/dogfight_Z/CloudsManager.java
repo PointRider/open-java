@@ -16,7 +16,6 @@ public class CloudsManager implements Runnable
 	private double visibility;
 	private double location[];
 	private HzController rateController;
-	//private ExecutorService hzPool;
 	private Thread rateSynThread;
 	private ExecutorService epool;
 	

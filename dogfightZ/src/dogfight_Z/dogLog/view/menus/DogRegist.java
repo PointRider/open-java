@@ -1,6 +1,5 @@
 package dogfight_Z.dogLog.view.menus;
 
-import java.awt.Color;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JTextArea;
@@ -9,6 +8,8 @@ import graphic_Z.HUDs.CharButton;
 import graphic_Z.HUDs.CharLabel;
 import graphic_Z.HUDs.CharPasswordEdit;
 import graphic_Z.HUDs.CharSingleLineTextEdit;
+import graphic_Z.HUDs.Operable;
+import graphic_Z.HUDs.Widget;
 
 public class DogRegist extends Menu {
     
@@ -31,7 +32,7 @@ public class DogRegist extends Menu {
     private CharButton btnConfirm;
     private CharButton btnCancel;
     
-    private CharSingleLineTextEdit textBoxes[];
+    private Widget widget[];
     
     public DogRegist(int resolutionX, int resolutionY) {
         super(7, resolutionX, resolutionY);
@@ -61,7 +62,7 @@ public class DogRegist extends Menu {
             resolution, 
             20, 
             12, 
-            32
+            36
         );
         
         lblUserPass = new CharLabel(
@@ -79,7 +80,7 @@ public class DogRegist extends Menu {
             resolution, 
             20, 
             15, 
-            32
+            36
         );
 
         lblUserPassConfirm = new CharLabel(
@@ -97,54 +98,116 @@ public class DogRegist extends Menu {
             resolution, 
             20, 
             18, 
-            32
+            36
+        );
+        
+        lblUserNick = new CharLabel(
+            screenBuffer, 
+            1, 
+            resolution, 
+            "Nickname:", 
+            8, 
+            21,
+            false
+        );
+        
+        tbUserNick = new CharSingleLineTextEdit(
+            screenBuffer, 
+            resolution, 
+            20, 
+            21, 
+            36
+        );
+        
+        btnUserScreenSetup = new CharButton(
+            screenBuffer, 
+            resolution, 
+            "Setup Screen Size", 
+            10, 
+            26,
+            44,
+            new Operable() {
+
+                @Override
+                public Operation call() {
+                    
+                    return null;
+                }
+                
+            }
+        );
+        
+        btnConfirm = new CharButton(
+            screenBuffer, 
+            resolution, 
+            "O K", 
+            10, 
+            29,
+            20,
+            new Operable() {
+
+                @Override
+                public Operation call() {
+                    
+                    return null;
+                }
+                
+            }
+        );
+        
+        btnCancel = new CharButton(
+            screenBuffer, 
+            resolution, 
+            "Cancel", 
+            34, 
+            29,
+            20,
+            new Operable() {
+                @Override
+                public Operation call() {
+                    return new Operation(true, null, null, null);
+                }
+            }
         );
         
         //--------------------------------------------
-        textBoxes = new CharSingleLineTextEdit[] {
+        widget = new Widget[] {
             tbUsername,
             pasUserPass,
-            pasUserPassConfirm
+            pasUserPassConfirm,
+            tbUserNick,
+            btnUserScreenSetup,
+            btnConfirm,
+            btnCancel
         };
         
     }
 
     @Override
     public void getPrintNew(JTextArea screen) {
-        
-        switch(getSelectedIndex()) {
-        case 0: 
-            tbUsername.setSelected(true);
-            break;
-        case 1:
-            pasUserPass.setSelected(true);
-            break;
-        case 2:
-            pasUserPassConfirm.setSelected(true);
-            break;
-        }
-        
+
         clearScreenBuffer();
         
+        for(int i = 0, j = widget.length; i < j; ++i) {
+            if(i == getSelectedIndex()) widget[i].setSelected(true);
+            widget[i].printNew();
+        }
+        
+        btnUserScreenSetup.printNew();
+        
         lblTiltle.printNew();
-        
-        tbUsername.printNew();
         lblUsername.printNew();
-        
         lblUserPass.printNew();
-        pasUserPass.printNew();
-        
         lblUserPassConfirm.printNew();
-        pasUserPassConfirm.printNew();
+        lblUserNick.printNew();
         
         setScreen(screen);
     }
 
     @Override
     public Operation putKeyHit(int keyCode) {
-        // TODO 自动生成的方法存根
+        
         int selected = getSelectedIndex();
-        if(keyCode == KeyEvent.VK_END) return new Operation(true, null, null, null);
         
         Operation opt = null;
         switch(keyCode) {
@@ -155,17 +218,19 @@ public class DogRegist extends Menu {
             indexDown();
             break;
         case KeyEvent.VK_ENTER:
-            if(selected >= 0  &&  selected < textBoxes.length) {
+            if(selected >= 0  &&  selected < 4) {
+                //文本框
                 indexDown();
             } else {
-                //opt = new Operation(false, null, new Color(64, 96, 128));
-                //opt = entries[getSelectedIndex()].call();
+                //按钮
+                widget[selected].setSelected(true);
+                opt = widget[selected].call();
             }
             break;
         default:
-            if(selected >= 0  &&  selected < textBoxes.length) {
-                textBoxes[selected].setSelected(true);
-                textBoxes[selected].getControl(keyCode);
+            if(selected >= 0  &&  selected < widget.length) {
+                widget[selected].setSelected(true);
+                widget[selected].getControl(keyCode);
             }
             break;
         }
@@ -177,9 +242,9 @@ public class DogRegist extends Menu {
     public Operation putKeyType(int keyChar) {
         if(keyChar == '\n'  ||  keyChar == '\r') return null;
         int selected = getSelectedIndex();
-        if(selected >= 0  &&  selected < textBoxes.length) {
-            textBoxes[selected].setSelected(true);
-            textBoxes[selected].getInput(keyChar);
+        if(selected >= 0  &&  selected < widget.length) {
+            widget[selected].setSelected(true);
+            widget[selected].getInput(keyChar);
         }
         return null;
     }

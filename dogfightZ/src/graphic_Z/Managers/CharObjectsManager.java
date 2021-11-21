@@ -72,7 +72,6 @@ public class CharObjectsManager extends TDObjectsManager
 	
 	public void printNew()
 	{
-		// TODO 自动生成的方法存根
 		for(Iterable<Dynamic> eachList:dynamicObjLists)
 			for(Dynamic aObj:eachList)
 				aObj.go();

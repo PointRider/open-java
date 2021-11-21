@@ -20,7 +20,7 @@ public class ScoreList extends CharDynamicHUD
 		int Location_Y,
 		boolean transparent_at_space,
 		Iterable<Aircraft> thelist,
-		short players_camp
+		int players_camp
 	)
 	{
 		super(backGroundImgFile, frapsBuffer, HUDLayer, scrResolution, size_X, size_Y, Location_X, Location_Y, 0.0, transparent_at_space);
