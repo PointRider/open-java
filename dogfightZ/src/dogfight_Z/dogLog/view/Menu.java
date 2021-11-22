@@ -1,12 +1,18 @@
-package dogfight_Z.dogLog.view.menus;
+package dogfight_Z.dogLog.view;
 
 import javax.swing.JTextArea;
+
+import graphic_Z.Common.Operation;
 
 public abstract class Menu implements DogMenu {
     
     //protected final String  menuIndices[];
+    protected String        args[];
     protected int           resolution[];
     protected char          screenBuffer[][];
+    protected JTextArea     screen;
+    private   Object        inBox;
+    //protected Stack<Object> returnStack;
     private   StringBuilder screenBuilder;
     private   Integer       selectedIndex;
     private   Object        mutex;
@@ -22,7 +28,11 @@ public abstract class Menu implements DogMenu {
             + "==============================================================\n"
             + "=============================================================="; 
     
-    public Menu(int selectableCount, int resolutionX, int resolutionY) {
+    public Menu(String args[], JTextArea screen, int selectableCount, int resolutionX, int resolutionY) {
+        this.args          = args;
+        //this.returnStack   = returnStack;
+        this.screen        = screen;
+        inBox              = null;
         mutex              = new Object();
         resolution         = new int[2];
         //this.menuIndices   = menuIndices;
@@ -38,7 +48,7 @@ public abstract class Menu implements DogMenu {
     }
 
     @Override
-    public abstract void getPrintNew(JTextArea screen);
+    public abstract void getPrintNew();
     
     public void setResolution(int x, int y) {
         synchronized(mutex) {
@@ -92,9 +102,41 @@ public abstract class Menu implements DogMenu {
         
         screen.setText(screenBuilder.toString());
     }
+
+    protected void resizeScreen(int x, int y) {
+        resolution[0] = x;
+        resolution[1] = y;
+        
+        screenBuffer = new char[y][];
+        emptyLine    = new char[x];
+        
+        for(int i=0 ; i<y ; ++i)
+            screenBuffer[i] = new char[x];
+
+        for(int i=0 ; i<x ; ++i)
+            emptyLine[i] = ' ';
+        
+        screenBuilder = new StringBuilder(x * y);
+    }
+    
+    public void sendMail(Object o) {
+        inBox = o;
+    }
+
+    public Object pollMail() {
+        Object o = inBox;
+        inBox = null;
+        return o;
+    }
     
     @Override
-    public abstract Operation putKeyHit(int keyCode);
+    public abstract Operation putKeyReleaseEvent(int keyCode);
     @Override
-    public abstract Operation putKeyType(int keyChar);
+    public abstract Operation putKeyTypeEvent(int keyChar);
+    @Override
+    public abstract Operation putKeyPressEvent(int keyCode);
+    @Override
+    public abstract Operation beforePrintNewEvent();
+    @Override
+    public abstract Operation afterPrintNewEvent();
 }

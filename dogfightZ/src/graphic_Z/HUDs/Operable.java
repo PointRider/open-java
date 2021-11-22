@@ -1,6 +1,6 @@
 package graphic_Z.HUDs;
 
-import dogfight_Z.dogLog.view.menus.Operation;
+import graphic_Z.Common.Operation;
 
 public interface Operable {
     Operation call();

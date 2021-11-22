@@ -55,9 +55,9 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		//point = '*';					//default
 		point = new char[POINTLEVEL + 1];
 		point[0]  = '@';
-		point[1]  = '0';
-		point[2]  = 'G';
-		point[3]  = '$';
+		point[1]  = '$';
+		point[2]  = '0';
+		point[3]  = 'G';
 		point[4]  = 'Q';
 		point[5]  = 'O';
 		point[6]  = 'o';

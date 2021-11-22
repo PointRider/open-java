@@ -1,9 +1,11 @@
-package dogfight_Z.dogLog.view.menus;
+package dogfight_Z.dogLog.controller;
 
 import java.awt.event.KeyEvent;
 
 import javax.swing.JTextArea;
 
+import dogfight_Z.dogLog.view.Menu;
+import graphic_Z.Common.Operation;
 import graphic_Z.HUDs.CharButton;
 import graphic_Z.HUDs.CharLabel;
 import graphic_Z.HUDs.CharPasswordEdit;
@@ -34,8 +36,8 @@ public class DogRegist extends Menu {
     
     private Widget widget[];
     
-    public DogRegist(int resolutionX, int resolutionY) {
-        super(7, resolutionX, resolutionY);
+    public DogRegist(String args[], JTextArea screen, int resolutionX, int resolutionY) {
+        super(args, screen, 7, resolutionX, resolutionY);
         
         lblTiltle = new CharLabel(
             screenBuffer, 
@@ -49,7 +51,7 @@ public class DogRegist extends Menu {
         
         lblUsername = new CharLabel(
             screenBuffer, 
-            1, 
+            2, 
             resolution, 
             "Username:", 
             8, 
@@ -67,7 +69,7 @@ public class DogRegist extends Menu {
         
         lblUserPass = new CharLabel(
             screenBuffer, 
-            1, 
+            3, 
             resolution, 
             "Password:", 
             8, 
@@ -85,7 +87,7 @@ public class DogRegist extends Menu {
 
         lblUserPassConfirm = new CharLabel(
             screenBuffer, 
-            1, 
+            4, 
             resolution, 
             " Confirm:", 
             8, 
@@ -103,7 +105,7 @@ public class DogRegist extends Menu {
         
         lblUserNick = new CharLabel(
             screenBuffer, 
-            1, 
+            5, 
             resolution, 
             "Nickname:", 
             8, 
@@ -131,7 +133,7 @@ public class DogRegist extends Menu {
                 @Override
                 public Operation call() {
                     
-                    return null;
+                    return new Operation(false, new ScreenResize(args, screen, resolution[0], resolution[1]), null, null, null);
                 }
                 
             }
@@ -165,7 +167,7 @@ public class DogRegist extends Menu {
             new Operable() {
                 @Override
                 public Operation call() {
-                    return new Operation(true, null, null, null);
+                    return new Operation(true, null, null, null, null);
                 }
             }
         );
@@ -184,7 +186,7 @@ public class DogRegist extends Menu {
     }
 
     @Override
-    public void getPrintNew(JTextArea screen) {
+    public void getPrintNew() {
 
         clearScreenBuffer();
         
@@ -205,7 +207,7 @@ public class DogRegist extends Menu {
     }
 
     @Override
-    public Operation putKeyHit(int keyCode) {
+    public Operation putKeyReleaseEvent(int keyCode) {
         
         int selected = getSelectedIndex();
         
@@ -239,13 +241,34 @@ public class DogRegist extends Menu {
     }
 
     @Override
-    public Operation putKeyType(int keyChar) {
+    public Operation putKeyTypeEvent(int keyChar) {
         if(keyChar == '\n'  ||  keyChar == '\r') return null;
         int selected = getSelectedIndex();
         if(selected >= 0  &&  selected < widget.length) {
             widget[selected].setSelected(true);
             widget[selected].getInput(keyChar);
         }
+        return null;
+    }
+
+    @Override
+    public Operation putKeyPressEvent(int keyCode) {
+        // TODO 自动生成的方法存根
+        return null;
+    }
+
+    @Override
+    public Operation beforePrintNewEvent() {
+        int sizeInfo[] = (int[]) pollMail();
+        if(sizeInfo != null) {
+            System.out.println(sizeInfo[0] + ", " + sizeInfo[1] + ", " + sizeInfo[2]);
+        }
+        return null;
+    }
+
+    @Override
+    public Operation afterPrintNewEvent() {
+        // TODO 自动生成的方法存根
         return null;
     }
 

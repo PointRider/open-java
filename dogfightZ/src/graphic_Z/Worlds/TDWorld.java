@@ -20,7 +20,7 @@ public abstract class TDWorld<WorldType, ObjectType, HUDType>
 	public void getIntoGameWorld() {
 		eventManager.setVisible(true);
 	}
-	
+
 	public void exitTheWorld()
 	{
 		eventManager.setVisible(false);

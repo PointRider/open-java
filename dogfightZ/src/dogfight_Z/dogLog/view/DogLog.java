@@ -16,9 +16,8 @@ import java.util.Stack;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
-import dogfight_Z.dogLog.view.menus.DogMenu;
-import dogfight_Z.dogLog.view.menus.Operation;
-import dogfight_Z.dogLog.view.menus.PilotLog;
+import dogfight_Z.dogLog.controller.PilotLog;
+import graphic_Z.Common.Operation;
 
 public class DogLog extends JFrame {
 
@@ -27,12 +26,15 @@ public class DogLog extends JFrame {
      */
     private static final long serialVersionUID = -4187237321637169638L;
 
-    private   JTextArea      mainScr;
-    private   int            pcScreenWidth;
-    private   int            pcScreenHeight;
+    private JTextArea      mainScr;
+    private int            pcScreenWidth;
+    private int            pcScreenHeight;
 
-    private   Stack<DogMenu> menuStack; 
-    private   DogMenu        baseMenu;
+    //private Stack<Object>  menuReturnStack; 
+    private Stack<DogMenu> menuStack; 
+    private DogMenu        baseMenu;
+    
+    //private String []      args;
     
     private void initUI() {
         pcScreenWidth  = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -65,31 +67,60 @@ public class DogLog extends JFrame {
                             imageCursor,  new Point(0, 0), "cursor"));
         
         this.addKeyListener(new KeyListener() {
-
+            
             @Override
             public void keyTyped(KeyEvent e) {
-                menuStack.peek().putKeyType(e.getKeyChar());
+                menuStack.peek().putKeyTypeEvent(e.getKeyChar());
             }
 
             @Override
             public void keyPressed(KeyEvent e) {
-                // TODO 自动生成的方法存根
+
+                int keyCode = e.getKeyCode();
+                if(keyCode == KeyEvent.VK_ESCAPE) System.exit(0);
+
+                DogMenu menu = menuStack.peek();
+                
+                Operation o  = menu.putKeyPressEvent(keyCode);
+                
+                DogMenu m = operationProcessor(menu, o);
+                
+                o = m.beforePrintNewEvent();
+                if(o != null) m = operationProcessor(m, o);
+                m.getPrintNew();
+                m.afterPrintNewEvent();
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                // TODO 自动生成的方法存根
+
                 int keyCode = e.getKeyCode();
                 if(keyCode == KeyEvent.VK_ESCAPE) System.exit(0);
+
+                DogMenu menu = menuStack.peek();
                 
-                DogMenu menu = menuStack.peek(), tmp = null;
+                Operation o  = menu.putKeyReleaseEvent(keyCode);
+                
+                DogMenu m = operationProcessor(menu, o);
+                
+                o = m.beforePrintNewEvent();
+                if(o != null) m = operationProcessor(m, o);
+                m.getPrintNew();
+                m.afterPrintNewEvent();
+            }
+            
+            private DogMenu operationProcessor(DogMenu menu, Operation o) {
                 Color c;
-                Operation o  = menu.putKeyHit(keyCode);
+                Object returnValue;
+                DogMenu tmp = menu;
                 
                 if(o != null) {
                     if(o.isGoBack() && menu != baseMenu) {
-                        menuStack.pop();
+                        menuStack.pop();//注1
                         menu = menuStack.peek();
+                    }
+                    if((returnValue = o.getReturnValue()) != null) {
+                        menu.sendMail(returnValue);//注意此时的menu可能已经是 注1 处pop后的下一个menu
                     }
                     if((tmp = o.getGetInto()) != null) {
                         menuStack.push(tmp);
@@ -102,10 +133,8 @@ public class DogLog extends JFrame {
                         doubleFlashColor(c);
                     }
                 }
-                
-                menu.getPrintNew(mainScr);
+                return menu;
             }
-            
         });
     }
     
@@ -153,33 +182,33 @@ public class DogLog extends JFrame {
             
         }).start();
     }
-    private void constructor() {
-        baseMenu  = new PilotLog(64, 32);
-        menuStack = new Stack<>();
-        menuStack.push(baseMenu);
-        
+    private void constructor(String args[]) {
+        //this.args = args;
         initUI();
-        
-        menuStack.peek().getPrintNew(mainScr);
+        //menuReturnStack = new Stack<>();
+        menuStack       = new Stack<>();
+        baseMenu        = new PilotLog(args, mainScr, 64, 32);
+        menuStack.push(baseMenu);
+        menuStack.peek().getPrintNew();
     }
     
-    public DogLog() throws HeadlessException {
-        constructor();
+    public DogLog(String args[]) throws HeadlessException {
+        constructor(args);
     }
 
-    public DogLog(GraphicsConfiguration gc) {
+    public DogLog(String args[], GraphicsConfiguration gc) {
         super(gc);
-        constructor();
+        constructor(args);
     }
 
-    public DogLog(String title) throws HeadlessException {
+    public DogLog(String args[], String title) throws HeadlessException {
         super(title);
-        constructor();
+        constructor(args);
     }
 
-    public DogLog(String title, GraphicsConfiguration gc) {
+    public DogLog(String args[], String title, GraphicsConfiguration gc) {
         super(title, gc);
-        constructor();
+        constructor(args);
     }
     
     public void setScrZoom(int size)
@@ -191,7 +220,7 @@ public class DogLog extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    DogLog dlog = new DogLog();
+                    DogLog dlog = new DogLog(args);
                     dlog.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();

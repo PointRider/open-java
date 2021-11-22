@@ -2,7 +2,7 @@ package graphic_Z.HUDs;
 
 import java.awt.event.KeyEvent;
 
-import dogfight_Z.dogLog.view.menus.Operation;
+import graphic_Z.Common.Operation;
 import graphic_Z.utils.Common;
 import graphic_Z.utils.LinkedListZ;
 

@@ -103,7 +103,7 @@ public class Game extends CharTimeSpace implements Runnable
 	public int   playersCamp;
 	public long  gameTimeUsed;
 	
-	private final int resolution_min = Math.min(visualManager.getResolution_X(), visualManager.getResolution_Y()) >> 1;
+	private int resolution_min;
 	private int keyPressed;
 	private int scrSize = 8;
 	private boolean flgWheelUp, flgWheelDn;
@@ -160,7 +160,7 @@ public class Game extends CharTimeSpace implements Runnable
 		return npc;
 	}
 	
-	public void initClasses() {
+	private void initClasses() {
         try{
             Class.forName("dogfight_Z.Ammo.CannonAmmo");
             Class.forName("dogfight_Z.Ammo.Decoy");
@@ -171,7 +171,7 @@ public class Game extends CharTimeSpace implements Runnable
         }
 	}
 	
-	public void initUI(int fontSize) {
+	private void initUI(int fontSize) {
         eventManager.setTitle("dogfightZ");
         scrSize = fontSize;
         eventManager.setScrZoom(fontSize);
@@ -180,7 +180,7 @@ public class Game extends CharTimeSpace implements Runnable
         colorChangedTime      = 0;
 	}
 	
-	public void initDatastructure(String hud_scoreListBG, int resolutionX, int resolutionY) {
+	private void initDatastructure(String hud_scoreListBG, int resolutionX, int resolutionY) {
 	    tmp = new StringBuilder();
         firedAmmo = new PriorityQueue<Dynamic>();
         objectsManager.newSelfDisposableObjList(firedAmmo);
@@ -209,7 +209,7 @@ public class Game extends CharTimeSpace implements Runnable
 	 "resources/MyJetHUD_Locked.hud" 
 	 "resources/MissileWarning.hud" 
 	 */
-	public void initMainCamera(
+	private void initMainCamera(
 	        String hud_friend,
 	        String hud_enemy,
 	        String hud_locking,
@@ -257,7 +257,7 @@ public class Game extends CharTimeSpace implements Runnable
         visualManager.newCamera(mainCamera);
 	}
 	
-	public void initMe(
+	private void initMe(
 	        String myJetModel_file, 
             String hud_friend,
             String hud_enemy,
@@ -284,7 +284,7 @@ public class Game extends CharTimeSpace implements Runnable
      * gameTime -> gameTimeUsed, gameStopTime
      * ? x NPC(id, diff, camp)
      */
-	public void initPlayers(String myJetModel_file, String cfg_file, String rec_file) {
+	private void initPlayers(String myJetModel_file, String cfg_file, String rec_file) {
         long gameTime;
         respawnTime  = 10;   //seconds
         playersCamp  = 0;
@@ -338,7 +338,7 @@ public class Game extends CharTimeSpace implements Runnable
         }   catch(IOException exc) {}
 	}
 	
-	public void initHUDs(
+	private void initHUDs(
 	        int resolutionX, int resolutionY, 
 	        String hud_horizonIndicator,
 	        String hud_crosshairImg,
@@ -347,6 +347,7 @@ public class Game extends CharTimeSpace implements Runnable
 	        String hud_radarBG,
 	        String hud_radarPrinter
 	    ) {
+	    resolution_min = Math.min(visualManager.getResolution_X(), visualManager.getResolution_Y()) >> 1;
 	    scoreShow.visible = false;
         visualManager.newDynamicHUD(scoreShow);
         EndScreen = visualManager.newLabel("      TIME UP\nPress ESC Key To Exit.", ((resolutionX>>1) - 9), (int)(resolutionY * 0.3), 999);
@@ -400,7 +401,7 @@ public class Game extends CharTimeSpace implements Runnable
         visualManager.newDynamicHUD(hud_Radar);
 	}
 	
-	public void initClouds() {
+	private void initClouds() {
         clouds = new ArrayList<ThreeDs>();
         objectsManager.newStaticObjectList(clouds);
 
@@ -409,7 +410,7 @@ public class Game extends CharTimeSpace implements Runnable
         cloudManThread = new Thread(cloudMan);
 	}
 	
-	public void initKeyboardAndMouse() {
+	private void initKeyboardAndMouse() {
         Object mouse = new MouseWheelControl(eventManager.EventFrapsQueue_keyboard);
         eventManager.mainScr.addMouseWheelListener((MouseWheelListener) mouse);
         eventManager.mainScr.addMouseListener((MouseListener) mouse);
@@ -426,7 +427,7 @@ public class Game extends CharTimeSpace implements Runnable
         keyState_SHIFT = false;
 	}
 	
-	public void initSoundTrack(String bgm_file) {
+	private void initSoundTrack(String bgm_file) {
         soundTrack    = new SoundTrack(bgm_file);
         bgmThread     = new Thread(soundTrack);
 	}
@@ -525,6 +526,7 @@ public class Game extends CharTimeSpace implements Runnable
 	}
 	
 	private void reLocateHUD() {
+	    resolution_min = Math.min(visualManager.getResolution_X(), visualManager.getResolution_Y()) >> 1;
 	    final int resolution_X = visualManager.resolution[0], resolution_Y = visualManager.resolution[1];
 	    final int progressBarLocationBaseX  = (int) (resolution_X * 0.75);
         final int progressBarLocationBaseX2 = (int) (resolution_X - 18);

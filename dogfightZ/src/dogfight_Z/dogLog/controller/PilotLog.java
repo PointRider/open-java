@@ -1,10 +1,12 @@
-package dogfight_Z.dogLog.view.menus;
+package dogfight_Z.dogLog.controller;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JTextArea;
 
+import dogfight_Z.dogLog.view.Menu;
+import graphic_Z.Common.Operation;
 import graphic_Z.HUDs.CharButton;
 import graphic_Z.HUDs.CharLabel;
 import graphic_Z.HUDs.Operable;
@@ -22,7 +24,7 @@ public class PilotLog extends Menu {
 
             @Override
             public Operation call() {
-                return new Operation(false, null, null, new Color(64, 96, 128));
+                return new Operation(false, null, null, new Color(64, 96, 128), null);
             }
             
         },
@@ -30,7 +32,7 @@ public class PilotLog extends Menu {
 
             @Override
             public Operation call() {
-                return new Operation(false, new DogRegist(resolution[0], resolution[1]), new Color(128, 96, 64), null);
+                return new Operation(false, new DogRegist(args, screen, resolution[0], resolution[1]), new Color(128, 96, 64), null, null);
             }
             
         },
@@ -40,8 +42,8 @@ public class PilotLog extends Menu {
     //private CharSingleLineTextEdit txtbox;
     private CharButton entries[];
     
-    public PilotLog(int width, int height) {
-        super(indices.length, width, height);
+    public PilotLog(String args[], JTextArea screen, int width, int height) {
+        super(args, screen, indices.length, width, height);
         logo = new CharLabel(
             screenBuffer, 
             0, 
@@ -70,7 +72,7 @@ public class PilotLog extends Menu {
     }
     
     @Override
-    public void getPrintNew(JTextArea screen) {
+    public void getPrintNew() {
         
         clearScreenBuffer();
         
@@ -85,7 +87,7 @@ public class PilotLog extends Menu {
     }
 
     @Override
-    public Operation putKeyHit(int keyCode) {
+    public Operation putKeyReleaseEvent(int keyCode) {
         
         Operation opt = null;
         switch(keyCode) {
@@ -109,8 +111,26 @@ public class PilotLog extends Menu {
     }
 
     @Override
-    public Operation putKeyType(int keyChar) {
+    public Operation putKeyTypeEvent(int keyChar) {
         //txtbox.getInput(keyChar);
+        return null;
+    }
+
+    @Override
+    public Operation putKeyPressEvent(int keyCode) {
+        // TODO 自动生成的方法存根
+        return null;
+    }
+
+    @Override
+    public Operation beforePrintNewEvent() {
+        // TODO 自动生成的方法存根
+        return null;
+    }
+
+    @Override
+    public Operation afterPrintNewEvent() {
+        // TODO 自动生成的方法存根
         return null;
     }
 
