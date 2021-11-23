@@ -310,7 +310,7 @@ public class Missile extends Aircraft implements Dynamic
 			//-----------------------------------
 			//location[0] += CharTimeSpace.g;
 			
-			if(target != null    &&    target.isAlive    &&    range(location, target.location) < 100)
+			if(target != null    &&    target.isAlive    &&    range(location, target.location) < 128)
 			{
 				target.getDamage((int)(50 - 10 * Math.random()), from, "Missile");
 				new ExplosionMaker(location, 15, (short)75, 0.025, 0.1, from.effects);

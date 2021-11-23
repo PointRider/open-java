@@ -1,9 +1,13 @@
 package dogfight_Z.dogLog.controller;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
 
 import javax.swing.JTextArea;
 
+import dogfight_Z.dogLog.model.PlayerProfile;
+import dogfight_Z.dogLog.service.PlayerProfileService;
 import dogfight_Z.dogLog.view.Menu;
 import graphic_Z.Common.Operation;
 import graphic_Z.HUDs.CharButton;
@@ -149,11 +153,39 @@ public class DogRegist extends Menu {
             29,
             20,
             new Operable() {
-
                 @Override
                 public Operation call() {
+                    String uname = tbUsername.getText();
+                    String pass = pasUserPass.getText();
+                    String passConfirm = pasUserPassConfirm.getText();
+                    String unick = tbUserNick.getText();
                     
-                    return null;
+                    if(uname.isEmpty()) {
+                        return new Operation(false, new TipsMenu(args, "用户名不能为空。", screen, resolution[0], resolution[1]), null, null, null);
+                    }
+
+                    if(pass.isEmpty()) {
+                        return new Operation(false, new TipsMenu(args, "登录口令不能为空。", screen, resolution[0], resolution[1]), null, null, null);
+                    }
+
+                    if(setScreenSize == null) {
+                        return new Operation(false, new TipsMenu(args, "请先校准屏幕尺寸。", screen, resolution[0], resolution[1]), null, null, null);
+                    }
+                    
+                    if(!pass.equals(passConfirm)) {
+                        return new Operation(false, new TipsMenu(args, "两次输入口令不一致，请重试。", screen, resolution[0], resolution[1]), null, null, null);
+                    }
+                    
+                    PlayerProfile player = new PlayerProfile(-1, uname, pass, unick, null,
+                            null, setScreenSize[0], setScreenSize[1], setScreenSize[2]);
+                    
+                    int pilotNo = -1;
+                    try {
+                        pilotNo = PlayerProfileService.getPlayerProfileService().regist(player);
+                    } catch (SQLException e) {}
+                    
+                    if(pilotNo != -1) return new Operation(true, new TipsMenu(args, "飞行战斗员注册成功，您的编号为: " + pilotNo + "。", screen, resolution[0], resolution[1]), null, new Color(48, 64, 48), null);
+                    return new Operation(false, new TipsMenu(args, "注册失败，可能已经存在同名的飞行员了。", screen, resolution[0], resolution[1]), new Color(128, 96, 64), null, null);
                 }
                 
             }
@@ -184,7 +216,6 @@ public class DogRegist extends Menu {
             btnConfirm,
             btnCancel
         };
-        
     }
 
     @Override

@@ -32,7 +32,7 @@ public class PilotLog extends Menu {
 
             @Override
             public Operation call() {
-                return new Operation(false, new DogRegist(args, screen, resolution[0], resolution[1]), new Color(128, 96, 64), null, null);
+                return new Operation(false, new DogRegist(args, screen, resolution[0], resolution[1]), null, null, null);
             }
             
         },
