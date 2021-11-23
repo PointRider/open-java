@@ -429,9 +429,16 @@ public class ScreenResizer extends Menu
 		int resolutionX, 
 		int resolutionY, 
 		int refresh_rate,
-		int fontSize
+		int fontSize,
+        int resolutionSetting[]
 	)
 	{
+        if(resolutionSetting != null) {
+            resolutionX = resolutionSetting[0];
+            resolutionY = resolutionSetting[1];
+            scrSize = resolutionSetting[2];
+        }
+        
 	    initUI();
 		initMe(myJetModel_file, resolutionX, resolutionY);
         initHUDs(resolutionX, resolutionY, 
@@ -449,8 +456,14 @@ public class ScreenResizer extends Menu
         cloudManThread.start();
 	}
 	
-	public ScreenResizer(String args[], JTextArea screen) {
-        super(args, screen, 1, Integer.parseInt(args[16]), Integer.parseInt(args[17]));
+	public ScreenResizer(String args[], JTextArea screen, int resolutionSetting[]) {
+        super(
+                args, 
+                screen, 
+                1, 
+                resolutionSetting == null? Integer.parseInt(args[16]): resolutionSetting[0], 
+                resolutionSetting == null? Integer.parseInt(args[17]): resolutionSetting[1]
+        );
         constructor (
             args[0] ,args[1] , args[2], args[3], args[4], args[5] ,
             args[6] , args[7], args[8], args[9], args[10], args[11], 
@@ -458,7 +471,8 @@ public class ScreenResizer extends Menu
             Integer.parseInt(args[16]), 
             Integer.parseInt(args[17]), 
             Integer.parseInt(args[18]),
-            Integer.parseInt(args[19])
+            Integer.parseInt(args[19]),
+            resolutionSetting
 	     );
 	}
 	

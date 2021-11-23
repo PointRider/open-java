@@ -36,8 +36,12 @@ public class DogRegist extends Menu {
     
     private Widget widget[];
     
+    private int setScreenSize[];
+    
     public DogRegist(String args[], JTextArea screen, int resolutionX, int resolutionY) {
         super(args, screen, 7, resolutionX, resolutionY);
+        
+        setScreenSize = null;
         
         lblTiltle = new CharLabel(
             screenBuffer, 
@@ -132,10 +136,8 @@ public class DogRegist extends Menu {
 
                 @Override
                 public Operation call() {
-                    
-                    return new Operation(false, new ScreenResize(args, screen, resolution[0], resolution[1]), null, null, null);
+                    return new Operation(false, new ScreenResize(args, screen, resolution[0], resolution[1], setScreenSize), null, null, null);
                 }
-                
             }
         );
         
@@ -189,6 +191,7 @@ public class DogRegist extends Menu {
     public void getPrintNew() {
 
         clearScreenBuffer();
+        
         
         for(int i = 0, j = widget.length; i < j; ++i) {
             if(i == getSelectedIndex()) widget[i].setSelected(true);
@@ -259,9 +262,10 @@ public class DogRegist extends Menu {
 
     @Override
     public Operation beforePrintNewEvent() {
-        int sizeInfo[] = (int[]) pollMail();
-        if(sizeInfo != null) {
-            System.out.println(sizeInfo[0] + ", " + sizeInfo[1] + ", " + sizeInfo[2]);
+        Object tmp = pollMail();
+        if(tmp != null) {
+            setScreenSize = (int[]) tmp;
+            btnUserScreenSetup.setText("My Screen Size: " + setScreenSize[0] + "," + setScreenSize[1] + "," + setScreenSize[2]);
         }
         return null;
     }

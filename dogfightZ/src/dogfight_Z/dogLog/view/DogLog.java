@@ -45,7 +45,7 @@ public class DogLog extends JFrame {
         
         setLocation(0, 0);
         setUndecorated(true);
-        //setOpacity(0.9f);
+        //setOpacity(0.5f);
         
         mainScr = new JTextArea();
         mainScr.setLocation(0, 0);
@@ -103,8 +103,12 @@ public class DogLog extends JFrame {
                 
                 DogMenu m = operationProcessor(menu, o);
                 
-                o = m.beforePrintNewEvent();
-                if(o != null) m = operationProcessor(m, o);
+                do {
+                    o = m.beforePrintNewEvent();
+                    menu = m;
+                    if(o != null) m = operationProcessor(m, o);
+                } while(m != menu);
+                
                 m.getPrintNew();
                 m.afterPrintNewEvent();
             }

@@ -7,10 +7,12 @@ import graphic_Z.utils.Common;
 
 public class CharButton extends CharLabel implements Operable, Widget {
 
-    private CharLabel outerBoxSelected;
-    private String    outerBoxSelectedText;
-    private boolean   selected;
-    private Operable  caller;
+    private CharLabel    outerBoxSelected;
+    private final String outerBoxSelectedText;
+    private boolean      selected;
+    private Operable     caller;
+    private int          sizeX;
+    private int          locationSource[];
     
     public CharButton(
         char[][] frapsBuffer, 
@@ -56,8 +58,10 @@ public class CharButton extends CharLabel implements Operable, Widget {
             frapsBuffer,          layer,         scrResolution, 
             outerBoxSelectedText, locationX - 2, locationY - 2
         );
-        selected         = false;
-        this.caller      = caller;
+        selected    = false;
+        this.caller = caller;
+        this.sizeX  = sizeX;
+        locationSource = new int[] {locationX, locationY};
     }
     
     @Override
@@ -69,6 +73,18 @@ public class CharButton extends CharLabel implements Operable, Widget {
     public void printNew(boolean selected) {
         if(selected) outerBoxSelected.printNew();
         setSelected(false);
+    }
+    
+    @Override
+    public void setText(String s) {
+        super.setText(s);
+        super.setLocation(
+            sizeX > s.length()? 
+                locationSource[0] + ((sizeX - s.length()) >> 1)
+              :
+                locationSource[0], 
+            locationSource[1] 
+        );
     }
     
     @Override

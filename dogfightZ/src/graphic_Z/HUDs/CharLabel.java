@@ -108,8 +108,7 @@ public class CharLabel extends CharHUD
 		location[1] = locationY;
 	}
 	
-	public final void setText(String Text)
-	{
+	public void setText(String Text) {
 		text = new String(Text);
 	}
 	
