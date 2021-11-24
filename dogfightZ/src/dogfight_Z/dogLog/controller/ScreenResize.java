@@ -40,7 +40,7 @@ public class ScreenResize extends Menu {
     public Operation putKeyReleaseEvent(int keyCode) {
         switch(keyCode) {
         case KeyEvent.VK_ENTER: 
-            return new Operation(false, new ScreenResizer(args, screen, resolutionSetting), null, null, null);
+            return new Operation(false, new ScreenResizer(args, screen, resolutionSetting), null, null, null, null);
         }
         return null;
     }
@@ -59,8 +59,8 @@ public class ScreenResize extends Menu {
     public Operation beforePrintNewEvent() {
         Object sizeInfo = pollMail();
         if(sizeInfo == null) return null;
-        screen.setFont(new Font("新宋体", Font.PLAIN, 24));
-        return new Operation(true, null, null, null, sizeInfo);
+        screen.setFont(new Font("新宋体", Font.PLAIN, 20));
+        return new Operation(true, null, null, null, sizeInfo, null);
     }
 
     @Override

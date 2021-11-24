@@ -2,7 +2,6 @@ package dogfight_Z.dogLog.controller;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import java.sql.SQLException;
 
 import javax.swing.JTextArea;
 
@@ -34,6 +33,7 @@ public class DogRegist extends Menu {
     private CharSingleLineTextEdit tbUserNick;
     
     private CharButton btnUserScreenSetup;
+    private CharButton btnUserRecordShareSetup;
     
     private CharButton btnConfirm;
     private CharButton btnCancel;
@@ -41,9 +41,10 @@ public class DogRegist extends Menu {
     private Widget widget[];
     
     private int setScreenSize[];
+    private int shareMyRecord = 1;
     
     public DogRegist(String args[], JTextArea screen, int resolutionX, int resolutionY) {
-        super(args, screen, 7, resolutionX, resolutionY);
+        super(args, screen, 8, resolutionX, resolutionY);
         
         setScreenSize = null;
         
@@ -129,10 +130,10 @@ public class DogRegist extends Menu {
             36
         );
         
-        btnUserScreenSetup = new CharButton(
+        btnUserRecordShareSetup = new CharButton(
             screenBuffer, 
             resolution, 
-            "Setup Screen Size", 
+            "Share my game record: YES", 
             10, 
             26,
             44,
@@ -140,7 +141,46 @@ public class DogRegist extends Menu {
 
                 @Override
                 public Operation call() {
-                    return new Operation(false, new ScreenResize(args, screen, resolution[0], resolution[1], setScreenSize), null, null, null);
+                    return new Operation(
+                        false, 
+                        new TipsConfirmMenu(
+                            args, 
+                            "你想要将自己的游戏记录设置为所有用户可见吗？", 
+                            "YES!", 
+                            "NO.", 
+                            screen, 
+                            resolution[0], 
+                            resolution[1], 
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    shareMyRecord = 1;
+                                }
+                            }, 
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    shareMyRecord = 0;
+                                }
+                            }
+                        ), null, null, null, null
+                    );
+                }
+            }
+        );
+
+        btnUserScreenSetup = new CharButton(
+            screenBuffer, 
+            resolution, 
+            "Setup Screen Size", 
+            10, 
+            29,
+            44,
+            new Operable() {
+
+                @Override
+                public Operation call() {
+                    return new Operation(false, new ScreenResize(args, screen, resolution[0], resolution[1], setScreenSize), null, null, null, null);
                 }
             }
         );
@@ -150,7 +190,7 @@ public class DogRegist extends Menu {
             resolution, 
             "O K", 
             10, 
-            29,
+            32,
             20,
             new Operable() {
                 @Override
@@ -161,33 +201,31 @@ public class DogRegist extends Menu {
                     String unick = tbUserNick.getText();
                     
                     if(uname.isEmpty()) {
-                        return new Operation(false, new TipsMenu(args, "用户名不能为空。", screen, resolution[0], resolution[1]), null, null, null);
+                        return new Operation(false, new TipsMenu(args, "用户名不能为空。", screen, resolution[0], resolution[1]), null, null, null, null);
                     }
 
                     if(pass.isEmpty()) {
-                        return new Operation(false, new TipsMenu(args, "登录口令不能为空。", screen, resolution[0], resolution[1]), null, null, null);
+                        return new Operation(false, new TipsMenu(args, "登录口令不能为空。", screen, resolution[0], resolution[1]), null, null, null, null);
                     }
 
                     if(setScreenSize == null) {
-                        return new Operation(false, new TipsMenu(args, "请先校准屏幕尺寸。", screen, resolution[0], resolution[1]), null, null, null);
+                        return new Operation(false, new TipsMenu(args, "请先校准屏幕尺寸。", screen, resolution[0], resolution[1]), null, null, null, null);
                     }
                     
                     if(!pass.equals(passConfirm)) {
-                        return new Operation(false, new TipsMenu(args, "两次输入口令不一致，请重试。", screen, resolution[0], resolution[1]), null, null, null);
+                        return new Operation(false, new TipsMenu(args, "两次输入口令不一致，请重试。", screen, resolution[0], resolution[1]), null, null, null, null);
                     }
                     
-                    PlayerProfile player = new PlayerProfile(-1, uname, pass, unick, null,
+                    PlayerProfile player = new PlayerProfile(-1, uname, pass, unick, null, shareMyRecord,
                             null, setScreenSize[0], setScreenSize[1], setScreenSize[2]);
                     
                     int pilotNo = -1;
-                    try {
-                        pilotNo = PlayerProfileService.getPlayerProfileService().regist(player);
-                    } catch (SQLException e) {}
                     
-                    if(pilotNo != -1) return new Operation(true, new TipsMenu(args, "飞行战斗员注册成功，您的编号为: " + pilotNo + "。", screen, resolution[0], resolution[1]), null, new Color(48, 64, 48), null);
-                    return new Operation(false, new TipsMenu(args, "注册失败，可能已经存在同名的飞行员了。", screen, resolution[0], resolution[1]), new Color(128, 96, 64), null, null);
+                    pilotNo = PlayerProfileService.getPlayerProfileService().regist(player);
+                    
+                    if(pilotNo != -1) return new Operation(true, new TipsMenu(args, "飞行战斗员注册成功，您的编号为: " + pilotNo + "。", screen, resolution[0], resolution[1]), null, new Color(48, 64, 48), null, null);
+                    return new Operation(false, new TipsMenu(args, "注册失败，可能已经存在同名的飞行员了。", screen, resolution[0], resolution[1]), new Color(128, 96, 64), null, null, null);
                 }
-                
             }
         );
         
@@ -196,12 +234,12 @@ public class DogRegist extends Menu {
             resolution, 
             "Cancel", 
             34, 
-            29,
+            32,
             20,
             new Operable() {
                 @Override
                 public Operation call() {
-                    return new Operation(true, null, null, null, null);
+                    return new Operation(true, null, null, null, null, null);
                 }
             }
         );
@@ -212,6 +250,7 @@ public class DogRegist extends Menu {
             pasUserPass,
             pasUserPassConfirm,
             tbUserNick,
+            btnUserRecordShareSetup,
             btnUserScreenSetup,
             btnConfirm,
             btnCancel
@@ -221,16 +260,22 @@ public class DogRegist extends Menu {
     @Override
     public void getPrintNew() {
 
-        clearScreenBuffer();
+        if(shareMyRecord == 1) {
+            btnUserRecordShareSetup.setText("Share my game record: YES");
+        } else {
+            btnUserRecordShareSetup.setText("Share my game record: NO");
+        }
         
+        clearScreenBuffer();
         
         for(int i = 0, j = widget.length; i < j; ++i) {
             if(i == getSelectedIndex()) widget[i].setSelected(true);
             widget[i].printNew();
         }
-        
+        /*
         btnUserScreenSetup.printNew();
-        
+        btnUserRecordShareSetup.printNew();
+        */
         lblTiltle.printNew();
         lblUsername.printNew();
         lblUserPass.printNew();
@@ -253,6 +298,20 @@ public class DogRegist extends Menu {
         case KeyEvent.VK_DOWN:
             indexDown();
             break;
+        case KeyEvent.VK_RIGHT:
+            if(selected >= 4) indexDown();
+            else {
+                widget[selected].setSelected(true);
+                widget[selected].getControl(keyCode);
+            }
+            break;
+        case KeyEvent.VK_LEFT:
+            if(selected >= 4) indexUp();
+            else {
+                widget[selected].setSelected(true);
+                widget[selected].getControl(keyCode);
+            }
+            break;
         case KeyEvent.VK_ENTER:
             if(selected >= 0  &&  selected < 4) {
                 //文本框
@@ -263,11 +322,13 @@ public class DogRegist extends Menu {
                 opt = widget[selected].call();
             }
             break;
+        case KeyEvent.VK_ESCAPE:
+            opt = new Operation(true, null, null, null, null, null);
+            break;
         default:
-            if(selected >= 0  &&  selected < widget.length) {
-                widget[selected].setSelected(true);
-                widget[selected].getControl(keyCode);
-            }
+            widget[selected].setSelected(true);
+            widget[selected].getControl(keyCode);
+            
             break;
         }
         
@@ -278,10 +339,10 @@ public class DogRegist extends Menu {
     public Operation putKeyTypeEvent(int keyChar) {
         if(keyChar == '\n'  ||  keyChar == '\r') return null;
         int selected = getSelectedIndex();
-        if(selected >= 0  &&  selected < widget.length) {
-            widget[selected].setSelected(true);
-            widget[selected].getInput(keyChar);
-        }
+
+        widget[selected].setSelected(true);
+        widget[selected].getInput(keyChar);
+        
         return null;
     }
 

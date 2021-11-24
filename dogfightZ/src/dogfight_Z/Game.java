@@ -406,7 +406,7 @@ public class Game extends CharTimeSpace implements Runnable
         objectsManager.newStaticObjectList(clouds);
 
         cloudRefreshRateController = new HzController(refreshHz >> 1); //32Hz
-        cloudMan = new CloudsManager(clouds, cloudRefreshRateController, myJet.location, visibility);
+        cloudMan = new CloudsManager(clouds, cloudRefreshRateController, mainCamera, visibility);
         cloudManThread = new Thread(cloudMan);
 	}
 	

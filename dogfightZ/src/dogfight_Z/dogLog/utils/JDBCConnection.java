@@ -244,6 +244,60 @@ public class JDBCConnection {
         }
     }
 
+    public <T> T queryEntity(Class<T> tClass, String dql, Object ... args) throws SQLException, NoSuchMethodException{
+        if (connection == null) return null;
+        if(opened  &&  getWorkingTime() > timeOutSec) return null;
+        PreparedStatement ppdStmt = null;
+        asyncLock.readLock().lock();
+        try {
+            ppdStmt = connection.prepareStatement(dql);
+            ppdStmt.setQueryTimeout(timeOutSec);
+
+            //绑定参数
+            int i = 0;
+            for(Object each : args) {
+                ppdStmt.setObject(++i, each);
+            }
+
+            //执行查询并返回查询结果构造的脱机结果集
+            return constructEntity(tClass, ppdStmt.executeQuery());
+        } finally {
+            try {
+                if(ppdStmt != null  &&  !ppdStmt.isClosed()) ppdStmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            asyncLock.readLock().unlock();
+        }
+    }
+    
+    public <T> T queryEntity(Class<T> tClass, Iterable<Object> args, String dql) throws SQLException, NoSuchMethodException{
+        if (connection == null) return null;
+        if(opened  &&  getWorkingTime() > timeOutSec) return null;
+        PreparedStatement ppdStmt = null;
+        asyncLock.readLock().lock();
+        try {
+            ppdStmt = connection.prepareStatement(dql);
+            ppdStmt.setQueryTimeout(timeOutSec);
+
+            //绑定参数
+            int i = 0;
+            for(Object each : args) {
+                ppdStmt.setObject(++i, each);
+            }
+
+            //执行查询并返回查询结果构造的脱机结果集
+            return constructEntity(tClass, ppdStmt.executeQuery());
+        } finally {
+            try {
+                if(ppdStmt != null  &&  !ppdStmt.isClosed()) ppdStmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            asyncLock.readLock().unlock();
+        }
+    }
+    
     public <T> List<T> queryEntities(Class<T> tClass, String dql, Object ... args) throws SQLException, NoSuchMethodException{
         if (connection == null) return null;
         if(opened  &&  getWorkingTime() > timeOutSec) return null;
@@ -533,6 +587,41 @@ public class JDBCConnection {
         while(rs.next()) {
             try {
                 result.add(resultConstructor.newInstance(rs));
+            } catch (InstantiationException e) {
+                System.out.println(e.getMessage());
+            } catch (IllegalAccessException e) {
+                System.out.println(e.getMessage());
+            } catch (InvocationTargetException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        rs.close();
+        return result;
+    }
+
+    /**
+     * 使用 ResultSet 构造脱机的单个实体
+     * @param resultClass 要构造的实体类的模板对象
+     * @param rs JDBC 查询结果集
+     * @param <T> 要构造的实体类
+     * @return 脱机的单个实体
+     * @throws SQLException
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     * @throws InstantiationException
+     */
+    public static <T> T constructEntity(Class<T> resultClass, ResultSet rs) throws NoSuchMethodException, SQLException {
+        if(rs == null) return null;
+
+        T result = null;
+
+        Constructor<T> resultConstructor = resultClass.getDeclaredConstructor(ResultSet.class);
+        resultConstructor.setAccessible(true);
+        
+        if(rs.next()) {
+            try {
+                result = resultConstructor.newInstance(rs);
             } catch (InstantiationException e) {
                 System.out.println(e.getMessage());
             } catch (IllegalAccessException e) {

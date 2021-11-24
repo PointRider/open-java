@@ -278,7 +278,7 @@ public class Missile extends Aircraft implements Dynamic
 		cameraRollAngle[2] = -roll_angle[2];
 		
 		double x, y, z, t, r1, r2;
-		from.effects.add(new EngineFlame(location, (short)50));
+		from.effects.add(new EngineFlame(location, 100));
 		
 		for(int repeat = 0; repeat < 2; ++repeat)
 		{
@@ -310,7 +310,7 @@ public class Missile extends Aircraft implements Dynamic
 			//-----------------------------------
 			//location[0] += CharTimeSpace.g;
 			
-			if(target != null    &&    target.isAlive    &&    range(location, target.location) < 128)
+			if(target != null    &&    target.isAlive    &&    range(location, target.location) < 224)
 			{
 				target.getDamage((int)(50 - 10 * Math.random()), from, "Missile");
 				new ExplosionMaker(location, 15, (short)75, 0.025, 0.1, from.effects);

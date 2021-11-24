@@ -15,9 +15,17 @@ public class TipsConfirmMenu extends Menu {
     private CharLabel  lblTip;
     private CharButton btnOK;
     private CharButton btnCancel;
+    //private Runnable   callBack;
     
-    public TipsConfirmMenu(String[] args, String tip, JTextArea screen, int resolutionX, int resolutionY) {
+    public TipsConfirmMenu(String[] args, String tip, JTextArea screen, int resolutionX, int resolutionY, Runnable callBackConfirm, Runnable callBackCancel) {
+        this(args, tip, "O K", "Cancel", screen, resolutionX, resolutionY, callBackConfirm, callBackCancel);
+    }
+    
+    public TipsConfirmMenu(String[] args, String tip, String selectionConfirm, String selectionCancel, JTextArea screen, int resolutionX, int resolutionY, Runnable callBackConfirm, Runnable callBackCancel) {
         super(args, screen, 2, resolutionX, resolutionY);
+        
+        //this.callBack = callBack;
+        
         lblTip = new CharLabel(
             screenBuffer, 
             1, 
@@ -31,14 +39,15 @@ public class TipsConfirmMenu extends Menu {
         btnOK = new CharButton(
             screenBuffer, 
             resolution, 
-            "O K", 
-            34, 
-            29,
+            selectionConfirm, 
+            (resolutionX >> 1) + 1, 
+            resolutionY - 6,
             20,
             new Operable() {
                 @Override
                 public Operation call() {
-                    return new Operation(true, null, null, null, true);
+                    callBackConfirm.run();
+                    return new Operation(true, null, null, null, null, null);
                 }
                 
             }
@@ -47,14 +56,15 @@ public class TipsConfirmMenu extends Menu {
         btnCancel = new CharButton(
                 screenBuffer, 
                 resolution, 
-                "Cancel", 
-                10, 
-                29,
+                selectionCancel, 
+                (resolutionX >> 1) - 25, 
+                resolutionY - 6,
                 20,
                 new Operable() {
                     @Override
                     public Operation call() {
-                        return new Operation(true, null, null, null, false);
+                        callBackCancel.run();
+                        return new Operation(true, null, null, null, null, null);
                     }
                     
                 }

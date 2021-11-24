@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import graphic_Z.Cameras.TDCamera;
 import graphic_Z.Interfaces.ThreeDs;
+import graphic_Z.Worlds.CharWorld;
 import graphic_Z.utils.HzController;
 
 public class CloudsManager implements Runnable
@@ -14,12 +16,12 @@ public class CloudsManager implements Runnable
 	private RandomClouds aCloud;
 	private ArrayList<ThreeDs> clouds;
 	private double visibility;
-	private double location[];
+	private TDCamera<CharWorld> playerCamera;
 	private HzController rateController;
 	private Thread rateSynThread;
 	private ExecutorService epool;
 	
-	public CloudsManager(ArrayList<ThreeDs> clouds, HzController rateController, double location[], double visibility) {
+	public CloudsManager(ArrayList<ThreeDs> clouds, HzController rateController, TDCamera<CharWorld> playerCamera, double visibility) {
 		double random1, random2, random3;
 		
 		for(currentCloudsCount=0 ; currentCloudsCount < maxCloudsCount ; ++currentCloudsCount)
@@ -37,12 +39,12 @@ public class CloudsManager implements Runnable
 			clouds.add
 			(
 				new RandomClouds
-				(location, visibility, -2250, 0.1)
+				(playerCamera, visibility, -2250, 0.1)
 			);
 		}
 		this.clouds         = clouds;
 		this.rateController = rateController;
-		this.location       = location;
+		this.playerCamera   = playerCamera;
 		this.visibility     = visibility;
 		
 		//hzPool = Executors.newSingleThreadExecutor();
@@ -66,7 +68,7 @@ public class CloudsManager implements Runnable
 				for(int i=0 ; i<currentCloudsCount ; ++i) {
 					aCloud = (RandomClouds) clouds.get(i);
 					
-					if(range_YZ(aCloud.location, location) > visibility * 1.10)
+					if(range_YZ(aCloud.location, playerCamera.location) > visibility * 1.10)
 						epool.execute(aCloud);
 						//aCloud.run();
 						//(new Thread(aCloud)).start();

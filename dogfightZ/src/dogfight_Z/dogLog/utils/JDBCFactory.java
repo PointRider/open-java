@@ -171,7 +171,6 @@ public class JDBCFactory {
                     System.out.println("t1 returned " + i);
                 }
 
-
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {

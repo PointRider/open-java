@@ -144,11 +144,20 @@ public class Aircraft extends CharMessObject
 	{
 		super(modelFile, Mess, line);
 		killed				= dead = 0;
+		/*
 		fov_1stPerson		= 2.6;
 		fov_3thPerson		= 2.6;
 		fov_pushing			= 2.9;
 		fov_gunFiring       = 1.0;
 		fov_current			= 2.6;
+		*/
+
+        fov_1stPerson       = 9.28;
+        fov_3thPerson       = 9.28;
+        fov_pushing         = 9.36;
+        fov_gunFiring       = 8.9;
+        fov_current         = 9.28;
+        
 		respwanAtTime		= 0;
 		specialDisplay		= '@';
 		ID					= id;
@@ -862,26 +871,30 @@ public class Aircraft extends CharMessObject
 		cameraLocation[1] += location[1];
 		cameraLocation[2] += location[2];
 		
-		if(isPushing) {
-			fov_current += 0.025;
+		if(mainCamera.location != cameraLocation) {
+		    fov_current = 9.37;
+		} else if(isPushing) {
+		    /*
+			fov_current += 0.005;
 			if(fov_current > fov_pushing)
-				fov_current = fov_pushing;
-		}
-		else
-		{
+				fov_current = fov_pushing;*/
+			fov_current += (fov_pushing / fov_current - 1) * 2;
+		} else {
 			if(isCannonFiring) {
+			    fov_current += (fov_gunFiring / fov_current - 1);
+			    /*
 				if(fov_current > fov_gunFiring) fov_current -= 0.08;
-				else fov_current = fov_gunFiring;
+				else fov_current = fov_gunFiring;*/
 			} else switch(cameraLocationFlag) {
 				case 0:
-					fov_current += (fov_3thPerson / fov_current - 1) / 8;
+					fov_current += (fov_3thPerson / fov_current - 1) / 2;
 					/*
 					if(fov_current > fov_3thPerson)      fov_current -= 0.005;
 					else if(fov_current < fov_3thPerson) fov_current += 0.005;
 					*/
 					break;
 				case 1:
-					fov_current += (fov_1stPerson / fov_current - 1) / 8;
+					fov_current += (fov_1stPerson / fov_current - 1) / 2;
 					/*
 					if(fov_current > fov_1stPerson)      fov_current -= 0.005;
 					else if(fov_current < fov_1stPerson) fov_current += 0.005;

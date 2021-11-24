@@ -2,11 +2,11 @@ package dogfight_Z.dogLog.utils;
 
 import java.sql.SQLException;
 
-public class SQLiteTest {
+public class DBInit {
     
     static {
         try {
-            Class.forName("dogfight_Z.Menu.utils.JDBCFactory");
+            Class.forName("dogfight_Z.dogLog.utils.JDBCFactory");
         } catch (ClassNotFoundException e) {
             // TODO 自动生成的 catch 块
             e.printStackTrace();
@@ -27,6 +27,7 @@ public class SQLiteTest {
                 "  `userPass` varchar(64) NOT NULL," +
                 "  `userNick` varchar(64)," +
                 "  `userBank` decimal(12,2) DEFAULT 0.00," +
+                "  `gameRecordShare` integer NOT NULL," +
                 "  `createTime` datetime NOT NULL DEFAULT (datetime('now', 'localtime'))," +
                 "  `resolutionX` integer DEFAULT 160," +
                 "  `resolutionY` integer DEFAULT 83," +

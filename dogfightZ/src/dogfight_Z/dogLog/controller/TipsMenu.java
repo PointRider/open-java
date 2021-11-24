@@ -22,7 +22,7 @@ public class TipsMenu extends Menu {
             1, 
             resolution, 
             tip, 
-            (resolutionX >> 1) - (tip.length() >> 1) - 3, 
+            (resolutionX >> 1) - (tip.length() >> 1), 
             resolutionY >> 1,
             false
         );
@@ -31,13 +31,13 @@ public class TipsMenu extends Menu {
             screenBuffer, 
             resolution, 
             "O K", 
-            (resolutionX >> 1) - 10, 
-            24,
+            (resolutionX >> 1) - 12, 
+            resolutionY - 6,
             20,
             new Operable() {
                 @Override
                 public Operation call() {
-                    return new Operation(true, null, null, null, null);
+                    return new Operation(true, null, null, null, null, null);
                 }
                 
             }

@@ -11,6 +11,7 @@ import javax.swing.JTextArea;
 
 import dogfight_Z.CloudsManager;
 import graphic_Z.Cameras.CharFrapsCamera;
+import graphic_Z.Cameras.TDCamera;
 import graphic_Z.Common.Operation;
 import graphic_Z.HUDs.CharDynamicHUD;
 import graphic_Z.HUDs.CharHUD;
@@ -22,6 +23,7 @@ import graphic_Z.HUDs.HUD;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Objects.CharMessObject;
 import graphic_Z.Objects.TDObject;
+import graphic_Z.Worlds.CharWorld;
 import graphic_Z.utils.Common;
 import graphic_Z.utils.GraphicUtils;
 import graphic_Z.utils.HzController;
@@ -212,30 +214,32 @@ public class ScreenResizer extends Menu
 	    
 	}
 	
-	private static class MCamera {
+	private static class MCamera extends TDCamera<CharWorld> {
 	    
-	    double location[];
+	    //double location[];
 	    double roll_source[];
-	    double FOV;
+	    //double FOV;
 	    
-	    public MCamera() {
+	    public MCamera(double cameraFOV, double visblt, CharWorld inWhichWorld) {
+	        super(cameraFOV, visblt, inWhichWorld);
 	        location = new double[3];
 	        roll_source = new double[3];
-	    }
-	    
-	    public void setFOV(double fov) {
-	        this.FOV = fov;
 	    }
 	    /*
 	    public void resizeScreen(int x, int y) {
 	        if(x < 1 || y < 1) return;
 	        visualManager.reSizeScreen(x, y);
 	    }*/
+
+        @Override
+        public Object exposure() {
+            return null;
+        }
 	}
 	
 	private void initMainCamera(int x, int y) {
 	    visualManager = new VManager(resolution, screenBuffer, x, y);
-	    mainCamera = new MCamera();
+	    mainCamera = new MCamera(2.6, 12480, null);
 	}
 	
 	private void initMe(String myJetModel_file, int x, int y) {
@@ -400,7 +404,7 @@ public class ScreenResizer extends Menu
         visualManager.staticObjLists.add(clouds);
 
         cloudRefreshRateController = new HzController(32);
-        cloudMan = new CloudsManager(clouds, cloudRefreshRateController, myJet.location, visibility);
+        cloudMan = new CloudsManager(clouds, cloudRefreshRateController, mainCamera, visibility);
         cloudManThread = new Thread(cloudMan);
 	}
 	
@@ -677,7 +681,7 @@ public class ScreenResizer extends Menu
     @Override
     public Operation putKeyReleaseEvent(int keyCode) {
         if(keyCode == KeyEvent.VK_ENTER) {
-            return new Operation(true, null, null, null, new int[] {resolution[0], resolution[1], scrSize}); 
+            return new Operation(true, null, null, null, new int[] {resolution[0], resolution[1], scrSize}, null); 
         }
         return null;
     }

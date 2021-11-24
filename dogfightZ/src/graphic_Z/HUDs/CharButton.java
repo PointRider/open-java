@@ -105,7 +105,6 @@ public class CharButton extends CharLabel implements Operable, Widget {
 
     @Override
     public boolean getInput(int keyChar) {
-        // TODO 自动生成的方法存根
         return false;
     }
 

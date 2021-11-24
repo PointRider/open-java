@@ -178,7 +178,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 					}
 					else //未发生优先级切换
 					{
-						if(/*myJet.missileMagazineLeft > 0  &&  */currentSelectObj!=null && a!=null && currentSelectObj.getID().equals(a.getID())  &&  !reversed)//
+						if(/*myJet.missileMagazineLeft > 0  &&  */location == myJet.cameraLocation && currentSelectObj!=null && a!=null && currentSelectObj.getID().equals(a.getID())  &&  !reversed)//
 						{//如果正在锁定或者已锁定了a
 							lockingSelected = true;//设置已选择锁定a的状态
 							if(locked)//已锁定

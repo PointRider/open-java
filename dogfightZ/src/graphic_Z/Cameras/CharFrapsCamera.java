@@ -160,7 +160,9 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	{
 		for(ThreeDs aObject:objList) exposureObject(aObject, rad(roll_angle[0]), rad(roll_angle[1]), rad(roll_angle[2]));
 	}
-	
+
+    private static final int notOnScreen[] = {-1, -1, -1};
+    
 	protected double exposureObject(ThreeDs aObject, double cr0, double cr1, double cr2, boolean staticOver) {
 	    
 		double locationOfanObj[]  = aObject.getLocation();
@@ -246,18 +248,14 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 					sin$ = GraphicUtils.sin(cr2);
 					X = cos$ * X0 - sin$ * Y0;
 					Y = sin$ * X0 + cos$ * Y0;
-					X0 = X;
-					Y0 = Y;
 					
 					int result[] = {(int)Y+XcenterI, (int)X+YcenterI, (int)Z0};
 					return result;
 				}
-				int result[] = {-1, -1, -1};
-				return result;
+				return notOnScreen;
 			};
 			
 			p1 = getPoint.run(aPointOfanObj[0], aPointOfanObj[1], aPointOfanObj[2]);
-
 			X1 = p1[0];
 			Y1 = p1[1];
 			Z1 = p1[2];
@@ -281,7 +279,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 				GraphicUtils.drawLine(fraps_buffer, X1, Y1, X2, Y2, (spc =='\0'? inWorld.visualManager.point[index] : spc), staticOver);
 				++i;
 			} else {
-				if(X1>=0 && Y1>=0 && X1<resolution[0] && Y1<resolution[1])
+				if(Z1 >=0 && X1>=0 && Y1>=0 && X1<resolution[0] && Y1<resolution[1])
 				{
 					index = (int)((Z1 * 38) / visibility);
 
@@ -396,8 +394,6 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
                     sin$ = GraphicUtils.sin(cr2);
                     X = cos$ * X0 - sin$ * Y0;
                     Y = sin$ * X0 + cos$ * Y0;
-                    X0 = X;
-                    Y0 = Y;
                     
                     int result[] = {(int)Y+XcenterI, (int)X+YcenterI, (int)Z0};
                     return result;

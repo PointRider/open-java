@@ -24,7 +24,7 @@ public class PilotLog extends Menu {
 
             @Override
             public Operation call() {
-                return new Operation(false, null, null, new Color(64, 96, 128), null);
+                return new Operation(false, new PilotLogin(args, screen, resolution[0], resolution[1]), null, new Color(64, 96, 128), null, null);
             }
             
         },
@@ -32,14 +32,13 @@ public class PilotLog extends Menu {
 
             @Override
             public Operation call() {
-                return new Operation(false, new DogRegist(args, screen, resolution[0], resolution[1]), null, null, null);
+                return new Operation(false, new DogRegist(args, screen, resolution[0], resolution[1]), null, null, null, null);
             }
             
         },
     };
     
-    private CharLabel logo;
-    //private CharSingleLineTextEdit txtbox;
+    private CharLabel  logo;
     private CharButton entries[];
     
     public PilotLog(String args[], JTextArea screen, int width, int height) {
@@ -50,7 +49,7 @@ public class PilotLog extends Menu {
             resolution, 
             logoString, 
             (resolution[0] >> 1) - 31, 
-            (resolution[1] >> 1) - 11,
+            4,
             true
         );
         
@@ -65,7 +64,7 @@ public class PilotLog extends Menu {
                 resolution, 
                 indices[cur],
                 (resolution[0] >> 1) - ((length + 4) >> 1), 
-                (resolution[1] >> 1) + (cur * 5),
+                18 + (cur * 5),
                 buttonEvents[cur]
             );
         }
@@ -101,6 +100,9 @@ public class PilotLog extends Menu {
             //opt = new Operation(false, null, new Color(64, 96, 128));
             entries[getSelectedIndex()].setSelected(true);
             opt = entries[getSelectedIndex()].call();
+            break;
+        case KeyEvent.VK_ESCAPE:
+            opt = new Operation(true, null, null, null, null, null);
             break;
         default:
             //txtbox.getControl(keyCode);

@@ -1,9 +1,8 @@
 package dogfight_Z.dogLog.service;
 
-import java.sql.SQLException;
-
 import dogfight_Z.dogLog.dao.PlayerProfileDAO;
 import dogfight_Z.dogLog.model.PlayerProfile;
+import dogfight_Z.dogLog.view.DogLog;
 
 public class PlayerProfileService {
 
@@ -16,10 +15,15 @@ public class PlayerProfileService {
     private PlayerProfileService() {
     }
 
-    public int regist(PlayerProfile p) throws SQLException {
+    public int regist(PlayerProfile p) {
+        p.setUserPass(DogLog.getPasswordencoder().encrypt(p.getUserPass()));
         return PlayerProfileDAO.getPlayerProfileDAO().registPlayer(p);
     }
     
+    public PlayerProfile login(PlayerProfile p) {
+        p.setUserPass(DogLog.getPasswordencoder().encrypt(p.getUserPass()));
+        return PlayerProfileDAO.getPlayerProfileDAO().login(p);
+    }    
     public static PlayerProfileService getPlayerProfileService() {
         return playerProfileService;
     }

@@ -110,7 +110,7 @@ public class CharSingleLineTextEdit extends CharLabel implements KeyInputGetter,
         if(text.size() < size && keyChar >= 32 && keyChar <= 126) {
             inputItr.add((char)keyChar);
             return true;
-        } else if(keyChar == KeyEvent.VK_BACK_SPACE) {
+        } else if(keyChar == KeyEvent.VK_BACK_SPACE  &&  !inputItr.isBegin()) {
             inputItr.previous();
             inputItr.remove();
             return true;

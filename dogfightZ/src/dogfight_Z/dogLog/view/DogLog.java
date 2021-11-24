@@ -17,6 +17,8 @@ import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
 import dogfight_Z.dogLog.controller.PilotLog;
+import dogfight_Z.dogLog.security.Irreversible;
+import dogfight_Z.dogLog.security.SHA256Hex;
 import graphic_Z.Common.Operation;
 
 public class DogLog extends JFrame {
@@ -24,6 +26,8 @@ public class DogLog extends JFrame {
     /**
      * 
      */
+    private static final Irreversible<String, String> passwordEncoder = new SHA256Hex();
+    
     private static final long serialVersionUID = -4187237321637169638L;
 
     private JTextArea      mainScr;
@@ -35,6 +39,14 @@ public class DogLog extends JFrame {
     private DogMenu        baseMenu;
     
     //private String []      args;
+    static {
+        try {
+            Class.forName("dogfight_Z.dogLog.utils.JDBCFactory");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+    }
     
     private void initUI() {
         pcScreenWidth  = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -53,7 +65,7 @@ public class DogLog extends JFrame {
         mainScr.setEditable(false);
         mainScr.setFocusable(false);
         mainScr.setText("Welcome to the game world !");
-        mainScr.setFont(new Font("新宋体", Font.PLAIN, 24));
+        mainScr.setFont(new Font("新宋体", Font.PLAIN, 20));
         mainScr.setBackground(new Color(0, 0, 0));
         mainScr.setForeground(new Color(255, 255, 255));
         //mainScr.setBackground(new Color(255, 200, 64));
@@ -76,12 +88,9 @@ public class DogLog extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
 
-                int keyCode = e.getKeyCode();
-                if(keyCode == KeyEvent.VK_ESCAPE) System.exit(0);
-
                 DogMenu menu = menuStack.peek();
                 
-                Operation o  = menu.putKeyPressEvent(keyCode);
+                Operation o  = menu.putKeyPressEvent(e.getKeyCode());
                 
                 DogMenu m = operationProcessor(menu, o);
                 
@@ -94,12 +103,9 @@ public class DogLog extends JFrame {
             @Override
             public void keyReleased(KeyEvent e) {
 
-                int keyCode = e.getKeyCode();
-                if(keyCode == KeyEvent.VK_ESCAPE) System.exit(0);
-
                 DogMenu menu = menuStack.peek();
                 
-                Operation o  = menu.putKeyReleaseEvent(keyCode);
+                Operation o  = menu.putKeyReleaseEvent(e.getKeyCode());
                 
                 DogMenu m = operationProcessor(menu, o);
                 
@@ -117,11 +123,13 @@ public class DogLog extends JFrame {
                 Color c;
                 Object returnValue;
                 DogMenu tmp = menu;
-                
+                Runnable callback;
                 if(o != null) {
-                    if(o.isGoBack() && menu != baseMenu) {
-                        menuStack.pop();//注1
-                        menu = menuStack.peek();
+                    if(o.isGoBack()) {
+                        if(menu != baseMenu) {
+                            menuStack.pop();//注1
+                            menu = menuStack.peek();
+                        } else System.exit(0);
                     }
                     if((returnValue = o.getReturnValue()) != null) {
                         menu.sendMail(returnValue);//注意此时的menu可能已经是 注1 处pop后的下一个menu
@@ -129,6 +137,9 @@ public class DogLog extends JFrame {
                     if((tmp = o.getGetInto()) != null) {
                         menuStack.push(tmp);
                         menu = tmp;
+                    }
+                    if((callback = o.getCallBack()) != null) {
+                        callback.run();
                     }
                     if((c = o.getFlashColor()) != null) {
                         flashColor(c);
@@ -191,7 +202,7 @@ public class DogLog extends JFrame {
         initUI();
         //menuReturnStack = new Stack<>();
         menuStack       = new Stack<>();
-        baseMenu        = new PilotLog(args, mainScr, 64, 32);
+        baseMenu        = new PilotLog(args, mainScr, 64, 36);
         menuStack.push(baseMenu);
         menuStack.peek().getPrintNew();
     }
@@ -231,5 +242,9 @@ public class DogLog extends JFrame {
                 }
             }
         });
+    }
+
+    public static Irreversible<String, String> getPasswordencoder() {
+        return passwordEncoder;
     }
 }

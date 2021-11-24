@@ -1,7 +1,9 @@
 package dogfight_Z;
 
+import graphic_Z.Cameras.TDCamera;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Objects.CharObject;
+import graphic_Z.Worlds.CharWorld;
 
 public class RandomClouds extends CharObject implements Runnable, ThreeDs
 {
@@ -9,7 +11,8 @@ public class RandomClouds extends CharObject implements Runnable, ThreeDs
 	double density;
 	double visibility;
 	double hight;
-	double location_player[];
+	//double location_player[];
+	TDCamera<CharWorld> playerCamera;
 	/*
 	public RandomClouds (  
 		double Location[], double Visibility, double Hight,
@@ -91,7 +94,7 @@ public class RandomClouds extends CharObject implements Runnable, ThreeDs
 	
 	public RandomClouds
 	(	//		hights
-		double Location[], double Visibility, double Hight,
+	    TDCamera<CharWorld> playerCamera, double Visibility, double Hight,
 		double size_X, double size_Y, double size_Z,
 		double max_density
 	)
@@ -109,7 +112,7 @@ public class RandomClouds extends CharObject implements Runnable, ThreeDs
 
 		density = max_density;
 		
-		location_player = Location;
+		this.playerCamera = playerCamera;
 		location = new double[3];
 		
 		location[0] = Math.random();
@@ -123,8 +126,8 @@ public class RandomClouds extends CharObject implements Runnable, ThreeDs
 			location[2] = -location[2];
 		
 		location[0] = hight - location[0] * 2 * size[1];
-		location[1] = location[1] * visibility + location_player[1];
-		location[2] = location[2] * visibility + location_player[2];
+		location[1] = location[1] * visibility + playerCamera.location[1];
+		location[2] = location[2] * visibility + playerCamera.location[2];
 		
 		roll_angle[0] = roll_angle[1] = roll_angle[2] = 0.0;
 		
@@ -148,13 +151,13 @@ public class RandomClouds extends CharObject implements Runnable, ThreeDs
 	
 	public RandomClouds
 	(
-		double Location[], double Visibility,
+	    TDCamera<CharWorld> playerCamera, double Visibility,
 		double Hight, double max_density
 	)
 	{
 		this
 		(
-			Location, Visibility, Hight,
+		    playerCamera, Visibility, Hight,
 			Math.random() * 300, 
 			Math.random() * 1000, 
 			Math.random() * 1000,
@@ -164,8 +167,8 @@ public class RandomClouds extends CharObject implements Runnable, ThreeDs
 	
 	public RandomClouds
 	(
-		double Location[], double Visibility, double Hight
-	)	{this(Location, Visibility, Hight, Math.random() * 1000);}
+	    TDCamera<CharWorld> playerCamera, double Visibility, double Hight
+	)	{this(playerCamera, Visibility, Hight, Math.random() * 1000);}
 	
 	public void reConstruct()
 	{
@@ -180,8 +183,8 @@ public class RandomClouds extends CharObject implements Runnable, ThreeDs
 			location[2] = -location[2];
 		
 		location[0] = /*location_player[0] < hight - visibility? hight + location_player[0] - location[0] * 2 * size[1] :*/ hight - location[0] * 2 * size[1];
-		location[1] = location[1] * visibility + location_player[1];
-		location[2] = location[2] * visibility + location_player[2];
+		location[1] = location[1] * visibility + playerCamera.location[1];
+		location[2] = location[2] * visibility + playerCamera.location[2];
 		/*
 		for(int i=0 ; i<points_count ; ++i)
 		{

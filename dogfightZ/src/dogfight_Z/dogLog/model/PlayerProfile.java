@@ -1,7 +1,10 @@
 package dogfight_Z.dogLog.model;
 
 import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class PlayerProfile extends SimplePrimaryKey {
     //-----------[profile]------------
@@ -10,6 +13,7 @@ public class PlayerProfile extends SimplePrimaryKey {
     private String        userPass;
     private String        userNick;
     private BigDecimal    userBank;
+    private int           gameRecordShare;
     private LocalDateTime createTime;
     //-----------[config]-------------
     private int           resolutionX;
@@ -19,8 +23,8 @@ public class PlayerProfile extends SimplePrimaryKey {
     
     public PlayerProfile() {
     }
-
-    public PlayerProfile(int userID, String userName, String userPass, String userNick, BigDecimal userBank,
+    
+    public PlayerProfile(int userID, String userName, String userPass, String userNick, BigDecimal userBank, int gameRecordShared,
             LocalDateTime createTime, int resolutionX, int resolutionY, int fontSize) {
         super();
         this.userID = userID;
@@ -28,10 +32,25 @@ public class PlayerProfile extends SimplePrimaryKey {
         this.userPass = userPass;
         this.userNick = userNick;
         this.userBank = userBank;
+        this.gameRecordShare = gameRecordShared;
         this.createTime = createTime;
         this.resolutionX = resolutionX;
         this.resolutionY = resolutionY;
         this.fontSize = fontSize;
+    }
+
+    public PlayerProfile(ResultSet rs) throws SQLException  {
+        super();
+        this.userID          = rs.getInt("userID");
+        this.userName        = rs.getString("userName");
+        this.userPass        = rs.getString("userPass");
+        this.userNick        = rs.getString("userNick");
+        this.userBank        = rs.getBigDecimal("userBank");
+        this.gameRecordShare = rs.getInt("gameRecordShare");
+        this.createTime      = LocalDateTime.parse(rs.getString("createTime"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.resolutionX     = rs.getInt("resolutionX");
+        this.resolutionY     = rs.getInt("resolutionY");
+        this.fontSize        = rs.getInt("fontSize");
     }
 
     @Override
@@ -110,4 +129,21 @@ public class PlayerProfile extends SimplePrimaryKey {
     public void setFontSize(int fontSize) {
         this.fontSize = fontSize;
     }
+
+    public int getGameRecordShare() {
+        return gameRecordShare;
+    }
+
+    public void setGameRecordShare(int gameRecordShare) {
+        this.gameRecordShare = gameRecordShare;
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerProfile [userID=" + userID + ", userName=" + userName + ", userPass=" + userPass + ", userNick="
+                + userNick + ", userBank=" + userBank + ", gameRecordShared=" + gameRecordShare + ", createTime="
+                + createTime + ", resolutionX=" + resolutionX + ", resolutionY=" + resolutionY + ", fontSize="
+                + fontSize + "]";
+    }
+    
 }
