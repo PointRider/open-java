@@ -42,18 +42,13 @@ public class TipsMenu extends Menu {
                 
             }
         );
-        
     }
 
     @Override
-    public void getPrintNew() {
-        clearScreenBuffer();
-        
+    public void getRefresh() {
         lblTip.printNew();
         btnOK.setSelected(true);
         btnOK.printNew();
-        
-        setScreen(screen);
     }
 
     @Override
@@ -81,15 +76,25 @@ public class TipsMenu extends Menu {
     }
 
     @Override
-    public Operation beforePrintNewEvent() {
+    public Operation beforeRefreshNotification() {
         // TODO 自动生成的方法存根
         return null;
     }
 
     @Override
-    public Operation afterPrintNewEvent() {
+    public Operation afterRefreshNotification() {
         // TODO 自动生成的方法存根
         return null;
+    }
+
+    @Override
+    protected void beforeRefreshEvent() {
+        
+    }
+
+    @Override
+    protected void afterRefreshEvent() {
+        
     }
 
 }

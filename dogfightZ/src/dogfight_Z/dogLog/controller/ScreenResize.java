@@ -30,15 +30,15 @@ public class ScreenResize extends Menu {
     }
 
     @Override
-    public void getPrintNew() {
-        clearScreenBuffer();
+    public void getRefresh() {
         tip.printNew();
-        setScreen(screen);
     }
 
     @Override
     public Operation putKeyReleaseEvent(int keyCode) {
         switch(keyCode) {
+        case KeyEvent.VK_ESCAPE:
+            return new Operation(true, null, null, null, null, null);
         case KeyEvent.VK_ENTER: 
             return new Operation(false, new ScreenResizer(args, screen, resolutionSetting), null, null, null, null);
         }
@@ -56,7 +56,7 @@ public class ScreenResize extends Menu {
     }
 
     @Override
-    public Operation beforePrintNewEvent() {
+    public Operation beforeRefreshNotification() {
         Object sizeInfo = pollMail();
         if(sizeInfo == null) return null;
         screen.setFont(new Font("新宋体", Font.PLAIN, 20));
@@ -64,8 +64,18 @@ public class ScreenResize extends Menu {
     }
 
     @Override
-    public Operation afterPrintNewEvent() {
+    public Operation afterRefreshNotification() {
         return null;
+    }
+
+    @Override
+    protected void beforeRefreshEvent() {
+        screen.setFont(new Font("新宋体", Font.PLAIN, 20));
+    }
+
+    @Override
+    protected void afterRefreshEvent() {
+        
     }
 
 }

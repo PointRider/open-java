@@ -10,7 +10,6 @@ import graphic_Z.Common.Operation;
 import graphic_Z.HUDs.CharButton;
 import graphic_Z.HUDs.CharLabel;
 import graphic_Z.HUDs.Operable;
-//import graphic_Z.HUDs.CharSingleLineTextEdit;
 
 public class PilotLog extends Menu {
 
@@ -71,9 +70,7 @@ public class PilotLog extends Menu {
     }
     
     @Override
-    public void getPrintNew() {
-        
-        clearScreenBuffer();
+    public void getRefresh() {
         
         logo.printNew();
         
@@ -81,8 +78,6 @@ public class PilotLog extends Menu {
             entries[i].setSelected(i == getSelectedIndex());
             entries[i].printNew();
         }
-        //txtbox.printNew();
-        setScreen(screen);
     }
 
     @Override
@@ -114,26 +109,32 @@ public class PilotLog extends Menu {
 
     @Override
     public Operation putKeyTypeEvent(int keyChar) {
-        //txtbox.getInput(keyChar);
         return null;
     }
 
     @Override
     public Operation putKeyPressEvent(int keyCode) {
-        // TODO 自动生成的方法存根
         return null;
     }
 
     @Override
-    public Operation beforePrintNewEvent() {
-        // TODO 自动生成的方法存根
+    public Operation beforeRefreshNotification() {
         return null;
     }
 
     @Override
-    public Operation afterPrintNewEvent() {
-        // TODO 自动生成的方法存根
+    public Operation afterRefreshNotification() {
         return null;
+    }
+
+    @Override
+    protected void beforeRefreshEvent() {
+        
+    }
+
+    @Override
+    protected void afterRefreshEvent() {
+        
     }
 
 }

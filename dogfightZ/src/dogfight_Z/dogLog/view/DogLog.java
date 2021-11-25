@@ -94,10 +94,10 @@ public class DogLog extends JFrame {
                 
                 DogMenu m = operationProcessor(menu, o);
                 
-                o = m.beforePrintNewEvent();
+                o = m.beforeRefreshNotification();
                 if(o != null) m = operationProcessor(m, o);
-                m.getPrintNew();
-                m.afterPrintNewEvent();
+                m.refresh();
+                m.afterRefreshNotification();
             }
 
             @Override
@@ -110,13 +110,13 @@ public class DogLog extends JFrame {
                 DogMenu m = operationProcessor(menu, o);
                 
                 do {
-                    o = m.beforePrintNewEvent();
+                    o = m.beforeRefreshNotification();
                     menu = m;
                     if(o != null) m = operationProcessor(m, o);
                 } while(m != menu);
                 
-                m.getPrintNew();
-                m.afterPrintNewEvent();
+                m.refresh();
+                m.afterRefreshNotification();
             }
             
             private DogMenu operationProcessor(DogMenu menu, Operation o) {
@@ -204,7 +204,7 @@ public class DogLog extends JFrame {
         menuStack       = new Stack<>();
         baseMenu        = new PilotLog(args, mainScr, 64, 36);
         menuStack.push(baseMenu);
-        menuStack.peek().getPrintNew();
+        menuStack.peek().refresh();
     }
     
     public DogLog(String args[]) throws HeadlessException {

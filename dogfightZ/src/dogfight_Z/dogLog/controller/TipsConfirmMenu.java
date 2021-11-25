@@ -72,9 +72,7 @@ public class TipsConfirmMenu extends Menu {
     }
 
     @Override
-    public void getPrintNew() {
-        clearScreenBuffer();
-        
+    public void getRefresh() {
         switch(getSelectedIndex()) {
         case 0: btnCancel.setSelected(true); break;
         case 1: btnOK.setSelected(true); break;
@@ -82,8 +80,6 @@ public class TipsConfirmMenu extends Menu {
         lblTip.printNew();
         btnCancel.printNew();
         btnOK.printNew();
-        
-        setScreen(screen);
     }
 
     @Override
@@ -124,15 +120,25 @@ public class TipsConfirmMenu extends Menu {
     }
 
     @Override
-    public Operation beforePrintNewEvent() {
+    public Operation beforeRefreshNotification() {
         // TODO 自动生成的方法存根
         return null;
     }
 
     @Override
-    public Operation afterPrintNewEvent() {
+    public Operation afterRefreshNotification() {
         // TODO 自动生成的方法存根
         return null;
+    }
+
+    @Override
+    protected void beforeRefreshEvent() {
+        
+    }
+
+    @Override
+    protected void afterRefreshEvent() {
+        
     }
 
 }

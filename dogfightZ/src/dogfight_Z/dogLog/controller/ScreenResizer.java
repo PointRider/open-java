@@ -576,11 +576,8 @@ public class ScreenResizer extends Menu
 	    return new int[] {visualManager.resolution[0], visualManager.resolution[1], scrSize};
 	}
 	
-    @SuppressWarnings("deprecation")
     @Override
-    public void getPrintNew() {
-        clearScreenBuffer();
-        
+    public void getRefresh() {
         for(Iterable<ThreeDs> staticList : visualManager.staticObjLists) {
             for(ThreeDs aCloud : staticList) {
                 CharFrapsCamera.exposureAnObject(
@@ -619,11 +616,6 @@ public class ScreenResizer extends Menu
         
         visualManager.printNew(screen);
         
-        setScreen(screen);
-        if(cloudManThread != null) {
-            cloudManThread.stop();
-            cloudManThread = null;
-        }
     }
     
     public void resizeScreen(int x, int y) {
@@ -674,26 +666,43 @@ public class ScreenResizer extends Menu
 
     @Override
     public Operation putKeyTypeEvent(int keyChar) {
-        // TODO 自动生成的方法存根
         return null;
     }
 
     @Override
     public Operation putKeyReleaseEvent(int keyCode) {
-        if(keyCode == KeyEvent.VK_ENTER) {
+        
+        switch(keyCode) {
+        case KeyEvent.VK_ESCAPE:
+            return new Operation(true, null, null, null, null, null);
+        case KeyEvent.VK_ENTER:
             return new Operation(true, null, null, null, new int[] {resolution[0], resolution[1], scrSize}, null); 
         }
         return null;
     }
 
     @Override
-    public Operation beforePrintNewEvent() {
+    public Operation beforeRefreshNotification() {
         return null;
     }
 
     @Override
-    public Operation afterPrintNewEvent() {
-        // TODO 自动生成的方法存根
+    public Operation afterRefreshNotification() {
         return null;
+    }
+
+    @Override
+    protected void beforeRefreshEvent() {
+        
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    protected void afterRefreshEvent() {
+
+        if(cloudManThread != null) {
+            cloudManThread.stop();
+            cloudManThread = null;
+        }
     }
 }

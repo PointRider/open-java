@@ -4,11 +4,11 @@ import graphic_Z.Common.Operation;
 
 public interface DogMenu {
 
-    Operation beforePrintNewEvent();
-    Operation afterPrintNewEvent();
+    Operation beforeRefreshNotification();
+    Operation afterRefreshNotification();
     Operation putKeyReleaseEvent(int keyCode);
     Operation putKeyPressEvent(int keyCode);
     Operation putKeyTypeEvent(int keyChar);
     void sendMail(Object o);
-    void getPrintNew();
+    void refresh();
 }

@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JTextArea;
 
 import dogfight_Z.dogLog.model.PlayerProfile;
-import dogfight_Z.dogLog.service.PlayerProfileService;
+import dogfight_Z.dogLog.service.PlayerProfileServiceImp;
 import dogfight_Z.dogLog.view.Menu;
 import graphic_Z.Common.Operation;
 import graphic_Z.HUDs.CharButton;
@@ -44,7 +44,7 @@ public class DogRegist extends Menu {
     private int shareMyRecord = 1;
     
     public DogRegist(String args[], JTextArea screen, int resolutionX, int resolutionY) {
-        super(args, screen, 8, resolutionX, resolutionY);
+        super(args, screen, 0, resolutionX, resolutionY);
         
         setScreenSize = null;
         
@@ -221,7 +221,7 @@ public class DogRegist extends Menu {
                     
                     int pilotNo = -1;
                     
-                    pilotNo = PlayerProfileService.getPlayerProfileService().regist(player);
+                    pilotNo = PlayerProfileServiceImp.getPlayerProfileService().regist(player);
                     
                     if(pilotNo != -1) return new Operation(true, new TipsMenu(args, "飞行战斗员注册成功，您的编号为: " + pilotNo + "。", screen, resolution[0], resolution[1]), null, new Color(48, 64, 48), null, null);
                     return new Operation(false, new TipsMenu(args, "注册失败，可能已经存在同名的飞行员了。", screen, resolution[0], resolution[1]), new Color(128, 96, 64), null, null, null);
@@ -255,34 +255,22 @@ public class DogRegist extends Menu {
             btnConfirm,
             btnCancel
         };
+        
+        setSelectableCount(widget.length);
     }
 
     @Override
-    public void getPrintNew() {
-
-        if(shareMyRecord == 1) {
-            btnUserRecordShareSetup.setText("Share my game record: YES");
-        } else {
-            btnUserRecordShareSetup.setText("Share my game record: NO");
-        }
-        
-        clearScreenBuffer();
-        
+    public void getRefresh() {
         for(int i = 0, j = widget.length; i < j; ++i) {
             if(i == getSelectedIndex()) widget[i].setSelected(true);
             widget[i].printNew();
         }
-        /*
-        btnUserScreenSetup.printNew();
-        btnUserRecordShareSetup.printNew();
-        */
+        
         lblTiltle.printNew();
         lblUsername.printNew();
         lblUserPass.printNew();
         lblUserPassConfirm.printNew();
         lblUserNick.printNew();
-        
-        setScreen(screen);
     }
 
     @Override
@@ -348,12 +336,11 @@ public class DogRegist extends Menu {
 
     @Override
     public Operation putKeyPressEvent(int keyCode) {
-        // TODO 自动生成的方法存根
         return null;
     }
 
     @Override
-    public Operation beforePrintNewEvent() {
+    public Operation beforeRefreshNotification() {
         Object tmp = pollMail();
         if(tmp != null) {
             setScreenSize = (int[]) tmp;
@@ -363,9 +350,21 @@ public class DogRegist extends Menu {
     }
 
     @Override
-    public Operation afterPrintNewEvent() {
-        // TODO 自动生成的方法存根
+    public Operation afterRefreshNotification() {
         return null;
+    }
+
+    @Override
+    protected void beforeRefreshEvent() {
+        if(shareMyRecord == 1) {
+            btnUserRecordShareSetup.setText("Share my game record: YES");
+        } else {
+            btnUserRecordShareSetup.setText("Share my game record: NO");
+        }
+    }
+
+    @Override
+    protected void afterRefreshEvent() {
     }
 
 }

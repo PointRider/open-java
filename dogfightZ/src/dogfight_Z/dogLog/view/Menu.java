@@ -46,9 +46,6 @@ public abstract class Menu implements DogMenu {
 
         for(int i=0 ; i<resolutionX ; ++i) emptyLine[i] = ' ';
     }
-
-    @Override
-    public abstract void getPrintNew();
     
     public void setResolution(int x, int y) {
         synchronized(mutex) {
@@ -72,17 +69,22 @@ public abstract class Menu implements DogMenu {
             if(++selectedIndex >= selectableCount) selectedIndex = 0;
         }
     }
-    
+
     public int getSelectedIndex() {
         return selectedIndex;
     }
     
-    public final void clearScreenBuffer() {
+    public void setSelectableCount(int count) {
+        this.selectableCount = count;
+        selectedIndex = 0;
+    }
+    
+    private final void clearScreenBuffer() {
         for(int i=0 ; i<resolution[1] ; ++i)
             System.arraycopy(emptyLine, 0, screenBuffer[i], 0, resolution[0]);
     }
     
-    public final void setScreen(JTextArea screen) {
+    private final void setScreen(JTextArea screen) {
         screenBuilder.delete(0, screenBuilder.length());
         
         boolean firstInLine, firstLine;
@@ -128,6 +130,19 @@ public abstract class Menu implements DogMenu {
         inBox = null;
         return o;
     }
+
+    protected abstract void getRefresh();
+    protected abstract void beforeRefreshEvent();
+    protected abstract void afterRefreshEvent();
+    
+    @Override
+    public void refresh() {
+        beforeRefreshEvent();
+        clearScreenBuffer();
+        getRefresh();
+        setScreen(screen);
+        afterRefreshEvent();
+    }
     
     @Override
     public abstract Operation putKeyReleaseEvent(int keyCode);
@@ -136,7 +151,7 @@ public abstract class Menu implements DogMenu {
     @Override
     public abstract Operation putKeyPressEvent(int keyCode);
     @Override
-    public abstract Operation beforePrintNewEvent();
+    public abstract Operation beforeRefreshNotification();
     @Override
-    public abstract Operation afterPrintNewEvent();
+    public abstract Operation afterRefreshNotification();
 }

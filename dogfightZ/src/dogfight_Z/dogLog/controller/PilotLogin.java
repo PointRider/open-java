@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JTextArea;
 
 import dogfight_Z.dogLog.model.PlayerProfile;
-import dogfight_Z.dogLog.service.PlayerProfileService;
+import dogfight_Z.dogLog.service.PlayerProfileServiceImp;
 import dogfight_Z.dogLog.view.Menu;
 import graphic_Z.Common.Operation;
 import graphic_Z.HUDs.CharButton;
@@ -92,7 +92,7 @@ public class PilotLogin extends Menu {
                     PlayerProfile player = new PlayerProfile();
                     player.setUserName(tbUsername.getText());
                     player.setUserPass(pasUserPass.getText());
-                    player = PlayerProfileService.getPlayerProfileService().login(player);
+                    player = PlayerProfileServiceImp.getPlayerProfileService().login(player);
                     if(player == null) return new Operation(false, null, null, new Color(86, 32, 32), null, null);
                     return new Operation(false, null, null, new Color(32, 86, 32), null, null);
                 }
@@ -124,9 +124,7 @@ public class PilotLogin extends Menu {
     }
 
     @Override
-    public void getPrintNew() {
-        
-        clearScreenBuffer();
+    public void getRefresh() {
         
         for(int i = 0, j = widget.length; i < j; ++i) {
             if(i == getSelectedIndex()) widget[i].setSelected(true);
@@ -136,8 +134,6 @@ public class PilotLogin extends Menu {
         lblTiltle.printNew();
         lblUsername.printNew();
         lblUserPass.printNew();
-        
-        setScreen(screen);
     }
 
     @Override
@@ -203,20 +199,27 @@ public class PilotLogin extends Menu {
 
     @Override
     public Operation putKeyPressEvent(int keyCode) {
-        // TODO 自动生成的方法存根
         return null;
     }
 
     @Override
-    public Operation beforePrintNewEvent() {
-        // TODO 自动生成的方法存根
+    public Operation beforeRefreshNotification() {
         return null;
     }
 
     @Override
-    public Operation afterPrintNewEvent() {
-        // TODO 自动生成的方法存根
+    public Operation afterRefreshNotification() {
         return null;
+    }
+
+    @Override
+    protected void beforeRefreshEvent() {
+        
+    }
+
+    @Override
+    protected void afterRefreshEvent() {
+        
     }
 
 }
