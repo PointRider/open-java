@@ -577,7 +577,7 @@ public class ScreenResizer extends Menu
 	}
 	
     @Override
-    public void getRefresh() {
+    protected void getRefresh() {
         for(Iterable<ThreeDs> staticList : visualManager.staticObjLists) {
             for(ThreeDs aCloud : staticList) {
                 CharFrapsCamera.exposureAnObject(

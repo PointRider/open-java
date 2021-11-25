@@ -94,7 +94,7 @@ public class PilotLogin extends Menu {
                     player.setUserPass(pasUserPass.getText());
                     player = PlayerProfileServiceImp.getPlayerProfileService().login(player);
                     if(player == null) return new Operation(false, null, null, new Color(86, 32, 32), null, null);
-                    return new Operation(false, null, null, new Color(32, 86, 32), null, null);
+                    return new Operation(true, new UserOperationMenu(args, player, screen, resolution[0], resolution[1]), null, new Color(32, 86, 32), null, null);
                 }
                 
             }
@@ -124,7 +124,7 @@ public class PilotLogin extends Menu {
     }
 
     @Override
-    public void getRefresh() {
+    protected void getRefresh() {
         
         for(int i = 0, j = widget.length; i < j; ++i) {
             if(i == getSelectedIndex()) widget[i].setSelected(true);

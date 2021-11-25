@@ -12,6 +12,8 @@ public class Operation {
     private Object   returnValue;
     private Runnable callBack;
     
+    public final static Operation EXIT = new Operation(true, null, null, null, null, null);
+    
     public Operation() {
         super();
         this.goBack           = false;
@@ -78,5 +80,9 @@ public class Operation {
 
     public void setCallBack(Runnable callBack) {
         this.callBack = callBack;
+    }
+    
+    public static Operation getIntoMenu(DogMenu m) {
+        return new Operation(false, m, null, null, null, null);
     }
 }

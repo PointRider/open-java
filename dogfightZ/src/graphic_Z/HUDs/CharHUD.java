@@ -34,10 +34,14 @@ public class CharHUD extends HUD
 		layer		 = HUDLayer;
 		fraps_buffer = frapsBuffer;
 	}
-	
+
+    public void resetScreenBuffer(char fraps_buffer[][]) {
+        this.fraps_buffer = fraps_buffer;
+    }
+    
 	public void reSizeScreen(int resolution[], char fraps_buffer[][]) {
 		super.resolution = resolution;
-		this.fraps_buffer = fraps_buffer;
+		resetScreenBuffer(fraps_buffer);
 	}
 	
 	@Override

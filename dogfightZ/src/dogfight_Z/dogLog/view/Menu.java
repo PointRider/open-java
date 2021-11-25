@@ -21,10 +21,10 @@ public abstract class Menu implements DogMenu {
     
     protected static final  String logoString = 
               "ooooo   oooo   ooooo oooooo oooo  ooooo oo  oo oooooo   @@@@@@\n"
-            + "oo  oo oo  oo oo     oo      oo  oo     oo  oo   oo     @  @@ \n"
+            + "oo  oo oo  oo oo     oo   o  oo  oo     oo  oo o oo o   @  @@ \n"
             + "oo  oo oo  oo oo ooo oooo    oo  oo ooo oooooo   oo       @@  \n"
             + "oo  oo oo  oo oo  oo oo      oo  oo  oo oo  oo   oo      @@  @\n"
-            + "ooooo   oooo   ooooo oo     oooo  ooooo oo  oo   oo     @@@@@@\n\n"
+            + "ooooo   oooo   ooooo ooo    oooo  ooooo oo  oo  oooo    @@@@@@\n\n"
             + "==============================================================\n"
             + "=============================================================="; 
     
@@ -45,6 +45,7 @@ public abstract class Menu implements DogMenu {
         emptyLine          = new char[resolutionX];
 
         for(int i=0 ; i<resolutionX ; ++i) emptyLine[i] = ' ';
+        
     }
     
     public void setResolution(int x, int y) {
@@ -84,7 +85,7 @@ public abstract class Menu implements DogMenu {
             System.arraycopy(emptyLine, 0, screenBuffer[i], 0, resolution[0]);
     }
     
-    private final void setScreen(JTextArea screen) {
+    private synchronized final void setScreen(JTextArea screen) {
         screenBuilder.delete(0, screenBuilder.length());
         
         boolean firstInLine, firstLine;
@@ -136,7 +137,7 @@ public abstract class Menu implements DogMenu {
     protected abstract void afterRefreshEvent();
     
     @Override
-    public void refresh() {
+    public synchronized void refresh() {
         beforeRefreshEvent();
         clearScreenBuffer();
         getRefresh();

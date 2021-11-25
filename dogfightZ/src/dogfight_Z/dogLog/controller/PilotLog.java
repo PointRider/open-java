@@ -48,11 +48,9 @@ public class PilotLog extends Menu {
             resolution, 
             logoString, 
             (resolution[0] >> 1) - 31, 
-            4,
+            2,
             true
         );
-        
-        //txtbox = new CharSingleLineTextEdit(screenBuffer, resolution, (resolution[0] >> 1) - 20, (resolution[1] >> 1) + 12, 40);
         
         entries = new CharButton[indices.length];
         
@@ -63,14 +61,14 @@ public class PilotLog extends Menu {
                 resolution, 
                 indices[cur],
                 (resolution[0] >> 1) - ((length + 4) >> 1), 
-                18 + (cur * 5),
+                16 + (cur * 6),
                 buttonEvents[cur]
             );
         }
     }
     
     @Override
-    public void getRefresh() {
+    protected void getRefresh() {
         
         logo.printNew();
         

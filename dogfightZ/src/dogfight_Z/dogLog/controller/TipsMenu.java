@@ -45,7 +45,7 @@ public class TipsMenu extends Menu {
     }
 
     @Override
-    public void getRefresh() {
+    protected void getRefresh() {
         lblTip.printNew();
         btnOK.setSelected(true);
         btnOK.printNew();

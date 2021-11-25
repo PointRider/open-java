@@ -50,6 +50,13 @@ public class CharSingleLineTextEdit extends CharLabel implements KeyInputGetter,
         super.printNew();
     }
     
+    @Override
+    public void resetScreenBuffer(char fraps_buffer[][]) {
+        super.resetScreenBuffer(fraps_buffer);
+        outerBoxSelected.resetScreenBuffer(fraps_buffer);
+        outerBoxNotSelected.resetScreenBuffer(fraps_buffer);
+    }
+    
     /**
      * 将输入的字符链表缓冲到 CharLabel 的 String text 中
      * @return 当前输入光标的位置下标

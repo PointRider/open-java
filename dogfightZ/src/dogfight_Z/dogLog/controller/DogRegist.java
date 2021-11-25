@@ -260,7 +260,7 @@ public class DogRegist extends Menu {
     }
 
     @Override
-    public void getRefresh() {
+    protected void getRefresh() {
         for(int i = 0, j = widget.length; i < j; ++i) {
             if(i == getSelectedIndex()) widget[i].setSelected(true);
             widget[i].printNew();

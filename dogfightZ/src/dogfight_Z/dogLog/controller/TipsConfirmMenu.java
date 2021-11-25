@@ -46,7 +46,7 @@ public class TipsConfirmMenu extends Menu {
             new Operable() {
                 @Override
                 public Operation call() {
-                    callBackConfirm.run();
+                    if(callBackConfirm != null) callBackConfirm.run();
                     return new Operation(true, null, null, null, null, null);
                 }
                 
@@ -63,7 +63,7 @@ public class TipsConfirmMenu extends Menu {
                 new Operable() {
                     @Override
                     public Operation call() {
-                        callBackCancel.run();
+                        if(callBackCancel != null) callBackCancel.run();
                         return new Operation(true, null, null, null, null, null);
                     }
                     
@@ -72,7 +72,7 @@ public class TipsConfirmMenu extends Menu {
     }
 
     @Override
-    public void getRefresh() {
+    protected void getRefresh() {
         switch(getSelectedIndex()) {
         case 0: btnCancel.setSelected(true); break;
         case 1: btnOK.setSelected(true); break;

@@ -92,6 +92,12 @@ public class CharButton extends CharLabel implements Operable, Widget {
         if(!selected) return null;
         return caller.call();
     }
+    
+    @Override
+    public void resetScreenBuffer(char fraps_buffer[][]) {
+        super.resetScreenBuffer(fraps_buffer);
+        outerBoxSelected.resetScreenBuffer(fraps_buffer);
+    }
 
     @Override
     public boolean isSelected() {

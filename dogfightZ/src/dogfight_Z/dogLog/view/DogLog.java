@@ -17,9 +17,11 @@ import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
 import dogfight_Z.dogLog.controller.PilotLog;
+import dogfight_Z.dogLog.controller.TipsConfirmMenu;
 import dogfight_Z.dogLog.security.Irreversible;
 import dogfight_Z.dogLog.security.SHA256Hex;
 import graphic_Z.Common.Operation;
+import graphic_Z.utils.HzController;
 
 public class DogLog extends JFrame {
 
@@ -33,10 +35,14 @@ public class DogLog extends JFrame {
     private JTextArea      mainScr;
     private int            pcScreenWidth;
     private int            pcScreenHeight;
+    private static int     resolution[] = {64, 36};
 
     //private Stack<Object>  menuReturnStack; 
     private Stack<DogMenu> menuStack; 
     private DogMenu        baseMenu;
+    private DogMenu        makeSureMenu;
+    private boolean        running;
+    private HzController   secondRefresher;
     
     //private String []      args;
     static {
@@ -82,41 +88,45 @@ public class DogLog extends JFrame {
             
             @Override
             public void keyTyped(KeyEvent e) {
-                menuStack.peek().putKeyTypeEvent(e.getKeyChar());
+                synchronized(menuStack) {
+                    menuStack.peek().putKeyTypeEvent(e.getKeyChar());
+                }
             }
 
             @Override
             public void keyPressed(KeyEvent e) {
-
-                DogMenu menu = menuStack.peek();
-                
-                Operation o  = menu.putKeyPressEvent(e.getKeyCode());
-                
-                DogMenu m = operationProcessor(menu, o);
-                
-                o = m.beforeRefreshNotification();
-                if(o != null) m = operationProcessor(m, o);
-                m.refresh();
-                m.afterRefreshNotification();
+                synchronized(menuStack) {
+                    DogMenu menu = menuStack.peek();
+                    
+                    Operation o  = menu.putKeyPressEvent(e.getKeyCode());
+                    
+                    DogMenu m = operationProcessor(menu, o);
+                    
+                    o = m.beforeRefreshNotification();
+                    if(o != null) m = operationProcessor(m, o);
+                    m.refresh();
+                    m.afterRefreshNotification();
+                }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-
-                DogMenu menu = menuStack.peek();
-                
-                Operation o  = menu.putKeyReleaseEvent(e.getKeyCode());
-                
-                DogMenu m = operationProcessor(menu, o);
-                
-                do {
-                    o = m.beforeRefreshNotification();
-                    menu = m;
-                    if(o != null) m = operationProcessor(m, o);
-                } while(m != menu);
-                
-                m.refresh();
-                m.afterRefreshNotification();
+                synchronized(menuStack) {
+                    DogMenu menu = menuStack.peek();
+                    
+                    Operation o  = menu.putKeyReleaseEvent(e.getKeyCode());
+                    
+                    DogMenu m = operationProcessor(menu, o);
+                    
+                    do {
+                        o = m.beforeRefreshNotification();
+                        menu = m;
+                        if(o != null) m = operationProcessor(m, o);
+                    } while(m != menu);
+                    
+                    m.refresh();
+                    m.afterRefreshNotification();
+                }
             }
             
             private DogMenu operationProcessor(DogMenu menu, Operation o) {
@@ -129,7 +139,10 @@ public class DogLog extends JFrame {
                         if(menu != baseMenu) {
                             menuStack.pop();//注1
                             menu = menuStack.peek();
-                        } else System.exit(0);
+                        } else {
+                            menu = makeSureMenu;
+                            menuStack.push(makeSureMenu);
+                        }
                     }
                     if((returnValue = o.getReturnValue()) != null) {
                         menu.sendMail(returnValue);//注意此时的menu可能已经是 注1 处pop后的下一个menu
@@ -197,14 +210,56 @@ public class DogLog extends JFrame {
             
         }).start();
     }
+    
     private void constructor(String args[]) {
         //this.args = args;
         initUI();
         //menuReturnStack = new Stack<>();
-        menuStack       = new Stack<>();
-        baseMenu        = new PilotLog(args, mainScr, 64, 36);
+        baseMenu = new PilotLog(args, mainScr, resolution[0], resolution[1]);
+        
+        menuStack = new Stack<>();
         menuStack.push(baseMenu);
         menuStack.peek().refresh();
+        
+        makeSureMenu = new TipsConfirmMenu(
+            args, 
+            "确定要退出游戏吗？", 
+            "YES", 
+            "CANCEL", 
+            mainScr, 
+            resolution[0], 
+            resolution[1], 
+            new Runnable() {
+                @Override
+                public void run() {
+                    System.exit(0);
+                }
+            }, 
+            null
+        );
+        
+        running = true;
+        secondRefresher = new HzController(2);
+        
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Thread syn = null;
+                try {
+                    while(running) {
+                        syn = new Thread(secondRefresher);
+                        synchronized(menuStack) {
+                            menuStack.peek().refresh();
+                        }
+                        syn.join();
+                    }
+                } catch (InterruptedException e) {
+                    // TODO 自动生成的 catch 块
+                    e.printStackTrace();
+                }
+            }
+            
+        }).start();
     }
     
     public DogLog(String args[]) throws HeadlessException {
