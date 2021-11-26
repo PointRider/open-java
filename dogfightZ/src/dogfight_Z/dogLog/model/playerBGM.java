@@ -2,10 +2,10 @@ package dogfight_Z.dogLog.model;
 
 public class playerBGM {
     
-    private int    userID;
-    private int    index;
-    private String title;
-    private String filePathName;
+    private Integer userID;
+    private Integer index;
+    private String  title;
+    private String  filePathName;
     
     public playerBGM() {
         // TODO 自动生成的构造函数存根

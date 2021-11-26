@@ -30,7 +30,7 @@ public class ScreenResize extends Menu {
     }
 
     @Override
-    protected void getRefresh() {
+    public void getRefresh() {
         tip.printNew();
     }
 

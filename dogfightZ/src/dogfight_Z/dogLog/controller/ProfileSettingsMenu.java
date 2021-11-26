@@ -11,6 +11,7 @@ import dogfight_Z.dogLog.view.Menu;
 import graphic_Z.Common.Operation;
 import graphic_Z.HUDs.CharButton;
 import graphic_Z.HUDs.CharLabel;
+import graphic_Z.HUDs.CharSingleLineTextEdit;
 import graphic_Z.HUDs.Operable;
 import graphic_Z.HUDs.Widget;
 
@@ -127,7 +128,7 @@ public class ProfileSettingsMenu extends Menu {
                                     null, 
                                     0, 
                                     resolution, 
-                                    "Registed on " + player.getCreateTime().toString(), 
+                                    "Registed on " + player.getCreateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), 
                                     16, 
                                     26,
                                     true
@@ -155,6 +156,7 @@ public class ProfileSettingsMenu extends Menu {
                     }
                 }
             ), 
+            //------------------------------------------------------------------------------
             new CharButton(
                 screenBuffer, 
                 resolution, 
@@ -165,7 +167,96 @@ public class ProfileSettingsMenu extends Menu {
                 new Operable() {
                     @Override
                     public Operation call() {
-                        return null;
+                        return Operation.getIntoMenu(new SimpleMenu(
+                            args, screen, 
+                            new CharLabel[] {
+                                new CharLabel(
+                                    null, 
+                                    0, 
+                                    resolution, 
+                                    logoString, 
+                                    (resolution[0] >> 1) - 31, 
+                                    2,
+                                    true
+                                ),
+                                new CharLabel(
+                                    null, 
+                                    2, 
+                                    resolution, 
+                                    "Username:", 
+                                    8, 
+                                    16,
+                                    false
+                                )
+                            },
+                            new Widget[] {
+                                new CharSingleLineTextEdit(
+                                    screenBuffer, 
+                                    resolution, 
+                                    20, 
+                                    16, 
+                                    34
+                                ),
+                                new CharButton(
+                                    null, 
+                                    resolution, 
+                                    "Confirm", 
+                                    10, 
+                                    resolution[1] - 4,
+                                    18,
+                                    new Operable() {
+                                        @Override
+                                        public Operation call() {
+                                            return Operation.EXIT;
+                                        }
+                                    }
+                                ),
+                                new CharButton(
+                                    null, 
+                                    resolution, 
+                                    "Cancel", 
+                                    34, 
+                                    resolution[1] - 4,
+                                    18,
+                                    new Operable() {
+                                        @Override
+                                        public Operation call() {
+                                            return Operation.EXIT;
+                                        }
+                                    }
+                                )
+                            },
+                            resolution[0],
+                            resolution[1]
+                        ) {
+                            @Override
+                            public Operation putKeyReleaseEvent(int keyCode) {
+                                Operation opt = null;
+                                switch(keyCode) {
+                                case KeyEvent.VK_UP:
+                                    indexUp();
+                                    break;
+                                case KeyEvent.VK_DOWN:
+                                    indexDown();
+                                    break;
+                                case KeyEvent.VK_ENTER:{
+                                    int idx = getSelectedIndex();
+                                    if(idx == 0) {
+                                        indexDown();
+                                    } else {
+                                        widgets[idx].setSelected(true);
+                                        opt = widgets[idx].call();
+                                    }
+                                } break;
+                                case KeyEvent.VK_ESCAPE:
+                                    opt = new Operation(true, null, null, null, null, null);
+                                default:
+                                    widgets[getSelectedIndex()].setSelected(true);
+                                    widgets[getSelectedIndex()].getControl(keyCode);
+                                }
+                                return opt;
+                            }
+                        });
                     }
                 }
             ), 
@@ -220,7 +311,7 @@ public class ProfileSettingsMenu extends Menu {
     }
 
     @Override
-    protected void getRefresh() {
+    public void getRefresh() {
         for(CharLabel l : labels) {
             l.printNew();
         }

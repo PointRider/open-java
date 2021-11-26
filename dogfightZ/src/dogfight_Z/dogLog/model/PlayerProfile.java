@@ -8,17 +8,17 @@ import java.time.format.DateTimeFormatter;
 
 public class PlayerProfile extends SimplePrimaryKey {
     //-----------[profile]------------
-    private int           userID;
+    private Integer       userID;
     private String        userName;
     private String        userPass;
     private String        userNick;
     private BigDecimal    userBank;
-    private int           gameRecordShare;
+    private Integer       gameRecordShare;
     private LocalDateTime createTime;
     //-----------[config]-------------
-    private int           resolutionX;
-    private int           resolutionY;
-    private int           fontSize;
+    private Integer       resolutionX;
+    private Integer       resolutionY;
+    private Integer       fontSize;
     //--------------------------------
     
     public PlayerProfile() {
@@ -58,7 +58,7 @@ public class PlayerProfile extends SimplePrimaryKey {
         return getUserID();
     }
     
-    public int getUserID() {
+    public Integer getUserID() {
         return userID;
     }
 
@@ -106,7 +106,7 @@ public class PlayerProfile extends SimplePrimaryKey {
         this.createTime = createTime;
     }
 
-    public int getResolutionX() {
+    public Integer getResolutionX() {
         return resolutionX;
     }
 
@@ -114,7 +114,7 @@ public class PlayerProfile extends SimplePrimaryKey {
         this.resolutionX = resolutionX;
     }
 
-    public int getResolutionY() {
+    public Integer getResolutionY() {
         return resolutionY;
     }
 
@@ -122,7 +122,7 @@ public class PlayerProfile extends SimplePrimaryKey {
         this.resolutionY = resolutionY;
     }
 
-    public int getFontSize() {
+    public Integer getFontSize() {
         return fontSize;
     }
 
@@ -130,7 +130,7 @@ public class PlayerProfile extends SimplePrimaryKey {
         this.fontSize = fontSize;
     }
 
-    public int getGameRecordShare() {
+    public Integer getGameRecordShare() {
         return gameRecordShare;
     }
 

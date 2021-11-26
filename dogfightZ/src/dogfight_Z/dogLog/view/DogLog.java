@@ -44,7 +44,6 @@ public class DogLog extends JFrame {
     private boolean        running;
     private HzController   secondRefresher;
     
-    //private String []      args;
     static {
         try {
             Class.forName("dogfight_Z.dogLog.utils.JDBCFactory");
@@ -129,7 +128,7 @@ public class DogLog extends JFrame {
                 }
             }
             
-            private DogMenu operationProcessor(DogMenu menu, Operation o) {
+            private synchronized DogMenu operationProcessor(DogMenu menu, Operation o) {
                 Color c;
                 Object returnValue;
                 DogMenu tmp = menu;
@@ -223,6 +222,7 @@ public class DogLog extends JFrame {
         
         makeSureMenu = new TipsConfirmMenu(
             args, 
+            null,
             "确定要退出游戏吗？", 
             "YES", 
             "CANCEL", 

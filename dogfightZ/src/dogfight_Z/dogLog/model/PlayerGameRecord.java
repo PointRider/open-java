@@ -5,18 +5,18 @@ import java.time.LocalDateTime;
 
 public class PlayerGameRecord {
     
-    private int           userID;
-    private long          gameTime;
-    private int           enemyCount;
-    private int           friendCount;
-    private double        enemyAvgDiff;
-    private double        friendAvgDiff;
-    private int           killed;
-    private int           dead;
+    private Integer       userID;
+    private Long          gameTime;
+    private Integer       enemyCount;
+    private Integer       friendCount;
+    private Double        enemyAvgDiff;
+    private Double        friendAvgDiff;
+    private Integer       killed;
+    private Integer       dead;
     private BigDecimal    getBank;
     private String        gameVersion;
-    private int           resolutionX;
-    private int           resolutionY;
+    private Integer       resolutionX;
+    private Integer       resolutionY;
     private LocalDateTime recDateTime;
     
     public PlayerGameRecord() {

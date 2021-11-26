@@ -163,7 +163,7 @@ public class UserOperationMenu extends Menu {
         setSelectableCount(widgets.length);
         
         makeSureMenu = new TipsConfirmMenu(
-            args, 
+            args, null,
             "确定要登出吗？", 
             "YES", 
             "CANCEL", 
@@ -181,7 +181,7 @@ public class UserOperationMenu extends Menu {
     }
 
     @Override
-    protected void getRefresh() {
+    public void getRefresh() {
         for(CharLabel l : labels) {
             l.printNew();
         }

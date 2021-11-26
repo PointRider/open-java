@@ -18,12 +18,12 @@ public class TipsConfirmMenu extends Menu {
     //private Runnable   callBack;
     
     public TipsConfirmMenu(String[] args, String tip, JTextArea screen, int resolutionX, int resolutionY, Runnable callBackConfirm, Runnable callBackCancel) {
-        this(args, tip, "O K", "Cancel", screen, resolutionX, resolutionY, callBackConfirm, callBackCancel);
+        this(args, null, tip, "O K", "Cancel", screen, resolutionX, resolutionY, callBackConfirm, callBackCancel);
     }
     
-    public TipsConfirmMenu(String[] args, String tip, String selectionConfirm, String selectionCancel, JTextArea screen, int resolutionX, int resolutionY, Runnable callBackConfirm, Runnable callBackCancel) {
+    public TipsConfirmMenu(String[] args, char scrBuffer[][], String tip, String selectionConfirm, String selectionCancel, JTextArea screen, int resolutionX, int resolutionY, Runnable callBackConfirm, Runnable callBackCancel) {
         super(args, screen, 2, resolutionX, resolutionY);
-        
+        if(scrBuffer != null) super.screenBuffer = scrBuffer;
         //this.callBack = callBack;
         
         lblTip = new CharLabel(
@@ -47,7 +47,7 @@ public class TipsConfirmMenu extends Menu {
                 @Override
                 public Operation call() {
                     if(callBackConfirm != null) callBackConfirm.run();
-                    return new Operation(true, null, null, null, null, null);
+                    return new Operation(false, null, null, null, null, null);
                 }
                 
             }
@@ -64,7 +64,7 @@ public class TipsConfirmMenu extends Menu {
                     @Override
                     public Operation call() {
                         if(callBackCancel != null) callBackCancel.run();
-                        return new Operation(true, null, null, null, null, null);
+                        return new Operation(false, null, null, null, null, null);
                     }
                     
                 }
@@ -72,7 +72,7 @@ public class TipsConfirmMenu extends Menu {
     }
 
     @Override
-    protected void getRefresh() {
+    public void getRefresh() {
         switch(getSelectedIndex()) {
         case 0: btnCancel.setSelected(true); break;
         case 1: btnOK.setSelected(true); break;

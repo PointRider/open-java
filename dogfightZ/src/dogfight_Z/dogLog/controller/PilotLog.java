@@ -68,7 +68,7 @@ public class PilotLog extends Menu {
     }
     
     @Override
-    protected void getRefresh() {
+    public void getRefresh() {
         
         logo.printNew();
         

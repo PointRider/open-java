@@ -132,7 +132,7 @@ public abstract class Menu implements DogMenu {
         return o;
     }
 
-    protected abstract void getRefresh();
+    public abstract void getRefresh();
     protected abstract void beforeRefreshEvent();
     protected abstract void afterRefreshEvent();
     

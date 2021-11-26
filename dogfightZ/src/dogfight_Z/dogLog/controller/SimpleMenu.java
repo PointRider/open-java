@@ -30,7 +30,7 @@ public class SimpleMenu extends Menu {
     }
 
     @Override
-    protected void getRefresh() {
+    public void getRefresh() {
         for(CharLabel l : labels) {
             l.printNew();
         }
@@ -65,12 +65,17 @@ public class SimpleMenu extends Menu {
             break;
         case KeyEvent.VK_ESCAPE:
             opt = new Operation(true, null, null, null, null, null);
+        default:
+            widgets[getSelectedIndex()].setSelected(true);
+            widgets[getSelectedIndex()].getControl(keyCode);
         }
         return opt;
     }
 
     @Override
     public Operation putKeyTypeEvent(int keyChar) {
+        widgets[getSelectedIndex()].setSelected(true);
+        widgets[getSelectedIndex()].getInput(keyChar);
         return null;
     }
 

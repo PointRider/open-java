@@ -145,6 +145,7 @@ public class DogRegist extends Menu {
                         false, 
                         new TipsConfirmMenu(
                             args, 
+                            null,
                             "你想要将自己的游戏记录设置为所有用户可见吗？", 
                             "YES!", 
                             "NO.", 
@@ -260,7 +261,7 @@ public class DogRegist extends Menu {
     }
 
     @Override
-    protected void getRefresh() {
+    public void getRefresh() {
         for(int i = 0, j = widget.length; i < j; ++i) {
             if(i == getSelectedIndex()) widget[i].setSelected(true);
             widget[i].printNew();
