@@ -39,13 +39,7 @@ public class Missile extends Aircraft implements Dynamic
 		newPonit[1] = 0;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = 1;
-		missileModelData.add(newPonit);
-		
+		/*
 		newPonit = new double[3];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
@@ -74,7 +68,7 @@ public class Missile extends Aircraft implements Dynamic
 		newPonit[0] = -1;
 		newPonit[1] = 0;
 		newPonit[2] = 0;
-		missileModelData.add(newPonit);
+		missileModelData.add(newPonit);*/
 	}
 	
 	//private		  double lrRangeToCenterOnScreen_old = 0.0;
@@ -150,7 +144,7 @@ public class Missile extends Aircraft implements Dynamic
 		roll_angle[1] = Roll_angle[1];
 		roll_angle[2] = Roll_angle[2];
 		
-		halfAResolution = guideResolution / 2;
+		halfAResolution = guideResolution >> 1;
 		
 		points = missileModelData;
 		points_count = missileModelData.size();

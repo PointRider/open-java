@@ -93,8 +93,8 @@ public class CharDynamicHUD extends CharImage
 							x0 = X;
 							y0 = Y;
 						}
-						x0 += location[0];
-						y0 += location[1];
+						x0 += location[0] + 0.5;
+						y0 += location[1] + 0.5;
 						
 						if(x0 >= 0 && y0 >= 0 && x0 < resolution[0]	&&	y0 < resolution[1])
 							fraps_buffer[(int) y0][(int) x0] = HUDImg[y][x];

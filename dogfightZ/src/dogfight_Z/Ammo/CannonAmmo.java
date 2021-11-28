@@ -34,18 +34,15 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 		missileModelData = new ArrayList<double[]>();
 		
 		double newPonit[];
-		newPonit = new double[3];
+		newPonit = new double[6];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
-		newPonit[2] = 0;
+		newPonit[2] = 1000;
+		newPonit[3] = 0;
+		newPonit[4] = 0;
+		newPonit[5] = 0;
 		missileModelData.add(newPonit);
-		
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = 1;
-		missileModelData.add(newPonit);
-		
+		/*
 		newPonit = new double[3];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
@@ -74,7 +71,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 		newPonit[0] = -1;
 		newPonit[1] = 0;
 		newPonit[2] = 0;
-		missileModelData.add(newPonit);
+		missileModelData.add(newPonit);*/
 	}
 	
 	public CannonAmmo
@@ -90,7 +87,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 		Aircraft souce
 	)
 	{
-		super(null, 1);
+		super(null, 1, true);
 		specialDisplay	= '@';
 		temp 			= new double[3];
 		actived			= true;

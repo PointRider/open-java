@@ -50,8 +50,8 @@ public class Radar extends CharDynamicHUD
 		back			= new char[size][size];
 		nowAngle		= 270;
 		
-		painter = new CharDynamicHUD(HUDPainterImg, frapsBuffer, HUDLayer, scrResolution, size, size, Location_X, Location_Y, 0.0, true);
-		//\painter.location[0] += 1;
+		painter = new CharDynamicHUD(HUDPainterImg, frapsBuffer, HUDLayer, scrResolution, size, size, Location_X, Location_Y , 0.0, true);
+		//painter.location[0] += 1;
 		//painter.location[1] += 1;
 		if(HUDImgFile != null)try(FileReader data = new FileReader(HUDImgFile))
 		{

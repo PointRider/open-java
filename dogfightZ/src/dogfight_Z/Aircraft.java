@@ -514,8 +514,8 @@ public class Aircraft extends CharMessObject
 			cannonLocation[2] = 0;
 			
 			if(cannonGunFlg % 2 == 0)
-				cannonLocation[1] += 320;
-			else cannonLocation[1] -= 320;
+				cannonLocation[1] += 200;
+			else cannonLocation[1] -= 200;
 			if(cannonGunFlg < 2)
 				cannonLocation[0] += 180;
 			else cannonLocation[0] -= 60;
@@ -712,8 +712,8 @@ public class Aircraft extends CharMessObject
 					cannonLocation[2] = 0;
 					
 					if(cannonGunFlg % 2 == 0)
-						cannonLocation[1] += 280;
-					else cannonLocation[1] -= 280;
+						cannonLocation[1] += 180;
+					else cannonLocation[1] -= 180;
 					if(cannonGunFlg < 2)
 						cannonLocation[0] += 120;
 					else cannonLocation[0] -= 120;
