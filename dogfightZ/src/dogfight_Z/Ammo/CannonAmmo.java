@@ -37,7 +37,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 		newPonit = new double[6];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
-		newPonit[2] = 1000;
+		newPonit[2] = 1250;
 		newPonit[3] = 0;
 		newPonit[4] = 0;
 		newPonit[5] = 0;

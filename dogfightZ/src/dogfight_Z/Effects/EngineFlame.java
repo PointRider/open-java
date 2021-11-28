@@ -19,44 +19,39 @@ public class EngineFlame extends CharObject implements Dynamic
 		missileModelData = new ArrayList<double[]>();
 		
 		double newPonit[];
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		missileModelData.add(newPonit);
 		
 		newPonit = new double[3];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
-		newPonit[2] = 1;
+		newPonit[2] = 5;
 		missileModelData.add(newPonit);
 		
 		newPonit = new double[3];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
-		newPonit[2] = -1;
+		newPonit[2] = -5;
 		missileModelData.add(newPonit);
 		
 		newPonit = new double[3];
 		newPonit[0] = 0;
-		newPonit[1] = 1;
+		newPonit[1] = 5;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
 		newPonit = new double[3];
 		newPonit[0] = 0;
-		newPonit[1] = -1;
+		newPonit[1] = -5;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
 		newPonit = new double[3];
-		newPonit[0] = 1;
+		newPonit[0] = 5;
 		newPonit[1] = 0;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
 		newPonit = new double[3];
-		newPonit[0] = -1;
+		newPonit[0] = -5;
 		newPonit[1] = 0;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);

@@ -28,44 +28,39 @@ private static ArrayList<double[]> missileModelData;
 		missileModelData = new ArrayList<double[]>();
 		
 		double newPonit[];
-		newPonit = new double[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		missileModelData.add(newPonit);
 		
 		newPonit = new double[3];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
-		newPonit[2] = 1;
+		newPonit[2] = 40;
 		missileModelData.add(newPonit);
 		
 		newPonit = new double[3];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
-		newPonit[2] = -1;
+		newPonit[2] = -40;
 		missileModelData.add(newPonit);
 		
 		newPonit = new double[3];
 		newPonit[0] = 0;
-		newPonit[1] = 1;
+		newPonit[1] = 40;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
 		newPonit = new double[3];
 		newPonit[0] = 0;
-		newPonit[1] = -1;
+		newPonit[1] = -40;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
 		newPonit = new double[3];
-		newPonit[0] = 1;
+		newPonit[0] = 40;
 		newPonit[1] = 0;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
 		newPonit = new double[3];
-		newPonit[0] = -1;
+		newPonit[0] = -40;
 		newPonit[1] = 0;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
@@ -87,7 +82,7 @@ private static ArrayList<double[]> missileModelData;
 	{
 		super(null, null, 0.0, (short)-1, null, effect, del_que, null, null, null, "\nDecory" + Math.random(), false);
 		camp = campTo;
-		specialDisplay = '*';
+		specialDisplay = '@';
 		location[0] = Location[0];
 		location[1] = Location[1];
 		location[2] = Location[2];

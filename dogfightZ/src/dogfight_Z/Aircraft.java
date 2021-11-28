@@ -75,6 +75,7 @@ public class Aircraft extends CharMessObject
 	public int		cannonFireLoadTime;
 	public double   motionRate;
 	protected int	cannonGunFlg;
+    protected int   missileFlg;
 	public CharFrapsCamera mainCamera;
 	//--------------------------
 	public Aircraft locked_By;
@@ -196,6 +197,7 @@ public class Aircraft extends CharMessObject
 		isPlayer			= true;
 		isAlive				= true;
 		cannonGunFlg		= 1;
+		missileFlg          = 1;
 		game				= theGame;
 		locked_By			= null;
 		lockingLife			= 0;
@@ -513,10 +515,10 @@ public class Aircraft extends CharMessObject
 			cannonLocation[1] = 0;
 			cannonLocation[2] = 0;
 			
-			if(cannonGunFlg % 2 == 0)
+			if(missileFlg % 2 == 0)
 				cannonLocation[1] += 200;
 			else cannonLocation[1] -= 200;
-			if(cannonGunFlg < 2)
+			if(missileFlg < 2)
 				cannonLocation[0] += 180;
 			else cannonLocation[0] -= 60;
 			
@@ -554,8 +556,8 @@ public class Aircraft extends CharMessObject
 			fired.add(m);
 			
 			colorFlash(255, 255, 255, 0, 64, 96, 6);
-			if(++cannonGunFlg == 4)
-				cannonGunFlg = 0;
+			if(++missileFlg == 4)
+			    missileFlg = 0;
 
 			if(--missileMagazineLeft == 0)
 				missileReloadingTimeLeft = missileReloadingTime;
@@ -615,8 +617,8 @@ public class Aircraft extends CharMessObject
 		effectMakingLocation[1][1] += location[1];
 		effectMakingLocation[1][2] += location[2];
 		
-		effects.add(new EngineFlame(effectMakingLocation[0], 50, '*'));
-		effects.add(new EngineFlame(effectMakingLocation[1], 50, '*'));
+		effects.add(new EngineFlame(effectMakingLocation[0], 100, '*'));
+		effects.add(new EngineFlame(effectMakingLocation[1], 100, '*'));
 	}
 	
 	public void doMotion()
