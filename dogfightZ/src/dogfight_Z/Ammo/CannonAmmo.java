@@ -155,8 +155,8 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 					{
 						aJet.getDamage(5, from, "Cannon");
 						new ExplosionMaker(location, 10, (short)75, 0.01, 0.1, effects);
-						aJet.colorFlash(255, 255, 128, 127, 15, 15, (short)2);
-						from.colorFlash(255, 255, 128, 128, 96, 0, (short)2);
+						aJet.colorFlash(255, 255, 128, 128, 16, 16, (short)2);
+						from.colorFlash(255, 255, 128, 96, 72, 0, (short)2);
 						disable();
 						return;
 					}
