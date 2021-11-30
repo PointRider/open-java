@@ -486,8 +486,8 @@ public class Aircraft extends CharMessObject
 		{
 			new DecoyMaker
 			(
-				camp, location, roll_angle, speed, 10, 
-				300, 0.02, 0.125, 
+				camp, location, roll_angle, speed, 64, 
+				300, 0.04, 0.125, 
 				addWatingQueue, deleteQue, effects
 			);
 
@@ -732,12 +732,19 @@ public class Aircraft extends CharMessObject
 					cannonLocation[1] += location[1];
 					cannonLocation[2] += location[2];
 					//---旋转结束---
-					
+					/*
+					 * v0 = 400 + speed = v
+					 * v1 = 50
+					 *  r = 0.00175
+					 *  Q : t
+					 *  t = (v1 - v0) / a
+					 *  
+					 */
 					fired.add
 					(
 						new CannonAmmo
 						(
-							600, camp, 400 + speed, resistanceRate_normal, 
+							400, camp, 400 + speed, 0.00175, 
 							cannonLocation, roll_angle, aircrafts, effects, this
 						)
 					);

@@ -304,14 +304,12 @@ public class Missile extends Aircraft implements Dynamic
 			//-----------------------------------
 			//location[0] += CharTimeSpace.g;
 			
-			if(target != null    &&    target.isAlive    &&    range(location, target.location) < 224)
+			if(target != null  &&  range(location, target.location) < 224)
 			{
 				target.getDamage((int)(50 - 10 * Math.random()), from, "Missile");
 				new ExplosionMaker(location, 15, (short)75, 0.025, 0.1, from.effects);
 
 				target.colorFlash(255, 255, 255, 127, 16, 16, (short)20);
-				//target.colorFlash(255, 255, 255, 64, 127, 0, (short)20);
-				//from.colorFlash(255, 255, 255, 127, 16, 16, (short)20);
 				from.colorFlash(0, 192, 255, 0, 0, 0, (short)12);
 				
 				disable();

@@ -120,8 +120,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 	@Override
 	public void go()
 	{
-		if(!actived)
-			return;
+		if(!actived) return;
 		if(lifeLeft <= 0)
 		{
 			disable();
@@ -133,6 +132,8 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 		for(int repeat = 0; repeat < 5; ++repeat)
 		{
 			//------------[go street]------------
+            speed -= speed * resistanceRate;
+            
 			r1 = Math.toRadians(roll_angle[1]);
 			r2 = Math.toRadians(roll_angle[0]);
 			t  = GraphicUtils.cos(r1) * speed;
@@ -154,9 +155,9 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 					if(aJet.camp != myCamp)
 					{
 						aJet.getDamage(5, from, "Cannon");
-						new ExplosionMaker(location, 10, (short)75, 0.01, 0.1, effects);
-						aJet.colorFlash(255, 255, 128, 128, 16, 16, (short)2);
-						from.colorFlash(255, 255, 128, 96, 72, 0, (short)2);
+						new ExplosionMaker(location, 10, 75, 0.01, 0.1, effects);
+						aJet.colorFlash(255, 255, 128, 128, 16, 16, 2);
+						from.colorFlash(255, 255, 128, 96, 72, 0, 2);
 						disable();
 						return;
 					}
@@ -191,7 +192,6 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 	
 	public int getHash()
 	{
-		// TODO 自动生成的方法存根
 		return this.hashCode();
 	}
 }

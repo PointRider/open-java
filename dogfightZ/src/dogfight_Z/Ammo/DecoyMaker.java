@@ -38,25 +38,25 @@ public class DecoyMaker
 		
 		speed_aircraft = speedAircraft;
 		
-		for(double x=120 ; x<240 ; x+=1/density) 
+		for(double x=105 ; x<=255 ; x+=1/density) 
 		{
-			for(double y=-60 ; y<0 ; y+=1/density/2)
+			for(double y=-30 ; y<0 ; y+=1/density)
 			{
-				roll[0] = x;
-				roll[1] = y*2;
-				add_que.add
-				(
-					new Decoy
-					(
-						camp, lifeTime, velocity, speedAircraft, 
-						resistanceRate, location, roll, 
-						roll_angle_aircraft, del_que, effect
-					)
-				);
+			    roll[0] = x;
+	            roll[1] = y;
+	            add_que.add
+	            (
+	                new Decoy
+	                (
+	                    camp, lifeTime, velocity, speedAircraft, 
+	                    resistanceRate, location, roll, 
+	                    roll_angle_aircraft, del_que, effect
+	                )
+	            );
 			}
 		}
 	}
-	
+	/*
 	public DecoyMaker
 	(
 		double location[], 
@@ -77,5 +77,5 @@ public class DecoyMaker
 			speedAircraft, velocity, lifeTime, density,
 			resistanceRate, add_que, del_que, effect
 		);
-	}
+	}*/
 }

@@ -66,20 +66,20 @@ public class Game extends CharTimeSpace implements Runnable
 	public CharProgressBar		hud_decoy_progressBar;
 	public CharProgressBar		hud_decoyReloading_progressBar;
 	
-	public ScoreList			scoreShow;
+	public ScoreList            scoreShow;
 	public CharImage            hud_crosshair;
-	public Radar				hud_Radar;
+	public Radar                hud_Radar;
 	
-	public int					maxAmmoCount;
-	public ArrayList<ThreeDs>	clouds;
-	public PriorityQueue<Dynamic> firedAmmo;
-	public PriorityQueue<Dynamic> effects;
-	public LinkedList<ListIterator<ThreeDs>>	deleteQue;
-	public LinkedList<ThreeDs>	waitToAddQue;
-	public LinkedList<String>	killTipList;
-	public int					killTipListUpdateTimeLeft;
-	public int					killTipListUpdateTime;
-	public int					maxKillTipCount;
+	public int					             maxAmmoCount;
+	public ArrayList<ThreeDs>	             clouds;
+	public PriorityQueue<Dynamic>            firedAmmo;
+	public PriorityQueue<Dynamic>            effects;
+	public LinkedList<ListIterator<ThreeDs>> deleteQue;
+	public LinkedList<ThreeDs>	             waitToAddQue;
+	public LinkedList<String>	             killTipList;
+	public int					             killTipListUpdateTimeLeft;
+	public int					             killTipListUpdateTime;
+	public int					             maxKillTipCount;
 
 	public int respawnTime;
 	public int colorChangedTime;
