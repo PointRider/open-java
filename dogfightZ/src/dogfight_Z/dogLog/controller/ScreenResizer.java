@@ -21,6 +21,7 @@ import graphic_Z.HUDs.CharLoopingScrollBar;
 import graphic_Z.HUDs.CharProgressBar;
 import graphic_Z.HUDs.HUD;
 import graphic_Z.Interfaces.ThreeDs;
+import graphic_Z.Managers.EventManager;
 import graphic_Z.Objects.CharMessObject;
 import graphic_Z.Objects.TDObject;
 import graphic_Z.Worlds.CharWorld;
@@ -409,7 +410,7 @@ public class ScreenResizer extends Menu
 	}
 	
 	private void initUI() {
-	    screen.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, scrSize));
+	    screen.setFont(new Font(EventManager.FONTFAMILY, Font.PLAIN, scrSize));
 	}
 	
 	private void constructor
@@ -636,11 +637,11 @@ public class ScreenResizer extends Menu
         {
             case 93://]
                 scrSize += 1;
-                screen.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, scrSize));
+                screen.setFont(new Font(EventManager.FONTFAMILY, Font.PLAIN, scrSize));
                 break;
             case 91://[
                 if(scrSize > 1)scrSize -= 1;
-                screen.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, scrSize));
+                screen.setFont(new Font(EventManager.FONTFAMILY, Font.PLAIN, scrSize));
                 break;
 
             case KeyEvent.VK_J:

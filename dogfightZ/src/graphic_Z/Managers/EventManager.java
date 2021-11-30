@@ -26,6 +26,9 @@ public class EventManager extends JFrame
 	private final int PCScreenCenter_X;
 	private final int PCScreenCenter_Y;
 	
+	//public final static String FONTFAMILY = "Consolas";
+	public final static String FONTFAMILY = "DejaVu Sans Mono";
+	
 	public JTextArea		   mainScr;
 	
 	protected KeyboardResponse keyResponse;
@@ -39,6 +42,7 @@ public class EventManager extends JFrame
 	
 	public EventManager(int maxKeyBuffer_size)
 	{
+	    
 		EventFrapsQueue_mouse	 = new LinkedList<SinglePoint>();
 		EventFrapsQueue_keyboard = new LinkedList<Integer>();
 		
@@ -66,7 +70,7 @@ public class EventManager extends JFrame
 		mainScr.setEditable(false);
 		mainScr.setFocusable(false);
 		mainScr.setText("Welcome to the game world !");
-		mainScr.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, 8));
+		mainScr.setFont(new Font(FONTFAMILY, Font.PLAIN, 8));
 		mainScr.setBackground(new Color(0, 0, 0));
 		mainScr.setForeground(new Color(255, 255, 255));
 		//mainScr.setBackground(new Color(255, 200, 64));
@@ -94,7 +98,7 @@ public class EventManager extends JFrame
 	
 	public void setScrZoom(int size)
 	{
-		mainScr.setFont(new Font("DejaVu Sans Mono", Font.PLAIN, size));
+		mainScr.setFont(new Font(FONTFAMILY, Font.PLAIN, size));
 	}
 
 	public int popAKeyOpreation()
