@@ -17,13 +17,12 @@ import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
 import dogfight_Z.dogLog.controller.PilotLog;
-import dogfight_Z.dogLog.controller.TipsConfirmMenu;
 import dogfight_Z.dogLog.security.Irreversible;
 import dogfight_Z.dogLog.security.SHA256Hex;
 import graphic_Z.Common.Operation;
 import graphic_Z.utils.HzController;
 
-public class DogLog extends JFrame {
+public class PiLog extends JFrame {
 
     /**
      * 
@@ -40,7 +39,6 @@ public class DogLog extends JFrame {
     //private Stack<Object>  menuReturnStack; 
     private Stack<DogMenu> menuStack; 
     private DogMenu        baseMenu;
-    private DogMenu        makeSureMenu;
     private boolean        running;
     private HzController   secondRefresher;
     
@@ -111,10 +109,14 @@ public class DogLog extends JFrame {
             @Override
             public void keyReleased(KeyEvent e) {
                 synchronized(menuStack) {
+                    Operation o = null;
                     DogMenu menu = menuStack.peek();
-                    
-                    Operation o  = menu.putKeyReleaseEvent(e.getKeyCode());
-                    
+                    DogMenu dialog = menu.getCurrentDialog();
+                    if(dialog == null) {
+                        o = menu.putKeyReleaseEvent(e.getKeyCode());
+                    } else {
+                        /*o = */dialog.putKeyReleaseEvent(e.getKeyCode());
+                    }
                     DogMenu m = operationProcessor(menu, o);
                     
                     do {
@@ -129,37 +131,33 @@ public class DogLog extends JFrame {
             }
             
             private synchronized DogMenu operationProcessor(DogMenu menu, Operation o) {
+                if(o == null) return menu;
+                
                 Color c;
                 Object returnValue;
                 DogMenu tmp = menu;
                 Runnable callback;
-                if(o != null) {
-                    if(o.isGoBack()) {
-                        if(menu != baseMenu) {
-                            menuStack.pop();//注1
-                            menu = menuStack.peek();
-                        } else {
-                            menu = makeSureMenu;
-                            menuStack.push(makeSureMenu);
-                        }
-                    }
-                    if((returnValue = o.getReturnValue()) != null) {
-                        menu.sendMail(returnValue);//注意此时的menu可能已经是 注1 处pop后的下一个menu
-                    }
-                    if((tmp = o.getGetInto()) != null) {
-                        menuStack.push(tmp);
-                        menu = tmp;
-                    }
-                    if((callback = o.getCallBack()) != null) {
-                        callback.run();
-                    }
-                    if((c = o.getFlashColor()) != null) {
-                        flashColor(c);
-                    }
-                    if((c = o.getDoubleFlashColor()) != null) {
-                        doubleFlashColor(c);
-                    }
+                if(o.isGoBack()) {
+                    menuStack.pop();//注1
+                    menu = menuStack.peek();
                 }
+                if((returnValue = o.getReturnValue()) != null) {
+                    menu.sendMail(returnValue);//注意此时的menu可能已经是 注1 处pop后的下一个menu
+                }
+                if((tmp = o.getGetInto()) != null) {
+                    menuStack.push(tmp);
+                    menu = tmp;
+                }
+                if((callback = o.getCallBack()) != null) {
+                    callback.run();
+                }
+                if((c = o.getFlashColor()) != null) {
+                    flashColor(c);
+                }
+                if((c = o.getDoubleFlashColor()) != null) {
+                    doubleFlashColor(c);
+                }
+
                 return menu;
             }
         });
@@ -220,24 +218,6 @@ public class DogLog extends JFrame {
         menuStack.push(baseMenu);
         menuStack.peek().refresh();
         
-        makeSureMenu = new TipsConfirmMenu(
-            args, 
-            null,
-            "确定要退出游戏吗？", 
-            "YES", 
-            "CANCEL", 
-            mainScr, 
-            resolution[0], 
-            resolution[1], 
-            new Runnable() {
-                @Override
-                public void run() {
-                    System.exit(0);
-                }
-            }, 
-            null
-        );
-        
         running = true;
         secondRefresher = new HzController(2);
         
@@ -262,21 +242,21 @@ public class DogLog extends JFrame {
         }).start();
     }
     
-    public DogLog(String args[]) throws HeadlessException {
+    public PiLog(String args[]) throws HeadlessException {
         constructor(args);
     }
 
-    public DogLog(String args[], GraphicsConfiguration gc) {
+    public PiLog(String args[], GraphicsConfiguration gc) {
         super(gc);
         constructor(args);
     }
 
-    public DogLog(String args[], String title) throws HeadlessException {
+    public PiLog(String args[], String title) throws HeadlessException {
         super(title);
         constructor(args);
     }
 
-    public DogLog(String args[], String title, GraphicsConfiguration gc) {
+    public PiLog(String args[], String title, GraphicsConfiguration gc) {
         super(title, gc);
         constructor(args);
     }
@@ -290,7 +270,7 @@ public class DogLog extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    DogLog dlog = new DogLog(args);
+                    PiLog dlog = new PiLog(args);
                     dlog.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();

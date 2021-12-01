@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import javax.swing.JTextArea;
 
 import dogfight_Z.dogLog.model.PlayerProfile;
-import dogfight_Z.dogLog.view.DogMenu;
 import dogfight_Z.dogLog.view.Menu;
 import graphic_Z.Common.Operation;
 import graphic_Z.HUDs.CharButton;
@@ -52,7 +51,6 @@ public class UserOperationMenu extends Menu {
     private CharLabel     labels[];
     //private PlayerProfile player;
     private Widget        widgets[];
-    private DogMenu       makeSureMenu;
     private PlayerProfile player;
 
     public UserOperationMenu(String[] args, PlayerProfile player, JTextArea screen, int resolutionX, int resolutionY) {
@@ -161,7 +159,7 @@ public class UserOperationMenu extends Menu {
         };
         
         setSelectableCount(widgets.length);
-        
+        /*
         makeSureMenu = new TipsConfirmMenu(
             args, null,
             "确定要登出吗？", 
@@ -177,7 +175,7 @@ public class UserOperationMenu extends Menu {
                 }
             }, 
             null
-        );
+        );*/
     }
 
     @Override
@@ -205,7 +203,15 @@ public class UserOperationMenu extends Menu {
             opt = widgets[getSelectedIndex()].call();
             break;
         case KeyEvent.VK_ESCAPE:
-            opt = new Operation(false, makeSureMenu, null, null, null, null);
+            showConfirmDialog("确定要登出吗？", "YES", "CANCEL", 
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        sendMail(new Object());
+                    }
+                }
+            );
+            opt = new Operation(false, null, null, null, null, null);
         }
         return opt;
     }

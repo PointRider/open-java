@@ -31,7 +31,7 @@ public class PilotLog extends Menu {
 
             @Override
             public Operation call() {
-                return new Operation(false, new DogRegist(args, screen, resolution[0], resolution[1]), null, null, null, null);
+                return new Operation(false, new PilotRegist(args, screen, resolution[0], resolution[1]), null, null, null, null);
             }
             
         },
@@ -95,7 +95,20 @@ public class PilotLog extends Menu {
             opt = entries[getSelectedIndex()].call();
             break;
         case KeyEvent.VK_ESCAPE:
-            opt = new Operation(true, null, null, null, null, null);
+            showConfirmDialog("确定要退出游戏吗？", "Yes.", "NO!", 
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        System.exit(0);
+                    }
+                }, 
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        closeDialog();
+                    }
+                }
+            );
             break;
         default:
             //txtbox.getControl(keyCode);

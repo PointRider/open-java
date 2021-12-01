@@ -2,22 +2,29 @@ package dogfight_Z.dogLog.view;
 
 import javax.swing.JTextArea;
 
+import dogfight_Z.dogLog.controller.TipsConfirmMenu;
+import dogfight_Z.dogLog.controller.TipsMenu;
 import graphic_Z.Common.Operation;
+import graphic_Z.HUDs.CharButton;
+import graphic_Z.HUDs.CharLabel;
+import graphic_Z.HUDs.CharSingleLineTextEdit;
+import graphic_Z.HUDs.Operable;
 
 public abstract class Menu implements DogMenu {
     
-    //protected final String  menuIndices[];
     protected String        args[];
     protected int           resolution[];
     protected char          screenBuffer[][];
     protected JTextArea     screen;
+    private   Menu          currentDialog;
     private   Object        inBox;
-    //protected Stack<Object> returnStack;
     private   StringBuilder screenBuilder;
     private   Integer       selectedIndex;
     private   Object        mutex;
     private   char          emptyLine[];
     private   int           selectableCount;
+    private   Runnable      overridedBeforeRefreshEvent;
+    private   Runnable      overridedAfterRefreshNotification;
     
     protected static final  String logoString = 
               "ooooo   oooo   ooooo oooooo oooo  ooooo oo  oo oooooo   @@@@@@\n"
@@ -32,6 +39,7 @@ public abstract class Menu implements DogMenu {
         this.args          = args;
         //this.returnStack   = returnStack;
         this.screen        = screen;
+        currentDialog      = null;
         inBox              = null;
         mutex              = new Object();
         resolution         = new int[2];
@@ -45,7 +53,9 @@ public abstract class Menu implements DogMenu {
         emptyLine          = new char[resolutionX];
 
         for(int i=0 ; i<resolutionX ; ++i) emptyLine[i] = ' ';
-        
+
+        setOverridedBeforeRefreshEvent(null);
+        setOverridedAfterRefreshNotification(null);
     }
     
     public void setResolution(int x, int y) {
@@ -73,6 +83,10 @@ public abstract class Menu implements DogMenu {
 
     public int getSelectedIndex() {
         return selectedIndex;
+    }
+
+    public void setFocus(int id) {
+        selectedIndex = id;
     }
     
     public void setSelectableCount(int count) {
@@ -132,17 +146,144 @@ public abstract class Menu implements DogMenu {
         return o;
     }
 
+    protected void showConfirmDialog(String tip, String confirm, String cancel, Runnable confirmed, Runnable canceled) {
+        currentDialog = new TipsConfirmMenu(
+            args, 
+            screenBuffer,
+            tip, 
+            confirm, 
+            cancel, 
+            screen, 
+            resolution[0], 
+            resolution[1], 
+            confirmed, 
+            canceled,
+            new Runnable() {
+                @Override
+                public void run() {
+                    closeDialog();
+                }
+            }
+        );
+    }
+    
+    protected void showConfirmDialog(String tip, String confirm, String cancel, Runnable confirmed) {
+        Runnable cancelCall = new Runnable() {
+            @Override
+            public void run() {
+                closeDialog();
+            }
+        };
+        
+        currentDialog = new TipsConfirmMenu(
+            args, 
+            screenBuffer,
+            tip, 
+            confirm, 
+            cancel, 
+            screen, 
+            resolution[0], 
+            resolution[1], 
+            confirmed, 
+            cancelCall,
+            cancelCall
+        );
+    }
+    
+    protected void showTipsDialog(String tip, Runnable confirmed) {
+        currentDialog = new TipsMenu(
+            args, 
+            screenBuffer,
+            tip, 
+            screen, 
+            resolution[0], 
+            resolution[1], 
+            confirmed
+        );
+    }
+    
+    protected void showTipsDialog(String tip) {
+        currentDialog = new TipsMenu(
+            args, 
+            screenBuffer,
+            tip, 
+            screen, 
+            resolution[0], 
+            resolution[1], 
+            new Runnable() {
+                @Override
+                public void run() {
+                    closeDialog();
+                }
+            }
+        );
+    }
+    
+    protected void closeDialog() {
+        currentDialog = null;
+    }
+    
     public abstract void getRefresh();
     protected abstract void beforeRefreshEvent();
     protected abstract void afterRefreshEvent();
     
+    public CharButton newCharButton(String text, int localtionX, int locationY, int size, Operable operator) {
+        return new CharButton(screenBuffer, resolution, text, localtionX, locationY, size, operator);
+    }
+    
+    public CharButton newCharButton(String text, int localtionX, int locationY, Operable operator) {
+        return new CharButton(screenBuffer, resolution, text, localtionX, locationY, operator);
+    }
+    
+    public CharLabel newCharLabel(String text, int localtionX, int locationY) {
+        return new CharLabel(screenBuffer, 0, resolution, text, localtionX, locationY, true);
+    }
+    
+    public CharLabel newCharLabel(String text, int localtionX, int locationY, boolean emptyAtSpace) {
+        return new CharLabel(screenBuffer, 0, resolution, text, localtionX, locationY, emptyAtSpace);
+    }
+    
+    public CharSingleLineTextEdit newCharSingleLineTextEdit(int localtionX, int locationY, int width) {
+        return new CharSingleLineTextEdit(screenBuffer, resolution, localtionX, locationY, width);
+    }
+    
     @Override
     public synchronized void refresh() {
-        beforeRefreshEvent();
+        if(overridedBeforeRefreshEvent == null) beforeRefreshEvent();
+        else overridedBeforeRefreshEvent.run();
+        
         clearScreenBuffer();
-        getRefresh();
+        if(currentDialog == null) getRefresh();
+        else currentDialog.getRefresh();
         setScreen(screen);
-        afterRefreshEvent();
+        
+        if(overridedAfterRefreshNotification == null) afterRefreshEvent();
+        else overridedAfterRefreshNotification.run();
+    }
+    
+    @Override
+    public DogMenu getCurrentDialog() {
+        return currentDialog;
+    }
+    
+    @Override
+    public Runnable getOverridedBeforeRefreshEvent() {
+        return overridedBeforeRefreshEvent;
+    }
+
+    @Override
+    public void setOverridedBeforeRefreshEvent(Runnable overridedBeforeRefreshEvent) {
+        this.overridedBeforeRefreshEvent = overridedBeforeRefreshEvent;
+    }
+
+    @Override
+    public Runnable getOverridedAfterRefreshNotification() {
+        return overridedAfterRefreshNotification;
+    }
+
+    @Override
+    public void setOverridedAfterRefreshNotification(Runnable overridedAfterRefreshNotification) {
+        this.overridedAfterRefreshNotification = overridedAfterRefreshNotification;
     }
     
     @Override

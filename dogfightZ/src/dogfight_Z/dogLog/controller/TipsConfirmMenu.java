@@ -15,17 +15,18 @@ public class TipsConfirmMenu extends Menu {
     private CharLabel  lblTip;
     private CharButton btnOK;
     private CharButton btnCancel;
+    private Runnable   exitCall;
     //private Runnable   callBack;
     
-    public TipsConfirmMenu(String[] args, String tip, JTextArea screen, int resolutionX, int resolutionY, Runnable callBackConfirm, Runnable callBackCancel) {
-        this(args, null, tip, "O K", "Cancel", screen, resolutionX, resolutionY, callBackConfirm, callBackCancel);
+    public TipsConfirmMenu(String[] args, String tip, JTextArea screen, int resolutionX, int resolutionY, Runnable callBackConfirm, Runnable callBackCancel, Runnable exitCall) {
+        this(args, null, tip, "O K", "Cancel", screen, resolutionX, resolutionY, callBackConfirm, callBackCancel, exitCall);
     }
     
-    public TipsConfirmMenu(String[] args, char scrBuffer[][], String tip, String selectionConfirm, String selectionCancel, JTextArea screen, int resolutionX, int resolutionY, Runnable callBackConfirm, Runnable callBackCancel) {
+    public TipsConfirmMenu(String[] args, char scrBuffer[][], String tip, String selectionConfirm, String selectionCancel, JTextArea screen, int resolutionX, int resolutionY, Runnable callBackConfirm, Runnable callBackCancel, Runnable exitCall) {
         super(args, screen, 2, resolutionX, resolutionY);
         if(scrBuffer != null) super.screenBuffer = scrBuffer;
         //this.callBack = callBack;
-        
+        this.exitCall = exitCall;
         lblTip = new CharLabel(
             screenBuffer, 
             1, 
@@ -47,7 +48,7 @@ public class TipsConfirmMenu extends Menu {
                 @Override
                 public Operation call() {
                     if(callBackConfirm != null) callBackConfirm.run();
-                    return new Operation(false, null, null, null, null, null);
+                    return null;
                 }
                 
             }
@@ -64,7 +65,7 @@ public class TipsConfirmMenu extends Menu {
                     @Override
                     public Operation call() {
                         if(callBackCancel != null) callBackCancel.run();
-                        return new Operation(false, null, null, null, null, null);
+                        return null;
                     }
                     
                 }
@@ -103,31 +104,32 @@ public class TipsConfirmMenu extends Menu {
                 opt = btnOK.call();
                 break;
             }   break;
+        case KeyEvent.VK_ESCAPE:
+            if(exitCall == null) {
+                btnCancel.setSelected(true);
+                opt = btnCancel.call();
+            } else exitCall.run();
         }
         return opt;
     }
 
     @Override
     public Operation putKeyTypeEvent(int keyChar) {
-        // TODO 自动生成的方法存根
         return null;
     }
 
     @Override
     public Operation putKeyPressEvent(int keyCode) {
-        // TODO 自动生成的方法存根
         return null;
     }
 
     @Override
     public Operation beforeRefreshNotification() {
-        // TODO 自动生成的方法存根
         return null;
     }
 
     @Override
     public Operation afterRefreshNotification() {
-        // TODO 自动生成的方法存根
         return null;
     }
 

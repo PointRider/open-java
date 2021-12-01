@@ -11,4 +11,9 @@ public interface DogMenu {
     Operation putKeyTypeEvent(int keyChar);
     void sendMail(Object o);
     void refresh();
+    DogMenu getCurrentDialog();
+    Runnable getOverridedBeforeRefreshEvent();
+    void setOverridedBeforeRefreshEvent(Runnable overridedBeforeRefreshEvent);
+    Runnable getOverridedAfterRefreshNotification();
+    void setOverridedAfterRefreshNotification(Runnable overridedAfterRefreshNotification);
 }

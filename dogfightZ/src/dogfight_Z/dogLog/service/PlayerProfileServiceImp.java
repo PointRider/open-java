@@ -4,7 +4,7 @@ import java.util.List;
 
 import dogfight_Z.dogLog.dao.PlayerProfileDAOImp;
 import dogfight_Z.dogLog.model.PlayerProfile;
-import dogfight_Z.dogLog.view.DogLog;
+import dogfight_Z.dogLog.view.PiLog;
 
 public class PlayerProfileServiceImp implements PlayerProfileService {
 
@@ -19,7 +19,7 @@ public class PlayerProfileServiceImp implements PlayerProfileService {
 
     @Override
     public int regist(PlayerProfile p) {
-        p.setUserPass(DogLog.getPasswordencoder().encrypt(p.getUserPass()));
+        p.setUserPass(PiLog.getPasswordencoder().encrypt(p.getUserPass()));
         return PlayerProfileDAOImp.getPlayerProfileDAO().registPlayer(p);
     }
 
@@ -27,7 +27,7 @@ public class PlayerProfileServiceImp implements PlayerProfileService {
     public PlayerProfile login(PlayerProfile p) {
         if(p.getUserName() == null  ||  p.getUserPass() == null) return null;
         
-        p.setUserPass(DogLog.getPasswordencoder().encrypt(p.getUserPass()));
+        p.setUserPass(PiLog.getPasswordencoder().encrypt(p.getUserPass()));
         List<PlayerProfile> players = null;
         players = PlayerProfileDAOImp.getPlayerProfileDAO().queryPlayerProfiles(p);
         if(players == null  ||  players.size() == 0) return null;

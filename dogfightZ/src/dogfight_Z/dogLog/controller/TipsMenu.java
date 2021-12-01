@@ -15,8 +15,13 @@ public class TipsMenu extends Menu {
     private CharLabel  lblTip;
     private CharButton btnOK;
     
-    public TipsMenu(String[] args, String tip, JTextArea screen, int resolutionX, int resolutionY) {
+    public TipsMenu(String[] args, char scrBuffer[][], String tip, JTextArea screen, int resolutionX, int resolutionY) {
+        this(args, scrBuffer, tip, screen, resolutionX, resolutionY, null);
+    }
+    
+    public TipsMenu(String[] args, char scrBuffer[][], String tip, JTextArea screen, int resolutionX, int resolutionY, Runnable caller) {
         super(args, screen, 1, resolutionX, resolutionY);
+        if(scrBuffer != null) super.screenBuffer = scrBuffer;
         lblTip = new CharLabel(
             screenBuffer, 
             1, 
@@ -37,9 +42,9 @@ public class TipsMenu extends Menu {
             new Operable() {
                 @Override
                 public Operation call() {
-                    return new Operation(true, null, null, null, null, null);
+                    if(caller != null) caller.run();
+                    return new Operation(false, null, null, null, null, null);
                 }
-                
             }
         );
     }
@@ -55,7 +60,7 @@ public class TipsMenu extends Menu {
     public Operation putKeyReleaseEvent(int keyCode) {
         Operation opt = null;
         switch(keyCode) {
-        case KeyEvent.VK_ENTER:
+        case KeyEvent.VK_ENTER: case KeyEvent.VK_ESCAPE:
             btnOK.setSelected(true);
             opt = btnOK.call();
             break;
@@ -65,25 +70,21 @@ public class TipsMenu extends Menu {
 
     @Override
     public Operation putKeyTypeEvent(int keyChar) {
-        // TODO 自动生成的方法存根
         return null;
     }
 
     @Override
     public Operation putKeyPressEvent(int keyCode) {
-        // TODO 自动生成的方法存根
         return null;
     }
 
     @Override
     public Operation beforeRefreshNotification() {
-        // TODO 自动生成的方法存根
         return null;
     }
 
     @Override
     public Operation afterRefreshNotification() {
-        // TODO 自动生成的方法存根
         return null;
     }
 

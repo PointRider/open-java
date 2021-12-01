@@ -30,7 +30,7 @@ public class CharSingleLineTextEdit extends CharLabel implements KeyInputGetter,
         int sizeX
     ) {
         super(frapsBuffer, id++, scrResolution, null, locationX, locationY, false);
-        // TODO 自动生成的构造函数存根
+        
         outerBoxNotSelectedText = " " + Common.loopChar('-', sizeX) + " ";
         outerBoxSelectedText = outerBoxNotSelectedText + "\n<" + Common.loopChar(' ', sizeX) + ">\n" + outerBoxNotSelectedText;
         
@@ -144,6 +144,22 @@ public class CharSingleLineTextEdit extends CharLabel implements KeyInputGetter,
     public String getText() {
         buff();
         return new String(super.text);
+    }
+    
+    public void clear() {
+        super.setText("");
+        text.clear();
+        inputItr = text.end();
+    }
+    
+    @Override
+    public void setText(String s) {
+        super.setText(s);
+        text.clear();
+        for(int i = 0, j = s.length(); i < j; ++i) {
+            text.add(s.charAt(i));
+        }
+        inputItr = text.end();
     }
 
     @Override

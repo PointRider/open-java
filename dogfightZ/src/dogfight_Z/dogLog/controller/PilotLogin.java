@@ -30,12 +30,9 @@ public class PilotLogin extends Menu {
     private CharButton btnCancel;
     
     private Widget widget[];
-    
-    private Menu currentDialog;
 
     public PilotLogin(String[] args, JTextArea screen, int resolutionX, int resolutionY) {
         super(args, screen, 4, resolutionX, resolutionY);
-        currentDialog = null;
         lblTiltle = new CharLabel(
             screenBuffer, 
             1, 
@@ -97,28 +94,10 @@ public class PilotLogin extends Menu {
                     player.setUserPass(pasUserPass.getText());
                     player = PlayerProfileServiceImp.getPlayerProfileService().login(player);
                     if(player == null) {
-                        currentDialog = new TipsConfirmMenu(
-                            args, 
-                            screenBuffer,
-                            "登录失败，请检查登录名和口令是否正确", 
-                            "YES!", 
-                            "NO.", 
-                            screen, 
-                            resolution[0], 
-                            resolution[1], 
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    currentDialog = null;
-                                }
-                            }, 
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    currentDialog = null;
-                                }
-                            }
-                        );
+                        pasUserPass.clear();
+                        pasUserPass.setSelected(true);
+                        setFocus(1);
+                        showTipsDialog("登录失败，请检查登录名和口令是否正确。");
                         return new Operation(false, null, null, new Color(86, 32, 32), null, null);
                     }
                     return new Operation(true, new UserOperationMenu(args, player, screen, resolution[0], resolution[1]), null, new Color(32, 86, 32), null, null);
@@ -152,70 +131,65 @@ public class PilotLogin extends Menu {
 
     @Override
     public void getRefresh() {
+    
+        for(int i = 0, j = widget.length; i < j; ++i) {
+            if(i == getSelectedIndex()) widget[i].setSelected(true);
+            widget[i].printNew();
+        }
         
-        if(currentDialog == null) {
-            for(int i = 0, j = widget.length; i < j; ++i) {
-                if(i == getSelectedIndex()) widget[i].setSelected(true);
-                widget[i].printNew();
-            }
-            
-            lblTiltle.printNew();
-            lblUsername.printNew();
-            lblUserPass.printNew();
-        } else currentDialog.getRefresh();
-        
+        lblTiltle.printNew();
+        lblUsername.printNew();
+        lblUserPass.printNew();
     }
 
     @Override
     public Operation putKeyReleaseEvent(int keyCode) {
-        if(currentDialog == null) {
-            int selected = getSelectedIndex();
-            
-            Operation opt = null;
-            switch(keyCode) {
-            case KeyEvent.VK_UP: 
-                indexUp();
-                break;
-            case KeyEvent.VK_DOWN: 
-                indexDown();
-                break;
-            case KeyEvent.VK_RIGHT:
-                if(selected >= 2) indexDown();
-                else {
-                    widget[selected].setSelected(true);
-                    widget[selected].getControl(keyCode);
-                }
-                break;
-            case KeyEvent.VK_LEFT:
-                if(selected >= 2) indexUp();
-                else {
-                    widget[selected].setSelected(true);
-                    widget[selected].getControl(keyCode);
-                }
-                break;
-            case KeyEvent.VK_ENTER:
-                if(selected >= 0  &&  selected < 2) {
-                    //文本框
-                    indexDown();
-                } else {
-                    //按钮
-                    widget[selected].setSelected(true);
-                    opt = widget[selected].call();
-                }
-                break;
-            case KeyEvent.VK_ESCAPE:
-                opt = new Operation(true, null, null, null, null, null);
-                break;
-            default:
-                if(selected >= 0  &&  selected < widget.length) {
-                    widget[selected].setSelected(true);
-                    widget[selected].getControl(keyCode);
-                }
-                break;
+        int selected = getSelectedIndex();
+        
+        Operation opt = null;
+        switch(keyCode) {
+        case KeyEvent.VK_UP: 
+            indexUp();
+            break;
+        case KeyEvent.VK_DOWN: 
+            indexDown();
+            break;
+        case KeyEvent.VK_RIGHT:
+            if(selected >= 2) indexDown();
+            else {
+                widget[selected].setSelected(true);
+                widget[selected].getControl(keyCode);
             }
-            
-            return opt;
-        } else return currentDialog.putKeyReleaseEvent(keyCode);
+            break;
+        case KeyEvent.VK_LEFT:
+            if(selected >= 2) indexUp();
+            else {
+                widget[selected].setSelected(true);
+                widget[selected].getControl(keyCode);
+            }
+            break;
+        case KeyEvent.VK_ENTER:
+            if(selected >= 0  &&  selected < 2) {
+                //文本框
+                indexDown();
+            } else {
+                //按钮
+                widget[selected].setSelected(true);
+                opt = widget[selected].call();
+            }
+            break;
+        case KeyEvent.VK_ESCAPE:
+            opt = new Operation(true, null, null, null, null, null);
+            break;
+        default:
+            if(selected >= 0  &&  selected < widget.length) {
+                widget[selected].setSelected(true);
+                widget[selected].getControl(keyCode);
+            }
+            break;
+        }
+        
+        return opt;
     }
 
     @Override

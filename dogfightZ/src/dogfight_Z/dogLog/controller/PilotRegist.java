@@ -16,7 +16,7 @@ import graphic_Z.HUDs.CharSingleLineTextEdit;
 import graphic_Z.HUDs.Operable;
 import graphic_Z.HUDs.Widget;
 
-public class DogRegist extends Menu {
+public class PilotRegist extends Menu {
     
     private CharLabel lblTiltle;
 
@@ -43,7 +43,7 @@ public class DogRegist extends Menu {
     private int setScreenSize[];
     private int shareMyRecord = 1;
     
-    public DogRegist(String args[], JTextArea screen, int resolutionX, int resolutionY) {
+    public PilotRegist(String args[], JTextArea screen, int resolutionX, int resolutionY) {
         super(args, screen, 0, resolutionX, resolutionY);
         
         setScreenSize = null;
@@ -141,31 +141,24 @@ public class DogRegist extends Menu {
 
                 @Override
                 public Operation call() {
-                    return new Operation(
-                        false, 
-                        new TipsConfirmMenu(
-                            args, 
-                            null,
-                            "你想要将自己的游戏记录设置为所有用户可见吗？", 
-                            "YES!", 
-                            "NO.", 
-                            screen, 
-                            resolution[0], 
-                            resolution[1], 
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    shareMyRecord = 1;
-                                }
-                            }, 
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    shareMyRecord = 0;
-                                }
+                    showConfirmDialog("你想要将自己的游戏记录设置为所有用户可见吗？","YES!", "NO.", 
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                shareMyRecord = 1;
+                                closeDialog();
                             }
-                        ), null, null, null, null
+                        }, 
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                shareMyRecord = 0;
+                                closeDialog();
+                            }
+                        }
                     );
+                    
+                    return new Operation(false, null, null, null, null, null);
                 }
             }
         );
@@ -202,19 +195,31 @@ public class DogRegist extends Menu {
                     String unick = tbUserNick.getText();
                     
                     if(uname.isEmpty()) {
-                        return new Operation(false, new TipsMenu(args, "用户名不能为空。", screen, resolution[0], resolution[1]), null, null, null, null);
+                        tbUsername.setSelected(true);
+                        setFocus(0);
+                        showTipsDialog("用户名不能为空。");
+                        return null;
                     }
 
                     if(pass.isEmpty()) {
-                        return new Operation(false, new TipsMenu(args, "登录口令不能为空。", screen, resolution[0], resolution[1]), null, null, null, null);
+                        pasUserPass.setSelected(true);
+                        setFocus(1);
+                        showTipsDialog("登录口令不能为空。");
+                        return null;
                     }
 
-                    if(setScreenSize == null) {
-                        return new Operation(false, new TipsMenu(args, "请先校准屏幕尺寸。", screen, resolution[0], resolution[1]), null, null, null, null);
+                    if(!pass.equals(passConfirm)) {
+                        pasUserPass.clear();
+                        pasUserPassConfirm.clear();
+                        pasUserPass.setSelected(true);
+                        setFocus(1);
+                        showTipsDialog("两次输入口令不一致，请重试。");
+                        return null;
                     }
                     
-                    if(!pass.equals(passConfirm)) {
-                        return new Operation(false, new TipsMenu(args, "两次输入口令不一致，请重试。", screen, resolution[0], resolution[1]), null, null, null, null);
+                    if(setScreenSize == null) {
+                        showTipsDialog("请先校准屏幕尺寸。");
+                        return null;
                     }
                     
                     PlayerProfile player = new PlayerProfile(-1, uname, pass, unick, null, shareMyRecord,
@@ -224,8 +229,16 @@ public class DogRegist extends Menu {
                     
                     pilotNo = PlayerProfileServiceImp.getPlayerProfileService().regist(player);
                     
-                    if(pilotNo != -1) return new Operation(true, new TipsMenu(args, "飞行战斗员注册成功，您的编号为: " + pilotNo + "。", screen, resolution[0], resolution[1]), null, new Color(48, 64, 48), null, null);
-                    return new Operation(false, new TipsMenu(args, "注册失败，可能已经存在同名的飞行员了。", screen, resolution[0], resolution[1]), new Color(128, 96, 64), null, null, null);
+                    if(pilotNo != -1) {
+                        showTipsDialog("飞行战斗员注册成功，您的编号为: " + pilotNo + "。");
+                        return new Operation(true, null, new Color(48, 64, 48), null, null, null);
+                    } else {
+                        tbUsername.clear();
+                        tbUsername.setSelected(true);
+                        setFocus(0);
+                        showTipsDialog("注册失败，可能已经存在同名的飞行员了。");
+                        return new Operation(false, null, new Color(128, 96, 64), null, null, null);
+                    }
                 }
             }
         );

@@ -46,7 +46,6 @@ public class SimpleMenu extends Menu {
 
     @Override
     protected void afterRefreshEvent() {
-
     }
 
     @Override
