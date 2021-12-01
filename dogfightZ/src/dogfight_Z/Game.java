@@ -23,6 +23,7 @@ import graphic_Z.HUDs.CharLoopingScrollBar;
 import graphic_Z.HUDs.CharProgressBar;
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
+import graphic_Z.Managers.EventManager;
 import graphic_Z.Worlds.CharTimeSpace;
 import graphic_Z.utils.GraphicUtils;
 import graphic_Z.utils.HzController;
@@ -44,7 +45,6 @@ public class Game extends CharTimeSpace implements Runnable
     public CharLabel lbl7;
     public CharLabel lbl8;
     public CharLabel lbl9;
-	
 	
 	public CharLabel lblRespawnTimeLeft;
 	public CharLabel lblGameTimeLeft;
@@ -106,6 +106,7 @@ public class Game extends CharTimeSpace implements Runnable
 	private int resolution_min;
 	private int keyPressed;
 	private int scrSize = 8;
+    private int fontIdx = 1;
 	private boolean flgWheelUp, flgWheelDn;
 	private Aircraft lockedEnemy = null;
 	//--------------------------------
@@ -174,6 +175,7 @@ public class Game extends CharTimeSpace implements Runnable
 	private void initUI(int fontSize) {
         eventManager.setTitle("dogfightZ");
         scrSize = fontSize;
+        fontIdx = 1;
         eventManager.setScrZoom(fontSize);
         killTipListUpdateTimeLeft = killTipListUpdateTime = 450;
         maxKillTipCount       = 7;
@@ -763,7 +765,7 @@ public class Game extends CharTimeSpace implements Runnable
 				case -KeyEvent.VK_V:
 					keyState_V = false;
 				break;
-				
+				//fontIdx
 				case 93://]
 					scrSize += 1;
 					eventManager.setScrZoom(scrSize);
@@ -772,7 +774,16 @@ public class Game extends CharTimeSpace implements Runnable
 					if(scrSize > 1)scrSize -= 1;
 					eventManager.setScrZoom(scrSize);
 				break;
-
+				
+				case KeyEvent.VK_N:
+				    if(fontIdx-- == 0) fontIdx = EventManager.FONTS.length - 1;
+                    eventManager.switchFont(fontIdx);
+                break;
+                case KeyEvent.VK_M:
+                    if(++fontIdx == EventManager.FONTS.length) fontIdx = 0;
+                    eventManager.switchFont(fontIdx);
+                break;
+				
 				case KeyEvent.VK_J:
 					mainCamera.resizeScreen(visualManager.resolution[0] - 1, visualManager.resolution[1]);
 					reLocateHUD();

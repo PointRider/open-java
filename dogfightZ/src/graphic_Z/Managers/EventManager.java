@@ -26,8 +26,13 @@ public class EventManager extends JFrame
 	private final int PCScreenCenter_X;
 	private final int PCScreenCenter_Y;
 	
+	public  final static String FONTS[] = {
+	     "Consolas", "DejaVu Sans Mono", "新宋体"
+	};
+	
 	//public final static String FONTFAMILY = "Consolas";
-	public final static String FONTFAMILY = "DejaVu Sans Mono";
+	public static String FONTFAMILY = "DejaVu Sans Mono";
+	private int fontSize;
 	
 	public JTextArea		   mainScr;
 	
@@ -63,14 +68,14 @@ public class EventManager extends JFrame
 		setLocation(0, 0);
 		setUndecorated(true);
 		//setOpacity(0.9f);
-		
+		fontSize = 8;
 		mainScr = new JTextArea();
 		mainScr.setLocation(0, 0);
 		mainScr.setSize(PCScreenCenter_X << 1, PCScreenCenter_Y << 1);
 		mainScr.setEditable(false);
 		mainScr.setFocusable(false);
 		mainScr.setText("Welcome to the game world !");
-		mainScr.setFont(new Font(FONTFAMILY, Font.PLAIN, 8));
+		mainScr.setFont(new Font(FONTFAMILY, Font.PLAIN, fontSize));
 		mainScr.setBackground(new Color(0, 0, 0));
 		mainScr.setForeground(new Color(255, 255, 255));
 		//mainScr.setBackground(new Color(255, 200, 64));
@@ -98,9 +103,17 @@ public class EventManager extends JFrame
 	
 	public void setScrZoom(int size)
 	{
+	    fontSize = size;
 		mainScr.setFont(new Font(FONTFAMILY, Font.PLAIN, size));
 	}
 
+    public void switchFont(int idx)
+    {
+        if(idx < 0 || idx > FONTS.length) return;
+        FONTFAMILY = FONTS[idx];
+        mainScr.setFont(new Font(FONTFAMILY, Font.PLAIN, fontSize));
+    }
+    
 	public int popAKeyOpreation()
 	{
 		int keyCode = -1;
