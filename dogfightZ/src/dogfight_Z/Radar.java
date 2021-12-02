@@ -13,8 +13,8 @@ public class Radar extends CharDynamicHUD
 {
 	public Aircraft myself;
 	public LinkedListZ<ThreeDs> aircrafts;
-	public double maxSearchRange;
-	public double tmp_double_xy[];
+	public float maxSearchRange;
+	public float tmp_float_xy[];
 	public char Img[][];
 	public char back[][];
 	public int nowAngle;
@@ -38,19 +38,19 @@ public class Radar extends CharDynamicHUD
 		int Location_Y,
 		Aircraft myJet,
 		LinkedListZ<ThreeDs> aircraftsList,
-		double maxSearch_range
+		float maxSearch_range
 	)
 	{
-		super(null, frapsBuffer, HUDLayer, scrResolution, size, size, Location_X, Location_Y, 0.0, true);
+		super(null, frapsBuffer, HUDLayer, scrResolution, size, size, Location_X, Location_Y, 0.0F, true);
 		myself			= myJet;
 		aircrafts		= aircraftsList;
-		tmp_double_xy	= new double[2];
+		tmp_float_xy	= new float[2];
 		maxSearchRange	= maxSearch_range;
 		Img				= new char[size][size];
 		back			= new char[size][size];
 		nowAngle		= 270;
 		
-		painter = new CharDynamicHUD(HUDPainterImg, frapsBuffer, HUDLayer, scrResolution, size, size, Location_X, Location_Y , 0.0, true);
+		painter = new CharDynamicHUD(HUDPainterImg, frapsBuffer, HUDLayer, scrResolution, size, size, Location_X, Location_Y , 0.0F, true);
 		//painter.location[0] += 1;
 		//painter.location[1] += 1;
 		if(HUDImgFile != null)try(FileReader data = new FileReader(HUDImgFile))
@@ -81,9 +81,9 @@ public class Radar extends CharDynamicHUD
 		}
 	}
 	
-	public double rangeXY(double x1, double y1, double x2, double y2)
+	public float rangeXY(float x1, float y1, float x2, float y2)
 	{
-		return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+		return GraphicUtils.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
 	}
 	
 	@Override
@@ -98,7 +98,7 @@ public class Radar extends CharDynamicHUD
 		painter.printNew();
 		
 		int x, y, r = (size[0]>>1);
-		double theta = Math.toRadians(nowAngle);
+		float theta = GraphicUtils.toRadians(nowAngle);
 		for(int i=0 ; i<r ; ++i)
 		{
 			x = (int)(GraphicUtils.cos(theta) * i);
@@ -123,7 +123,7 @@ public class Radar extends CharDynamicHUD
 	public void makeNewReady()
 	{
 		Aircraft aTarget = null;
-		double range, r = (size[0]>>1);
+		float range, r = (size[0]>>1);
 		int x, y;
 		
 		for(int i=0 ; i<size[1] ; ++i)
@@ -137,19 +137,19 @@ public class Radar extends CharDynamicHUD
 			aTarget = (Aircraft) a;
 			if(aTarget.getID().equals(myself.getID()) || aTarget.camp == -1 || !aTarget.isAlive)
 				continue;
-			myself.getRelativePosition_XY(aTarget.location[1], aTarget.location[2], tmp_double_xy);
+			myself.getRelativePosition_XY(aTarget.location[1], aTarget.location[2], tmp_float_xy);
 			
 			range = rangeXY(aTarget.location[1], aTarget.location[2], myself.location[1], myself.location[2]);
 			
-			if(Math.abs(range) <= maxSearchRange)
+			if(GraphicUtils.abs(range) <= maxSearchRange)
 			{
-				x = (int) (tmp_double_xy[0] * r / maxSearchRange);
-				y = (int) (tmp_double_xy[1] * r / maxSearchRange);
+				x = (int) (tmp_float_xy[0] * r / maxSearchRange);
+				y = (int) (tmp_float_xy[1] * r / maxSearchRange);
 				
 				x += centerX;
 				y += centerY + 1;
 				
-				if(Math.abs(myself.roll_angle[1]) < 90)
+				if(GraphicUtils.abs(myself.roll_angle[1]) < 90)
 					 y = size[1] - y;
 				else x = size[0] - x;
 				

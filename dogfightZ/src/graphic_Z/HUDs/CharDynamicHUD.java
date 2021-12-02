@@ -4,7 +4,7 @@ import graphic_Z.utils.GraphicUtils;
 
 public class CharDynamicHUD extends CharImage
 {
-	public double  angle;
+	public float  angle;
 	public boolean transparentAtSpace;
 	
 	public CharDynamicHUD
@@ -17,7 +17,7 @@ public class CharDynamicHUD extends CharImage
 		int size_Y,
 		int Location_X,
 		int Location_Y,
-		double Angle_X,
+		float Angle_X,
 		boolean transparent_at_space
 	)
 	{
@@ -36,7 +36,7 @@ public class CharDynamicHUD extends CharImage
 		int size_Y,
 		int Location_X,
 		int Location_Y
-	) {this(HUDImgFile, frapsBuffer, HUDLayer, scrResolution, size_X, size_Y, Location_X, Location_Y, 0.0, true);}
+	) {this(HUDImgFile, frapsBuffer, HUDLayer, scrResolution, size_X, size_Y, Location_X, Location_Y, 0.0F, true);}
 	
 	public CharDynamicHUD
 	(
@@ -46,13 +46,13 @@ public class CharDynamicHUD extends CharImage
 		int[] scrResolution,
 		int size_X,
 		int size_Y
-	) {this(HUDImgFile, frapsBuffer, HUDLayer, scrResolution, size_X, size_Y, 0, 0, 0.0, true);}
+	) {this(HUDImgFile, frapsBuffer, HUDLayer, scrResolution, size_X, size_Y, 0, 0, 0.0F, true);}
 	
-	protected double distance(double x0, double y0, int x2, int y2)
+	protected float distance(float x0, float y0, int x2, int y2)
 	{
 		x2 -= x0;
 		y2 -= y0;
-		return Math.sqrt(x2*x2 + y2*y2);
+		return GraphicUtils.sqrt(x2*x2 + y2*y2);
 	}
 	
 	@Override
@@ -61,8 +61,8 @@ public class CharDynamicHUD extends CharImage
 		if(visible)
 		{
 			angle %= 360;
-			double x0, y0;
-			double r, X, Y, /*tmp,*/ cos$, sin$;
+			float x0, y0;
+			float r, X, Y, /*tmp,*/ cos$, sin$;
 			
 			for(int y=0 ; y<size[1] ; ++y)
 			{
@@ -78,14 +78,14 @@ public class CharDynamicHUD extends CharImage
 							/*
 							r  = distance(x0, y0, 0, 0);
 							
-							tmp = Math.atan(y0/x0)+Math.toRadians(angle);
+							tmp = GraphicUtils.atan(y0/x0)+GraphicUtils.toRadians(angle);
 							X = GraphicUtils.cos(tmp) * r;
 							Y = GraphicUtils.sin(tmp) * r;
 							y0 = ((x0<0)?(-Y):Y);
 							x0 = ((x0<0)?(-X):X);
 							*/
 							
-							r = Math.toRadians(angle);
+							r = GraphicUtils.toRadians(angle);
 							cos$ = GraphicUtils.cos(r);
 							sin$ = GraphicUtils.sin(r);
 							X = cos$ * x0 - sin$ * y0;

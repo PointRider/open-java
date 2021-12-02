@@ -19,7 +19,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 	public CharLabel	  hudDistance;
 	public CharDynamicHUD hudWarning_missile;
 	
-	public double 		  maxSearchingRange;
+	public float 		  maxSearchingRange;
 	public Aircraft		  myJet;
 	//-------------------------------------------------
 	public Aircraft		  currentSelectObj;
@@ -34,9 +34,9 @@ public class PlayersJetCamera extends CharFrapsCamera
 	
 	public PlayersJetCamera
 	(
-		double         FOV, 
-		double         visblt, 
-		double         max_searchingRange,
+		float         FOV, 
+		float         visblt, 
+		float         max_searchingRange,
 		int            this_camp,
 		int            lock_time,
 		int[]          resolution_XY, 
@@ -100,10 +100,10 @@ public class PlayersJetCamera extends CharFrapsCamera
 		reversedAngle[1] = -roll_source[1];
 		reversedAngle[2] = -roll_source[2];
 		
-		double locationOfanObj[]  = new double[3];
+		float locationOfanObj[]  = new float[3];
 		/*
-		double rollAngleOfanObj[] = new double[3];
-		double aPointOfanObj[]    = new double[3];
+		float rollAngleOfanObj[] = new float[3];
+		float aPointOfanObj[]    = new float[3];
 		short  X1, Y1;
 		char spc;*/
 		lockingSelected = false;
@@ -111,9 +111,9 @@ public class PlayersJetCamera extends CharFrapsCamera
 		if(myJet.lockedByEnemy) warning_lockedByMissile();
 
 		Aircraft a = null;
-		double point_on_Scr[] = new double[2];
+		float point_on_Scr[] = new float[2];
 
-		double rge;
+		float rge;
 		
 		for(ThreeDs aObject:inWorld.objectsManager.objects)	//for each object
 		{
@@ -138,7 +138,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 			
 			if(a==null || a.getID().equals(myJet.getID()) || !a.isAlive || !myJet.isAlive) continue;
 			
-			double range_to_Scr = CharFrapsCamera.getXY_onCamera
+			float range_to_Scr = CharFrapsCamera.getXY_onCamera
 			(
 				locationOfanObj[0], locationOfanObj[1], locationOfanObj[2], 
 				resolution[0], resolution[1], location, roll_angle, point_on_Scr, FOV

@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import dogfight_Z.GameRun;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -40,8 +43,11 @@ public class Start_GUI extends JFrame {
 	//private static String beready="java dogFight_Z.GameRun \"%~dp0Jet.dat\" \"%~dp0Crosshair2.hud\" \"%~dp0LoopingScrollBar1.hud\" \"%~dp0LoopingScrollBar3.hud\" \"%~dp0HUD2.hud\" \"%~dp0MyJetHUD_Friend.hud\" \"%~dp0MyJetHUD_Enemy.hud\" \"%~dp0MyJetHUD_Locking.hud\" \"%~dp0MyJetHUD_Locked.hud\" \"%~dp0MissileWarning.hud\" \"%~dp0RadarHUD.hud\" \"%~dp0RaderPainter.hud\" \"%~dp0ScoreHUD.hud\" \"%~dp0GameOver.hud\" 107 57 120 ";
 	//private Icon iconstart = new ImageIcon("resources\\icon.jpg");
 	//private Icon iconrecord = new ImageIcon("resources\\icon2.jpg");
+	
+	static { GameRun.initEnviroment(); }
 
 	public static void main(String[] args) {
+	    System.err.println("running~");
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -139,142 +145,166 @@ public class Start_GUI extends JFrame {
 		bgp.add(btnNewButton0);
 		btnNewButton0.setFont(new Font("宋体", Font.BOLD, 22));
 		
-				//调出游戏记录，查看
-				JButton btnNewButton = new JButton("游戏记录");
-				btnNewButton.setBounds(24, 200, 200, 40);
-				bgp.add(btnNewButton);
-				btnNewButton.setFont(new Font("宋体", Font.BOLD, 22));
-				//设置图标
-				//btnNewButton.setIcon(iconrecord);
+		//调出游戏记录，查看
+		JButton btnNewButton = new JButton("游戏记录");
+		btnNewButton.setBounds(24, 200, 200, 40);
+		bgp.add(btnNewButton);
+		btnNewButton.setFont(new Font("宋体", Font.BOLD, 22));
+		//设置图标
+		//btnNewButton.setIcon(iconrecord);
 
-				JButton btnNewButton2 = new JButton("清除记录");
-				btnNewButton2.setBounds(24, 250, 200, 40);
-				bgp.add(btnNewButton2);
-				btnNewButton2.setFont(new Font("宋体", Font.BOLD, 22));
-				
-				//添加按钮Start！
-				JButton btnNewButton1 = new JButton("Start\uFF01");
-				btnNewButton1.setBounds(24, 350, 200, 40);
-				bgp.add(btnNewButton1);
-				btnNewButton1.setFont(new Font("宋体", Font.BOLD, 26));
-				
-				//播放列表窗体启动
-				JButton btnNewButton3 = new JButton("播放列表");
-				btnNewButton3.setBounds(24, 300, 200, 40);
-				bgp.add(btnNewButton3);
-				btnNewButton3.setFont(new Font("宋体", Font.BOLD, 22));
-				
-				//监听Start按钮，当被点击时，
-				//将选择的难度添加到 beready中，
-				//将选中的歌曲，加载（未写）
-				btnNewButton1.addActionListener
-				( 
-					new ActionListener()
-					{
-						public void actionPerformed(ActionEvent e)
-						{
-							ProcessBuilder pb = new ProcessBuilder
-							(
-								"java", "dogfight_Z.GameRun",
-								"resources/Jet.dat",
-								"resources/Crosshair2.hud",
-								"resources/LoopingScrollBar1.hud",
-								"resources/LoopingScrollBar3.hud",
-								"resources/HUD3.hud",
-								"resources/MyJetHUD_Friend.hud",
-								"resources/MyJetHUD_Enemy.hud",
-								"resources/MyJetHUD_Locking.hud",
-								"resources/MyJetHUD_Locked.hud",
-								"resources/MissileWarning.hud",
-								"resources/RadarHUD.hud",
-								"resources/RaderPainter.hud",
-								"resources/ScoreHUD.hud",
-								"resources/config_NPC.cfg",
-								"resources/gameRecord.rec",
-								"resources/config_OST.cfg",
-								"192", "108", "64", "8"
-							);
-							try
+		JButton btnNewButton2 = new JButton("清除记录");
+		btnNewButton2.setBounds(24, 250, 200, 40);
+		bgp.add(btnNewButton2);
+		btnNewButton2.setFont(new Font("宋体", Font.BOLD, 22));
+		
+		//添加按钮Start！
+		JButton btnNewButton1 = new JButton("Start\uFF01");
+		btnNewButton1.setBounds(24, 350, 200, 40);
+		bgp.add(btnNewButton1);
+		btnNewButton1.setFont(new Font("宋体", Font.BOLD, 26));
+		
+		//播放列表窗体启动
+		JButton btnNewButton3 = new JButton("播放列表");
+		btnNewButton3.setBounds(24, 300, 200, 40);
+		bgp.add(btnNewButton3);
+		btnNewButton3.setFont(new Font("宋体", Font.BOLD, 22));
+		
+		//监听Start按钮，当被点击时，
+		//将选择的难度添加到 beready中，
+		//将选中的歌曲，加载（未写）
+		//ClassLoader.getSystemResource(name)
+		btnNewButton1.addActionListener
+		( 
+			new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+				    String args[] = {
+			            "resources/Jet.dat",
+                        "resources/Crosshair2.hud",
+                        "resources/LoopingScrollBar1.hud",
+                        "resources/LoopingScrollBar3.hud",
+                        "resources/HUD3.hud",
+                        "resources/MyJetHUD_Friend.hud",
+                        "resources/MyJetHUD_Enemy.hud",
+                        "resources/MyJetHUD_Locking.hud",
+                        "resources/MyJetHUD_Locked.hud",
+                        "resources/MissileWarning.hud",
+                        "resources/RadarHUD.hud",
+                        "resources/RaderPainter.hud",
+                        "resources/ScoreHUD.hud",
+                        "resources/config_NPC.cfg",
+                        "resources/gameRecord.rec",
+                        "resources/config_OST.cfg",
+                        "192", "108", "64", "8"
+				    };
+				    
+				    GameRun.main(args);
+				}
+			}
+		);
+		
+		btnNewButton0.addActionListener( 
+			new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e) {
+					//将选择的难度加入到需要的命令行String中
+						SwingUtilities.invokeLater
+						(
+							new Runnable()
 							{
-								pb.start();
-							} catch (IOException e1)
-							{
-								// TODO 自动生成的 catch 块
-								e1.printStackTrace();
+								@Override
+								public void run()
+								{
+									new GameStartGUI("resources/config_NPC.cfg");
+								}
 							}
-						}
+						);
 					}
-				);
-				
-				btnNewButton0.addActionListener( 
-						new ActionListener()
-						{
-							public void actionPerformed(ActionEvent e) {
-								//将选择的难度加入到需要的命令行String中
-									SwingUtilities.invokeLater
-									(
-										new Runnable()
-										{
-											@Override
-											public void run()
-											{
-												new GameStartGUI("resources/config_NPC.cfg");
-											}
-										}
-									);
-								}
-							}
-					);
-				
-				btnNewButton2.addActionListener( 
-						new ActionListener()
-						{
-							public void actionPerformed(ActionEvent e) {
-								//将选择的难度加入到需要的命令行String中
-									File f = new File("resources/gameRecord.rec");
-									f.delete();
-									JOptionPane.showMessageDialog(null, "所有游戏记录已成功清除。");
-								}
-							}
-					);
-				
-				btnNewButton.addActionListener( 
-					new ActionListener()
-					{
-						public void actionPerformed(ActionEvent e) {
-							try {
-								gamerecord=new RecordUI("resources/gameRecord.rec");
-							} catch (FileNotFoundException e1) {
-								// TODO 自动生成的 catch 块
-								e1.printStackTrace();
-							} catch (IOException e1) {
-								// TODO 自动生成的 catch 块
-								e1.printStackTrace();
-							}
-							gamerecord.setVisible(true);
-						}
-					} 	
-				);
-				
-				btnNewButton3.addActionListener( 
-						new ActionListener()
-						{
-							public void actionPerformed(ActionEvent e) {
-								SwingUtilities.invokeLater
-								(
-									new Runnable()
-									{
-										@Override
-										public void run()
-										{
-											new SoundTrackSelector("resources/config_OST.cfg");
-										}
-									}
-								);
-							}
-						} 	
-					);
-				
+				}
+		);
+		
+		btnNewButton2.addActionListener( 
+			new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e) {
+				//将选择的难度加入到需要的命令行String中
+					File f = new File("resources/gameRecord.rec");
+					f.delete();
+					JOptionPane.showMessageDialog(null, "所有游戏记录已成功清除。");
+				}
+			}
+		);
+		
+		btnNewButton.addActionListener( 
+			new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e) {
+					try {
+						gamerecord=new RecordUI("resources/gameRecord.rec");
+					} catch (FileNotFoundException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					}
+					gamerecord.setVisible(true);
+				}
+			} 	
+		);
+		
+		btnNewButton3.addActionListener( 
+    		new ActionListener()
+    		{
+    			public void actionPerformed(ActionEvent e) {
+    				SwingUtilities.invokeLater
+    				(
+    					new Runnable()
+    					{
+    						@Override
+    						public void run()
+    						{
+    							new SoundTrackSelector("resources/config_OST.cfg");
+    						}
+    					}
+    				);
+    			}
+    		} 	
+    	);
 	}
 }
 
+
+
+/*
+ProcessBuilder pb = new ProcessBuilder
+(
+    "java", "dogfight_Z.Game",
+    "resources/Jet.dat",
+    "resources/Crosshair2.hud",
+    "resources/LoopingScrollBar1.hud",
+    "resources/LoopingScrollBar3.hud",
+    "resources/HUD3.hud",
+    "resources/MyJetHUD_Friend.hud",
+    "resources/MyJetHUD_Enemy.hud",
+    "resources/MyJetHUD_Locking.hud",
+    "resources/MyJetHUD_Locked.hud",
+    "resources/MissileWarning.hud",
+    "resources/RadarHUD.hud",
+    "resources/RaderPainter.hud",
+    "resources/ScoreHUD.hud",
+    "resources/config_NPC.cfg",
+    "resources/gameRecord.rec",
+    "resources/config_OST.cfg",
+    "192", "108", "64", "8"
+);
+try
+{
+    pb.start();
+} catch (IOException e1)
+{
+    // TODO 自动生成的 catch 块
+    e1.printStackTrace();
+}*/

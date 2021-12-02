@@ -32,8 +32,8 @@ import dogfight_Z.dogLog.view.Menu;
 
 public class ScreenResizer extends Menu
 {
-	public double fov = 2.2;
-	public double visibility = 12480;
+	public float fov = 2.2F;
+	public float visibility = 12480;
 	
 	public CharMessObject myJet;
 	
@@ -204,7 +204,7 @@ public class ScreenResizer extends Menu
 	        int    size,
 	        char   visual,
 	        CharProgressBar.Direction direction,
-	        double value
+	        float value
 	    )
 	    {
 	        CharProgressBar newBar = 
@@ -217,14 +217,14 @@ public class ScreenResizer extends Menu
 	
 	private static class MCamera extends TDCamera<CharWorld> {
 	    
-	    //double location[];
-	    double roll_source[];
-	    //double FOV;
+	    //float location[];
+	    float roll_source[];
+	    //float FOV;
 	    
-	    public MCamera(double cameraFOV, double visblt, CharWorld inWhichWorld) {
+	    public MCamera(float cameraFOV, float visblt, CharWorld inWhichWorld) {
 	        super(cameraFOV, visblt, inWhichWorld);
-	        location = new double[3];
-	        roll_source = new double[3];
+	        location = new float[3];
+	        roll_source = new float[3];
 	    }
 	    /*
 	    public void resizeScreen(int x, int y) {
@@ -240,7 +240,7 @@ public class ScreenResizer extends Menu
 	
 	private void initMainCamera(int x, int y) {
 	    visualManager = new VManager(resolution, screenBuffer, x, y);
-	    mainCamera = new MCamera(2.6, 12480, null);
+	    mainCamera = new MCamera(2.6F, 12480, null);
 	}
 	
 	private void initMe(String myJetModel_file, int x, int y) {
@@ -257,7 +257,7 @@ public class ScreenResizer extends Menu
 	private void playersCameraManage()
     {
 	    
-        double t1, t2, t3;
+        float t1, t2, t3;
 
         mainCamera.location[0] = -240;
         mainCamera.location[1] = 0;
@@ -331,7 +331,7 @@ public class ScreenResizer extends Menu
         mainCamera.location[1] += myJet.location[1];
         mainCamera.location[2] += myJet.location[2];
         
-        mainCamera.setFOV(2.6);
+        mainCamera.setFOV(2.6F);
     }
 
 	private void initHUDs(
@@ -343,7 +343,7 @@ public class ScreenResizer extends Menu
 	        String hud_radarBG,
 	        String hud_radarPrinter
 	    ) {
-	    resolution_min = Math.min(visualManager.resolution[0], visualManager.resolution[1]) >> 1;
+	    resolution_min = GraphicUtils.min(visualManager.resolution[0], visualManager.resolution[1]) >> 1;
         EndScreen = visualManager.newLabel("      TIME UP\nPress ESC Key To Exit.", ((resolutionX>>1) - 9), (int)(resolutionY * 0.3), 999);
         EndScreen.visible = false;
         
@@ -369,15 +369,15 @@ public class ScreenResizer extends Menu
         lblGameTimeLeft = visualManager.newLabel(" ", ((resolutionX>>1) - 11), 3, 998);
         lblKillTipList = visualManager.newLabel(" ", 3, 3, 123);
         
-        hud_HP_progressBar          = visualManager.newProgressBar((progressBarLocationBaseX + 4), progressBarLocationBaseY, 205, 20, '|', CharProgressBar.Direction.horizon, 1.0);
-        hud_pushTime_progressBar    = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 2), 209, 20, '|', CharProgressBar.Direction.horizon, 1.0);
+        hud_HP_progressBar          = visualManager.newProgressBar((progressBarLocationBaseX + 4), progressBarLocationBaseY, 205, 20, '|', CharProgressBar.Direction.horizon, 1.0F);
+        hud_pushTime_progressBar    = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 2), 209, 20, '|', CharProgressBar.Direction.horizon, 1.0F);
         
-        hud_cannon_progressBar           = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 4), 210, 20, '|', CharProgressBar.Direction.horizon, 1.0);
-        hud_cannonReloading_progressBar  = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 5), 212, 25, '-', CharProgressBar.Direction.horizon, 1.0);
-        hud_missile_progressBar          = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 6), 214, 20, '|', CharProgressBar.Direction.horizon, 1.0);
-        hud_missileReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 7), 216, 25, '-', CharProgressBar.Direction.horizon, 1.0);
-        hud_decoy_progressBar            = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 8), 218, 20, '|', CharProgressBar.Direction.horizon, 1.0);
-        hud_decoyReloading_progressBar   = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 9), 220, 25, '-', CharProgressBar.Direction.horizon, 1.0);
+        hud_cannon_progressBar           = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 4), 210, 20, '|', CharProgressBar.Direction.horizon, 1.0F);
+        hud_cannonReloading_progressBar  = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 5), 212, 25, '-', CharProgressBar.Direction.horizon, 1.0F);
+        hud_missile_progressBar          = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 6), 214, 20, '|', CharProgressBar.Direction.horizon, 1.0F);
+        hud_missileReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 7), 216, 25, '-', CharProgressBar.Direction.horizon, 1.0F);
+        hud_decoy_progressBar            = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 8), 218, 20, '|', CharProgressBar.Direction.horizon, 1.0F);
+        hud_decoyReloading_progressBar   = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 9), 220, 25, '-', CharProgressBar.Direction.horizon, 1.0F);
         
         hud_roll_up_dn_angle     = visualManager.newDynamicHUD(hud_horizonIndicator, 21, 51, 33);
         hud_roll_up_dn_scrollBar = visualManager.newLoopingScrollBar(hud_loopingScrollBar_vertical, 50, 72, 4, 43, CharLoopingScrollBar.Direction.vertical);
@@ -482,7 +482,7 @@ public class ScreenResizer extends Menu
 	}
 	
 	private void reLocateHUD() {
-	    resolution_min = Math.min(visualManager.resolution[0], visualManager.resolution[1]) >> 1;
+	    resolution_min = GraphicUtils.min(visualManager.resolution[0], visualManager.resolution[1]) >> 1;
 	    final int resolution_X = visualManager.resolution[0], resolution_Y = visualManager.resolution[1];
 	    final int progressBarLocationBaseX  = (int) (resolution_X * 0.75);
         final int progressBarLocationBaseX2 = (int) (resolution_X - 18);
@@ -524,12 +524,12 @@ public class ScreenResizer extends Menu
         hud_turn_lr_scrollBar.location[1] = resolution_Y - 1;
         hud_turn_lr_scrollBar.location[0] = resolution_X >> 1;
         hud_roll_up_dn_scrollBar.location[1] = (int) (resolution_Y >> 1);
-        hud_roll_up_dn_scrollBar.location[0] = (int) (resolution_X * 0.2);
+        hud_roll_up_dn_scrollBar.location[0] = (int) (resolution_X * 0.2F);
         
         hud_crosshair.setLocation(((resolution_X >> 1) - (65 >> 1)), ((resolution_Y >> 1) - (11 >> 1)));
         
-        hud_roll_up_dn_angle.location[0] = (int) (GraphicUtils.sin(Math.toRadians(myJet.roll_angle[2])) * GraphicUtils.sin(Math.toRadians(Math.abs(myJet.roll_angle[1]) > 90.0? -myJet.roll_angle[1] : myJet.roll_angle[1])) * - resolution_min + (visualManager.resolution[0]>>1));
-        hud_roll_up_dn_angle.location[1] = (int) (GraphicUtils.cos(Math.toRadians(myJet.roll_angle[2])) * GraphicUtils.sin(Math.toRadians(Math.abs(myJet.roll_angle[1]) > 90.0?  myJet.roll_angle[1] :-myJet.roll_angle[1])) * - resolution_min + (visualManager.resolution[1]>>1));
+        hud_roll_up_dn_angle.location[0] = (int) ((float) GraphicUtils.sin(GraphicUtils.toRadians(myJet.roll_angle[2])) * (float) GraphicUtils.sin(GraphicUtils.toRadians(GraphicUtils.abs(myJet.roll_angle[1]) > 90.0F? -myJet.roll_angle[1] : myJet.roll_angle[1])) * - resolution_min + (visualManager.resolution[0]>>1));
+        hud_roll_up_dn_angle.location[1] = (int) ((float) GraphicUtils.cos(GraphicUtils.toRadians(myJet.roll_angle[2])) * (float) GraphicUtils.sin(GraphicUtils.toRadians(GraphicUtils.abs(myJet.roll_angle[1]) > 90.0F?  myJet.roll_angle[1] :-myJet.roll_angle[1])) * - resolution_min + (visualManager.resolution[1]>>1));
         
         hud_Radar.setLocation((visualManager.resolution[0] - 22), 1);
 	}
@@ -546,10 +546,10 @@ public class ScreenResizer extends Menu
 				hud_Radar.visible = lbl1.visible = lbl2.visible = lbl3.visible = lbl4.visible = true;
 		//------------[Dynamic HUDs]------------
 		
-		hud_roll_up_dn_angle.angle = Math.abs(myJet.roll_angle[1]) > 90.0? myJet.roll_angle[2] + 180 : myJet.roll_angle[2];
+		hud_roll_up_dn_angle.angle = GraphicUtils.abs(myJet.roll_angle[1]) > 90.0? myJet.roll_angle[2] + 180 : myJet.roll_angle[2];
 		
-		hud_roll_up_dn_angle.location[0] = (int) (GraphicUtils.sin(Math.toRadians(myJet.roll_angle[2])) * GraphicUtils.sin(Math.toRadians(Math.abs(myJet.roll_angle[1]) > 90.0? -myJet.roll_angle[1] : myJet.roll_angle[1])) * - resolution_min + (visualManager.resolution[0]>>1));
-		hud_roll_up_dn_angle.location[1] = (int) (GraphicUtils.cos(Math.toRadians(myJet.roll_angle[2])) * GraphicUtils.sin(Math.toRadians(Math.abs(myJet.roll_angle[1]) > 90.0?  myJet.roll_angle[1] :-myJet.roll_angle[1])) * - resolution_min + (visualManager.resolution[1]>>1));
+		hud_roll_up_dn_angle.location[0] = (int) (GraphicUtils.sin(GraphicUtils.toRadians(myJet.roll_angle[2])) * GraphicUtils.sin(GraphicUtils.toRadians(GraphicUtils.abs(myJet.roll_angle[1]) > 90.0? -myJet.roll_angle[1] : myJet.roll_angle[1])) * - resolution_min + (visualManager.resolution[0]>>1));
+		hud_roll_up_dn_angle.location[1] = (int) (GraphicUtils.cos(GraphicUtils.toRadians(myJet.roll_angle[2])) * GraphicUtils.sin(GraphicUtils.toRadians(GraphicUtils.abs(myJet.roll_angle[1]) > 90.0?  myJet.roll_angle[1] :-myJet.roll_angle[1])) * - resolution_min + (visualManager.resolution[1]>>1));
 		
 		hud_roll_up_dn_scrollBar.value = (int) (myJet.roll_angle[1] / 360 * 72);
 		hud_turn_lr_scrollBar.value    = (int) (-myJet.roll_angle[0] / 360 * 72);

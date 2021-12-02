@@ -2,9 +2,9 @@ package graphic_Z.Objects;
 
 public class CharMessObject extends CharObject
 {
-	protected double mess;
-	protected double velocity[];
-	public double velocity_roll[];
+	protected float mess;
+	protected float velocity[];
+	public float velocity_roll[];
 	/*
 	public CharMessObject(CharMessObject another)
 	{
@@ -12,8 +12,8 @@ public class CharMessObject extends CharObject
 
 		mess = another.mess;
 		
-		velocity = new double[3];
-		velocity_roll =  new double[3];
+		velocity = new float[3];
+		velocity_roll =  new float[3];
 		
 		velocity[0] = another.velocity[0];
 		velocity[1] = another.velocity[1];
@@ -24,25 +24,25 @@ public class CharMessObject extends CharObject
 		velocity_roll[2] = another.velocity_roll[2];
 	}
 	*/
-	public CharMessObject(String ModelFile, double Mess, boolean lineConstruct)
+	public CharMessObject(String ModelFile, float Mess, boolean lineConstruct)
 	{
 		super(ModelFile, lineConstruct);
 
 		mess = Mess;
 		
-		velocity = new double[3];
-		velocity_roll =  new double[3];
+		velocity = new float[3];
+		velocity_roll =  new float[3];
 		
-		velocity[0] = 0.0;
-		velocity[1] = 0.0;
-		velocity[2] = 0.0;
+		velocity[0] = 0.0F;
+		velocity[1] = 0.0F;
+		velocity[2] = 0.0F;
 		
-		velocity_roll[0] = 0.0;
-		velocity_roll[1] = 0.0;
-		velocity_roll[2] = 0.0;
+		velocity_roll[0] = 0.0F;
+		velocity_roll[1] = 0.0F;
+		velocity_roll[2] = 0.0F;
 	}
 	
-	public CharMessObject(String ModelFile, double Mess) {
+	public CharMessObject(String ModelFile, float Mess) {
 		this(ModelFile, Mess, false);
 	}
 

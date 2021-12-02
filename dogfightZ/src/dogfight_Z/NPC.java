@@ -17,12 +17,12 @@ public class NPC extends Aircraft
 	private int		missileFireWaitingTime;
 	private int		missileFireWaitingTimeLeft;
 	//---------------[tracing]------------------
-	public double searching_visibility;
+	public float searching_visibility;
 	public Aircraft		tracingTarget;
-	public double		maxMotionRate;
-	private	double		halfAResolution_X;
-	private double		halfAResolution_Y;
-	private double		maxSearchingRange;
+	public float		maxMotionRate;
+	private	float		halfAResolution_X;
+	private float		halfAResolution_Y;
+	private float		maxSearchingRange;
 	public Aircraft		currentSelectObj;
 	public boolean		locked;
 	public boolean		lockingSelected;
@@ -30,8 +30,8 @@ public class NPC extends Aircraft
 	public int		lockTimeLeft;
 	public int		currentMaxLockingPriority;
 	public int		scrResolution[];
-	public double		point_on_Scr[];
-	//public double		point_on_Old[];
+	public float		point_on_Scr[];
+	//public float		point_on_Old[];
 	//---------------[cruise]-------------------
 	private int		goStreetTime;
 	private int		turnLRTime;
@@ -46,9 +46,9 @@ public class NPC extends Aircraft
 		Game					theGame,
 		String					modelFile, 
 		String					id,
-		double					Mess, 
-		double					searching_visibility,
-		double					max_motionRate,
+		float					Mess, 
+		float					searching_visibility,
+		float					max_motionRate,
 		int					    scrResolution_X,
 		int 					scrResolution_Y,
 		int					    camp,
@@ -61,8 +61,8 @@ public class NPC extends Aircraft
 	{
 		super(theGame, modelFile, Mess, camp, firedAmmo, Effects, delete_que, add_que, Aircrafts, null, id, true);
 		scrResolution		= new int[2];
-		point_on_Scr		= new double[2];
-		//point_on_Old		= new double[2];
+		point_on_Scr		= new float[2];
+		//point_on_Old		= new float[2];
 		maxMotionRate		= max_motionRate;
 		maxSearchingRange	= searching_visibility;
 		scrResolution[0]	= scrResolution_X;
@@ -72,17 +72,17 @@ public class NPC extends Aircraft
 		tracingTarget		= null;
 		currentSelectObj	= null;
 		isPlayer			= false;
-		goStreetTime		= (short)(500 * Math.random());
+		goStreetTime		= (GraphicUtils.randomInt(500));
 		turnLRTime			= 0;
 		roll_up_dn_Time		= 0;
 		lockTime			= 100;
 		missileFireWaitingTime	= missileFireWaitingTimeLeft = 1;
-		turnRight			= (Math.random() > 0.5? true : false);
-		turnUp  			= (Math.random() > 0.5? true : false);
+		turnRight			= (GraphicUtils.random() > 0.5? true : false);
+		turnUp  			= (GraphicUtils.random() > 0.5? true : false);
 		currentMaxLockingPriority = 0;
 	}
 	
-	public void pursuit(double range_to_me) {
+	public void pursuit(float range_to_me) {
 		if(speed < tracingTarget.speed || range_to_me > 5000)
 			control_acc();
 		else if(speed > tracingTarget.speed && speed > minStableSpeed)
@@ -120,9 +120,9 @@ public class NPC extends Aircraft
 	{
 		if(tracingTarget != null  &&  tracingTarget.isAlive)
 		{		
-			double range_to_Scr = CharFrapsCamera.getXY_onCamera (
+			float range_to_Scr = CharFrapsCamera.getXY_onCamera (
 				tracingTarget.location[0], tracingTarget.location[1], tracingTarget.location[2], 
-				scrResolution[0], scrResolution[1], location, cameraRollAngle, point_on_Scr, 2.6
+				scrResolution[0], scrResolution[1], location, cameraRollAngle, point_on_Scr, 2.6F
 			);
 			
 			if(range_to_Scr > 0) {
@@ -145,7 +145,7 @@ public class NPC extends Aircraft
 						range_to_Scr = CharFrapsCamera.getXY_onCamera
 						(
 							aJet.location[0], aJet.location[1], aJet.location[2], 
-							scrResolution[0], scrResolution[1], location, cameraRollAngle, point_on_Scr, 2.6
+							scrResolution[0], scrResolution[1], location, cameraRollAngle, point_on_Scr, 2.6F
 						);
 						
 						if
@@ -154,11 +154,11 @@ public class NPC extends Aircraft
 							CharFrapsCamera.rangeXY(point_on_Scr[0], point_on_Scr[1], halfAResolution_X, halfAResolution_Y) < 24
 						)
 						{
-							if(currentSelectObj == null || currentMaxLockingPriority < Math.abs(aJet.lockingPriority) && !currentSelectObj.getID().equals(aJet.getID()))
+							if(currentSelectObj == null || currentMaxLockingPriority < GraphicUtils.abs(aJet.lockingPriority) && !currentSelectObj.getID().equals(aJet.getID()))
 							{	//当前选择目标切换到优先级更高的	(发生切换)
 								if(aJet.lockingPriority > 0)
 									tracingTarget			= aJet;
-								currentMaxLockingPriority	= (short) Math.abs(aJet.lockingPriority);
+								currentMaxLockingPriority	= (short) GraphicUtils.abs(aJet.lockingPriority);
 								currentSelectObj			= aJet;
 								lockTimeLeft				= lockTime;
 								locked						= false;
@@ -214,11 +214,11 @@ public class NPC extends Aircraft
 	public void cruise
 	(
 		int motionRate,
-		double maxRollAngle_lr,
-		double minAcc,
-		double time_street,
-		double time_turn,
-		double time_up_dn
+		float maxRollAngle_lr,
+		float minAcc,
+		float time_street,
+		float time_turn,
+		float time_up_dn
 	)
 	{
 			currentMaxLockingPriority = 0;
@@ -266,7 +266,7 @@ public class NPC extends Aircraft
 					else if(roll_angle[2] < -maxRollAngle_lr)
 						control_roll_lr(maxVelRollLR / motionRate);	//r
 					
-					roll_up_dn(velocity_roll[1] * 2 * GraphicUtils.sin(Math.toRadians(maxRollAngle_lr)) / GraphicUtils.cos(Math.toRadians(maxRollAngle_lr)));
+					roll_up_dn(velocity_roll[1] * 2 * GraphicUtils.sin(GraphicUtils.toRadians(maxRollAngle_lr)) / GraphicUtils.cos(GraphicUtils.toRadians(maxRollAngle_lr)));
 					
 					control_turn_lr(maxVelRollLR / motionRate);
 				}
@@ -277,7 +277,7 @@ public class NPC extends Aircraft
 					else if(roll_angle[2] > maxRollAngle_lr)
 						control_roll_lr(maxVelRollLR / -motionRate);	//l
 					
-					roll_up_dn(-velocity_roll[1] * 2 * GraphicUtils.sin(Math.toRadians(maxRollAngle_lr)) / GraphicUtils.cos(Math.toRadians(maxRollAngle_lr)));
+					roll_up_dn(-velocity_roll[1] * 2 * GraphicUtils.sin(GraphicUtils.toRadians(maxRollAngle_lr)) / GraphicUtils.cos(GraphicUtils.toRadians(maxRollAngle_lr)));
 	
 					control_turn_lr(maxVelRollLR / -motionRate);
 				}
@@ -289,17 +289,17 @@ public class NPC extends Aircraft
 			}
 			else
 			{
-				boolean RandomFlg = (Math.random() > 0.5? true : false);
+				boolean RandomFlg = (GraphicUtils.random() > 0.5? true : false);
 				if(RandomFlg)
-					goStreetTime = (short) (Math.random() * time_street);
+					goStreetTime = (short) (GraphicUtils.random() * time_street);
 				else
 				{
-					turnLRTime = (short) (Math.random() * time_turn);
-					turnRight  = (Math.random() > 0.5? true : false);
+					turnLRTime = (short) (GraphicUtils.random() * time_turn);
+					turnRight  = (GraphicUtils.random() > 0.5? true : false);
 					
 				}
-				roll_up_dn_Time = (short) (Math.random() * time_up_dn);
-				turnUp  = (Math.random() > 0.5? true : false);
+				roll_up_dn_Time = (short) (GraphicUtils.random() * time_up_dn);
+				turnUp  = (GraphicUtils.random() > 0.5? true : false);
 			}
 	}
 
@@ -347,7 +347,7 @@ public class NPC extends Aircraft
 				m = new Missile
 				(
 					(short)1280, speed/2+5, 512, resistanceRate_normal, 
-					cannonLocation, roll_angle, 20, 512, 3.0, this, target, mainCamera
+					cannonLocation, roll_angle, 20, 512, 3.0F, this, target, mainCamera
 				);
 			}
 			else
@@ -355,13 +355,13 @@ public class NPC extends Aircraft
 				m = new Missile
 				(
 					(short)1280, speed/2+5, 512, resistanceRate_normal, 
-					cannonLocation, roll_angle, 20, 512, 3.0, this, target, null
+					cannonLocation, roll_angle, 20, 512, 3.0F, this, target, null
 				);
 			}
 			
 			fired.add(m);
 			
-			colorFlash(255, 255, 255, 0, 64, 96, (short)6);
+			colorFlash(255, 255, 255, 0, 64, 96, 6);
 			if(++cannonGunFlg == 4)
 				cannonGunFlg = 0;
 
@@ -384,7 +384,7 @@ public class NPC extends Aircraft
 		if(locked_By != null)
 			tracingTarget = locked_By;
 		
-		double range_to_Scr;
+		float range_to_Scr;
 		Aircraft aJet;
 		
 		if(tracingTarget == null)
@@ -400,7 +400,7 @@ public class NPC extends Aircraft
 				range_to_Scr = CharFrapsCamera.getXY_onCamera
 				(
 					aJet.location[0], aJet.location[1], aJet.location[2], 
-					scrResolution[0], scrResolution[1], location, cameraRollAngle, point_on_Scr, 2.6
+					scrResolution[0], scrResolution[1], location, cameraRollAngle, point_on_Scr, 2.6F
 				);
 				
 				if
@@ -414,11 +414,11 @@ public class NPC extends Aircraft
 					//point_on_Old[0] = point_on_Scr[0];
 					//point_on_Old[1] = point_on_Scr[1];
 					
-					if(currentSelectObj == null || currentMaxLockingPriority < Math.abs(aJet.lockingPriority) && !currentSelectObj.getID().equals(aJet.getID()))
+					if(currentSelectObj == null || currentMaxLockingPriority < GraphicUtils.abs(aJet.lockingPriority) && !currentSelectObj.getID().equals(aJet.getID()))
 					{
 						if(aJet.lockingPriority > 0)
 							tracingTarget			= aJet;
-						currentMaxLockingPriority	= (short) Math.abs(aJet.lockingPriority);
+						currentMaxLockingPriority	= (short) GraphicUtils.abs(aJet.lockingPriority);
 						currentSelectObj			= aJet;
 						lockTimeLeft				= lockTime;
 						locked						= false;
@@ -475,6 +475,6 @@ public class NPC extends Aircraft
 	
 	public void rename()
 	{
-		setID("NPC " + (int)(Math.random()*100));
+		setID("NPC " + (int)(GraphicUtils.random()*100));
 	}
 }

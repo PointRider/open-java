@@ -14,52 +14,52 @@ import graphic_Z.utils.GraphicUtils;
 
 public class Decoy extends Aircraft implements Dynamic
 {
-	public double  velocity;
-	public double  resistanceRate;
+	public float  velocity;
+	public float  resistanceRate;
 	public int   lifeLeft;
 	public int   life;
 	public long lifeTo;
 	public boolean end;
-	public double Roll_angle_Aircraft[];
+	public float Roll_angle_Aircraft[];
 	
-private static ArrayList<double[]> missileModelData;
+private static ArrayList<float[]> missileModelData;
 	
 	static {
-		missileModelData = new ArrayList<double[]>();
+		missileModelData = new ArrayList<float[]>();
 		
-		double newPonit[];
+		float newPonit[];
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
 		newPonit[2] = 40;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
 		newPonit[2] = -40;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 0;
 		newPonit[1] = 40;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 0;
 		newPonit[1] = -40;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 40;
 		newPonit[1] = 0;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = -40;
 		newPonit[1] = 0;
 		newPonit[2] = 0;
@@ -70,17 +70,17 @@ private static ArrayList<double[]> missileModelData;
 	(
 		int  campTo,
 		int  lifeTime,
-		double Speed,
-		double Speed_aircraft,
-		double resistance_rate,
-		double Location[],
-		double Roll_angle[],
-		double Roll_angle_aircraft[],
+		float Speed,
+		float Speed_aircraft,
+		float resistance_rate,
+		float Location[],
+		float Roll_angle[],
+		float Roll_angle_aircraft[],
 		LinkedList<ListIterator<ThreeDs>>	   del_que,
 		PriorityQueue<Dynamic> effect
 	)
 	{
-		super(null, null, 0.0, (short)-1, null, effect, del_que, null, null, null, "\nDecory" + Math.random(), false);
+		super(null, null, 0.0F, (short)-1, null, effect, del_que, null, null, null, "\nDecory" + GraphicUtils.random(), false);
 		camp = campTo;
 		specialDisplay = '@';
 		location[0] = Location[0];
@@ -103,22 +103,22 @@ private static ArrayList<double[]> missileModelData;
 		roll_angle[1] = Roll_angle[1];
 		roll_angle[2] = Roll_angle[2];
 		
-		velocity = Speed * Math.random() * 2;
+		velocity = Speed * GraphicUtils.random() * 2;
 		resistanceRate = resistance_rate;
-		resistanceRate *= Math.random();
+		resistanceRate *= GraphicUtils.random();
 		isAlive = true;
-		lockingPriority = -128/*(short)-(2.0 + 10.0 * Math.random())*/;
+		lockingPriority = -128/*(short)-(2.0 + 10.0 * GraphicUtils.random())*/;
 	}
 	
 	public Decoy
 	(
 		short  lifeTime,
-		double Speed,
-		double Speed_aircraft,
-		double resistance_rate,
-		double Location[],
-		double Roll_angle[],
-		double Roll_angle_aircraft[],
+		float Speed,
+		float Speed_aircraft,
+		float resistance_rate,
+		float Location[],
+		float Roll_angle[],
+		float Roll_angle_aircraft[],
 		LinkedList<ListIterator<ThreeDs>> del_que,
 		PriorityQueue<Dynamic> effect
 	)
@@ -137,19 +137,19 @@ private static ArrayList<double[]> missileModelData;
 		if(lifeLeft <= 0) disable();
 		else
 		{/*
-			double x, y, z, t = GraphicUtils.cos(Math.toRadians(roll_angle[1])) * velocity;
+			float x, y, z, t = GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[1])) * velocity;
 			
-			x = GraphicUtils.tan(Math.toRadians(roll_angle[1])) * t;
-			y = GraphicUtils.sin(Math.toRadians(roll_angle[0])) * t;
-			z = GraphicUtils.cos(Math.toRadians(roll_angle[0])) * t;
+			x = GraphicUtils.tan(GraphicUtils.toRadians(roll_angle[1])) * t;
+			y = GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[0])) * t;
+			z = GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * t;
 			*/
 
             velocity -= velocity * resistanceRate * 1.5;
             
-		    double x, y, z;
-			double r1 = Math.toRadians(roll_angle[1] + Roll_angle_Aircraft[1]);
-	        double r2 = Math.toRadians(roll_angle[0] + Roll_angle_Aircraft[0]);
-	        double t  = GraphicUtils.cos(r1) * velocity;
+		    float x, y, z;
+			float r1 = GraphicUtils.toRadians(roll_angle[1] + Roll_angle_Aircraft[1]);
+	        float r2 = GraphicUtils.toRadians(roll_angle[0] + Roll_angle_Aircraft[0]);
+	        float t  = GraphicUtils.cos(r1) * velocity;
 	        x  = GraphicUtils.sin(r1) * velocity;
 	        y  = GraphicUtils.sin(r2) * t;
 	        z  = GraphicUtils.cos(r2) * t;
@@ -158,18 +158,18 @@ private static ArrayList<double[]> missileModelData;
             location[1] += y;
             location[2] += z;
             
-	        r1 = Math.toRadians(Roll_angle_Aircraft[1]);
-	        r2 = Math.toRadians(Roll_angle_Aircraft[0]);
+	        r1 = GraphicUtils.toRadians(Roll_angle_Aircraft[1]);
+	        r2 = GraphicUtils.toRadians(Roll_angle_Aircraft[0]);
 	        t  = GraphicUtils.cos(r1) * speed;
             x  = GraphicUtils.sin(r1) * speed;
             y  = GraphicUtils.sin(r2) * t;
             z  = GraphicUtils.cos(r2) * t;
 			/*
-			t = GraphicUtils.cos(Math.toRadians(Roll_angle_Aircraft[1])) * speed;
+			t = GraphicUtils.cos(GraphicUtils.toRadians(Roll_angle_Aircraft[1])) * speed;
 			
-			x = GraphicUtils.tan(Math.toRadians(Roll_angle_Aircraft[1])) * t;
-			y = GraphicUtils.sin(Math.toRadians(Roll_angle_Aircraft[0])) * t;
-			z = GraphicUtils.cos(Math.toRadians(Roll_angle_Aircraft[0])) * t;
+			x = GraphicUtils.tan(GraphicUtils.toRadians(Roll_angle_Aircraft[1])) * t;
+			y = GraphicUtils.sin(GraphicUtils.toRadians(Roll_angle_Aircraft[0])) * t;
+			z = GraphicUtils.cos(GraphicUtils.toRadians(Roll_angle_Aircraft[0])) * t;
 			*/
 			location[0]	-= x;
 			location[1]	+= y;
@@ -177,7 +177,7 @@ private static ArrayList<double[]> missileModelData;
 
             location[0] += CharTimeSpace.g * (life - lifeLeft) * 0.0125 - (life-lifeLeft) * resistanceRate;
             
-			effects.add(new EngineFlame(location, (short)25, '*'));
+			effects.add(new EngineFlame(location, (short)25 + (int)(50 * GraphicUtils.random()), '*'));
 			--lifeLeft;
 		}
 	}

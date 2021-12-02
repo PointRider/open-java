@@ -11,14 +11,14 @@ import graphic_Z.utils.GraphicUtils;
 public class RunDemo
 {
 	
-	private static double rad(double x)
+	private static float rad(float x)
 	{
-		return x * Math.PI / 180.0;
+		return x * GraphicUtils.PI / 180.0F;
 	}
 
 	public static void main(String[] args)
 	{
-		double fov = 1.0;
+		float fov = 1.0F;
 		int scrSize = 16;
 		
 		CharTimeSpace testWorld = new CharTimeSpace(Short.parseShort(args[3]), Short.parseShort(args[4]));
@@ -69,7 +69,7 @@ public class RunDemo
 			
 			SinglePoint xy = testWorld.eventManager.popAMouseOpreation();
 			
-			if(Math.abs(mainCamera.roll_angle[1]) > 90.0)
+			if(GraphicUtils.abs(mainCamera.roll_angle[1]) > 90.0)
 			{
 				mainCamera.roll_angle[0] -= GraphicUtils.sin(rad(mainCamera.roll_angle[2])) * xy.y / 6.4;
 				mainCamera.roll_angle[0] += GraphicUtils.cos(rad(mainCamera.roll_angle[2])) * xy.x / 6.4;
@@ -137,16 +137,16 @@ public class RunDemo
 				break;
 				
 				case 87://W
-					mainCamera.goStreet(8.0);
+					mainCamera.goStreet(8.0F);
 				break;
 				case 65://A
-					mainCamera.goLeft(8.0);
+					mainCamera.goLeft(8.0F);
 				break;
 				case 68://D
-					mainCamera.goRight(8.0);
+					mainCamera.goRight(8.0F);
 				break;
 				case 83://S
-					mainCamera.goBack(8.0);
+					mainCamera.goBack(8.0F);
 				break;
 				
 				case 81://Q

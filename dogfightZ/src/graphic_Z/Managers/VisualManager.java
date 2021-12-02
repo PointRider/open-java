@@ -36,6 +36,6 @@ public abstract class VisualManager<WorldType>
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public abstract TDCamera newCamera(double FOV);
+	public abstract TDCamera newCamera(float FOV);
 	public abstract HUD newHUD(String HUDImgFile, int HUDLayer);
 }

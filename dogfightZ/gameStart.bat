@@ -3,7 +3,6 @@
 mode con cols=20 lines=10
 cls
 
-cd bin
+cd target
 
-::java --class-path="lib\ext\mp3plugin.jar";"lib\jmf.jar" com.sun.media.codec.audio.mp3.JavaDecoder
-java startTheWorld.Start_GUI
+java -jar dogfightZ.jar

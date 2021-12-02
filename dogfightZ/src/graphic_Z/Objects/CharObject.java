@@ -12,7 +12,7 @@ public class CharObject extends TDObject implements ThreeDs
 {
 	public char specialDisplay;
 	public int points_count;			//物体点个数
-	public List<double[]> points;		//物体每个点坐标
+	public List<float[]> points;		//物体每个点坐标
 	private boolean lineConstruct;
 	protected ListIterator<ThreeDs> myPosition;
 	/*
@@ -23,7 +23,7 @@ public class CharObject extends TDObject implements ThreeDs
 		points_count	= another.points_count;
 		location 		= another.location.clone();
 		
-		points = new ArrayList<double[]>();
+		points = new ArrayList<float[]>();
 		for(int x=0 ; x<another.points.size() ; ++x)
 			points.add(x, another.points.get(x).clone());
 	}
@@ -41,28 +41,28 @@ public class CharObject extends TDObject implements ThreeDs
 		myPosition = null;
 		this.lineConstruct = lineConstruct;
 		specialDisplay = '\0';
-		points = new ArrayList<double[]>();
-		location[0]   = location[1]   = location[2]   = 0.0;
-		roll_angle[0] = roll_angle[1] = roll_angle[2] = 0.0;
+		points = new ArrayList<float[]>();
+		location[0]   = location[1]   = location[2]   = 0.0F;
+		roll_angle[0] = roll_angle[1] = roll_angle[2] = 0.0F;
 		
 		if(ModelFile != null) try (
 			DataInputStream data = new DataInputStream
 			(new FileInputStream(ModelFile))
 		) {
-			double newPonit[] = null;
+			float newPonit[] = null;
 			for(points_count=0 ; true ; ++points_count)
 			{
-				if(lineConstruct) newPonit = new double[6];
-				else newPonit = new double[3];
+				if(lineConstruct) newPonit = new float[6];
+				else newPonit = new float[3];
 				
-				newPonit[0] = data.readDouble();
-				newPonit[1] = data.readDouble();
-				newPonit[2] = data.readDouble();
+				newPonit[0] = (float) data.readDouble();
+				newPonit[1] = (float) data.readDouble();
+				newPonit[2] = (float) data.readDouble();
 				
 				if(lineConstruct) {
-					newPonit[3] = data.readDouble();
-					newPonit[4] = data.readDouble();
-					newPonit[5] = data.readDouble();
+					newPonit[3] = (float) data.readDouble();
+					newPonit[4] = (float) data.readDouble();
+					newPonit[5] = (float) data.readDouble();
 				}
 				
 				points.add(newPonit);
@@ -74,14 +74,14 @@ public class CharObject extends TDObject implements ThreeDs
 		this(ModelFile, false);
 	}
 
-	public void setLocation(double x, double y, double z)
+	public void setLocation(float x, float y, float z)
 	{
 		location[0] = x;
 		location[1] = y;
 		location[2] = z;
 	}
 	
-	public void setRollAngle(double x, double y, double z)
+	public void setRollAngle(float x, float y, float z)
 	{
 		roll_angle[0] = x;
 		roll_angle[1] = y;
@@ -94,14 +94,14 @@ public class CharObject extends TDObject implements ThreeDs
 	}
 
 	@Override
-	public double[] getLocation()
+	public float[] getLocation()
 	{
 		// TODO 自动生成的方法存根
 		return location;
 	}
 
 	@Override
-	public double[] getRollAngle()
+	public float[] getRollAngle()
 	{
 		// TODO 自动生成的方法存根
 		return roll_angle;
@@ -122,7 +122,7 @@ public class CharObject extends TDObject implements ThreeDs
 	}
 
 	@Override
-	public double[] getPoint(int index)
+	public float[] getPoint(int index)
 	{
 		// TODO 自动生成的方法存根
 		return points.get(index);

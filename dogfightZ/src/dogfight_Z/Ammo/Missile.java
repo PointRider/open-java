@@ -16,108 +16,108 @@ public class Missile extends Aircraft implements Dynamic
 	public		  int		life;
 	public		  int		lifeLeft;
 	public		  long		lifeTo;
-	//public 		  double 	guideLocation[];
-	public		  double 	startGuideTime;
+	//public 		  float 	guideLocation[];
+	public		  float 	startGuideTime;
 	public		  Aircraft  from;
 	public		  Aircraft  target;
 	public		  CharFrapsCamera camera;
 	
 	public		  int    guideResolution;
-	public		  double guideFOV;
-	public		  double maxSpeed;
-	private		  double halfAResolution;
-	private		  double range_old;
+	public		  float guideFOV;
+	public		  float maxSpeed;
+	private		  float halfAResolution;
+	private		  float range_old;
 	
-	private static ArrayList<double[]> missileModelData;
+	private static ArrayList<float[]> missileModelData;
 	
 	static {
-		missileModelData = new ArrayList<double[]>();
+		missileModelData = new ArrayList<float[]>();
 		
-		double newPonit[];
-		newPonit = new double[3];
+		float newPonit[];
+		newPonit = new float[3];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		/*
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
 		newPonit[2] = -1;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 0;
 		newPonit[1] = 1;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 0;
 		newPonit[1] = -1;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 1;
 		newPonit[1] = 0;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = -1;
 		newPonit[1] = 0;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);*/
 	}
 	
-	//private		  double lrRangeToCenterOnScreen_old = 0.0;
-	//private		  double up_dnRangeToCenterOnScreen_old = 0.0;
+	//private		  float lrRangeToCenterOnScreen_old = 0.0;
+	//private		  float up_dnRangeToCenterOnScreen_old = 0.0;
 	
 	public Missile
 	(
 		//String modelFile, 
 		int    lifeTime,
-		double Speed,
-		double maxSpeed,
-		double resistance_rate,
-		double Location[],
-		double Roll_angle[],
-		double guideStartTime,
+		float Speed,
+		float maxSpeed,
+		float resistance_rate,
+		float Location[],
+		float Roll_angle[],
+		float guideStartTime,
 		Aircraft Target
 	)
 	{
 		this
 		(
 			lifeTime, Speed, maxSpeed, resistance_rate, Location, 
-			Roll_angle, guideStartTime, 100, 2.8, null, Target, null
+			Roll_angle, guideStartTime, 100, 2.8F, null, Target, null
 		);
 	}
 	
 	public Missile
 	(
 		//String modelFile, 
-		//double Mess,
+		//float Mess,
 		int    lifeTime,
-		double Speed,
-		double max_speed,
-		double resistance_rate,
-		double Location[],
-		double Roll_angle[],
-		double guideStartTime,
+		float Speed,
+		float max_speed,
+		float resistance_rate,
+		float Location[],
+		float Roll_angle[],
+		float guideStartTime,
 		int    guide_Resolution,
-		double guide_FOV, 
+		float guide_FOV, 
 		Aircraft From,
 		Aircraft Target,
 		CharFrapsCamera Camera
 	)
 	{
-		super(null, null, 0.0, (short)-1, null, null, null, null, null, null, false);
+		super(null, null, 0.0F, (short)-1, null, null, null, null, null, null, false);
 		specialDisplay	= '@';
 		maxSpeed		= max_speed;
-		maxVelRollUp	= 20.0;				//导弹最大上下翻滚能力
-		maxVelTurnLR	= 20.0;				//导弹最大左右水平转向能力
-		maxVelRollLR	= 20.0;				//导弹最大左右翻滚能力
+		maxVelRollUp	= 20.0F;				//导弹最大上下翻滚能力
+		maxVelTurnLR	= 20.0F;				//导弹最大左右水平转向能力
+		maxVelRollLR	= 20.0F;				//导弹最大左右翻滚能力
 		from			= From;				//导弹发射源
 		camera			= Camera;			//玩家摄像机，在跟随导弹视角后，将玩家视角归还给from所指示的源物体
 		actived			= true;				//导弹是否被激活
@@ -127,8 +127,8 @@ public class Missile extends Aircraft implements Dynamic
 		guideResolution = guide_Resolution;	//导弹制导分辨率
 		guideFOV		= guide_FOV;		//导弹最大搜寻视角
 		lifeTo = life + System.currentTimeMillis() / 1000;
-		resistanceRate_normal	= 0.0;
-		range_old		= 0.0;
+		resistanceRate_normal	= 0.0F;
+		range_old		= 0.0F;
 		
 		if(lifeTime > maxLife) lifeTime = maxLife;
 		
@@ -162,36 +162,36 @@ public class Missile extends Aircraft implements Dynamic
 				return;
 			}
 			
-			double point_on_Scr[] = new double[2];
-			double range = 
+			float point_on_Scr[] = new float[2];
+			float range = 
 			CharFrapsCamera.getXY_onCamera
 			(
 				target.location[0], target.location[1], target.location[2], 
 				guideResolution, guideResolution, location, cameraRollAngle, point_on_Scr, guideFOV
 			);
 			
-			double lrRangeToCenterOnScreen    = point_on_Scr[0] - halfAResolution;
-			double up_dnRangeToCenterOnScreen = point_on_Scr[1] - halfAResolution;
+			float lrRangeToCenterOnScreen    = point_on_Scr[0] - halfAResolution;
+			float up_dnRangeToCenterOnScreen = point_on_Scr[1] - halfAResolution;
 			
-			double range_diff = range_old - range;
-			double range_diff2 = range_diff * range_diff;
+			float range_diff = range_old - range;
+			float range_diff2 = range_diff * range_diff;
 			
-			//double lrRangeToCenterOnScreen_diff = Math.abs(lrRangeToCenterOnScreen_old - lrRangeToCenterOnScreen);
-			//double lrRangeToCenterOnScreen_diff2 = lrRangeToCenterOnScreen_diff * lrRangeToCenterOnScreen_diff;
+			//float lrRangeToCenterOnScreen_diff = GraphicUtils.abs(lrRangeToCenterOnScreen_old - lrRangeToCenterOnScreen);
+			//float lrRangeToCenterOnScreen_diff2 = lrRangeToCenterOnScreen_diff * lrRangeToCenterOnScreen_diff;
 			
-			//double up_dnRangeToCenterOnScreen_diff = Math.abs(up_dnRangeToCenterOnScreen_old - up_dnRangeToCenterOnScreen);
-			//double up_dnRangeToCenterOnScreen_diff2 = up_dnRangeToCenterOnScreen_diff * up_dnRangeToCenterOnScreen_diff;
+			//float up_dnRangeToCenterOnScreen_diff = GraphicUtils.abs(up_dnRangeToCenterOnScreen_old - up_dnRangeToCenterOnScreen);
+			//float up_dnRangeToCenterOnScreen_diff2 = up_dnRangeToCenterOnScreen_diff * up_dnRangeToCenterOnScreen_diff;
 			
-			double temp0 = range_diff2 * range_diff2 * halfAResolution;
+			float temp0 = range_diff2 * range_diff2 * halfAResolution;
 			
-			double lrControl = temp0 * lrRangeToCenterOnScreen;
-			double udControl = temp0 * up_dnRangeToCenterOnScreen;
+			float lrControl = temp0 * lrRangeToCenterOnScreen;
+			float udControl = temp0 * up_dnRangeToCenterOnScreen;
 			
-			double lrRate = 1.0;
-			double udRate = 1.0;
+			float lrRate = 1.0F;
+			float udRate = 1.0F;
 			
-			if(Math.abs(lrControl) > Math.abs(udControl))		udRate = Math.abs(udControl / lrControl);
-			else if(Math.abs(lrControl) < Math.abs(udControl))	lrRate = Math.abs(lrControl / udControl);
+			if(GraphicUtils.abs(lrControl) > GraphicUtils.abs(udControl))		udRate = GraphicUtils.abs(udControl / lrControl);
+			else if(GraphicUtils.abs(lrControl) < GraphicUtils.abs(udControl))	lrRate = GraphicUtils.abs(lrControl / udControl);
 			
 			if(!(range<0 || point_on_Scr[0]<0))
 			{
@@ -245,11 +245,11 @@ public class Missile extends Aircraft implements Dynamic
 		}
 	}
 	
-	protected static double range(double p1[], double p2[])
+	protected static float range(float p1[], float p2[])
 	{
-		return Math.abs
+		return GraphicUtils.abs
 		(
-			Math.sqrt
+			GraphicUtils.sqrt
 			(
 				(p2[0]-p1[0])*(p2[0]-p1[0]) +
 				(p2[1]-p1[1])*(p2[1]-p1[1]) +
@@ -271,8 +271,8 @@ public class Missile extends Aircraft implements Dynamic
 		cameraRollAngle[1] = -roll_angle[1];
 		cameraRollAngle[2] = -roll_angle[2];
 		
-		double x, y, z, t, r1, r2;
-		from.effects.add(new EngineFlame(location, 100));
+		float x, y, z, t, r1, r2;
+		from.effects.add(new EngineFlame(location, 100 + (int)(50 * GraphicUtils.random())));
 		
 		for(int repeat = 0; repeat < 2; ++repeat)
 		{
@@ -286,11 +286,11 @@ public class Missile extends Aircraft implements Dynamic
 			if(life - lifeLeft > startGuideTime)
 				trace();
 			//------------[go street]------------
-			r1 = Math.toRadians(roll_angle[1]);
-			r2 = GraphicUtils.cos(Math.toRadians(roll_angle[0]));
+			r1 = GraphicUtils.toRadians(roll_angle[1]);
+			r2 = GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0]));
 			t  = GraphicUtils.cos(r1) * speed;
 			x  = GraphicUtils.tan(r1) * t;
-			y  = GraphicUtils.sin(Math.toRadians(roll_angle[0])) * t;
+			y  = GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[0])) * t;
 			z  = r2 * t;
 			
 			location[0]	-= x;
@@ -306,8 +306,8 @@ public class Missile extends Aircraft implements Dynamic
 			
 			if(target != null  &&  range(location, target.location) < 224)
 			{
-				target.getDamage((int)(50 - 10 * Math.random()), from, "Missile");
-				new ExplosionMaker(location, 15, (short)75, 0.025, 0.1, from.effects);
+				target.getDamage((int)(50 - 10 * GraphicUtils.random()), from, "Missile");
+				new ExplosionMaker(location, 15, (short)75, 0.025F, 0.1F, from.effects);
 
 				target.colorFlash(255, 255, 255, 127, 16, 16, (short)20);
 				from.colorFlash(0, 192, 255, 0, 0, 0, (short)12);
@@ -369,8 +369,8 @@ public class Missile extends Aircraft implements Dynamic
 }
 
 /*  at function maxMoving
-double upT		= Math.atan(l / deltaZ);
-double pz[]		= new double[3];
+float upT		= GraphicUtils.atan(l / deltaZ);
+float pz[]		= new float[3];
 
 getXYZ_afterRolling
 (
@@ -380,8 +380,8 @@ getXYZ_afterRolling
 	pz
 );
 
-double myAngle2	= Math.atan
-	(Math.sqrt(pz[0]*pz[0] + pz[1]*pz[1]) / pz[2]);
+float myAngle2	= GraphicUtils.atan
+	(GraphicUtils.sqrt(pz[0]*pz[0] + pz[1]*pz[1]) / pz[2]);
 
 if(myAngle2	< upT)
 	control_roll_up_dn(maxVelRollUp);
@@ -394,12 +394,12 @@ else
 public void trace()
 {
 	//----------------------------------------
-	double targetDirection[] = new double[3];
+	float targetDirection[] = new float[3];
 	targetDirection[0] = targetLocation[1] - location[1];
 	targetDirection[1] = targetLocation[0] - location[0];
 	targetDirection[2] = targetLocation[2] - location[2];
 	
-	double maxRange, maxIndex;
+	float maxRange, maxIndex;
 	
 	if(targetDirection[0] > targetDirection[1])
 	{
@@ -432,7 +432,7 @@ public void trace()
 	targetDirection[1] = (maxIndex==1? 1 : targetDirection[1]/maxRange);
 	targetDirection[2] = (maxIndex==2? 1 : targetDirection[2]/maxRange);
 	//----------------------------------------
-	double targetDirection[] = new double[2];
+	float targetDirection[] = new float[2];
 	if(targetDirection[0] > targetDirection[1])
 	{
 		targetDirection[1] /= targetDirection[0];

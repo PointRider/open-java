@@ -1,43 +1,62 @@
 package graphic_Z.utils;
 
+import java.util.Random;
+
 public class GraphicUtils
 {
-	private static final  int boot = 65536;
-	private static double bootTmp;
-	private static double sint[];
-	private static double cost[];
-	private static double tant[];
+	private static final int boot = 65536;
+    private static final int boot_1 = boot - 1;
+	private static float bootTmp;
+	private static float sint[];
+	private static float cost[];
+	private static float tant[];
+	private static float radt[]; 
+    private static float rantF[]; 
+    private static int   rantI[]; 
+    private static char  curRandomIdx; /*char is unsigned between 0 ~ 65535*/
+	
+	public static float PI = 3.141592653589793F;
+	
+	public static final Random randomMaker;
 	
 	static {
+	    randomMaker = new Random();
+		sint  = new float[boot];
+		cost  = new float[boot];
+		tant  = new float[boot];
+		radt  = new float[boot];
+		rantF = new float[boot];
+        rantI = new int[boot];
 		
-		sint = new double[boot];
-		cost = new double[boot];
-		tant = new double[boot];
+		bootTmp = (float)boot / (2.0F * (float)PI);
 		
-		bootTmp = (double)boot / (2.0 * Math.PI);
-		
-		double tmp = 0.0, each = 2 * Math.PI / boot;
+		float tmp = 0.0F, each = 2 * (float)PI / boot;
 		for(int i = 0; i < boot; ++i) {
 			tmp = each * i;
-			sint[i] = Math.sin(tmp);
-			cost[i] = Math.cos(tmp);
-			tant[i] = Math.tan(tmp);
+			sint[i]  = (float) Math.sin(tmp);
+			cost[i]  = (float) Math.cos(tmp);
+			tant[i]  = (float) Math.tan(tmp);
+			radt[i]  = (float) Math.toRadians(tmp);
+			rantF[i] = (float) Math.random();
+			rantI[i] = randomMaker.nextInt();
 		}
+		
+        curRandomIdx = 0;
 	}
 	
-	public static double sin(double i) {
-		i %= 2.0 * Math.PI;
+	public static float sin(float i) {
+		i %= 2.0F * PI;
 		if(i < 0) return - sint[(int)(bootTmp * -i)];
 		return sint[(int)(bootTmp * i)];
 	}
 	
-	public static double cos(double i) {
-		i %= 2.0 * Math.PI;
+	public static float cos(float i) {
+		i %= 2.0F * PI;
 		return cost[(int)(bootTmp * Math.abs(i))];
 	}
 	
-	public static double tan(double i) {
-		i %= Math.PI;
+	public static float tan(float i) {
+		i %= PI;
 		if(i < 0) return - tant[(int)(bootTmp * -i)];
 		return tant[(int)(bootTmp * i)];
 	}
@@ -45,7 +64,16 @@ public class GraphicUtils
 	public static int absI(int x) {
 		return x < 0? -x: x;
 	}
-	
+
+    public static float toRadians(float deg) {
+        return deg * 0.0174532925199433F;
+    }
+
+    public static float random() {
+        ++curRandomIdx;
+        return rantF[curRandomIdx &= boot_1];
+    }
+    
 	public static void drawLine(char fraps_buffer[][], int x1, int y1, int x2, int y2, char pixel, boolean noRewrite) {
 		//DDA
 		if(fraps_buffer == null) return;
@@ -101,15 +129,15 @@ public class GraphicUtils
 		drawLine(fraps_buffer, x1, y1, x2, y2, pixel, false);
 	}
 	/*
-	public static double sin(double i) {
+	public static float sin(float i) {
 		return Math.sin(i);
 	}
 	
-	public static double cos(double i) {
+	public static float cos(float i) {
 		return Math.cos(i);
 	}
 	
-	public static double tan(double i) {
+	public static float tan(float i) {
 		return Math.tan(i);
 	}
 	*/
@@ -117,7 +145,7 @@ public class GraphicUtils
 	public static void drawCircle(char fraps_buffer[][], int x0, int y0, int r, char pixel) {
 		
 		int   x = 0, y = r;
-		float d = 1.25f - r;
+		float d = 1.25F - r;
 		
 		circlePoints(fraps_buffer, x0, y0, x, y, pixel);
 		
@@ -165,10 +193,50 @@ public class GraphicUtils
 	}
 	
 	public static void main(String args[]) {
-		
-		double angle = 1.23;
+		float angle = 1.23F;
 		System.out.println("sin: " + Math.sin(angle) + ", " + sin(angle));
 		System.out.println("cos: " + Math.cos(angle) + ", " + cos(angle));
 		System.out.println("tan: " + Math.tan(angle) + ", " + tan(angle));
 	}
+    
+    public static float sqrt(float f) {
+        return (float) Math.sqrt(f);
+    }
+    
+    public static float max(float a, int b) {
+        return a > b? a: b;
+    }
+
+    public static float min(float a, float b) {
+        return a < b? a: b;
+    }
+
+    public static int min(int a, int b) {
+        return a < b? a: b;
+    }
+    
+    public static float abs(float f) {
+        return Math.abs(f);
+    }
+    
+    public static float log(float x) {
+        return (float) Math.log(x);
+    }
+    
+    public static float pow(float x, float y) {
+        return (float) Math.pow(x, y);
+    }
+    
+    public static int fastRanodmInt() {
+        ++curRandomIdx;
+        return rantI[curRandomIdx &= boot_1];
+    }
+    
+    public static int randomInt(int min, int max) {
+        return randomMaker.nextInt(max-min) + min;
+    }
+    
+    public static int randomInt(int max) {
+        return randomMaker.nextInt(max);
+    }
 }

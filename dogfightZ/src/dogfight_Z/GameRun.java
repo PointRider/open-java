@@ -1,25 +1,97 @@
 package dogfight_Z;
 
-public class GameRun
-{
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
-	public static void main(String[] args)
-	{
-		
-		Game game = new Game
-		(
-			args[0] ,args[1] , args[2], args[3], args[4], args[5] ,
-			args[6] , args[7], args[8], args[9], args[10], args[11], 
-			args[12], args[13], args[14], args[15], 
-			Integer.parseInt(args[16]), 
-			Integer.parseInt(args[17]), 
-			Integer.parseInt(args[18]),
-			Integer.parseInt(args[19])
-		);
-		
-		game.getIntoGameWorld();
-		game.run();	
-		
-	}
+public class GameRun {
+    
+    private static final String RESOURCESLIST[] = {
+        "Jet.dat",
+        "Crosshair2.hud",
+        "LoopingScrollBar1.hud",
+        "LoopingScrollBar3.hud",
+        "HUD3.hud",
+        "MyJetHUD_Friend.hud",
+        "MyJetHUD_Enemy.hud",
+        "MyJetHUD_Locking.hud",
+        "MyJetHUD_Locked.hud",
+        "MissileWarning.hud",
+        "RadarHUD.hud",
+        "RaderPainter.hud",
+        "ScoreHUD.hud",
+        "config_NPC.cfg",
+        "gameRecord.rec",
+        "config_OST.cfg",
+        "GuiBackground.jpg"
+    };
+    
+    public static void initEnviroment() {
+        makeDir("resources");
+        for(String resource : RESOURCESLIST) {
+            if(!fileExists("resources/" + resource)) extractResource(resource, "resources/");
+        }
+    }
+    
+    public static void makeDir(String path) {
+        File dir = new File(path);
+        dir.mkdir();
+        System.out.println("mkdir> " + path);
+    }
+    
+    public static boolean fileExists(String fileName) {
+        File dir = new File(fileName);
+        return dir.exists();
+    }
+    
+    public static void extractResource(String resourceName, String path) {
+       
+        BufferedInputStream  inputBuffer  = null;
+        BufferedOutputStream outputBuffer = null;
+        FileOutputStream     output       = null;
+        File                 newFile      = null;
+        try {
+            newFile = new File(path + resourceName);
+            newFile.createNewFile();
+            output       = new FileOutputStream(new File(path + resourceName));
+            inputBuffer  = new BufferedInputStream(ClassLoader.getSystemResourceAsStream(resourceName));
+            outputBuffer = new BufferedOutputStream(output);
+            
+            for(int readed = 0; (readed = inputBuffer.read()) != -1; outputBuffer.write(readed));
+            
+        } catch (IOException e) {
+            System.err.println("1");
+            e.printStackTrace();
+        } finally {
+            try {
+                if(inputBuffer  != null) inputBuffer.close();
+                if(outputBuffer != null) outputBuffer.close();
+            } catch (IOException e) {
+                System.err.println("2");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Game newGame = new Game(
+            args[0] ,args[1] , args[2], args[3], args[4], args[5] ,
+            args[6] , args[7], args[8], args[9], args[10], args[11], 
+            args[12], args[13], args[14], args[15], 
+            Integer.parseInt(args[16]), 
+            Integer.parseInt(args[17]), 
+            Integer.parseInt(args[18]),
+            Integer.parseInt(args[19])
+        );
+        
+        Thread gameThread = new Thread(newGame);
+        gameThread.setPriority(Thread.MAX_PRIORITY);
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+        newGame.getIntoGameWorld();
+        gameThread.start();
+        Thread.yield();
+    }
 
 }

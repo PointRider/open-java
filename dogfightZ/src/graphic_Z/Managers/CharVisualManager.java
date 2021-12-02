@@ -123,20 +123,20 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	
 	public void newCamera()
 	{
-		CharFrapsCamera newCamera = new CharFrapsCamera(1.0, 1000.0, resolution, fraps_buffer, inWorld, staticObjLists);
+		CharFrapsCamera newCamera = new CharFrapsCamera(1.0F, 1000.0F, resolution, fraps_buffer, inWorld, staticObjLists);
 		cameras.add(newCamera);
 		//staticObjExposureThread = new Thread(newCamera);
 	}
 	
-	public CharFrapsCamera newCamera(double FOV)
+	public CharFrapsCamera newCamera(float FOV)
 	{
-		CharFrapsCamera newCma = new CharFrapsCamera(FOV, 1000.0, resolution, fraps_buffer, inWorld, staticObjLists);
+		CharFrapsCamera newCma = new CharFrapsCamera(FOV, 1000.0F, resolution, fraps_buffer, inWorld, staticObjLists);
 		cameras.add(newCma);
 		//staticObjExposureThread = new Thread(newCma);
 		return newCma;
 	}
 	
-	public CharFrapsCamera newCamera(double FOV, double visibility)
+	public CharFrapsCamera newCamera(float FOV, float visibility)
 	{
 		CharFrapsCamera newCma = new CharFrapsCamera(FOV, visibility, resolution, fraps_buffer, inWorld, staticObjLists);
 		cameras.add(newCma);
@@ -241,7 +241,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		int	   size,
 		char   visual,
 		CharProgressBar.Direction direction,
-		double value
+		float value
 	)
 	{
 		CharProgressBar newBar = 

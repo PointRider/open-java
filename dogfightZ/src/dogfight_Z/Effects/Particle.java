@@ -5,10 +5,10 @@ import graphic_Z.utils.GraphicUtils;
 
 public class Particle extends EngineFlame
 {
-	public double  velocity;
-	public double  resistanceRate;
+	public float  velocity;
+	public float  resistanceRate;
 	
-	public Particle(double[] Location, double [] roll_Angle, long lifeTime, double Velocity, double resistance_rate)
+	public Particle(float[] Location, float [] roll_Angle, long lifeTime, float Velocity, float resistance_rate)
 	{
 		super(Location, lifeTime);
 
@@ -16,9 +16,9 @@ public class Particle extends EngineFlame
 		roll_angle[1] = roll_Angle[1];
 		roll_angle[2] = roll_Angle[2];
 		
-		velocity = Velocity * Math.random() * 2;
+		velocity = Velocity * GraphicUtils.random() * 2;
 		resistanceRate = resistance_rate;
-		resistanceRate *= Math.random();
+		resistanceRate *= GraphicUtils.random();
 	}
 	
 	@Override
@@ -31,18 +31,18 @@ public class Particle extends EngineFlame
 		}
 		else
 		{
-			double x, y, z, t = GraphicUtils.cos(Math.toRadians(roll_angle[1])) * velocity;
+			float x, y, z, t = GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[1])) * velocity;
 			
-			x = GraphicUtils.tan(Math.toRadians(roll_angle[1])) * t;
-			y = GraphicUtils.sin(Math.toRadians(roll_angle[0])) * t;
-			z = GraphicUtils.cos(Math.toRadians(roll_angle[0])) * t;
+			x = GraphicUtils.tan(GraphicUtils.toRadians(roll_angle[1])) * t;
+			y = GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[0])) * t;
+			z = GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * t;
 			
 			location[0]	-= x;
 			location[1]	+= y;
 			location[2]	+= z;
 			
 			velocity -= velocity * resistanceRate * 1.5;
-			location[0] += CharTimeSpace.g * (life - lifeLeft) * 0.025 - (life-lifeLeft) * resistanceRate * 2.4;
+			location[0] += CharTimeSpace.g * (life - lifeLeft) * 0.0275 - (life-lifeLeft) * resistanceRate * 2.4;
 			
 			--lifeLeft;
 		}

@@ -12,52 +12,52 @@ public class EngineFlame extends CharObject implements Dynamic
 	public long lifeTo;
 	public boolean end;
 	//public boolean haveMess;
-	//public double  resistanceRate;
+	//public float  resistanceRate;
 	
-	private static ArrayList<double[]> missileModelData;
+	private static ArrayList<float[]> missileModelData;
 	static {
-		missileModelData = new ArrayList<double[]>();
+		missileModelData = new ArrayList<float[]>();
 		
-		double newPonit[];
+		float newPonit[];
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
 		newPonit[2] = 5;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
 		newPonit[2] = -5;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 0;
 		newPonit[1] = 5;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 0;
 		newPonit[1] = -5;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 5;
 		newPonit[1] = 0;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = -5;
 		newPonit[1] = 0;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 	}
 	
-	public EngineFlame(double Location[], long lifeTime)
+	public EngineFlame(float Location[], long lifeTime)
 	{
 		super(null);
 		specialDisplay	= '@';
@@ -77,13 +77,13 @@ public class EngineFlame extends CharObject implements Dynamic
 		//haveMess		= have_mess;
 	}
 	
-	public EngineFlame(double Location[], long lifeTime, char specialDisplayChar)
+	public EngineFlame(float Location[], long lifeTime, char specialDisplayChar)
 	{
 		this(Location, lifeTime);
 		specialDisplay = specialDisplayChar;
 	}
 	/*
-	public EngineFlame(double Location[], short lifeTime)
+	public EngineFlame(float Location[], short lifeTime)
 	{
 		this(Location, lifeTime, false, 0.0);
 	}

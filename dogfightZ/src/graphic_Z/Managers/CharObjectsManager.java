@@ -60,7 +60,7 @@ public class CharObjectsManager extends TDObjectsManager
 		return newObj;
 	}
 	
-	public CharMessObject newMessObject(String modelFile, double Mess)
+	public CharMessObject newMessObject(String modelFile, float Mess)
 	{
 		return newMessObject(new CharMessObject(modelFile, Mess));
 	}

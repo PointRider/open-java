@@ -4,8 +4,8 @@ import graphic_Z.utils.GraphicUtils;
 
 public abstract class TDObject
 {
-	public double location[];		//物体中心坐标
-	public double roll_angle[];		//物体旋转角度
+	public float location[];		//物体中心坐标
+	public float roll_angle[];		//物体旋转角度
 	public boolean visible;			//物体是否可见
 	
 	public TDObject(TDObject another)
@@ -16,25 +16,25 @@ public abstract class TDObject
 	
 	public static void getXYZ_afterRolling
 	(
-		double X0, double Y0, double Z0,
-		double rx, double ry, double rz,
+		float X0, float Y0, float Z0,
+		float rx, float ry, float rz,
 		
-		double result[/*3*/]  //x, y, z
+		float result[/*3*/]  //x, y, z
 	)
 	{
-		double X, Y, Z, cos$, sin$, 
-			r2 = Math.toRadians(rz), r1 = Math.toRadians(ry), r0 = Math.toRadians(rx);
+		float X, Y, Z, cos$, sin$, 
+			r2 = GraphicUtils.toRadians(rz), r1 = GraphicUtils.toRadians(ry), r0 = GraphicUtils.toRadians(rx);
 		/*
-		X = GraphicUtils.cos(Math.atan(Y0/X0)+Math.toRadians(rz))*Math.sqrt(X0*X0+Y0*Y0);
-		Y = GraphicUtils.sin(Math.atan(Y0/X0)+Math.toRadians(rz))*Math.sqrt(X0*X0+Y0*Y0);
+		X = GraphicUtils.cos(GraphicUtils.atan(Y0/X0)+GraphicUtils.toRadians(rz))*GraphicUtils.sqrt(X0*X0+Y0*Y0);
+		Y = GraphicUtils.sin(GraphicUtils.atan(Y0/X0)+GraphicUtils.toRadians(rz))*GraphicUtils.sqrt(X0*X0+Y0*Y0);
 		Y0 = (X0<0)?(-Y):Y;
 		X0 = (X0<0)?(-X):X;
-		X = GraphicUtils.cos(Math.atan(Z0/X0)+Math.toRadians(ry))*Math.sqrt(X0*X0+Z0*Z0);
-		Z = GraphicUtils.sin(Math.atan(Z0/X0)+Math.toRadians(ry))*Math.sqrt(X0*X0+Z0*Z0);
+		X = GraphicUtils.cos(GraphicUtils.atan(Z0/X0)+GraphicUtils.toRadians(ry))*GraphicUtils.sqrt(X0*X0+Z0*Z0);
+		Z = GraphicUtils.sin(GraphicUtils.atan(Z0/X0)+GraphicUtils.toRadians(ry))*GraphicUtils.sqrt(X0*X0+Z0*Z0);
 		Z0 = (X0<0)?(-Z):Z;
 		X0 = (X0<0)?(-X):X;
-		Z = GraphicUtils.cos(Math.atan(Y0/Z0)+Math.toRadians(rx))*Math.sqrt(Z0*Z0+Y0*Y0);
-		Y = GraphicUtils.sin(Math.atan(Y0/Z0)+Math.toRadians(rx))*Math.sqrt(Z0*Z0+Y0*Y0);
+		Z = GraphicUtils.cos(GraphicUtils.atan(Y0/Z0)+GraphicUtils.toRadians(rx))*GraphicUtils.sqrt(Z0*Z0+Y0*Y0);
+		Y = GraphicUtils.sin(GraphicUtils.atan(Y0/Z0)+GraphicUtils.toRadians(rx))*GraphicUtils.sqrt(Z0*Z0+Y0*Y0);
 		Y0 = (Z0<0)?(-Y):Y;
 		Z0 = (Z0<0)?(-Z):Z;
 		*/
@@ -63,30 +63,30 @@ public abstract class TDObject
 	
 	public static void getXYZ_beforeRolling
 	(
-		double X0, double Y0, double Z0,
-		double rx, double ry, double rz,
+		float X0, float Y0, float Z0,
+		float rx, float ry, float rz,
 		
-		double result[]  //x, y, z
+		float result[]  //x, y, z
 	)
 	{
 		/*
-		double X, Y, Z;
+		float X, Y, Z;
 		
-		Z = GraphicUtils.cos(Math.atan(Y0/Z0)+Math.toRadians(-rx))*Math.sqrt(Z0*Z0+Y0*Y0);
-		Y = GraphicUtils.sin(Math.atan(Y0/Z0)+Math.toRadians(-rx))*Math.sqrt(Z0*Z0+Y0*Y0);
+		Z = GraphicUtils.cos(GraphicUtils.atan(Y0/Z0)+GraphicUtils.toRadians(-rx))*GraphicUtils.sqrt(Z0*Z0+Y0*Y0);
+		Y = GraphicUtils.sin(GraphicUtils.atan(Y0/Z0)+GraphicUtils.toRadians(-rx))*GraphicUtils.sqrt(Z0*Z0+Y0*Y0);
 		Y0 = (Z0<0)?(-Y):Y;
 		Z0 = (Z0<0)?(-Z):Z;
-		X = GraphicUtils.cos(Math.atan(Z0/X0)+Math.toRadians(-ry))*Math.sqrt(X0*X0+Z0*Z0);
-		Z = GraphicUtils.sin(Math.atan(Z0/X0)+Math.toRadians(-ry))*Math.sqrt(X0*X0+Z0*Z0);
+		X = GraphicUtils.cos(GraphicUtils.atan(Z0/X0)+GraphicUtils.toRadians(-ry))*GraphicUtils.sqrt(X0*X0+Z0*Z0);
+		Z = GraphicUtils.sin(GraphicUtils.atan(Z0/X0)+GraphicUtils.toRadians(-ry))*GraphicUtils.sqrt(X0*X0+Z0*Z0);
 		Z0 = (X0<0)?(-Z):Z;
 		X0 = (X0<0)?(-X):X;
-		X = GraphicUtils.cos(Math.atan(Y0/X0)+Math.toRadians(-rz))*Math.sqrt(X0*X0+Y0*Y0);
-		Y = GraphicUtils.sin(Math.atan(Y0/X0)+Math.toRadians(-rz))*Math.sqrt(X0*X0+Y0*Y0);
+		X = GraphicUtils.cos(GraphicUtils.atan(Y0/X0)+GraphicUtils.toRadians(-rz))*GraphicUtils.sqrt(X0*X0+Y0*Y0);
+		Y = GraphicUtils.sin(GraphicUtils.atan(Y0/X0)+GraphicUtils.toRadians(-rz))*GraphicUtils.sqrt(X0*X0+Y0*Y0);
 		Y0 = (X0<0)?(-Y):Y;
 		X0 = (X0<0)?(-X):X;
 		*/
-		double X, Y, Z, cos$, sin$, 
-			r2 = -Math.toRadians(rz), r1 = -Math.toRadians(ry), r0 = -Math.toRadians(rx);
+		float X, Y, Z, cos$, sin$, 
+			r2 = -GraphicUtils.toRadians(rz), r1 = -GraphicUtils.toRadians(ry), r0 = -GraphicUtils.toRadians(rx);
 
 		cos$ = GraphicUtils.cos(r0);
 		sin$ = GraphicUtils.sin(r0);
@@ -113,11 +113,11 @@ public abstract class TDObject
 	
 	public TDObject()
 	{
-		location	= new double[3];
-		roll_angle	= new double[3];
+		location	= new float[3];
+		roll_angle	= new float[3];
 		
-		location[0]   = location[1]   = location[2]   = 0.0;
-		roll_angle[0] = roll_angle[1] = roll_angle[2] = 0.0;
+		location[0]   = location[1]   = location[2]   = 0.0F;
+		roll_angle[0] = roll_angle[1] = roll_angle[2] = 0.0F;
 	}
 	
 	public abstract void go();

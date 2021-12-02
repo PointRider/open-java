@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import graphic_Z.Cameras.TDCamera;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Worlds.CharWorld;
+import graphic_Z.utils.GraphicUtils;
 import graphic_Z.utils.HzController;
 
 public class CloudsManager implements Runnable
@@ -15,31 +16,31 @@ public class CloudsManager implements Runnable
 	private int	currentCloudsCount;
 	private RandomClouds aCloud;
 	private ArrayList<ThreeDs> clouds;
-	private double visibility;
+	private float visibility;
 	private TDCamera<CharWorld> playerCamera;
 	private HzController rateController;
 	private Thread rateSynThread;
 	private ExecutorService epool;
 	
-	public CloudsManager(ArrayList<ThreeDs> clouds, HzController rateController, TDCamera<CharWorld> playerCamera, double visibility) {
-		double random1, random2, random3;
+	public CloudsManager(ArrayList<ThreeDs> clouds, HzController rateController, TDCamera<CharWorld> playerCamera, float visibility) {
+		float random1, random2, random3;
 		
 		for(currentCloudsCount=0 ; currentCloudsCount < maxCloudsCount ; ++currentCloudsCount)
 		{
-			random1 = Math.random();
+			random1 = GraphicUtils.random();
 			if((int)(random1 * 1000000) % 2 == 0)
 				random1 = -random1;
-			random2 = Math.random();
+			random2 = GraphicUtils.random();
 			if((int)(random2 * 1000000) % 2 == 0)
 				random2 = -random2;
-			random3 = Math.random();
+			random3 = GraphicUtils.random();
 			if((int)(random3 * 1000000) % 2 == 0)
 				random3 = -random3;
 			
 			clouds.add
 			(
 				new RandomClouds
-				(playerCamera, visibility, -2250, 0.1)
+				(playerCamera, visibility, -2250, 0.1F)
 			);
 		}
 		this.clouds         = clouds;
@@ -68,7 +69,7 @@ public class CloudsManager implements Runnable
 				for(int i=0 ; i<currentCloudsCount ; ++i) {
 					aCloud = (RandomClouds) clouds.get(i);
 					
-					if(range_YZ(aCloud.location, playerCamera.location) > visibility * 1.10)
+					if(range_YZ(aCloud.location, playerCamera.location) > visibility * 1.10F)
 						epool.execute(aCloud);
 						//aCloud.run();
 						//(new Thread(aCloud)).start();
@@ -78,10 +79,10 @@ public class CloudsManager implements Runnable
 		} catch(InterruptedException e) {e.printStackTrace();}
 	}
 
-	private static double range_YZ (double p1[], double p2[]) {
-		double d1 = p2[1]-p1[1];
-		double d2 = p2[2]-p1[2];
+	private static float range_YZ (float p1[], float p2[]) {
+		float d1 = p2[1]-p1[1];
+		float d2 = p2[2]-p1[2];
 		
-		return Math.sqrt(d1*d1 + d2*d2);
+		return GraphicUtils.sqrt(d1*d1 + d2*d2);
 	}
 }

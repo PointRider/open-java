@@ -22,19 +22,19 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 	public		  int		myCamp;
 	public		  int		lifeLeft;
 	public		  long		lifeTo;
-	public		  double	speed;
-	public		  double	resistanceRate;
-	public		  double[]	temp;
+	public		  float	speed;
+	public		  float	resistanceRate;
+	public		  float[]	temp;
 	public        PriorityQueue<Dynamic> effects;
 	public		  Aircraft	from;
 	public		  LinkedListZ<ThreeDs> aircrafts;
 	
-	private static ArrayList<double[]> missileModelData;
+	private static ArrayList<float[]> missileModelData;
 	static {
-		missileModelData = new ArrayList<double[]>();
+		missileModelData = new ArrayList<float[]>();
 		
-		double newPonit[];
-		newPonit = new double[6];
+		float newPonit[];
+		newPonit = new float[6];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
 		newPonit[2] = 1250;
@@ -43,31 +43,31 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 		newPonit[5] = 0;
 		missileModelData.add(newPonit);
 		/*
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 0;
 		newPonit[1] = 0;
 		newPonit[2] = -1;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 0;
 		newPonit[1] = 1;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 0;
 		newPonit[1] = -1;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = 1;
 		newPonit[1] = 0;
 		newPonit[2] = 0;
 		missileModelData.add(newPonit);
 		
-		newPonit = new double[3];
+		newPonit = new float[3];
 		newPonit[0] = -1;
 		newPonit[1] = 0;
 		newPonit[2] = 0;
@@ -78,10 +78,10 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 	(
 		int    lifeTime,
 		int    my_camp,
-		double Speed,
-		double resistance_rate,
-		double Location[],
-		double Roll_angle[],
+		float Speed,
+		float resistance_rate,
+		float Location[],
+		float Roll_angle[],
 		LinkedListZ<ThreeDs> Aircrafts,
 		PriorityQueue<Dynamic> Effects,
 		Aircraft souce
@@ -89,7 +89,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 	{
 		super(null, 1, true);
 		specialDisplay	= '@';
-		temp 			= new double[3];
+		temp 			= new float[3];
 		actived			= true;
 		lifeLeft = life = lifeTime;
 		myCamp			= my_camp;
@@ -126,16 +126,19 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 			disable();
 			return;
 		}
-		double x, y, z, t, r1, r2;
+		float x, y, z, t, r1, r2;
 		Aircraft aJet = null;
 		
 		for(int repeat = 0; repeat < 5; ++repeat)
 		{
 			//------------[go street]------------
             speed -= speed * resistanceRate;
-            
-			r1 = Math.toRadians(roll_angle[1]);
-			r2 = Math.toRadians(roll_angle[0]);
+            /*
+			r1 = GraphicUtils.toRad(roll_angle[1]);
+			r2 = GraphicUtils.toRad(roll_angle[0]);
+			*/
+            r1 = GraphicUtils.toRadians(roll_angle[1]);
+            r2 = GraphicUtils.toRadians(roll_angle[0]);
 			t  = GraphicUtils.cos(r1) * speed;
 			//x  = GraphicUtils.tan(r1) * t;
 			x  = GraphicUtils.sin(r1) * speed;
@@ -155,7 +158,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 					if(aJet.camp != myCamp)
 					{
 						aJet.getDamage(5, from, "Cannon");
-						new ExplosionMaker(location, 10, 75, 0.01, 0.1, effects);
+						new ExplosionMaker(location, 10, 75, 0.01F, 0.1F, effects);
 						aJet.colorFlash(255, 255, 128, 128, 16, 16, 2);
 						from.colorFlash(255, 255, 128, 96, 72, 0, 2);
 						disable();

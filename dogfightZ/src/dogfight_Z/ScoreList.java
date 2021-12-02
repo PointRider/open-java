@@ -23,7 +23,7 @@ public class ScoreList extends CharDynamicHUD
 		int players_camp
 	)
 	{
-		super(backGroundImgFile, frapsBuffer, HUDLayer, scrResolution, size_X, size_Y, Location_X, Location_Y, 0.0, transparent_at_space);
+		super(backGroundImgFile, frapsBuffer, HUDLayer, scrResolution, size_X, size_Y, Location_X, Location_Y, 0.0F, transparent_at_space);
 		list = thelist;
 		temp = new CharLabel(frapsBuffer, 0, scrResolution, true);
 		camp = players_camp;
