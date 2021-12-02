@@ -243,7 +243,7 @@ public class ProfileSettingsMenu extends Menu {
         Object tmp = pollMail();
         if(tmp != null) {
             setScreenSize = (int[]) tmp;
-            widgets[4].setText("My Screen Size: " + setScreenSize[0] + "," + setScreenSize[1] + "," + setScreenSize[2]);
+            widgets[4].setText("My Screen Size: " + setScreenSize[0] + "," + setScreenSize[1] + "," + setScreenSize[2] + "," + setScreenSize[3]);
         }
         return null;
     }

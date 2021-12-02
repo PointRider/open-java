@@ -616,27 +616,6 @@ public class Aircraft extends CharMessObject
 	public float[] getCurrentSpeedVector() {
         return speedVector;
     }
-
-    public static float vectorLength(float xyz[]) {
-        float x2 = xyz[0] * xyz[0];
-        float y2 = xyz[1] * xyz[1];
-        float z2 = xyz[2] * xyz[2];
-        
-        return GraphicUtils.sqrt(x2 + y2 + z2);
-    }
-    /*
-	public static float[] toDirectionVector(float speedVector[]) {
-	    float x = speedVector[0], y = speedVector[1], z = speedVector[2];
-	    float length = 
-	    
-	    speedVector[0] = x / max;
-	    speedVector[1] = y / max;
-	    speedVector[2] = z / max;
-	    
-	    return speedVector;
-	}
-	*/
-	
 	
     public void doMotion()
 	{

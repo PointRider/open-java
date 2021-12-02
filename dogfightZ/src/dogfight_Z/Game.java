@@ -778,11 +778,11 @@ public class Game extends CharTimeSpace implements Runnable
 				break;
 				
 				case KeyEvent.VK_N:
-				    if(fontIdx-- == 0) fontIdx = EventManager.FONTS.length - 1;
+				    if(fontIdx-- == 0) fontIdx = EventManager.getSupportedFontsCount() - 1;
                     eventManager.switchFont(fontIdx);
                 break;
                 case KeyEvent.VK_M:
-                    if(++fontIdx == EventManager.FONTS.length) fontIdx = 0;
+                    if(++fontIdx == EventManager.getSupportedFontsCount()) fontIdx = 0;
                     eventManager.switchFont(fontIdx);
                 break;
 				

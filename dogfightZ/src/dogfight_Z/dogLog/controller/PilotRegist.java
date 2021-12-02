@@ -358,7 +358,7 @@ public class PilotRegist extends Menu {
         Object tmp = pollMail();
         if(tmp != null) {
             setScreenSize = (int[]) tmp;
-            btnUserScreenSetup.setText("My Screen Size: " + setScreenSize[0] + "," + setScreenSize[1] + "," + setScreenSize[2]);
+            btnUserScreenSetup.setText("My Screen Size: " + setScreenSize[0] + "," + setScreenSize[1] + "," + setScreenSize[2] + "," + setScreenSize[3]);
         }
         return null;
     }

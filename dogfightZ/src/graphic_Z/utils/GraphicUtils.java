@@ -128,19 +128,21 @@ public class GraphicUtils
 	public static void drawLine(char fraps_buffer[][], int x1, int y1, int x2, int y2, char pixel) {
 		drawLine(fraps_buffer, x1, y1, x2, y2, pixel, false);
 	}
-	/*
-	public static float sin(float i) {
-		return Math.sin(i);
-	}
-	
-	public static float cos(float i) {
-		return Math.cos(i);
-	}
-	
-	public static float tan(float i) {
-		return Math.tan(i);
-	}
-	*/
+
+    public static float vectorLength(float xyz[]) {
+        float x2 = xyz[0] * xyz[0];
+        float y2 = xyz[1] * xyz[1];
+        float z2 = xyz[2] * xyz[2];
+        
+        return GraphicUtils.sqrt(x2 + y2 + z2);
+    }
+    
+    public static float[] toDirectionVector(float speedVector[]) {
+        float x = speedVector[0], y = speedVector[1], z = speedVector[2];
+        float length = vectorLength(speedVector);
+        
+        return new float[] {x / length, y / length, z / length};
+    }
 	
 	public static void drawCircle(char fraps_buffer[][], int x0, int y0, int r, char pixel) {
 		

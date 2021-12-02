@@ -14,6 +14,7 @@ public class DBInit {
         "  `userPass` varchar(64) NOT NULL," +
         "  `userNick` varchar(64)," +
         "  `userBank` decimal(12,2) DEFAULT 0.00," +
+        "  `userExp` decimal(12,2) DEFAULT 0.00," +
         "  `gameRecordShare` integer NOT NULL," +
         "  `createTime` datetime NOT NULL DEFAULT (datetime('now', 'localtime'))," +
         "  `resolutionX` integer DEFAULT 160," +
@@ -82,6 +83,7 @@ public class DBInit {
         "  `killed` integer," +
         "  `dead` integer," +
         "  `getBank` decimal(12,2)," +
+        "  `getExp` decimal(12,2)," +
         "  `gameVersion` varchar(32)," +
         "  `resolutionX` integer," +
         "  `resolutionY` integer," +

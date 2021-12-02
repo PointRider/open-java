@@ -1,7 +1,9 @@
 package dogfight_Z.dogLog.controller;
 
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -83,8 +85,22 @@ public class ScreenResizer extends Menu
 
     private VManager visualManager;
 	private int scrSize = 8;
+    private int currentFontIdx;
 	private MCamera mainCamera;
 	private int resolution_min;
+	
+	private static Font supportedFonts[]; static {
+        supportedFonts = new Font[3];
+        try {
+            supportedFonts[0] = Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemResourceAsStream("consola.ttf"));
+            supportedFonts[1] = Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemResourceAsStream("DejaVuSansMono_0.ttf"));
+            supportedFonts[2] = Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemResourceAsStream("simsun.ttc"));
+        } catch (FontFormatException | IOException e) {
+            // TODO 自动生成的 catch 块
+            e.printStackTrace();
+        }
+    };
+	
 	/*
 	public void initUI(int fontSize) {
         eventManager.setTitle("dogfightZ - Screen Resize");
@@ -410,7 +426,7 @@ public class ScreenResizer extends Menu
 	}
 	
 	private void initUI() {
-	    screen.setFont(new Font(EventManager.FONTFAMILY, Font.PLAIN, scrSize));
+	    screen.setFont(supportedFonts[currentFontIdx].deriveFont(Font.PLAIN, scrSize));
 	}
 	
 	private void constructor
@@ -443,6 +459,8 @@ public class ScreenResizer extends Menu
             resolutionY = resolutionSetting[1];
             scrSize = resolutionSetting[2];
         }
+        
+        currentFontIdx = 1;
         
 	    initUI();
 		initMe(myJetModel_file, resolutionX, resolutionY);
@@ -637,13 +655,22 @@ public class ScreenResizer extends Menu
         {
             case 93://]
                 scrSize += 1;
-                screen.setFont(new Font(EventManager.FONTFAMILY, Font.PLAIN, scrSize));
+                screen.setFont(supportedFonts[currentFontIdx].deriveFont(Font.PLAIN, scrSize));
                 break;
             case 91://[
                 if(scrSize > 1)scrSize -= 1;
-                screen.setFont(new Font(EventManager.FONTFAMILY, Font.PLAIN, scrSize));
+                screen.setFont(supportedFonts[currentFontIdx].deriveFont(Font.PLAIN, scrSize));
                 break;
 
+            case KeyEvent.VK_N:
+                if(currentFontIdx-- == 0) currentFontIdx = EventManager.getSupportedFontsCount() - 1;
+                screen.setFont(supportedFonts[currentFontIdx].deriveFont(Font.PLAIN, scrSize));
+            break;
+            case KeyEvent.VK_M:
+                if(++currentFontIdx == EventManager.getSupportedFontsCount()) currentFontIdx = 0;
+                screen.setFont(supportedFonts[currentFontIdx].deriveFont(Font.PLAIN, scrSize));
+            break;
+            
             case KeyEvent.VK_J:
                 resizeScreen(resolution[0] - 1, resolution[1]);
                 reLocateHUD();
@@ -677,7 +704,7 @@ public class ScreenResizer extends Menu
         case KeyEvent.VK_ESCAPE:
             return new Operation(true, null, null, null, null, null);
         case KeyEvent.VK_ENTER:
-            return new Operation(true, null, null, null, new int[] {resolution[0], resolution[1], scrSize}, null); 
+            return new Operation(true, null, null, null, new int[] {resolution[0], resolution[1], scrSize, currentFontIdx}, null); 
         }
         return null;
     }

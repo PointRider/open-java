@@ -38,7 +38,6 @@ public class GameRun {
     public static void makeDir(String path) {
         File dir = new File(path);
         dir.mkdir();
-        System.out.println("mkdir> " + path);
     }
     
     public static boolean fileExists(String fileName) {
@@ -62,14 +61,12 @@ public class GameRun {
             for(int readed = 0; (readed = inputBuffer.read()) != -1; outputBuffer.write(readed));
             
         } catch (IOException e) {
-            System.err.println("1");
             e.printStackTrace();
         } finally {
             try {
                 if(inputBuffer  != null) inputBuffer.close();
                 if(outputBuffer != null) outputBuffer.close();
             } catch (IOException e) {
-                System.err.println("2");
                 e.printStackTrace();
             }
         }

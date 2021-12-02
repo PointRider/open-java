@@ -2,10 +2,12 @@ package graphic_Z.Managers;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
 
@@ -26,13 +28,36 @@ public class EventManager extends JFrame
 	private final int PCScreenCenter_X;
 	private final int PCScreenCenter_Y;
 	
+	/*
 	public  final static String FONTS[] = {
 	     "Consolas", "DejaVu Sans Mono", "新宋体"
 	};
+	*/
+	
+	private static Font supportedFonts[]; static {
+	    supportedFonts = new Font[3];
+	    try {
+            supportedFonts[0] = Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemResourceAsStream("consola.ttf"));
+            supportedFonts[1] = Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemResourceAsStream("DejaVuSansMono_0.ttf"));
+            supportedFonts[2] = Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemResourceAsStream("simsun.ttc"));
+	    } catch (FontFormatException | IOException e) {
+            // TODO 自动生成的 catch 块
+            e.printStackTrace();
+        }
+	};
+	
+	public Font getCurrentFont() {
+	    return supportedFonts[currentFontIdx];
+	}
+	
+	public static int getSupportedFontsCount() {
+	    return supportedFonts.length;
+	}
 	
 	//public final static String FONTFAMILY = "Consolas";
-	public static String FONTFAMILY = "DejaVu Sans Mono";
+	//public static String FONTFAMILY = "DejaVu Sans Mono";
 	private int fontSize;
+	private int currentFontIdx;
 	
 	public JTextArea		   mainScr;
 	
@@ -75,7 +100,8 @@ public class EventManager extends JFrame
 		mainScr.setEditable(false);
 		mainScr.setFocusable(false);
 		mainScr.setText("Welcome to the game world !");
-		mainScr.setFont(new Font(FONTFAMILY, Font.PLAIN, fontSize));
+		currentFontIdx = 1;
+		mainScr.setFont(supportedFonts[1].deriveFont(Font.PLAIN, fontSize));
 		mainScr.setBackground(new Color(0, 0, 0));
 		mainScr.setForeground(new Color(255, 255, 255));
 		//mainScr.setBackground(new Color(255, 200, 64));
@@ -104,14 +130,14 @@ public class EventManager extends JFrame
 	public void setScrZoom(int size)
 	{
 	    fontSize = size;
-		mainScr.setFont(new Font(FONTFAMILY, Font.PLAIN, size));
+	    mainScr.setFont(supportedFonts[currentFontIdx].deriveFont(Font.PLAIN, fontSize));
 	}
 
     public void switchFont(int idx)
     {
-        if(idx < 0 || idx > FONTS.length) return;
-        FONTFAMILY = FONTS[idx];
-        mainScr.setFont(new Font(FONTFAMILY, Font.PLAIN, fontSize));
+        if(idx < 0 || idx > supportedFonts.length) return;
+        mainScr.setFont(supportedFonts[idx].deriveFont(Font.PLAIN, fontSize));
+        currentFontIdx = idx;
     }
     
 	public int popAKeyOpreation()

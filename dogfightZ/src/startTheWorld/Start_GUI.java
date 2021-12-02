@@ -44,10 +44,12 @@ public class Start_GUI extends JFrame {
 	//private Icon iconstart = new ImageIcon("resources\\icon.jpg");
 	//private Icon iconrecord = new ImageIcon("resources\\icon2.jpg");
 	
-	static { GameRun.initEnviroment(); }
+	static { 
+	    GameRun.initEnviroment();
+	    System.out.println("欢迎来到dogfightZ，\n\t一起来守护广袤的夜空吧！");
+	}
 
 	public static void main(String[] args) {
-	    System.err.println("running~");
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
