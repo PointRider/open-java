@@ -1,6 +1,6 @@
 @echo off
 
-mode con cols=20 lines=10
+mode con cols=32 lines=10
 cls
 
 cd target
