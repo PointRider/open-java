@@ -32,11 +32,11 @@ public class PlayerProfileDAOImp implements PlayerProfileDAO {
             conn = JDBCFactory.takeJDBC();
                 uid = (Integer) conn.updateForGeneratedKey(
                         "insert into `PlayerProfile` ("
-                           + "`userID`, `userName`, `userPass`, "
-                           + "`userNick`, `userBank`, `gameRecordShare`, `createTime`, "
-                           + "`resolutionX`, `resolutionY`, `fontSize`"
+                           + "`userID`, `userName`, `userPass`, `userNick`, "
+                           + "`userBank`, `userExp`, `gameRecordShare`, `createTime`, "
+                           + "`resolutionX`, `resolutionY`, `fontSize`, `fontIndx`"
                       + ") values ("
-                           + "null, ?, ?, ?, 0, ?, (datetime('now', 'localtime')), ?, ?, ?"
+                           + "null, ?, ?, ?, 0, 0, ?, (datetime('now', 'localtime')), ?, ?, ?, ?"
                       + ");", 
                       p.getUserName(),
                       p.getUserPass(),
@@ -44,7 +44,8 @@ public class PlayerProfileDAOImp implements PlayerProfileDAO {
                       p.getGameRecordShare(),
                       p.getResolutionX(),
                       p.getResolutionY(),
-                      p.getFontSize()
+                      p.getFontSize(),
+                      p.getFontIndx()
                 );
         } catch (SQLException e) {
         } finally {
@@ -99,8 +100,8 @@ public class PlayerProfileDAOImp implements PlayerProfileDAO {
         if(p == null) return null;
         String sql = "select "
                        + "`userID`, `userName`, `userPass`, "
-                       + "`userNick`, `userBank`, `gameRecordShare`, `createTime`, "
-                       + "`resolutionX`, `resolutionY`, `fontSize` " +
+                       + "`userNick`, `userBank`, `userExp`, `gameRecordShare`, `createTime`, "
+                       + "`resolutionX`, `resolutionY`, `fontSize`, `fontIndx` " +
                      "from `PlayerProfile` where 1=1";
         
         StringBuilder conditionStr = new StringBuilder();
@@ -177,6 +178,12 @@ public class PlayerProfileDAOImp implements PlayerProfileDAO {
             args.add(p.getUserBank());
             notFirst = true;
         }
+        if(p.getUserExp() != null) {
+            if(notFirst) settingStr.append(',');
+            settingStr.append("`userExp` = ?");
+            args.add(p.getUserExp());
+            notFirst = true;
+        }
         if(p.getGameRecordShare() != null) {
             if(notFirst) settingStr.append(',');
             settingStr.append("`gameRecordShare` = ?");
@@ -199,6 +206,12 @@ public class PlayerProfileDAOImp implements PlayerProfileDAO {
             if(notFirst) settingStr.append(',');
             settingStr.append("`fontSize` = ?");
             args.add(p.getFontSize());
+            notFirst = true;
+        }
+        if(p.getFontIndx() != null) {
+            if(notFirst) settingStr.append(',');
+            settingStr.append("`fontIndx` = ?");
+            args.add(p.getFontIndx());
             notFirst = true;
         }
         

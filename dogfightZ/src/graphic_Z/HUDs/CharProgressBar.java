@@ -6,7 +6,7 @@ public class CharProgressBar extends CharLabel
 	
 	public Direction direction;
 	public char visual;
-	public double value;
+	public float value;
 	public int size;
 	
 	public CharProgressBar
@@ -20,7 +20,7 @@ public class CharProgressBar extends CharLabel
 		int		Size, 
 		char		Visual,
 		Direction	barDirection,
-		double		Value
+		float		Value
 		//-----------------------
 	)
 	{
@@ -49,7 +49,7 @@ public class CharProgressBar extends CharLabel
 		this
 		(
 			frapsBuffer, HUDLayer,     scrResolution, location_X,  
-			location_Y,  Size, Visual, barDirection,  0.0
+			location_Y,  Size, Visual, barDirection,  0.0F
 		);
 	}
 

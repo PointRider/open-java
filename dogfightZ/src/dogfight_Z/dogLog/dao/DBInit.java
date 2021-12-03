@@ -1,7 +1,9 @@
 package dogfight_Z.dogLog.dao;
 
 import java.sql.SQLException;
+import java.util.Scanner;
 
+import dogfight_Z.GameRun;
 import dogfight_Z.dogLog.utils.JDBCConnection;
 import dogfight_Z.dogLog.utils.JDBCFactory;
 
@@ -17,9 +19,10 @@ public class DBInit {
         "  `userExp` decimal(12,2) DEFAULT 0.00," +
         "  `gameRecordShare` integer NOT NULL," +
         "  `createTime` datetime NOT NULL DEFAULT (datetime('now', 'localtime'))," +
-        "  `resolutionX` integer DEFAULT 160," +
-        "  `resolutionY` integer DEFAULT 83," +
-        "  `fontSize` integer DEFAULT 10," +
+        "  `resolutionX` integer DEFAULT 192," +
+        "  `resolutionY` integer DEFAULT 108," +
+        "  `fontSize` integer DEFAULT 8," +
+        "  `fontIndx` integer DEFAULT 1," +
         "  CONSTRAINT `uidKey` UNIQUE (`userID` COLLATE BINARY ASC)," +
         "  CONSTRAINT `unameKey` UNIQUE (`userName` COLLATE BINARY ASC)" +
         ")",
@@ -96,17 +99,23 @@ public class DBInit {
         ")"
     };
     
-    static {
-        try {
-            Class.forName("dogfight_Z.dogLog.utils.JDBCFactory");
-        } catch (ClassNotFoundException e) {
-            // TODO 自动生成的 catch 块
-            e.printStackTrace();
-        }
-    }
+    //static {}
     
     public static void main(String [] args) {
-        initDB();
+        if(!GameRun.fileExists("dogfightZ.db")) {
+            initDB();
+            System.out.println("OK.");
+            return;
+        }
+        
+        Scanner input = new Scanner(System.in);
+        System.err.print("数据库已存在，是否重置？(y/N)> ");
+        if(input.next().toLowerCase().contentEquals("y")) {
+            GameRun.deleteFile("dogfightZ.db");
+            initDB();
+        }
+        input.close();
+        System.out.println("OK.");
     }
 
     public static void initDB() {

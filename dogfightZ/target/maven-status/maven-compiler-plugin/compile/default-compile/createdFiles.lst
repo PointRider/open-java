@@ -181,7 +181,6 @@ dogfight_Z\dogLog\view\Menu$1.class
 dogfight_Z\dogLog\controller\TipsConfirmMenu.class
 graphic_Z\Cameras\CharFrapsCamera.class
 dogfight_Z\dogLog\utils\JDBCFactory.class
-dogfight_Z\dogLog\controller\ProfileSettingsMenu$10.class
 dogfight_Z\dogLog\controller\PilotRegist$1.class
 startTheWorld\SoundTrackSelector.class
 dogfight_Z\dogLog\view\Menu.class

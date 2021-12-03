@@ -199,7 +199,7 @@ public class Start_GUI extends JFrame {
                         "resources/config_NPC.cfg",
                         "resources/gameRecord.rec",
                         "resources/config_OST.cfg",
-                        "192", "108", "64", "8"
+                        "192", "108", "64", "8", "1"
 				    };
 				    
 				    GameRun.main(args);

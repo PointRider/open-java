@@ -4,18 +4,25 @@ import java.util.Random;
 
 public class GraphicUtils
 {
+    public  static final float PI = 3.141592653589793F;
+    public  static final float halfAPI = PI / 2;
+    public  static final float PIMUL2 = PI * 2;
+    public  static final float negativeHalfAPI = -halfAPI;
 	private static final int boot = 65536;
     private static final int boot_1 = boot - 1;
+    private static final int halfABoot = boot >> 1;
+    private static final int bootDiv256 = boot >> 8;
 	private static float bootTmp;
 	private static float sint[];
 	private static float cost[];
 	private static float tant[];
-	private static float radt[]; 
+    private static float asint[];
+    private static float acost[];
+    private static float atant[];
     private static float rantF[]; 
     private static int   rantI[]; 
     private static char  curRandomIdx; /*char is unsigned between 0 ~ 65535*/
 	
-	public static float PI = 3.141592653589793F;
 	
 	public static final Random randomMaker;
 	
@@ -23,9 +30,11 @@ public class GraphicUtils
 	    randomMaker = new Random();
 		sint  = new float[boot];
 		cost  = new float[boot];
-		tant  = new float[boot];
-		radt  = new float[boot];
-		rantF = new float[boot];
+		asint = new float[boot];
+		acost = new float[boot];
+        atant = new float[boot];
+        tant  = new float[boot];
+        rantF = new float[boot];
         rantI = new int[boot];
 		
 		bootTmp = (float)boot / (2.0F * (float)PI);
@@ -36,22 +45,34 @@ public class GraphicUtils
 			sint[i]  = (float) Math.sin(tmp);
 			cost[i]  = (float) Math.cos(tmp);
 			tant[i]  = (float) Math.tan(tmp);
-			radt[i]  = (float) Math.toRadians(tmp);
 			rantF[i] = (float) Math.random();
 			rantI[i] = randomMaker.nextInt();
 		}
 		
+		each = 2.0F / boot;
+		for(int i = 0; i < boot; ++i) {
+		    tmp = each * i;
+            asint[i] = (float) Math.asin(tmp - 1.0);
+            acost[i] = (float) Math.acos(tmp - 1.0);
+		}
+		
+		each = 256.0F / boot;
+        for(int i = 0; i < boot; ++i) {
+            tmp = each * i;
+            atant[i] = (float) Math.atan(tmp);
+        }
+        
         curRandomIdx = 0;
 	}
 	
 	public static float sin(float i) {
-		i %= 2.0F * PI;
+		i %= PIMUL2;
 		if(i < 0) return - sint[(int)(bootTmp * -i)];
 		return sint[(int)(bootTmp * i)];
 	}
 	
 	public static float cos(float i) {
-		i %= 2.0F * PI;
+		i %= PIMUL2;
 		return cost[(int)(bootTmp * Math.abs(i))];
 	}
 	
@@ -61,14 +82,54 @@ public class GraphicUtils
 		return tant[(int)(bootTmp * i)];
 	}
 	
+    public static float acos(float theta) {
+        int idx = (int)((theta + 1.0F) * halfABoot);
+        if(idx >= boot) return Float.NaN;
+        return acost[idx];
+    }
+    
+    public static float asin(float theta) {
+        int idx = (int)((theta + 1.0F) * halfABoot);
+        if(idx >= boot) return Float.NaN;
+        return asint[idx];
+    }
+    
+    public static float atan(float theta) {
+        int idx = (int)(theta * bootDiv256);
+        if(idx < 0){
+            int negative = -idx;
+            if(negative < boot) return -atant[negative];
+            else return negativeHalfAPI;
+        } else {
+            if(idx < boot) return atant[idx];
+            else return halfAPI;
+        }
+    }
+    
+    public static float atan2(float y, float x) {
+        if(x > 0) return atan(y/x);
+        else if(x < 0) {
+             if(y >= 0) return atan(y/x) + PI;
+                   else return atan(y/x) - PI;
+        } else {
+            if(y > 0)      return  halfAPI;
+            else if(y < 0) return -halfAPI;
+            else return Float.NaN;
+        }
+    }
+	
 	public static int absI(int x) {
 		return x < 0? -x: x;
 	}
 
+    public static float toDegrees(float rad) {
+        return rad * 57.29577951308233F;
+    }
+
     public static float toRadians(float deg) {
         return deg * 0.0174532925199433F;
     }
-
+    
     public static float random() {
         ++curRandomIdx;
         return rantF[curRandomIdx &= boot_1];
@@ -137,12 +198,13 @@ public class GraphicUtils
         return GraphicUtils.sqrt(x2 + y2 + z2);
     }
     
-    public static float[] toDirectionVector(float speedVector[]) {
+    public static float[] getDirectionVector(float speedVector[]) {
         float x = speedVector[0], y = speedVector[1], z = speedVector[2];
         float length = vectorLength(speedVector);
         
         return new float[] {x / length, y / length, z / length};
     }
+    
 	
 	public static void drawCircle(char fraps_buffer[][], int x0, int y0, int r, char pixel) {
 		
@@ -195,10 +257,13 @@ public class GraphicUtils
 	}
 	
 	public static void main(String args[]) {
-		float angle = 1.23F;
-		System.out.println("sin: " + Math.sin(angle) + ", " + sin(angle));
-		System.out.println("cos: " + Math.cos(angle) + ", " + cos(angle));
-		System.out.println("tan: " + Math.tan(angle) + ", " + tan(angle));
+	    //float angle = -999.23F;
+		//System.out.println("asin: " + Math.asin(angle) + ", " + asin(angle));
+	    //System.out.println("acos: " + Math.acos(angle) + ", " + acos(angle));
+		//System.out.println("atan: " + Math.atan(angle) + ", " + atan(angle));
+	    //float x = -123, y = -4.56F;
+	    //float d = (float) Math.atan2(y, x);
+	    //System.out.println("atan2: " + d + ", " + atan2(y, x));
 	}
     
     public static float sqrt(float f) {
@@ -206,6 +271,10 @@ public class GraphicUtils
     }
     
     public static float max(float a, int b) {
+        return a > b? a: b;
+    }
+    
+    public static float max(float a, float b) {
         return a > b? a: b;
     }
 

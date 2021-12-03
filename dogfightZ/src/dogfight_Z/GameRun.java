@@ -45,6 +45,13 @@ public class GameRun {
         return dir.exists();
     }
     
+    public static boolean deleteFile(String fileName) {
+        File f = new File(fileName);
+        if(f.exists()) {
+            return f.delete();
+        } else return false;
+    }
+    
     public static void extractResource(String resourceName, String path) {
        
         BufferedInputStream  inputBuffer  = null;
@@ -80,7 +87,8 @@ public class GameRun {
             Integer.parseInt(args[16]), 
             Integer.parseInt(args[17]), 
             Integer.parseInt(args[18]),
-            Integer.parseInt(args[19])
+            Integer.parseInt(args[19]),
+            Integer.parseInt(args[20])
         );
         
         Thread gameThread = new Thread(newGame);

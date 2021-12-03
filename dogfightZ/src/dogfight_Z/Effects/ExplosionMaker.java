@@ -18,7 +18,7 @@ public class ExplosionMaker
 			{
 				roll[0] = x;
 				roll[1] = y*2;
-				destoryQue.add(new Particle(location, roll, lifeTime + (int)(50 * GraphicUtils.random()), velocity, resistanceRate));
+				destoryQue.add(new Particle(location, roll, lifeTime + (int)(y * GraphicUtils.random()), velocity, resistanceRate));
 			}
 		}
 	}

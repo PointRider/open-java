@@ -85,19 +85,19 @@ public class Aircraft extends CharMessObject
 	//--------------------------
 	public LinkedList<ThreeDs> addWatingQueue;
 	//---------[ammo]-----------
-	public int		missileMagazine;				//单次挂载最大弹容量
-	public int		missileMagazineLeft;			//当前挂载导弹余量
-	public int	missileReloadingTime;			//重新挂载时间
-	public int	missileReloadingTimeLeft;		//重新挂载时间剩余
-	public int		cannonMagazine;					//单次装填最大弹容量
-	public int		cannonMagazineLeft;				//当前装填炮弹余量
-	public int	cannonReloadingTime;			//重新装填时间
-	public int	cannonReloadingTimeLeft;		//重新装填时间剩余
-	public int		decoyMagazine;					//单次诱饵弹装填最大弹容量
-	public int		decoyMagazineLeft;				//当前诱饵弹装填炮弹余量
-	public int	decoyReloadingTime;				//诱饵弹装填时间
-	public int	decoyReloadingTimeLeft;			//诱饵弹装填时间剩余
-	public float	effectMakingLocation[][];
+	public int   missileMagazine;			//单次挂载最大弹容量
+	public int   missileMagazineLeft;		//当前挂载导弹余量
+	public int   missileReloadingTime;	    //重新挂载时间
+	public int   missileReloadingTimeLeft;	//重新挂载时间剩余
+	public int   cannonMagazine;		    //单次装填最大弹容量
+	public int   cannonMagazineLeft;		//当前装填炮弹余量
+	public int   cannonReloadingTime;		//重新装填时间
+	public int   cannonReloadingTimeLeft;	//重新装填时间剩余
+	public int   decoyMagazine;				//单次诱饵弹装填最大弹容量
+	public int   decoyMagazineLeft;			//当前诱饵弹装填炮弹余量
+	public int   decoyReloadingTime;		//诱饵弹装填时间
+	public int   decoyReloadingTimeLeft;	//诱饵弹装填时间剩余
+	public float effectMakingLocation[][];
 	//--------------------------
 	public int killed;
 	public int dead;
@@ -641,6 +641,7 @@ public class Aircraft extends CharMessObject
 		if(isPushing)
 		{
 			F += pushPower;
+			if(this == game.myJet) game.addGBlack(1.3F);
 			if((pushTimeLeft -= 2) <= 0)
 				isPushing = false;
 		}
@@ -662,18 +663,21 @@ public class Aircraft extends CharMessObject
 		if(speed < minStableSpeed)
 		{
 			motionRate = speed * 0.8F / minStableSpeed;
-			if(location[0] < 0)
+			if(location[0] < 200)
 				location[0] += CharTimeSpace.g * (1.0F - speed / minStableSpeed);
-			else location[0] = 0;
+			else location[0] = 200;
 		}
 		else 
 		{
 			motionRate = 0.8F;
-			if(location[0] > 0) location[0] = 0;
-			if (
-				GraphicUtils.abs(velocity_roll[0]) > 0.6F * maxVelRollUp ||
-				GraphicUtils.abs(velocity_roll[2]) > 0.6F * maxVelRollLR
-			)	wingsEffectRun();
+			if(location[0] > 200) location[0] = 200;
+			float a = GraphicUtils.abs(velocity_roll[0]) / maxVelRollUp;
+            float b = GraphicUtils.abs(velocity_roll[2]) / maxVelRollLR;
+            float c = GraphicUtils.max(a, b);
+			if (c > 0.6F) {
+		        if(this == game.myJet) game.addGBlack(c * 2.6F);
+			    wingsEffectRun();
+			}
 		}
 	}
 	
@@ -938,6 +942,16 @@ public class Aircraft extends CharMessObject
 		playersCameraManage();
 	}
 	
+
+    /**
+     * 返回方向向量所对应的xyz夹角的弧度
+     * @param directionVector 方向向量
+     * @return 弧度制夹角
+     */
+    public static float[] getFakeDirectionXYZ(float directionVector[]) {
+        return new float[] {GraphicUtils.atan2(directionVector[2], -directionVector[1]), GraphicUtils.asin(directionVector[0]), 0/*GraphicUtils.asin(directionVector[1])*/};
+    }
+	
 	@Override
 	public void run()
 	{
@@ -947,14 +961,17 @@ public class Aircraft extends CharMessObject
 	public void randomRespawn()
 	{
 		lockingPriority = 0;
+		
 		setLocation
 		(
-			0,
+			200,
 			game.mainCamera.location[1] + GraphicUtils.random() * game.mainCamera.maxSearchingRange * (GraphicUtils.random()>0.5F? -1 : 1),
 			game.mainCamera.location[2] + GraphicUtils.random() * game.mainCamera.maxSearchingRange * (GraphicUtils.random()>0.5F? -1 : 1)
 		);
+		//setLocation(0, 0, 0);
 		
 		setRollAngle(GraphicUtils.random() * 360, 0, 0);
+		//setRollAngle(0, 0, 0);
 		
 		cameraRollAngle[0] = -roll_angle[0];
 		cameraRollAngle[1] = -roll_angle[1];

@@ -63,20 +63,25 @@ public class CharLabel extends CharHUD
 	@Override
 	public void printNew()
 	{
-		if(visible)
-		{
-			char tmp;
-			for (
-				int x=location[0], y=0, i=0, j=0; 
-			    (y = location[1] + j) < resolution[1] && y >= 0 && x >= 0 && i<text.length(); 
-				++i, ++x
-			)	if ((tmp=(char)text.charAt(i)) != ' ' || transparentAtSpace == false) {
-				if(tmp == '\n') {
-					++j; x = location[0] - 1;
-				} else if(x < resolution[0]) fraps_buffer[y][x] = tmp;
-			}
-		}
+	    printNew(text);
 	}
+	
+	public void printNew(String str)
+    {
+        if(visible)
+        {
+            char tmp;
+            for (
+                int x=location[0], y=0, i=0, j=0; 
+                (y = location[1] + j) < resolution[1] && y >= 0 && x >= 0 && i<str.length(); 
+                ++i, ++x
+            )   if ((tmp=(char)str.charAt(i)) != ' ' || transparentAtSpace == false) {
+                if(tmp == '\n') {
+                    ++j; x = location[0] - 1;
+                } else if(x < resolution[0]) fraps_buffer[y][x] = tmp;
+            }
+        }
+    }
 	
     public void printChar(char c)
     {

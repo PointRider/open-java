@@ -21,8 +21,8 @@ public class ScreenResize extends Menu {
         tip = new CharLabel(
             screenBuffer, 
             1, 
-            resolution, 
-            "  使用 '[' 和 ']' 键设置屏幕缩放比例，\n\n使用 'J'、'I'、'L'、'K' 键调整分辨率，\n\n      校准完成后按回车键返回。\n\n      按回车键开始屏幕校准...", 
+            resolution,
+            "  使用 '[' 和 ']' 键设置屏幕缩放比例，\n\n使用 'J'、'I'、'L'、'K' 键调整分辨率，\n\n     使用 'M'、'N' 键切换字体\n\n      校准完成后按回车键返回。\n\n      按回车键开始屏幕校准...", 
             (resolution[0] >> 1) - 13, 
             (resolution[1] >> 1) - 1, 
             false

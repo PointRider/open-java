@@ -151,7 +151,7 @@ public class ProfileSettingsMenu extends Menu {
                 }
             ), 
             //------------------------------------------------------------------------------
-            newCharButton("Change My Username", 10, 20, 40,
+            newCharButton("Edit My Profile", 10, 20, 40,
                 new Operable() {
                     @Override
                     public Operation call() {
@@ -159,7 +159,7 @@ public class ProfileSettingsMenu extends Menu {
                     }
                 }
             ), 
-            newCharButton("Change My Password", 10, 24, 40,
+            newCharButton("Set Key Map", 10, 24, 40,
                 new Operable() {
                     @Override
                     public Operation call() {
@@ -167,15 +167,7 @@ public class ProfileSettingsMenu extends Menu {
                     }
                 }
             ), 
-            newCharButton("Change My Nickname", 10, 28, 40,
-                new Operable() {
-                    @Override
-                    public Operation call() {
-                        return null;
-                    }
-                }
-            ), 
-            newCharButton("Setup Screen Size", 10, 32, 40,
+            newCharButton("Setup Screen Size", 10, 28, 40,
                 new Operable() {
                     @Override
                     public Operation call() {

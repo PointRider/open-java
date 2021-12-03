@@ -1,42 +1,51 @@
 package dogfight_Z.dogLog.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class PlayerProfile extends SimplePrimaryKey {
+public class PlayerProfile extends SimplePrimaryKey implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7110884182510096796L;
     //-----------[profile]------------
     private Integer       userID;
     private String        userName;
     private String        userPass;
     private String        userNick;
     private BigDecimal    userBank;
+    private BigDecimal    userExp;
     private Integer       gameRecordShare;
     private LocalDateTime createTime;
     //-----------[config]-------------
     private Integer       resolutionX;
     private Integer       resolutionY;
     private Integer       fontSize;
+    private Integer       fontIndx;
     //--------------------------------
     
     public PlayerProfile() {
     }
     
-    public PlayerProfile(int userID, String userName, String userPass, String userNick, BigDecimal userBank, int gameRecordShared,
-            LocalDateTime createTime, int resolutionX, int resolutionY, int fontSize) {
+    public PlayerProfile(int userID, String userName, String userPass, String userNick, BigDecimal userBank, BigDecimal userExp, int gameRecordShared,
+            LocalDateTime createTime, int resolutionX, int resolutionY, int fontSize, int fontIndx) {
         super();
-        this.userID = userID;
-        this.userName = userName;
-        this.userPass = userPass;
-        this.userNick = userNick;
-        this.userBank = userBank;
+        this.userID          = userID;
+        this.userName        = userName;
+        this.userPass        = userPass;
+        this.userNick        = userNick;
+        this.userBank        = userBank;
+        this.userExp         = userExp;
         this.gameRecordShare = gameRecordShared;
-        this.createTime = createTime;
-        this.resolutionX = resolutionX;
-        this.resolutionY = resolutionY;
-        this.fontSize = fontSize;
+        this.createTime      = createTime;
+        this.resolutionX     = resolutionX;
+        this.resolutionY     = resolutionY;
+        this.fontSize        = fontSize;
+        this.fontIndx        = fontIndx;
     }
 
     public PlayerProfile(ResultSet rs) throws SQLException  {
@@ -46,11 +55,13 @@ public class PlayerProfile extends SimplePrimaryKey {
         this.userPass        = rs.getString("userPass");
         this.userNick        = rs.getString("userNick");
         this.userBank        = rs.getBigDecimal("userBank");
+        this.userExp         = rs.getBigDecimal("userExp");
         this.gameRecordShare = rs.getInt("gameRecordShare");
         this.createTime      = LocalDateTime.parse(rs.getString("createTime"), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         this.resolutionX     = rs.getInt("resolutionX");
         this.resolutionY     = rs.getInt("resolutionY");
         this.fontSize        = rs.getInt("fontSize");
+        this.fontIndx        = rs.getInt("fontIndx");
     }
 
     @Override
@@ -138,12 +149,28 @@ public class PlayerProfile extends SimplePrimaryKey {
         this.gameRecordShare = gameRecordShare;
     }
 
+    public Integer getFontIndx() {
+        return fontIndx;
+    }
+
+    public void setFontIndx(Integer fontIndx) {
+        this.fontIndx = fontIndx;
+    }
+
+    public BigDecimal getUserExp() {
+        return userExp;
+    }
+
+    public void setUserExp(BigDecimal userExp) {
+        this.userExp = userExp;
+    }
+
     @Override
     public String toString() {
         return "PlayerProfile [userID=" + userID + ", userName=" + userName + ", userPass=" + userPass + ", userNick="
-                + userNick + ", userBank=" + userBank + ", gameRecordShared=" + gameRecordShare + ", createTime="
-                + createTime + ", resolutionX=" + resolutionX + ", resolutionY=" + resolutionY + ", fontSize="
-                + fontSize + "]";
+                + userNick + ", userBank=" + userBank + ", userExp=" + userExp + ", gameRecordShare=" + gameRecordShare
+                + ", createTime=" + createTime + ", resolutionX=" + resolutionX + ", resolutionY=" + resolutionY
+                + ", fontSize=" + fontSize + ", fontIndx=" + fontIndx + "]";
     }
-    
+
 }

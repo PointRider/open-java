@@ -13,7 +13,8 @@ public class CharSingleLineTextEdit extends CharLabel implements KeyInputGetter,
     
     private   int                             size;
     protected boolean                         selected;
-    private   LinkedListZ<Character>          text;
+    protected String                          placeholder;
+    protected LinkedListZ<Character>          text;
     private   LinkedListZ<Character>.Iterator inputItr;
     private   StringBuilder                   stringBuilder;
     
@@ -23,11 +24,20 @@ public class CharSingleLineTextEdit extends CharLabel implements KeyInputGetter,
     private static int id = 65536;
     
     public CharSingleLineTextEdit(
+            char[][] frapsBuffer, 
+            int[] scrResolution, 
+            int locationX, 
+            int locationY, 
+            int sizeX
+    ) { this(frapsBuffer, scrResolution, locationX, locationY, sizeX, null); }
+    
+    public CharSingleLineTextEdit(
         char[][] frapsBuffer, 
         int[] scrResolution, 
         int locationX, 
         int locationY, 
-        int sizeX
+        int sizeX,
+        String placeholder
     ) {
         super(frapsBuffer, id++, scrResolution, null, locationX, locationY, false);
         
@@ -38,6 +48,7 @@ public class CharSingleLineTextEdit extends CharLabel implements KeyInputGetter,
         outerBoxSelected    = new CharLabel(frapsBuffer, layer, scrResolution, outerBoxSelectedText, locationX - 1, locationY - 1);
         selected = false;
         
+        if(placeholder != null) this.placeholder = "--> " + placeholder;
         text = new LinkedListZ<>();
         inputItr = text.begin();
         stringBuilder = new StringBuilder(sizeX + 2);
@@ -47,7 +58,8 @@ public class CharSingleLineTextEdit extends CharLabel implements KeyInputGetter,
     @Override
     public void printNew() {
         this.printNew(this.selected);
-        super.printNew();
+        if(placeholder == null || !text.isEmpty()) super.printNew();
+        else super.printNew(placeholder);
     }
     
     @Override
@@ -70,7 +82,6 @@ public class CharSingleLineTextEdit extends CharLabel implements KeyInputGetter,
             itr.hasNext();
             itr.next()
         ) {
-            
             stringBuilder.append(itr.get());
             if(itr.at(inputItr)) at = i;
             
@@ -85,7 +96,7 @@ public class CharSingleLineTextEdit extends CharLabel implements KeyInputGetter,
     
     public void printNew(boolean selected) {
         StringBuilder sb2 = new StringBuilder(outerBoxNotSelectedText);
-        sb2.setCharAt(buff() + 1, '|');
+        sb2.setCharAt(buff() + 1, '|');//(placeholder == null || !text.isEmpty())? sb2.toString() : placeholder
         String tmpNotSelectedText = sb2.toString();
         String tmpSelectedText    = tmpNotSelectedText + "\n<" + Common.loopChar(' ', size) + ">\n" + tmpNotSelectedText;
         

@@ -451,16 +451,16 @@ public class ScreenResizer extends Menu
 		int resolutionY, 
 		int refresh_rate,
 		int fontSize,
+		int fontIdx,
         int resolutionSetting[]
 	)
 	{
         if(resolutionSetting != null) {
-            resolutionX = resolutionSetting[0];
-            resolutionY = resolutionSetting[1];
-            scrSize = resolutionSetting[2];
-        }
-        
-        currentFontIdx = 1;
+            resolutionX    = resolutionSetting[0];
+            resolutionY    = resolutionSetting[1];
+            scrSize        = resolutionSetting[2];
+            currentFontIdx = resolutionSetting[3];;
+        } else currentFontIdx = 1;
         
 	    initUI();
 		initMe(myJetModel_file, resolutionX, resolutionY);
@@ -495,6 +495,7 @@ public class ScreenResizer extends Menu
             Integer.parseInt(args[17]), 
             Integer.parseInt(args[18]),
             Integer.parseInt(args[19]),
+            Integer.parseInt(args[20]),
             resolutionSetting
 	     );
 	}

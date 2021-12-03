@@ -73,7 +73,7 @@ public class PilotRegist extends Menu {
             resolution, 
             20, 
             12, 
-            36
+            36, "Use this and password to login."
         );
         
         lblUserPass = new CharLabel(
@@ -91,7 +91,7 @@ public class PilotRegist extends Menu {
             resolution, 
             20, 
             15, 
-            36
+            36, "This can be reset after login."
         );
 
         lblUserPassConfirm = new CharLabel(
@@ -109,7 +109,7 @@ public class PilotRegist extends Menu {
             resolution, 
             20, 
             18, 
-            36
+            36, "Repeat again."
         );
         
         lblUserNick = new CharLabel(
@@ -222,8 +222,8 @@ public class PilotRegist extends Menu {
                         return null;
                     }
                     
-                    PlayerProfile player = new PlayerProfile(-1, uname, pass, unick, null, shareMyRecord,
-                            null, setScreenSize[0], setScreenSize[1], setScreenSize[2]);
+                    PlayerProfile player = new PlayerProfile(-1, uname, pass, unick, null, null, shareMyRecord,
+                            null, setScreenSize[0], setScreenSize[1], setScreenSize[2], setScreenSize[3]);
                     
                     int pilotNo = -1;
                     
