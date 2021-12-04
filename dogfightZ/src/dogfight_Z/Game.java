@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.PriorityQueue;
 
+import dogfight_Z.Ammo.Decoy;
 import dogfight_Z.Ammo.Missile;
 
 import graphic_Z.Common.SinglePoint;
@@ -30,86 +31,85 @@ import graphic_Z.utils.HzController;
 
 public class Game extends CharTimeSpace implements Runnable
 {
-	public float fov = 2.2F;
-	public float visibility = 12480;
+    private float fov = 2.2F;
+	private float visibility = 12480;
 	private float gBlack;
 	
-	public PlayersJetCamera mainCamera;
-	public Aircraft myJet;
+	private PlayersJetCamera mainCamera;
+	private Aircraft myJet;
 	
-	public CharLabel lbl1;
-	public CharLabel lbl2;
-	public CharLabel lbl3;
-	public CharLabel lbl4; 
-    public CharLabel lbl5;
-    public CharLabel lbl6;
-    public CharLabel lbl7;
-    public CharLabel lbl8;
-    public CharLabel lbl9;
+	private CharLabel lbl1;
+	private CharLabel lbl2;
+	private CharLabel lbl3;
+	private CharLabel lbl4; 
+	private CharLabel lbl5;
+    private CharLabel lbl6;
+    private CharLabel lbl7;
+    private CharLabel lbl8;
+    private CharLabel lbl9;
 	
-	public CharLabel lblRespawnTimeLeft;
-	public CharLabel lblGameTimeLeft;
-	public CharLabel lblKillTipList;
+    private CharLabel lblRespawnTimeLeft;
+	private CharLabel lblGameTimeLeft;
+	private CharLabel lblKillTipList;
 
-	public CharLabel 			EndScreen;
+	private CharLabel 			EndScreen;
 	//public CharLabel            lbltest;
 	
-	public CharDynamicHUD		hud_roll_up_dn_angle;
+	private CharDynamicHUD		hud_roll_up_dn_angle;
 	
-    public CharLabel hud_turn_lr_scrollBar_pointer;
-    public CharLabel hud_roll_up_dn_scrollBar_pointer;
-	public CharLoopingScrollBar hud_turn_lr_scrollBar;
-	public CharLoopingScrollBar hud_roll_up_dn_scrollBar;
+	private CharLabel hud_turn_lr_scrollBar_pointer;
+    private CharLabel hud_roll_up_dn_scrollBar_pointer;
+    private CharLoopingScrollBar hud_turn_lr_scrollBar;
+	private CharLoopingScrollBar hud_roll_up_dn_scrollBar;
 	
-	public CharProgressBar		hud_HP_progressBar;
-	public CharProgressBar		hud_pushTime_progressBar;
-	public CharProgressBar		hud_cannon_progressBar;
-	public CharProgressBar		hud_cannonReloading_progressBar;
-	public CharProgressBar		hud_missile_progressBar;
-	public CharProgressBar		hud_missileReloading_progressBar;
-	public CharProgressBar		hud_decoy_progressBar;
-	public CharProgressBar		hud_decoyReloading_progressBar;
+	private CharProgressBar		hud_HP_progressBar;
+	private CharProgressBar		hud_pushTime_progressBar;
+	private CharProgressBar		hud_cannon_progressBar;
+	private CharProgressBar		hud_cannonReloading_progressBar;
+	private CharProgressBar		hud_missile_progressBar;
+	private CharProgressBar		hud_missileReloading_progressBar;
+	private CharProgressBar		hud_decoy_progressBar;
+	private CharProgressBar		hud_decoyReloading_progressBar;
 	
-	public ScoreList            scoreShow;
-	public CharImage            hud_crosshair;
-	public Radar                hud_Radar;
+	private ScoreList            scoreShow;
+	private CharImage            hud_crosshair;
+	private Radar                hud_Radar;
 	
-	public int					             maxAmmoCount;
-	public ArrayList<ThreeDs>	             clouds;
-	public PriorityQueue<Dynamic>            firedAmmo;
-	public PriorityQueue<Dynamic>            effects;
-	public LinkedList<ListIterator<ThreeDs>> deleteQue;
-	public LinkedList<ThreeDs>	             waitToAddQue;
-	public LinkedList<String>	             killTipList;
-	public int					             killTipListUpdateTimeLeft;
-	public int					             killTipListUpdateTime;
-	public int					             maxKillTipCount;
+	private ArrayList<ThreeDs>	              clouds;
+	private PriorityQueue<Dynamic>            firedAmmo;
+	private PriorityQueue<Dynamic>            effects;
+	private LinkedList<ListIterator<ThreeDs>> deleteQue;
+	private LinkedList<ThreeDs>	              waitToAddQue;
+	private LinkedList<String>	              killTipList;
+	private int					              killTipListUpdateTimeLeft;
+	private int					              killTipListUpdateTime;
+	private int					              maxKillTipCount;
 
-	public int respawnTime;
-	public int colorChangedTime;
+	private int respawnTime; //ms
+	private int colorChangedTime;
 	private int rgbTmp;
 	public StringBuilder tmp;
 	//public ArrayList<HashSet<Aircraft>> camps;
 	private CloudsManager cloudMan;
 	private Thread        cloudManThread;
-	public HzController   cloudRefreshRateController;
+	private HzController   cloudRefreshRateController;
 
-	public boolean keyState_W;
-	public boolean keyState_A;
-	public boolean keyState_S;
-	public boolean keyState_D;
-    public boolean keyState_Up;
-    public boolean keyState_Dn;
-    public boolean keyState_Lf;
-    public boolean keyState_Rt;
-	public boolean keyState_X;
-	public boolean keyState_V;
-	public boolean keyState_TAB;
-	public boolean keyState_SPACE;
-	public boolean keyState_SHIFT;
+	private boolean keyState_W;
+	private boolean keyState_A;
+	private boolean keyState_S;
+	private boolean keyState_D;
+	private boolean keyState_Up;
+	private boolean keyState_Dn;
+	private boolean keyState_Lf;
+	private boolean keyState_Rt;
+	private boolean keyState_X;
+	private boolean keyState_V;
+	private boolean keyState_TAB;
+	private boolean keyState_SPACE;
+	private boolean keyState_SHIFT;
 	
-	public int   playersCamp;
-	public long  gameTimeUsed;
+	private int   playersCamp;
+	private long  gameTimeUsed;
 	
 	private int resolution_min;
 	private int keyPressed;
@@ -118,7 +118,7 @@ public class Game extends CharTimeSpace implements Runnable
 	private boolean flgWheelUp, flgWheelDn;
 	private Aircraft lockedEnemy = null;
 	//--------------------------------
-	public LinkedList<Aircraft> scoreList;
+	private LinkedList<Aircraft> scoreList;
 	//--------------------------------
 	
 	//private Color foreRGB;
@@ -132,24 +132,22 @@ public class Game extends CharTimeSpace implements Runnable
 	
 	public long gameStopTime;
 	
-	public void initRank()
-	{
+	private GameManager gameManager;
+	
+	private final void initRank(){
 		scoreList = new LinkedList<Aircraft>();
 	}
 	
-	public Aircraft newNPC
-	(
+	public final Aircraft newNPC (
 		String myJetModel_file,
 		String id,
 		float Mess,
 		float searching_visibility,
 		float max_motionRate,
 		int    camp
-	)
-	{
-		NPC npc = new NPC
-		(
-			this, 
+	) {
+		NPC npc = new NPC (
+			gameManager, 
 			myJetModel_file, 
 			id, 
 			Mess, 
@@ -159,7 +157,6 @@ public class Game extends CharTimeSpace implements Runnable
 			visualManager.resolution[1], 
 			camp, 
 			firedAmmo, 
-			effects, 
 			waitToAddQue, 
 			deleteQue, 
 			objectsManager.objects
@@ -172,7 +169,7 @@ public class Game extends CharTimeSpace implements Runnable
 		return npc;
 	}
 	
-	private void initClasses() {
+	private final void initClasses() {
         try{
             Class.forName("dogfight_Z.Ammo.CannonAmmo");
             Class.forName("dogfight_Z.Ammo.Decoy");
@@ -183,7 +180,7 @@ public class Game extends CharTimeSpace implements Runnable
         }
 	}
 	
-	private void initUI(int fontSize, int fontIndx) {
+	private final void initUI(int fontSize, int fontIndx) {
         eventManager.setTitle("dogfightZ");
         scrSize = fontSize;
         fontIdx = fontIndx;
@@ -194,7 +191,8 @@ public class Game extends CharTimeSpace implements Runnable
         colorChangedTime      = 0;
 	}
 	
-	private void initDatastructure(String hud_scoreListBG, int resolutionX, int resolutionY) {
+	private final void initDatastructure(String hud_scoreListBG, int resolutionX, int resolutionY) {
+	    
 	    tmp = new StringBuilder();
         firedAmmo = new PriorityQueue<Dynamic>();
         objectsManager.newSelfDisposableObjList(firedAmmo);
@@ -218,6 +216,7 @@ public class Game extends CharTimeSpace implements Runnable
         
         //foreRGB = new Color(255, 255, 255);
         backRGB = 0;
+        gameManager = new GameManager(this);
 	}
 	/*
 	 "resources/MyJetHUD_Friend.hud" 
@@ -226,7 +225,7 @@ public class Game extends CharTimeSpace implements Runnable
 	 "resources/MyJetHUD_Locked.hud" 
 	 "resources/MissileWarning.hud" 
 	 */
-	private void initMainCamera(
+	private final void initMainCamera(
 	        String hud_friend,
 	        String hud_enemy,
 	        String hud_locking,
@@ -238,7 +237,7 @@ public class Game extends CharTimeSpace implements Runnable
             visibility * 10, 0, 100, 
             visualManager.resolution, 
             visualManager.fraps_buffer,
-            this, myJet, 
+            this, getMyJet(), 
             new CharDynamicHUD (
                 hud_friend,
                 visualManager.fraps_buffer,
@@ -274,7 +273,7 @@ public class Game extends CharTimeSpace implements Runnable
         visualManager.newCamera(mainCamera);
 	}
 	
-	private void initMe(
+	private final void initMe(
 	        String myJetModel_file, 
             String hud_friend,
             String hud_enemy,
@@ -283,18 +282,18 @@ public class Game extends CharTimeSpace implements Runnable
             String hud_missileWarning
         ) {
 	    gBlack = 1;
-        myJet = new Aircraft(this, myJetModel_file, 10000, playersCamp, firedAmmo, effects, deleteQue, waitToAddQue, objectsManager.objects, null, "Me", true);
+        setMyJet(new Aircraft(gameManager, myJetModel_file, 10000, playersCamp, objectsManager.objects, null, "Me", true));
         
-        scoreList.add(myJet);
-        objectsManager.newMessObject(myJet);
+        scoreList.add(getMyJet());
+        objectsManager.newMessObject(getMyJet());
 
         initMainCamera(hud_friend, hud_enemy, hud_locking, hud_locked, hud_missileWarning);
 
-        myJet.mainCamera = mainCamera;
-        mainCamera.connectLocationAndAngle(myJet.cameraLocation, myJet.cameraRollAngle);
+        getMyJet().mainCamera = mainCamera;
+        mainCamera.connectLocationAndAngle(getMyJet().getCameraLocation(), getMyJet().getCameraRollAngle());
         
-        myJet.randomRespawn();
-        myJet.visible = true;
+        getMyJet().randomRespawn();
+        getMyJet().visible = true;
 	}
 
     /**
@@ -302,11 +301,11 @@ public class Game extends CharTimeSpace implements Runnable
      * gameTime -> gameTimeUsed, gameStopTime
      * ? x NPC(id, diff, camp)
      */
-	private void initPlayers(String myJetModel_file, String cfg_file, String rec_file) {
+	private final void initPlayers(String myJetModel_file, String cfg_file, String rec_file) {
         long gameTime;
-        respawnTime  = 10;   //seconds
+        setRespawnTime(10000);   //seconds
         playersCamp  = 0;
-        maxAmmoCount = 400;
+        //maxAmmoCount = 400;
         cfgFile = cfg_file;
         recFile = rec_file;
         try(FileReader reader = new FileReader(new File(cfgFile))) {
@@ -316,7 +315,7 @@ public class Game extends CharTimeSpace implements Runnable
             while((c = reader.read()) != '\n')
                 tmp = tmp + (char)c;
 
-            myJet.setID(tmp);
+            getMyJet().setID(tmp);
             
             tmp = "";
             while((c = reader.read()) != '\n' && c != -1)
@@ -356,7 +355,7 @@ public class Game extends CharTimeSpace implements Runnable
         }   catch(IOException exc) {}
 	}
 	
-	private void initHUDs(
+	private final void initHUDs(
 	        int resolutionX, int resolutionY, 
 	        String hud_horizonIndicator,
 	        String hud_crosshairImg,
@@ -418,12 +417,12 @@ public class Game extends CharTimeSpace implements Runnable
             hud_radarPrinter,
             visualManager.fraps_buffer, 124, visualManager.resolution, 
             21, (visualManager.resolution[0] - 12), 
-            11, myJet, objectsManager.objects, visibility * 10
+            11, getMyJet(), objectsManager.objects, visibility * 10
         );
         visualManager.newDynamicHUD(hud_Radar);
 	}
 	
-	private void initClouds() {
+	private final void initClouds() {
         clouds = new ArrayList<ThreeDs>();
         objectsManager.newStaticObjectList(clouds);
 
@@ -432,7 +431,7 @@ public class Game extends CharTimeSpace implements Runnable
         cloudManThread = new Thread(cloudMan);
 	}
 	
-	private void initKeyboardAndMouse() {
+	private final void initKeyboardAndMouse() {
         Object mouse = new MouseWheelControl(eventManager.EventFrapsQueue_keyboard);
         eventManager.mainScr.addMouseWheelListener((MouseWheelListener) mouse);
         eventManager.mainScr.addMouseListener((MouseListener) mouse);
@@ -453,7 +452,7 @@ public class Game extends CharTimeSpace implements Runnable
         keyState_SHIFT = false;
 	}
 	
-	private void initSoundTrack(String bgm_file) {
+	private final void initSoundTrack(String bgm_file) {
         soundTrack    = new SoundTrack(bgm_file);
         bgmThread     = new Thread(soundTrack);
 	}
@@ -510,15 +509,13 @@ public class Game extends CharTimeSpace implements Runnable
         clouds.add(flag);*/
 	}
 	
-	public void addKillTip(Aircraft killer, Aircraft deader, String WeaponName)
-	{
+	public final void addKillTip(Aircraft killer, Aircraft deader, String WeaponName) {
 		killTipList.addLast(killer.getID() + " >>" + WeaponName + ">> " + deader.getID());
 		if(killTipList.size() > maxKillTipCount)
 			killTipList.removeFirst();
 		
 		tmp.delete(0, tmp.length());
-		for(String aLine : killTipList)
-		{
+		for(String aLine : killTipList) {
 			tmp.append(aLine);
 			tmp.append('\n');
 		}
@@ -526,30 +523,23 @@ public class Game extends CharTimeSpace implements Runnable
 		killTipListUpdateTimeLeft = killTipListUpdateTime;
 	}
 	
-	public void colorFlash
-	(
+	public final void colorFlash(
 		int R_Fore, int G_Fore, int B_Fore, 
 		int R_Back, int G_Back, int B_Back, 
-		int time, Aircraft source
-	)
-	{
-		if(source.getID().equals(myJet.getID()))
-		{
-			eventManager.mainScr.setForeground(new Color(R_Fore, G_Fore, B_Fore));
-			eventManager.mainScr.setBackground(new Color(R_Back, G_Back, B_Back));
-			colorChangedTime = time;
-		}
+		int time
+	) {
+		eventManager.mainScr.setForeground(new Color(R_Fore, G_Fore, B_Fore));
+		eventManager.mainScr.setBackground(new Color(R_Back, G_Back, B_Back));
+		colorChangedTime = time;
 	}
 	
-	private void updateKillList() {
-		if(--killTipListUpdateTimeLeft <= 0)
-		{
+	private final void updateKillList() {
+		if(--killTipListUpdateTimeLeft <= 0) {
 			if(!killTipList.isEmpty())
 				killTipList.removeFirst();
 			
 			tmp.delete(0, tmp.length());
-			for(String aLine : killTipList)
-			{
+			for(String aLine : killTipList) {
 				tmp.append(aLine);
 				tmp.append('\n');
 			}
@@ -558,7 +548,7 @@ public class Game extends CharTimeSpace implements Runnable
 		}
 	}
 	
-	private void reLocateHUD() {
+	private final void reLocateHUD() {
 	    resolution_min = GraphicUtils.min(visualManager.getResolution_X(), visualManager.getResolution_Y()) >> 1;
 	    final int resolution_X = visualManager.resolution[0], resolution_Y = visualManager.resolution[1];
 	    final int progressBarLocationBaseX  = (int) (resolution_X * 0.75);
@@ -611,9 +601,9 @@ public class Game extends CharTimeSpace implements Runnable
         scoreShow.setLocation(resolution_X >> 1, resolution_Y >> 1);
 	}
 	
-	private void updateHUD() {
+	private final void updateHUD() {
 	    
-        float direcXYZ[] = Aircraft.getFakeDirectionXYZ(GraphicUtils.getDirectionVector(myJet.getCurrentSpeedVector()));
+        float direcXYZ[] = Aircraft.getFakeDirectionXYZ(GraphicUtils.getDirectionVector(getMyJet().getCurrentSpeedVector()));
         direcXYZ[0] = GraphicUtils.toDegrees(direcXYZ[0]);
         direcXYZ[1] = GraphicUtils.toDegrees(direcXYZ[1]);
         //direcXYZ[2] = GraphicUtils.toDegrees(direcXYZ[2]);
@@ -642,27 +632,27 @@ public class Game extends CharTimeSpace implements Runnable
 	    
 	    lbltest.setText(testInfo);
 	    */
-		lbl1.setText("speed: " + String.format("%.2f", myJet.speed * 14));
-		lbl2.setText("shift: " + String.format("%.2f", myJet.control_stick_acc));
-		lbl3.setText("rpm  : " + String.format("%.2f", Aircraft.getCurrentRPM(myJet.max_rpm, myJet.control_stick_acc)));
-		lbl4.setText("hight: " + String.format("%.2f", -myJet.location[0] + 200));
+		lbl1.setText("speed: " + String.format("%.2f", getMyJet().getSpeed() * 14));
+		lbl2.setText("shift: " + String.format("%.2f", getMyJet().getControl_stick_acc()));
+		lbl3.setText("rpm  : " + String.format("%.2f", Aircraft.getCurrentRPM(getMyJet().getMax_rpm(), getMyJet().getControl_stick_acc())));
+		lbl4.setText("hight: " + String.format("%.2f", -getMyJet().location[0] + 200));
 		//lbl5.setText("roll_angle: " + String.format("%.2f", myJet.roll_angle[2]));
 		//lbl6.setText("cameraRoll: " + String.format("%.2f", myJet.cameraRollAngle[2]));
 		
-		hud_HP_progressBar.value = (float)myJet.HP / 100.0F;
-		hud_pushTime_progressBar.value = myJet.pushTimeLeft / myJet.maxPushTime;
-		hud_cannon_progressBar.value = (float)myJet.cannonMagazineLeft / (float)myJet.cannonMagazine;
+		hud_HP_progressBar.value = (float)getMyJet().getHP() / 100.0F;
+		hud_pushTime_progressBar.value = getMyJet().getPushTimeLeft() / getMyJet().getMaxPushTime();
+		hud_cannon_progressBar.value = (float)getMyJet().cannonMagazineLeft / (float)getMyJet().cannonMagazine;
 		
-		if(myJet.isAlive) {
+		if(getMyJet().isAlive()) {
 			lblRespawnTimeLeft.visible = false;
 			hud_roll_up_dn_angle.visible = hud_roll_up_dn_scrollBar.visible = hud_turn_lr_scrollBar.visible = 
 					hud_Radar.visible = lbl1.visible = lbl2.visible = lbl3.visible = lbl4.visible = true;
 			//------------[Dynamic HUDs]------------
 			
-			hud_roll_up_dn_angle.angle = GraphicUtils.abs(myJet.roll_angle[1]) > 90.0F? myJet.roll_angle[2] + 180 : myJet.roll_angle[2];
+			hud_roll_up_dn_angle.angle = GraphicUtils.abs(getMyJet().roll_angle[1]) > 90.0F? getMyJet().roll_angle[2] + 180 : getMyJet().roll_angle[2];
 			
-			hud_roll_up_dn_angle.location[0] = (int) (GraphicUtils.sin(GraphicUtils.toRadians(myJet.roll_angle[2])) * GraphicUtils.sin((float) GraphicUtils.toRadians(GraphicUtils.abs(myJet.roll_angle[1]) > 90.0? -myJet.roll_angle[1] : myJet.roll_angle[1])) * - resolution_min + (visualManager.getResolution_X()>>1));
-			hud_roll_up_dn_angle.location[1] = (int) (GraphicUtils.cos(GraphicUtils.toRadians(myJet.roll_angle[2])) * GraphicUtils.sin((float) GraphicUtils.toRadians(GraphicUtils.abs(myJet.roll_angle[1]) > 90.0?  myJet.roll_angle[1] :-myJet.roll_angle[1])) * - resolution_min + (visualManager.getResolution_Y()>>1));
+			hud_roll_up_dn_angle.location[0] = (int) (GraphicUtils.sin(GraphicUtils.toRadians(getMyJet().roll_angle[2])) * GraphicUtils.sin((float) GraphicUtils.toRadians(GraphicUtils.abs(getMyJet().roll_angle[1]) > 90.0? -getMyJet().roll_angle[1] : getMyJet().roll_angle[1])) * - resolution_min + (visualManager.getResolution_X()>>1));
+			hud_roll_up_dn_angle.location[1] = (int) (GraphicUtils.cos(GraphicUtils.toRadians(getMyJet().roll_angle[2])) * GraphicUtils.sin((float) GraphicUtils.toRadians(GraphicUtils.abs(getMyJet().roll_angle[1]) > 90.0?  getMyJet().roll_angle[1] :-getMyJet().roll_angle[1])) * - resolution_min + (visualManager.getResolution_Y()>>1));
 			
 			hud_roll_up_dn_scrollBar.value = (int) (direcXYZ[1] / 5/*360 / 72*/);
 			hud_turn_lr_scrollBar.value    = (int) ((direcXYZ[0] + 180) / 5);
@@ -677,35 +667,35 @@ public class Game extends CharTimeSpace implements Runnable
 					hud_Radar.visible = lbl1.visible = lbl2.visible = lbl3.visible = lbl4.visible = false;
 			lbl1.visible = lbl2.visible = lbl3.visible = lbl4.visible = false;
 			lblRespawnTimeLeft.visible = true;
-			lblRespawnTimeLeft.setText("You will respawn in\n     " + (myJet.respwanAtTime - (float)System.currentTimeMillis()/1000) + " seconds.");
+			lblRespawnTimeLeft.setText("You will respawn in\n     " + (getMyJet().getRespwanAtTime() - (float)System.currentTimeMillis()/1000) + " seconds.");
 		}
 		
-		if(myJet.cannonMagazineLeft == 0)
+		if(getMyJet().cannonMagazineLeft == 0)
 		{
 			hud_cannonReloading_progressBar.visible = true;
-			hud_cannonReloading_progressBar.value = 1.0F - (float)myJet.cannonReloadingTimeLeft / (float)myJet.cannonReloadingTime;	
+			hud_cannonReloading_progressBar.value = 1.0F - (float)getMyJet().cannonReloadingTimeLeft / (float)getMyJet().cannonReloadingTime;	
 		}
 		else hud_cannonReloading_progressBar.visible = false;
 		
-		hud_missile_progressBar.value = (float)myJet.missileMagazineLeft / (float)myJet.missileMagazine;
-		if(myJet.missileMagazineLeft == 0)
+		hud_missile_progressBar.value = (float)getMyJet().missileMagazineLeft / (float)getMyJet().missileMagazine;
+		if(getMyJet().missileMagazineLeft == 0)
 		{
 			hud_missileReloading_progressBar.visible = true;
-			hud_missileReloading_progressBar.value = 1.0F - (float)myJet.missileReloadingTimeLeft / (float)myJet.missileReloadingTime;	
+			hud_missileReloading_progressBar.value = 1.0F - (float)getMyJet().missileReloadingTimeLeft / (float)getMyJet().missileReloadingTime;	
 		}
 		else hud_missileReloading_progressBar.visible = false;
 		
-		hud_decoy_progressBar.value = (float)myJet.decoyMagazineLeft / (float)myJet.decoyMagazine;
-		if(myJet.decoyMagazineLeft == 0)
+		hud_decoy_progressBar.value = (float)getMyJet().decoyMagazineLeft / (float)getMyJet().decoyMagazine;
+		if(getMyJet().decoyMagazineLeft == 0)
 		{
 			hud_decoyReloading_progressBar.visible = true;
-			hud_decoyReloading_progressBar.value = 1.0F - (float)myJet.decoyReloadingTimeLeft / (float)myJet.decoyReloadingTime;	
+			hud_decoyReloading_progressBar.value = 1.0F - (float)getMyJet().decoyReloadingTimeLeft / (float)getMyJet().decoyReloadingTime;	
 		}
 		else hud_decoyReloading_progressBar.visible = false;
 	}
 
 	@SuppressWarnings("deprecation")
-	private void keyResponse() {
+	private final void keyResponse() {
 		
 		flgWheelUp = flgWheelDn = false;
 		while(!eventManager.EventFrapsQueue_keyboard.isEmpty())
@@ -718,7 +708,7 @@ public class Game extends CharTimeSpace implements Runnable
 				case 4096:
 					if(!flgWheelUp)
 					{
-						myJet.control_acc(0.2F);
+						getMyJet().control_acc(0.2F);
 						flgWheelUp = true;
 					}
 				break;
@@ -726,7 +716,7 @@ public class Game extends CharTimeSpace implements Runnable
 				case 8192:
 					if(!flgWheelDn)
 					{
-						myJet.control_dec();
+						getMyJet().control_dec();
 						flgWheelDn = true;
 					}
 				break;
@@ -741,20 +731,20 @@ public class Game extends CharTimeSpace implements Runnable
 				
 				case 16386:
 				{
-					Missile m = myJet.missileOpenFire(true, lockedEnemy);
+					Missile m = getMyJet().missileOpenFire(true, lockedEnemy);
 					if(m != null)
-						mainCamera.connectLocationAndAngle(m.location, m.cameraRollAngle);
+						mainCamera.connectLocationAndAngle(m.location, m.getCameraRollAngle());
 				}
 				break;
 				
 				case 16387:
-					myJet.missileOpenFire(false, lockedEnemy);
+					getMyJet().missileOpenFire(false, lockedEnemy);
 				break;
 				
 				//-----------------------------
                     
 				case KeyEvent.VK_C:
-					++myJet.cameraLocationFlag;
+					++getMyJet().cameraLocationFlag;
 				break;
 				
 				case KeyEvent.VK_W://W
@@ -837,7 +827,7 @@ public class Game extends CharTimeSpace implements Runnable
 				//-----------------------------
 				
 				case KeyEvent.VK_Q:
-					mainCamera.connectLocationAndAngle(myJet.cameraLocation, myJet.cameraRollAngle);
+					mainCamera.connectLocationAndAngle(getMyJet().getCameraLocation(), getMyJet().getCameraRollAngle());
 				break;
 				
 				case KeyEvent.VK_V:
@@ -901,57 +891,57 @@ public class Game extends CharTimeSpace implements Runnable
         xy = eventManager.popAMouseOpreation();
         
         if(!(keyState_Up && keyState_Dn && keyState_Lf && keyState_Rt)) {
-            if(myJet.isCannonFiring) {
-                myJet.control_roll_lr((float)(-xy.x)/224.0F);
-                myJet.control_roll_up_dn((float)(-xy.y)/224.0F);
+            if(getMyJet().isCannonFiring) {
+                getMyJet().control_roll_lr((float)(-xy.x)/224.0F);
+                getMyJet().control_roll_up_dn((float)(-xy.y)/224.0F);
             } else {
-                myJet.control_roll_lr((float)(-xy.x)/96.0F);
-                myJet.control_roll_up_dn((float)(-xy.y)/96.0F);
+                getMyJet().control_roll_lr((float)(-xy.x)/96.0F);
+                getMyJet().control_roll_up_dn((float)(-xy.y)/96.0F);
             }
         }
         
-		if(keyState_W) myJet.control_acc(0.05F);
+		if(keyState_W) getMyJet().control_acc(0.05F);
 		
 		if(keyState_A) {
-			if(myJet.isCannonFiring) myJet.control_turn_lr(-0.1875F);
-			else myJet.control_turn_lr(-0.5F);
+			if(getMyJet().isCannonFiring) getMyJet().control_turn_lr(-0.1875F);
+			else getMyJet().control_turn_lr(-0.5F);
 		}
 		
 		if(keyState_D) {
-			if(myJet.isCannonFiring) myJet.control_turn_lr(0.1875F);
-			else myJet.control_turn_lr(0.5F);
+			if(getMyJet().isCannonFiring) getMyJet().control_turn_lr(0.1875F);
+			else getMyJet().control_turn_lr(0.5F);
 		}
 		
 		if(keyState_Up) {
-            if(myJet.isCannonFiring) myJet.control_roll_up_dn(-0.1875F);
-            else myJet.control_roll_up_dn(-0.5F);
+            if(getMyJet().isCannonFiring) getMyJet().control_roll_up_dn(-0.1875F);
+            else getMyJet().control_roll_up_dn(-0.5F);
         }
         
         if(keyState_Dn) {
-            if(myJet.isCannonFiring) myJet.control_roll_up_dn(0.1875F);
-            else myJet.control_roll_up_dn(0.5F);
+            if(getMyJet().isCannonFiring) getMyJet().control_roll_up_dn(0.1875F);
+            else getMyJet().control_roll_up_dn(0.5F);
         }
 
         if(keyState_Lf) {
-            if(myJet.isCannonFiring) myJet.control_roll_lr(0.1875F);
-            else myJet.control_roll_lr(0.5F);
+            if(getMyJet().isCannonFiring) getMyJet().control_roll_lr(0.1875F);
+            else getMyJet().control_roll_lr(0.5F);
         }
         
         if(keyState_Rt) {
-            if(myJet.isCannonFiring) myJet.control_roll_lr(-0.1875F);
-            else myJet.control_roll_lr(-0.5F);
+            if(getMyJet().isCannonFiring) getMyJet().control_roll_lr(-0.1875F);
+            else getMyJet().control_roll_lr(-0.5F);
         }
         
-		if(keyState_S) myJet.control_brk();
-		else myJet.control_stop_breaking();
+		if(keyState_S) getMyJet().control_brk();
+		else getMyJet().control_stop_breaking();
 
-        if(keyState_X) myJet.makeDecoy();
+        if(keyState_X) getMyJet().makeDecoy();
         
-		if(keyState_SHIFT) myJet.control_push();
-		else myJet.control_stop_pushing();
+		if(keyState_SHIFT) getMyJet().control_push();
+		else getMyJet().control_stop_pushing();
 		
-		if(keyState_SPACE) myJet.cannonOpenFire();
-		else myJet.cannonStopFiring();
+		if(keyState_SPACE) getMyJet().cannonOpenFire();
+		else getMyJet().cannonStopFiring();
 		/*
 		if(myJet.isCannonFiring) {
             myJet.control_roll_lr((float)(-xy.x)/224.0F);
@@ -965,7 +955,8 @@ public class Game extends CharTimeSpace implements Runnable
 		mainCamera.setReversed(keyState_V);
 	}
 	
-	public void run()
+	@Override
+	public final void run()
 	{
 		//float tmp_float_arr_2[] = new float[2];
 	    
@@ -1027,7 +1018,7 @@ public class Game extends CharTimeSpace implements Runnable
 			printNew();
 			//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 		}
-		myJet.visible = false;
+		getMyJet().visible = false;
 		buffStatic();
 		EndScreen.visible = true;
 		scoreShow.visible = true;
@@ -1035,30 +1026,29 @@ public class Game extends CharTimeSpace implements Runnable
 		
 		try(FileWriter fw = new FileWriter(new File(recFile), true))
 		{
-			fw.write(myJet.getID());
+			fw.write(getMyJet().getID());
 			fw.write('\n');
 			fw.write(Long.toString(gameTimeUsed));
 			fw.write('\n');
-			fw.write(Integer.toString(myJet.killed));
+			fw.write(Integer.toString(getMyJet().killed));
 			fw.write('\n');
-			fw.write(Integer.toString(myJet.dead));
+			fw.write(Integer.toString(getMyJet().dead));
 			fw.write('\n');
 		}	catch(IOException exc){}
 	}
 	
-	protected void finalize() throws Throwable{
+	@Override
+	protected final void finalize() throws Throwable{
 		cloudManThread.interrupt();
 		bgmThread.interrupt();
 	}
 	
-	public void addGBlack(float val) {
+	public final void addGBlack(float val) {
 	    if((gBlack += val) > 255) gBlack = 255;
 	}
 	
-	public static void main(String[] args)
-    {
-        Game game = new Game
-        (
+	public static void main(String[] args) {
+        Game game = new Game(
             args[0] ,args[1] , args[2], args[3], args[4], args[5] ,
             args[6] , args[7], args[8], args[9], args[10], args[11], 
             args[12], args[13], args[14], args[15], 
@@ -1071,5 +1061,49 @@ public class Game extends CharTimeSpace implements Runnable
         
         game.getIntoGameWorld();
         game.run();
+    }
+	
+	public final void fireAmmo(Dynamic ammo) {
+        firedAmmo.add(ammo);
+    }
+
+    public final int getRespawnTime() {
+        return respawnTime;
+    }
+
+    public final void setRespawnTime(int respawnTime) {
+        this.respawnTime = respawnTime;
+    }
+
+    public final Aircraft getMyJet() {
+        return myJet;
+    }
+
+    public final void setMyJet(Aircraft myJet) {
+        this.myJet = myJet;
+    }
+    
+    public final float getWeaponMaxSearchingRange() {
+        return mainCamera.getMaxSearchingRange();
+    }
+    
+    public final float[] getPlayerCameraLocation() {
+        return mainCamera.location;
+    }
+    
+    public final float[] getPlayerLocation() {
+        return myJet.location;
+    }
+    
+    public final void throwDecoy(Decoy decoy) {
+        waitToAddQue.add(decoy);
+    }
+    
+    public final void decoyDisable(ListIterator<ThreeDs> decoyID) {
+        deleteQue.add(decoyID);
+    }
+    
+    public final void newEffect(Dynamic effect) {
+        effects.add(effect);
     }
 }

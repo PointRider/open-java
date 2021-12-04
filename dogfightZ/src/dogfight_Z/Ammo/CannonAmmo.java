@@ -1,33 +1,30 @@
 package dogfight_Z.Ammo;
 
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 
 import dogfight_Z.Aircraft;
-import dogfight_Z.Effects.ExplosionMaker;
-import graphic_Z.Cameras.CharFrapsCamera;
+import dogfight_Z.GameManagement;
+import dogfight_Z.Effects.Particle;
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Objects.CharMessObject;
 import graphic_Z.utils.GraphicUtils;
-//import graphic_Z.Worlds.CharTimeSpace;
 import graphic_Z.utils.LinkedListZ;
 
-public class CannonAmmo extends CharMessObject implements Dynamic
+public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 {
 	protected	 boolean	actived;
-	
-	public static int    	maxLife = 500;
+	public static final int maxLife = 500;
 	public		  int		life;
 	public		  int		myCamp;
 	public		  int		lifeLeft;
 	public		  long		lifeTo;
-	public		  float	speed;
-	public		  float	resistanceRate;
+	public		  float	    speed;
+	public		  float	    resistanceRate;
 	public		  float[]	temp;
-	public        PriorityQueue<Dynamic> effects;
-	public		  Aircraft	from;
+	public		  Aircraft	launcher;
 	public		  LinkedListZ<ThreeDs> aircrafts;
+    private       GameManagement gameManager;
 	
 	private static ArrayList<float[]> missileModelData;
 	static {
@@ -42,52 +39,23 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 		newPonit[4] = 0;
 		newPonit[5] = 0;
 		missileModelData.add(newPonit);
-		/*
-		newPonit = new float[3];
-		newPonit[0] = 0;
-		newPonit[1] = 0;
-		newPonit[2] = -1;
-		missileModelData.add(newPonit);
-		
-		newPonit = new float[3];
-		newPonit[0] = 0;
-		newPonit[1] = 1;
-		newPonit[2] = 0;
-		missileModelData.add(newPonit);
-		
-		newPonit = new float[3];
-		newPonit[0] = 0;
-		newPonit[1] = -1;
-		newPonit[2] = 0;
-		missileModelData.add(newPonit);
-		
-		newPonit = new float[3];
-		newPonit[0] = 1;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		missileModelData.add(newPonit);
-		
-		newPonit = new float[3];
-		newPonit[0] = -1;
-		newPonit[1] = 0;
-		newPonit[2] = 0;
-		missileModelData.add(newPonit);*/
 	}
 	
 	public CannonAmmo
 	(
-		int    lifeTime,
-		int    my_camp,
+	    GameManagement gameManager,
+		int   lifeTime,
+		int   my_camp,
 		float Speed,
 		float resistance_rate,
 		float Location[],
 		float Roll_angle[],
 		LinkedListZ<ThreeDs> Aircrafts,
-		PriorityQueue<Dynamic> Effects,
 		Aircraft souce
 	)
 	{
 		super(null, 1, true);
+		this.gameManager = gameManager;
 		specialDisplay	= '@';
 		temp 			= new float[3];
 		actived			= true;
@@ -96,8 +64,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 		speed			= Speed;
 		resistanceRate	= resistance_rate;
 		aircrafts		= Aircrafts;
-		effects			= Effects;
-		from			= souce;
+		launcher		= souce;
 		if(lifeTime > maxLife)
 			lifeTime = maxLife;
 		
@@ -118,29 +85,23 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 	}
 	
 	@Override
-	public void go()
-	{
+	public void go() {
+	    
 		if(!actived) return;
-		if(lifeLeft <= 0)
-		{
+		if(lifeLeft <= 0) {
 			disable();
 			return;
 		}
-		float x, y, z, t, r1, r2;
-		Aircraft aJet = null;
 		
+        Aircraft aJet = null;
+		float x, y, z, t, r1, r2;
 		for(int repeat = 0; repeat < 5; ++repeat)
 		{
 			//------------[go street]------------
             speed -= speed * resistanceRate;
-            /*
-			r1 = GraphicUtils.toRad(roll_angle[1]);
-			r2 = GraphicUtils.toRad(roll_angle[0]);
-			*/
             r1 = GraphicUtils.toRadians(roll_angle[1]);
             r2 = GraphicUtils.toRadians(roll_angle[0]);
 			t  = GraphicUtils.cos(r1) * speed;
-			//x  = GraphicUtils.tan(r1) * t;
 			x  = GraphicUtils.sin(r1) * speed;
 			y  = GraphicUtils.sin(r2) * t;
 			z  = GraphicUtils.cos(r2) * t;
@@ -149,18 +110,14 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 			location[1]	+= y;
 			location[2]	+= z;
 			
-			for(ThreeDs T:aircrafts)
-			{
+			for(ThreeDs T : aircrafts) {
 				aJet = (Aircraft) T;
-				if(aJet.getID().charAt(0) != '\n')
-				if(CharFrapsCamera.range(location, aJet.location) < 480)
-				{
-					if(aJet.camp != myCamp)
-					{
-						aJet.getDamage(5, from, "Cannon");
-						new ExplosionMaker(location, 10, 75, 0.01F, 0.1F, effects);
-						aJet.colorFlash(255, 255, 128, 128, 16, 16, 2);
-						from.colorFlash(255, 255, 128, 96, 72, 0, 2);
+				if(aJet.getID().charAt(0) != '\n' && aJet.isAlive() && GraphicUtils.range(location, aJet.location) < 480) {
+					if(aJet.getCamp() != myCamp) {
+						aJet.getDamage(5, launcher, "Cannon");
+						Particle.makeExplosion(gameManager, location, 10, 75, 0.01F, 0.1F);
+						if(aJet.isPlayer()) aJet.getGameManager().colorFlash(255, 255, 128, 128, 16, 16, 2);
+						if(launcher.isPlayer()) launcher.getGameManager().colorFlash(255, 255, 128, 96, 72, 0, 2);
 						disable();
 						return;
 					}
@@ -171,30 +128,41 @@ public class CannonAmmo extends CharMessObject implements Dynamic
 		--lifeLeft;
 	}
 	
-	public void disable() 
-	{
+	public final void disable() {
 		actived = visible = false;
 	}
 	
-	public boolean deleted()
-	{
+	public final boolean deleted() {
 		return !actived;
 	}
 	
 	@Override
-	public int compareTo(Dynamic o)
-	{
+	public final int compareTo(Dynamic o) {
 		return (int) (getLife() - o.getLife());
 	}
 
 	@Override
-	public long getLife()
-	{
+	public final long getLife() {
 		return lifeTo;
 	}
 	
-	public int getHash()
-	{
+	public final int getHash() {
 		return this.hashCode();
 	}
+
+    @Override
+    public final int getDamage() {
+        //disable();
+        return 5;
+    }
+
+    @Override
+    public final String getLauncherID() {
+        return launcher.getID();
+    }
+
+    @Override
+    public final String getWeaponName() {
+        return "Cannon";
+    }
 }

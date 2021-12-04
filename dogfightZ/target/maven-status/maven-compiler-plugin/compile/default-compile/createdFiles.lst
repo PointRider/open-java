@@ -56,9 +56,9 @@ dogfight_Z\dogLog\view\PiLog$4.class
 dogfight_Z\Ammo\CannonAmmo.class
 graphic_Z\Interfaces\Dynamic.class
 dogfight_Z\dogLog\dao\PlayerProfileDAOImp.class
-dogfight_Z\Effects\ExplosionMaker.class
 dogfight_Z\dogLog\controller\TipsMenu$1.class
 startTheWorld\SoundTrackSelector$3.class
+dogfight_Z\GameManagement.class
 graphic_Z\HUDs\CharHUD.class
 startTheWorld\Start_GUI$4$1.class
 dogfight_Z\Ammo\Missile.class
@@ -90,6 +90,7 @@ startTheWorld\SoundTrackSelector$2.class
 startTheWorld\Start_GUI$5.class
 dogfight_Z\dogLog\utils\ArgsList.class
 graphic_Z\utils\LinkedListZ$Node.class
+dogfight_Z\GameManager.class
 graphic_Z\Common\Operation.class
 graphic_Z\Managers\CharVisualManager.class
 startTheWorld\Start_GUI$7$1.class
@@ -141,7 +142,6 @@ dogfight_Z\dogLog\controller\PilotRegist$4.class
 dogfight_Z\dogLog\controller\PilotLog$3.class
 dogfight_Z\dogLog\controller\PilotRegist$1$2.class
 graphic_Z\HUDs\CharLabel.class
-dogfight_Z\Ammo\DecoyMaker.class
 jmp123\decoder\Header.class
 graphic_Z\HUDs\HUD.class
 jmp123\decoder\Synthesis.class
@@ -178,6 +178,7 @@ dogfight_Z\dogLog\utils\JDBCFactory$3.class
 jmp123\demo\Test.class
 graphic_Z\HUDs\CharButton.class
 dogfight_Z\dogLog\view\Menu$1.class
+dogfight_Z\Ammo\Dangerous.class
 dogfight_Z\dogLog\controller\TipsConfirmMenu.class
 graphic_Z\Cameras\CharFrapsCamera.class
 dogfight_Z\dogLog\utils\JDBCFactory.class

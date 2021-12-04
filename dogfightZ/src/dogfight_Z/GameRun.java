@@ -23,7 +23,6 @@ public class GameRun {
         "RaderPainter.hud",
         "ScoreHUD.hud",
         "config_NPC.cfg",
-        "gameRecord.rec",
         "config_OST.cfg",
         "GuiBackground.jpg"
     };

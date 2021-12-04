@@ -135,7 +135,7 @@ public class Radar extends CharDynamicHUD
 		for(ThreeDs a : aircrafts)
 		{
 			aTarget = (Aircraft) a;
-			if(aTarget.getID().equals(myself.getID()) || aTarget.camp == -1 || !aTarget.isAlive)
+			if(aTarget.getID().equals(myself.getID()) || aTarget.getCamp() == -1 || !aTarget.isAlive())
 				continue;
 			myself.getRelativePosition_XY(aTarget.location[1], aTarget.location[2], tmp_float_xy);
 			
@@ -159,7 +159,7 @@ public class Radar extends CharDynamicHUD
 				if(x < 0) x = 0;
 				if(y < 0) y = 0;
 				
-				back[y][x] = (aTarget.camp == myself.camp? 'o' : '@');
+				back[y][x] = (aTarget.getCamp() == myself.getCamp()? 'o' : 'X');
 			}
 		}
 		

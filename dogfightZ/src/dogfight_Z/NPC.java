@@ -43,7 +43,7 @@ public class NPC extends Aircraft
 	//------------------------------------------
 	public NPC
 	(
-		Game					theGame,
+		GameManager			    theGameManager,
 		String					modelFile, 
 		String					id,
 		float					Mess, 
@@ -53,13 +53,12 @@ public class NPC extends Aircraft
 		int 					scrResolution_Y,
 		int					    camp,
 		PriorityQueue<Dynamic>	firedAmmo, 
-		PriorityQueue<Dynamic>	Effects,  
 		LinkedList<ThreeDs>		add_que,
 		LinkedList<ListIterator<ThreeDs>>		delete_que,
 		LinkedListZ<ThreeDs>	Aircrafts
 	)
 	{
-		super(theGame, modelFile, Mess, camp, firedAmmo, Effects, delete_que, add_que, Aircrafts, null, id, true);
+		super(theGameManager, modelFile, Mess, camp, Aircrafts, null, id, true);
 		scrResolution		= new int[2];
 		point_on_Scr		= new float[2];
 		//point_on_Old		= new float[2];
@@ -67,11 +66,11 @@ public class NPC extends Aircraft
 		maxSearchingRange	= searching_visibility;
 		scrResolution[0]	= scrResolution_X;
 		scrResolution[1]	= scrResolution_Y;
-		halfAResolution_X	= scrResolution[0] / 2;
-		halfAResolution_Y	= scrResolution[1] / 2;
+		halfAResolution_X	= scrResolution[0] >> 1;
+		halfAResolution_Y	= scrResolution[1] >> 1;
 		tracingTarget		= null;
 		currentSelectObj	= null;
-		isPlayer			= false;
+		setPlayer(false);
 		goStreetTime		= (GraphicUtils.randomInt(500));
 		turnLRTime			= 0;
 		roll_up_dn_Time		= 0;
@@ -83,46 +82,46 @@ public class NPC extends Aircraft
 	}
 	
 	public void pursuit(float range_to_me) {
-		if(speed < tracingTarget.speed || range_to_me > 5000)
+		if(getSpeed() < tracingTarget.getSpeed() || range_to_me > 5000)
 			control_acc();
-		else if(speed > tracingTarget.speed && speed > minStableSpeed)
+		else if(getSpeed() > tracingTarget.getSpeed() && getSpeed() > getMinStableSpeed())
 			control_dec();
 		
-		if(maxVelRollUp > maxVelTurnLR)
+		if(getMaxVelRollUp() > getMaxVelTurnLR())
 		{
 			if(point_on_Scr[0] > halfAResolution_X)
-				control_roll_lr(-maxVelRollLR * maxMotionRate/* * (point_on_Scr[0] * 2 - point_on_Old[0] - halfAResolution_X)*/);
+				control_roll_lr(-getMaxVelRollLR() * maxMotionRate/* * (point_on_Scr[0] * 2 - point_on_Old[0] - halfAResolution_X)*/);
 			else if(point_on_Scr[0] < halfAResolution_X)
-				control_roll_lr(maxVelRollLR * maxMotionRate/* * (halfAResolution_X - point_on_Scr[0] * 2 + point_on_Old[0])*/);
+				control_roll_lr(getMaxVelRollLR() * maxMotionRate/* * (halfAResolution_X - point_on_Scr[0] * 2 + point_on_Old[0])*/);
 			}
-		else if(maxVelRollUp < maxVelTurnLR)
+		else if(getMaxVelRollUp() < getMaxVelTurnLR())
 		{
 			if(point_on_Scr[1] > halfAResolution_Y)
-				control_roll_lr(-maxVelRollLR * maxMotionRate/* * (point_on_Scr[1] * 2 - point_on_Old[1] - halfAResolution_Y)*/);
+				control_roll_lr(-getMaxVelRollLR() * maxMotionRate/* * (point_on_Scr[1] * 2 - point_on_Old[1] - halfAResolution_Y)*/);
 			else if(point_on_Scr[1] < halfAResolution_Y)
-				control_roll_lr(maxVelRollLR * maxMotionRate/* * (halfAResolution_Y) - point_on_Scr[1] * 2 + point_on_Old[1]*/);
+				control_roll_lr(getMaxVelRollLR() * maxMotionRate/* * (halfAResolution_Y) - point_on_Scr[1] * 2 + point_on_Old[1]*/);
 		}
 		
 		if(point_on_Scr[0] > halfAResolution_X)
-			control_turn_lr(maxVelTurnLR * maxMotionRate/* * (point_on_Scr[0] * 2 - point_on_Old[0] - halfAResolution_X)*/);
+			control_turn_lr(getMaxVelTurnLR() * maxMotionRate/* * (point_on_Scr[0] * 2 - point_on_Old[0] - halfAResolution_X)*/);
 		else if(point_on_Scr[0] < halfAResolution_X)
-			control_turn_lr(-maxVelTurnLR * maxMotionRate/* * (halfAResolution_X - point_on_Scr[0] * 2 + point_on_Old[0])*/);
+			control_turn_lr(-getMaxVelTurnLR() * maxMotionRate/* * (halfAResolution_X - point_on_Scr[0] * 2 + point_on_Old[0])*/);
 		
 		if(point_on_Scr[1] > halfAResolution_Y)
-			control_roll_up_dn(-maxVelRollUp * maxMotionRate/* * (point_on_Scr[1] * 2 - point_on_Old[1] - halfAResolution_Y)*/);
+			control_roll_up_dn(-getMaxVelRollUp() * maxMotionRate/* * (point_on_Scr[1] * 2 - point_on_Old[1] - halfAResolution_Y)*/);
 		else if(point_on_Scr[1] < halfAResolution_Y)
-			control_roll_up_dn(maxVelRollUp * maxMotionRate/* * (halfAResolution_Y - point_on_Scr[1] * 2 + point_on_Old[1])*/);
+			control_roll_up_dn(getMaxVelRollUp() * maxMotionRate/* * (halfAResolution_Y - point_on_Scr[1] * 2 + point_on_Old[1])*/);
 		
 		//System.arraycopy(point_on_Scr, 0, point_on_Old, 0, 2);
 	}
 	
 	public void trace()
 	{
-		if(tracingTarget != null  &&  tracingTarget.isAlive)
+		if(tracingTarget != null  &&  tracingTarget.isAlive())
 		{		
 			float range_to_Scr = CharFrapsCamera.getXY_onCamera (
 				tracingTarget.location[0], tracingTarget.location[1], tracingTarget.location[2], 
-				scrResolution[0], scrResolution[1], location, cameraRollAngle, point_on_Scr, 2.6F
+				scrResolution[0], scrResolution[1], location, getCameraRollAngle(), point_on_Scr, 2.6F
 			);
 			
 			if(range_to_Scr > 0) {
@@ -130,7 +129,7 @@ public class NPC extends Aircraft
 				
 				if(
 					range_to_Scr < maxSearchingRange    &&    
-					CharFrapsCamera.rangeXY(point_on_Scr[0], point_on_Scr[1], halfAResolution_X, halfAResolution_Y) < 24
+					GraphicUtils.rangeXY(point_on_Scr[0], point_on_Scr[1], halfAResolution_X, halfAResolution_Y) < 24
 				) {
 					cannonOpenFire();
 					Aircraft aJet;
@@ -140,25 +139,25 @@ public class NPC extends Aircraft
 					for(ThreeDs a : aircrafts)
 					{
 						aJet = (Aircraft) a;
-						if(aJet.camp == camp  ||  !aJet.isAlive) continue;
+						if(aJet.getCamp() == getCamp()  ||  !aJet.isAlive()) continue;
 						
 						range_to_Scr = CharFrapsCamera.getXY_onCamera
 						(
 							aJet.location[0], aJet.location[1], aJet.location[2], 
-							scrResolution[0], scrResolution[1], location, cameraRollAngle, point_on_Scr, 2.6F
+							scrResolution[0], scrResolution[1], location, getCameraRollAngle(), point_on_Scr, 2.6F
 						);
 						
 						if
 						(
 							range_to_Scr > 0    &&    range_to_Scr < maxSearchingRange    &&    
-							CharFrapsCamera.rangeXY(point_on_Scr[0], point_on_Scr[1], halfAResolution_X, halfAResolution_Y) < 24
+							GraphicUtils.rangeXY(point_on_Scr[0], point_on_Scr[1], halfAResolution_X, halfAResolution_Y) < 24
 						)
 						{
-							if(currentSelectObj == null || currentMaxLockingPriority < GraphicUtils.abs(aJet.lockingPriority) && !currentSelectObj.getID().equals(aJet.getID()))
+							if(currentSelectObj == null || currentMaxLockingPriority < GraphicUtils.abs(aJet.getLockingPriority()) && !currentSelectObj.getID().equals(aJet.getID()))
 							{	//当前选择目标切换到优先级更高的	(发生切换)
-								if(aJet.lockingPriority > 0)
+								if(aJet.getLockingPriority() > 0)
 									tracingTarget			= aJet;
-								currentMaxLockingPriority	= (short) GraphicUtils.abs(aJet.lockingPriority);
+								currentMaxLockingPriority	= (short) GraphicUtils.abs(aJet.getLockingPriority());
 								currentSelectObj			= aJet;
 								lockTimeLeft				= lockTime;
 								locked						= false;
@@ -171,7 +170,7 @@ public class NPC extends Aircraft
 									lockingSelected = true;
 									if(locked)
 									{
-										if(aJet.lockingPriority >= 0) aJet.warning(this);
+										if(aJet.getLockingPriority() >= 0) aJet.warning(this);
 										if(missileMagazineLeft > 0)   missileOpenFire(false, aJet);
 									}
 									else
@@ -179,12 +178,12 @@ public class NPC extends Aircraft
 										if(--lockTimeLeft <= 0)
 										{
 											locked = true;
-											if(tracingTarget.lockingPriority >= 0) tracingTarget.warning(this);
+											if(tracingTarget.getLockingPriority() >= 0) tracingTarget.warning(this);
 											if(missileMagazineLeft > 0)            missileOpenFire(false, aJet);
 										}
 										else
 										{
-											if(tracingTarget.lockingPriority >= 0)
+											if(tracingTarget.getLockingPriority() >= 0)
 												tracingTarget.warning(this);
 										}
 									}
@@ -201,7 +200,7 @@ public class NPC extends Aircraft
 						tracingTarget			  = null;
 					}
 					
-					if(currentSelectObj!=null && currentSelectObj.lockingPriority >= 0)
+					if(currentSelectObj!=null && currentSelectObj.getLockingPriority() >= 0)
 						currentSelectObj.warning(this);
 				}
 				else cannonStopFiring();
@@ -211,175 +210,102 @@ public class NPC extends Aircraft
 		else cannonStopFiring();
 	}
 	
-	public void cruise
-	(
+	public void cruise(
 		int motionRate,
 		float maxRollAngle_lr,
 		float minAcc,
 		float time_street,
 		float time_turn,
 		float time_up_dn
-	)
-	{
+	) {
 			currentMaxLockingPriority = 0;
 			//if(missileMagazineLeft < missileMagazine) missileOpenFire(false, null); //清空弹舱，重新装填
 			
-			if(control_stick_acc < minAcc)      control_acc();
-			else if(control_stick_acc > minAcc) control_dec();
+			if(getControl_stick_acc() < minAcc)      control_acc();
+			else if(getControl_stick_acc() > minAcc) control_dec();
 			
-			if(--goStreetTime > 0)
-			{
+			if(--goStreetTime > 0) {
 				
 				if(roll_angle[2] < 0)
-					control_roll_lr(maxVelRollLR / motionRate);
+					control_roll_lr(getMaxVelRollLR() / motionRate);
 				else if(roll_angle[2] > 0)
-					control_roll_lr(maxVelRollLR / -motionRate);
+					control_roll_lr(getMaxVelRollLR() / -motionRate);
 				
 				if(location[0] < -3500 && roll_angle[1] > -15)
-					control_roll_up_dn(maxVelRollLR / -motionRate);		//down
+					control_roll_up_dn(getMaxVelRollLR() / -motionRate);		//down
 				else if(location[0] > -1250 && roll_angle[1] < 30)
-					control_roll_up_dn(maxVelRollLR / motionRate);		//up
-				else
-				{
-					if(--roll_up_dn_Time > 0)
-					{
+					control_roll_up_dn(getMaxVelRollLR() / motionRate);		//up
+				else {
+					if(--roll_up_dn_Time > 0) {
 						if(turnUp && roll_angle[1] < maxRollAngle_lr)
-							control_roll_up_dn(maxVelRollLR / motionRate);
+							control_roll_up_dn(getMaxVelRollLR() / motionRate);
 						else if(!turnUp && roll_angle[1] > -maxRollAngle_lr)
-							control_roll_up_dn(maxVelRollLR / -motionRate);
-					}
-					else
-					{
+							control_roll_up_dn(getMaxVelRollLR() / -motionRate);
+					} else {
 						if(roll_angle[1] > 0)
-							control_roll_up_dn(maxVelRollLR / -motionRate);		//down
+							control_roll_up_dn(getMaxVelRollLR() / -motionRate);		//down
 						else if(roll_angle[1] < 0)
-							control_roll_up_dn(maxVelRollLR / motionRate);		//up
+							control_roll_up_dn(getMaxVelRollLR() / motionRate);		//up
 					}
 				}
 			}
-			else if(--turnLRTime > 0)
-			{
-				if(turnRight)
-				{
+			else if(--turnLRTime > 0) {
+				if(turnRight) {
 					if(roll_angle[2] > -maxRollAngle_lr)
-						control_roll_lr(maxVelRollLR / -motionRate);	//l
+						control_roll_lr(getMaxVelRollLR() / -motionRate);	//l
 					else if(roll_angle[2] < -maxRollAngle_lr)
-						control_roll_lr(maxVelRollLR / motionRate);	//r
+						control_roll_lr(getMaxVelRollLR() / motionRate);	//r
 					
-					roll_up_dn(velocity_roll[1] * 2 * GraphicUtils.sin(GraphicUtils.toRadians(maxRollAngle_lr)) / GraphicUtils.cos(GraphicUtils.toRadians(maxRollAngle_lr)));
+					roll_up_dn(velocity_roll[1] * 2 * GraphicUtils.sin(GraphicUtils.toRadians(maxRollAngle_lr)) 
+					        / GraphicUtils.cos(GraphicUtils.toRadians(maxRollAngle_lr)));
 					
-					control_turn_lr(maxVelRollLR / motionRate);
-				}
-				else
-				{
+					control_turn_lr(getMaxVelRollLR() / motionRate);
+				} else {
 					if(roll_angle[2] < maxRollAngle_lr)
-						control_roll_lr(maxVelRollLR / motionRate);	//r
+						control_roll_lr(getMaxVelRollLR() / motionRate);	//r
 					else if(roll_angle[2] > maxRollAngle_lr)
-						control_roll_lr(maxVelRollLR / -motionRate);	//l
+						control_roll_lr(getMaxVelRollLR() / -motionRate);	//l
 					
-					roll_up_dn(-velocity_roll[1] * 2 * GraphicUtils.sin(GraphicUtils.toRadians(maxRollAngle_lr)) / GraphicUtils.cos(GraphicUtils.toRadians(maxRollAngle_lr)));
+					roll_up_dn(-velocity_roll[1] * 2 * GraphicUtils.sin(GraphicUtils.toRadians(maxRollAngle_lr)) 
+					        / GraphicUtils.cos(GraphicUtils.toRadians(maxRollAngle_lr)));
 	
-					control_turn_lr(maxVelRollLR / -motionRate);
+					control_turn_lr(getMaxVelRollLR() / -motionRate);
 				}
 				
 				if(location[0] < -2500 && roll_angle[1] > -15)
-					control_roll_up_dn(maxVelRollLR / -motionRate);		//down
+					control_roll_up_dn(getMaxVelRollLR() / -motionRate);		//down
 				else if(location[0] > -1250 && roll_angle[1] < 30)
-					control_roll_up_dn(maxVelRollLR / motionRate);		//up
-			}
-			else
-			{
-				boolean RandomFlg = (GraphicUtils.random() > 0.5? true : false);
+					control_roll_up_dn(getMaxVelRollLR() / motionRate);		//up
+			} else {
+				boolean RandomFlg = ((GraphicUtils.fastRanodmInt() & 1) == 0? true : false);
 				if(RandomFlg)
-					goStreetTime = (short) (GraphicUtils.random() * time_street);
-				else
-				{
-					turnLRTime = (short) (GraphicUtils.random() * time_turn);
-					turnRight  = (GraphicUtils.random() > 0.5? true : false);
-					
+					goStreetTime = (int) (GraphicUtils.random() * time_street);
+				else {
+					turnLRTime = (int) (GraphicUtils.random() * time_turn);
+					turnRight  = ((GraphicUtils.fastRanodmInt() & 1) == 0? true : false);
 				}
-				roll_up_dn_Time = (short) (GraphicUtils.random() * time_up_dn);
-				turnUp  = (GraphicUtils.random() > 0.5? true : false);
+				roll_up_dn_Time = (int) (GraphicUtils.random() * time_up_dn);
+				turnUp  = ((GraphicUtils.fastRanodmInt() & 1) == 0? true : false);
 			}
 	}
 
-	public void cruise()
-	{
-		cruise(8, 30, 18, 750, 500, 250);
-	}
-	
-	public void escape() {
-		cruise(4, 30, 22, 500, 500, 250);
-	}
+	public void cruise() { cruise(8, 30, 18, 750, 500, 250); }
+	public void escape() { cruise(4, 30, 22, 500, 500, 250); }
 	
 	@Override
 	public Missile missileOpenFire(boolean cameraTrace, Aircraft target)
 	{
-		if(missileMagazineLeft > 0 && missileFireWaitingTimeLeft <= 0)
-		{
-			cannonLocation[0] = 35;
-			cannonLocation[1] = 0;
-			cannonLocation[2] = 0;
-			
-			if(cannonGunFlg % 2 == 0)
-				cannonLocation[1] += 75;
-			else cannonLocation[1] -= 75;
-			if(cannonGunFlg < 2)
-				cannonLocation[0] += 10;
-			else cannonLocation[0] -= 10;
-			
-			getXYZ_afterRolling
-			(
-				cannonLocation[0], cannonLocation[1], cannonLocation[2],
-				roll_angle[0],	   roll_angle[1],	  roll_angle[2],
-				
-				cannonLocation
-			);
-			
-			cannonLocation[0] += location[0];
-			cannonLocation[1] += location[1];
-			cannonLocation[2] += location[2];
-			
-			Missile m;
-			
-			if(cameraTrace)
-			{
-				m = new Missile
-				(
-					(short)1280, speed/2+5, 512, resistanceRate_normal, 
-					cannonLocation, roll_angle, 20, 512, 3.0F, this, target, mainCamera
-				);
-			}
-			else
-			{
-				m = new Missile
-				(
-					(short)1280, speed/2+5, 512, resistanceRate_normal, 
-					cannonLocation, roll_angle, 20, 512, 3.0F, this, target, null
-				);
-			}
-			
-			fired.add(m);
-			
-			colorFlash(255, 255, 255, 0, 64, 96, 6);
-			if(++cannonGunFlg == 4)
-				cannonGunFlg = 0;
-
-			if(--missileMagazineLeft == 0)
-				missileReloadingTimeLeft = missileReloadingTime;
-			
-			missileFireWaitingTimeLeft = missileFireWaitingTime;
-			return m;
-		}
-		else return null;
+		if(missileMagazineLeft <= 0 || missileFireWaitingTimeLeft > 0 || !isAlive()) return null;
+		Missile m = newMissile(cameraTrace, target);
+		missileFireWaitingTimeLeft = missileFireWaitingTime;
+		return m;
 	}
 	
 	@Override
-	public void go()
-	{
-		cameraRollAngle[0] = -roll_angle[0];
-		cameraRollAngle[1] = -roll_angle[1];
-		cameraRollAngle[2] = -roll_angle[2];
+	public void go() {
+		getCameraRollAngle()[0] = -roll_angle[0];
+		getCameraRollAngle()[1] = -roll_angle[1];
+		getCameraRollAngle()[2] = -roll_angle[2];
 		
 		if(locked_By != null)
 			tracingTarget = locked_By;
@@ -387,38 +313,33 @@ public class NPC extends Aircraft
 		float range_to_Scr;
 		Aircraft aJet;
 		
-		if(tracingTarget == null)
-		{
+		if(tracingTarget == null) {
 			currentMaxLockingPriority = 0;
 			lockingSelected = false;
-			for(ThreeDs a : aircrafts)
-			{
+			for(ThreeDs a : aircrafts) {
 				aJet = (Aircraft) a;
-				if(aJet.camp == camp  ||  !aJet.isAlive)
+				if(aJet.getCamp() == getCamp()  ||  !aJet.isAlive())
 					continue;
 				
-				range_to_Scr = CharFrapsCamera.getXY_onCamera
-				(
+				range_to_Scr = CharFrapsCamera.getXY_onCamera(
 					aJet.location[0], aJet.location[1], aJet.location[2], 
-					scrResolution[0], scrResolution[1], location, cameraRollAngle, point_on_Scr, 2.6F
+					scrResolution[0], scrResolution[1], location, getCameraRollAngle(), point_on_Scr, 2.6F
 				);
 				
-				if
-				(
+				if(
 					range_to_Scr    > 0 && range_to_Scr    < maxSearchingRange &&    
 					point_on_Scr[0] > 0 && point_on_Scr[0] < scrResolution[0]  &&
 					point_on_Scr[1] > 0 && point_on_Scr[1] < scrResolution[1]
 					
-				)	
-				{
+				) {
 					//point_on_Old[0] = point_on_Scr[0];
 					//point_on_Old[1] = point_on_Scr[1];
 					
-					if(currentSelectObj == null || currentMaxLockingPriority < GraphicUtils.abs(aJet.lockingPriority) && !currentSelectObj.getID().equals(aJet.getID()))
+					if(currentSelectObj == null || currentMaxLockingPriority < GraphicUtils.abs(aJet.getLockingPriority()) && !currentSelectObj.getID().equals(aJet.getID()))
 					{
-						if(aJet.lockingPriority > 0)
+						if(aJet.getLockingPriority() > 0)
 							tracingTarget			= aJet;
-						currentMaxLockingPriority	= (short) GraphicUtils.abs(aJet.lockingPriority);
+						currentMaxLockingPriority	= (short) GraphicUtils.abs(aJet.getLockingPriority());
 						currentSelectObj			= aJet;
 						lockTimeLeft				= lockTime;
 						locked						= false;
@@ -427,28 +348,25 @@ public class NPC extends Aircraft
 				}
 			}
 			
-			if(!lockingSelected)
-			{
+			if(!lockingSelected) {
 				currentMaxLockingPriority = 0;
 				currentSelectObj		  = null;
 				lockTimeLeft			  = lockTime;
 				tracingTarget			  = null;
 			}
 			
-			if(currentSelectObj!=null && currentSelectObj.lockingPriority > 0)
+			if(currentSelectObj!=null && currentSelectObj.getLockingPriority() > 0)
 				currentSelectObj.warning(this);
 		}
 		
-		if(tracingTarget != null && tracingTarget.isAlive && tracingTarget.lockingPriority > 0 || lockedByEnemy && locked_By.isAlive)
+		if(tracingTarget != null && tracingTarget.isAlive() && tracingTarget.getLockingPriority() > 0 || lockedByEnemy && locked_By.isAlive())
 			trace();
-		else
-		{
+		else {
 			cannonStopFiring();
 			cruise();
 		}
 		
-		if(--lockingLife <= 0)
-		{
+		if(--lockingLife <= 0) {
 			lockedByEnemy = false;
 			locked_By     = null;
 		}

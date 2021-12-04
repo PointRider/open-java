@@ -4,13 +4,13 @@ import java.util.ListIterator;
 
 public interface ThreeDs extends Runnable
 {
-	public boolean  constructWithLine();
-	public float[] getLocation();
-	public float[] getRollAngle();
-	public boolean  getVisible();
-	public int		getPointsCount();
-	public float[] getPoint(int index);
-	public void 	go();
-	public char		getSpecialDisplayChar();
-	public void     setIterator(ListIterator<ThreeDs> itr);
+	boolean constructWithLine();
+	float[] getLocation();
+	float[] getRollAngle();
+	boolean getVisible();
+    int	    getPointsCount();
+	float[] getPoint(int index);
+	void    go();
+    char	getSpecialDisplayChar();
+	void    setIterator(ListIterator<ThreeDs> itr);
 }

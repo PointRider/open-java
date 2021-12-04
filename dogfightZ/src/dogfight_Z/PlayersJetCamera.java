@@ -19,7 +19,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 	public CharLabel	  hudDistance;
 	public CharDynamicHUD hudWarning_missile;
 	
-	public float 		  maxSearchingRange;
+	private float 		  maxSearchingRange;
 	public Aircraft		  myJet;
 	//-------------------------------------------------
 	public Aircraft		  currentSelectObj;
@@ -63,7 +63,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 		locked		= false;
 		lockingSelected = false;
 		currentSelectObj = null;
-		maxSearchingRange = max_searchingRange;
+		setMaxSearchingRange(max_searchingRange);
 		currentMaxLockingPriority = 0;
 
 		hudDistance = new CharLabel(frapsBuffer, (short)0, resolution_XY, true);
@@ -117,7 +117,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 		
 		for(ThreeDs aObject:inWorld.objectsManager.objects)	//for each object
 		{
-			if(aObject instanceof Aircraft) a = (Aircraft)aObject; else a = null;
+			a = (Aircraft)aObject;
 			locationOfanObj = aObject.getLocation();
 			/*
 			spc = aObject.getSpecialDisplayChar();
@@ -127,16 +127,14 @@ public class PlayersJetCamera extends CharFrapsCamera
 			r1 = rad(rollAngleOfanObj[1]);
 			r2 = rad(rollAngleOfanObj[2]);
 			*/
-			rge = exposureObject(aObject, rad(roll_angle[0]), rad(roll_angle[1]), rad(roll_angle[2]), false);
+			rge = exposureObject(aObject, GraphicUtils.toRadians(roll_angle[0]), GraphicUtils.toRadians(roll_angle[1]), GraphicUtils.toRadians(roll_angle[2]), false);
 			
-			if(rge > maxSearchingRange) try
+			if(rge > getMaxSearchingRange()) /*try*/
 			{
-				Aircraft tmp = (Aircraft)aObject;
-				if(!tmp.getID().equals(myJet.getID()))	//防止视角跟随导弹行进时将自己的进行战机拉回
-					tmp.pollBack();
-			} catch(ClassCastException e) {}
+				if(a != myJet) a.pollBack();	//防止视角跟随导弹行进时将自己的进行战机拉回
+			} /*catch(ClassCastException e) {System.err.println(aObject.toString());}*/
 			
-			if(a==null || a.getID().equals(myJet.getID()) || !a.isAlive || !myJet.isAlive) continue;
+			if(/*a==null ||*/ a.getID().equals(myJet.getID()) || !a.isAlive() || !myJet.isAlive()) continue;
 			
 			float range_to_Scr = CharFrapsCamera.getXY_onCamera
 			(
@@ -146,12 +144,12 @@ public class PlayersJetCamera extends CharFrapsCamera
 			
 			if
 			(
-				range_to_Scr > 0    &&    range_to_Scr < maxSearchingRange    &&    
-				rangeXY(point_on_Scr[0], point_on_Scr[1], XcenterI, YcenterI) < 24
+				range_to_Scr > 0    &&    range_to_Scr < getMaxSearchingRange()    &&    
+				GraphicUtils.rangeXY(point_on_Scr[0], point_on_Scr[1], XcenterI, YcenterI) < 24
 			)
 			{
 				hudDistance.setText(String.format("%.0f", range_to_Scr));
-				if(a.camp == thisCamp) //友军
+				if(a.getCamp() == thisCamp) //友军
 				{
 					hudFriends.location[0] = (int) point_on_Scr[0];
 					hudFriends.location[1] = (int) point_on_Scr[1];
@@ -161,9 +159,9 @@ public class PlayersJetCamera extends CharFrapsCamera
 				}
 				else //敌军
 				{
-					if(/*myJet.missileMagazineLeft > 0  &&  */GraphicUtils.absI(currentMaxLockingPriority) < GraphicUtils.absI(a.lockingPriority)  &&  !reversed)
+					if(/*myJet.missileMagazineLeft > 0  &&  */GraphicUtils.absI(currentMaxLockingPriority) < GraphicUtils.absI(a.getLockingPriority())  &&  !reversed)
 					{	//当前选择目标切换到优先级更高的	(发生切换)
-						currentMaxLockingPriority	= a.lockingPriority;
+						currentMaxLockingPriority	= a.getLockingPriority();
 						currentSelectObj			= a;
 						lockTimeLeft				= lockTime;
 						locked						= false;
@@ -178,7 +176,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 					}
 					else //未发生优先级切换
 					{
-						if(/*myJet.missileMagazineLeft > 0  &&  */location == myJet.cameraLocation && currentSelectObj!=null && a!=null && currentSelectObj.getID().equals(a.getID())  &&  !reversed)//
+						if(/*myJet.missileMagazineLeft > 0  &&  */location == myJet.getCameraLocation() && currentSelectObj!=null && a!=null && currentSelectObj.getID().equals(a.getID())  &&  !reversed)//
 						{//如果正在锁定或者已锁定了a
 							lockingSelected = true;//设置已选择锁定a的状态
 							if(locked)//已锁定
@@ -249,5 +247,13 @@ public class PlayersJetCamera extends CharFrapsCamera
 		
 		return null;
 	}
+
+    public final float getMaxSearchingRange() {
+        return this.maxSearchingRange;
+    }
+
+    public final void setMaxSearchingRange(float maxSearchingRange) {
+        this.maxSearchingRange = maxSearchingRange;
+    }
 	
 }

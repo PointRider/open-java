@@ -1,26 +1,21 @@
 package dogfight_Z.Ammo;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.PriorityQueue;
-
 import dogfight_Z.Aircraft;
+import dogfight_Z.GameManagement;
 import dogfight_Z.Effects.EngineFlame;
 import graphic_Z.Interfaces.Dynamic;
-import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Worlds.CharTimeSpace;
 import graphic_Z.utils.GraphicUtils;
 
 public class Decoy extends Aircraft implements Dynamic
 {
-	public float  velocity;
-	public float  resistanceRate;
-	public int   lifeLeft;
-	public int   life;
-	public long lifeTo;
-	public boolean end;
-	public float Roll_angle_Aircraft[];
+	private float   velocity;
+	private int     lifeLeft;
+	private int     life;
+	private long    lifeTo;
+	private boolean end;
+	private float   Roll_angle_Aircraft[];
 	
 private static ArrayList<float[]> missileModelData;
 	
@@ -66,35 +61,61 @@ private static ArrayList<float[]> missileModelData;
 		missileModelData.add(newPonit);
 	}
 	
-	public Decoy
+	public static final void make (
+        GameManagement gameManager,
+        int   camp,
+        float location[], 
+        float rollAngle_aircraft[],
+        float speedAircraft,
+        float velocity,
+        int   lifeTime, 
+        float density, 
+        float resistanceRate
+    ) {
+        float roll[] = new float[3];
+        for(float x=105 ; x<=255 ; x+=1/density) {
+            for(float y=-30 ; y<0 ; y+=1/density) {
+                roll[0] = x;
+                roll[1] = y;
+                gameManager.throwDecoy (
+                    new Decoy (
+                        gameManager, camp, lifeTime, velocity, speedAircraft, 
+                        resistanceRate, location, roll, 
+                        new float[] {rollAngle_aircraft[0], rollAngle_aircraft[1], rollAngle_aircraft[2]}
+                    )
+                );
+            }
+        }
+    }
+	
+	private Decoy
 	(
-		int  campTo,
-		int  lifeTime,
+	    GameManagement gameManager,
+		int   campTo,
+		int   lifeTime,
 		float Speed,
 		float Speed_aircraft,
 		float resistance_rate,
 		float Location[],
 		float Roll_angle[],
-		float Roll_angle_aircraft[],
-		LinkedList<ListIterator<ThreeDs>>	   del_que,
-		PriorityQueue<Dynamic> effect
+		float Roll_angle_aircraft[]
 	)
 	{
-		super(null, null, 0.0F, (short)-1, null, effect, del_que, null, null, null, "\nDecory" + GraphicUtils.random(), false);
-		camp = campTo;
+		super(gameManager, null, 0.0F, -1, null, null, "\nDecory" + GraphicUtils.random(), false);
+		setCamp(campTo);
 		specialDisplay = '@';
 		location[0] = Location[0];
 		location[1] = Location[1];
 		location[2] = Location[2];
 		
-		speed = Speed_aircraft;
+		setSpeed(Speed_aircraft);
 		Roll_angle_Aircraft = Roll_angle_aircraft;
 		
 		points = missileModelData;
 		points_count = missileModelData.size();
 		
 		lifeLeft = life = lifeTime;
-		lifeTo = life + System.currentTimeMillis() / 1000;
+		lifeTo = life + System.currentTimeMillis();
 		
 		end				= false;
 		visible			= true;
@@ -104,30 +125,28 @@ private static ArrayList<float[]> missileModelData;
 		roll_angle[2] = Roll_angle[2];
 		
 		velocity = Speed * GraphicUtils.random() * 2;
-		resistanceRate = resistance_rate;
-		resistanceRate *= GraphicUtils.random();
-		isAlive = true;
-		lockingPriority = -128/*(short)-(2.0 + 10.0 * GraphicUtils.random())*/;
+		setResistanceRate_normal(resistance_rate * GraphicUtils.random());
+		setHP(100);
+		setLockingPriority(-128/*-(short)(2.0 + 10.0 * GraphicUtils.random())*/);
 	}
 	
-	public Decoy
+	private Decoy
 	(
-		short  lifeTime,
+	    GameManagement gameManager,
+		short lifeTime,
 		float Speed,
 		float Speed_aircraft,
 		float resistance_rate,
 		float Location[],
 		float Roll_angle[],
-		float Roll_angle_aircraft[],
-		LinkedList<ListIterator<ThreeDs>> del_que,
-		PriorityQueue<Dynamic> effect
+		float Roll_angle_aircraft[]
 	)
 	{
 		this
 		(
-			-1, lifeTime, Speed, Speed_aircraft, 
+		    gameManager, -1, lifeTime, Speed, Speed_aircraft, 
 			resistance_rate, Location, Roll_angle, 
-			Roll_angle_aircraft, del_que, effect
+			Roll_angle_aircraft
 		);
 	}
 	
@@ -135,16 +154,8 @@ private static ArrayList<float[]> missileModelData;
 	public void go()
 	{
 		if(lifeLeft <= 0) disable();
-		else
-		{/*
-			float x, y, z, t = GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[1])) * velocity;
-			
-			x = GraphicUtils.tan(GraphicUtils.toRadians(roll_angle[1])) * t;
-			y = GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[0])) * t;
-			z = GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * t;
-			*/
-
-            velocity -= velocity * resistanceRate * 1.5;
+		else {
+            velocity -= velocity * getResistanceRate_normal() * 1.5;
             
 		    float x, y, z;
 			float r1 = GraphicUtils.toRadians(roll_angle[1] + Roll_angle_Aircraft[1]);
@@ -160,73 +171,47 @@ private static ArrayList<float[]> missileModelData;
             
 	        r1 = GraphicUtils.toRadians(Roll_angle_Aircraft[1]);
 	        r2 = GraphicUtils.toRadians(Roll_angle_Aircraft[0]);
-	        t  = GraphicUtils.cos(r1) * speed;
-            x  = GraphicUtils.sin(r1) * speed;
+	        t  = GraphicUtils.cos(r1) * getSpeed();
+            x  = GraphicUtils.sin(r1) * getSpeed();
             y  = GraphicUtils.sin(r2) * t;
             z  = GraphicUtils.cos(r2) * t;
-			/*
-			t = GraphicUtils.cos(GraphicUtils.toRadians(Roll_angle_Aircraft[1])) * speed;
-			
-			x = GraphicUtils.tan(GraphicUtils.toRadians(Roll_angle_Aircraft[1])) * t;
-			y = GraphicUtils.sin(GraphicUtils.toRadians(Roll_angle_Aircraft[0])) * t;
-			z = GraphicUtils.cos(GraphicUtils.toRadians(Roll_angle_Aircraft[0])) * t;
-			*/
 			location[0]	-= x;
 			location[1]	+= y;
 			location[2]	+= z;
 
-            location[0] += CharTimeSpace.g * (life - lifeLeft) * 0.0125 - (life-lifeLeft) * resistanceRate;
+            location[0] += (CharTimeSpace.g - getResistanceRate_normal()) * (life - lifeLeft) * 0.0000125F;
             
-			effects.add(new EngineFlame(location, (short)25 + (int)(50 * GraphicUtils.random()), '*'));
-			--lifeLeft;
+			getGameManager().newEffect(new EngineFlame(location, 25 + (int)(50 * GraphicUtils.random()), '*'));
+			lifeLeft -= 1000;
 		}
 	}
 	
-	public void disable() 
+	public final void disable() 
 	{
-		lockingPriority = 0;
+		setLockingPriority(0);
 		visible = false;
-		isAlive = false;
+		setHP(0);
 		end = true;
-		if(myPosition != null) deleteQue.add(myPosition);
-		else System.err.println("null");
+		if(myPosition != null) getGameManager().decoyDisable(myPosition);// deleteQue.add(myPosition);
 	}
 
 	@Override
-	public boolean deleted()
-	{
+	public final boolean deleted() {
 		return end;
 	}
 
 	@Override
-	public int compareTo(Dynamic o)
-	{
+	public final int compareTo(Dynamic o) {
 		return (int) (getLife() - o.getLife());
 	}
 
 	@Override
-	public long getLife()
-	{
+	public final long getLife() {
 		return lifeTo;
 	}
-	
-	@Override
-	public void getDamage(int damage, Aircraft giver, String weaponName)
-	{
-	}
-	
-	@Override
-	public void randomRespawn()
-	{
-	}
-	
-	@Override
-	public void pollBack()
-	{
-	}
-	public int getHash()
-	{
-		// TODO 自动生成的方法存根
+
+    @Override
+	public final int getHash() {
 		return this.hashCode();
 	}
 }

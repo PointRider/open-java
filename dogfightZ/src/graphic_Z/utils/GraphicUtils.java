@@ -23,7 +23,6 @@ public class GraphicUtils
     private static int   rantI[]; 
     private static char  curRandomIdx; /*char is unsigned between 0 ~ 65535*/
 	
-	
 	public static final Random randomMaker;
 	
 	static {
@@ -65,41 +64,44 @@ public class GraphicUtils
         curRandomIdx = 0;
 	}
 	
-	public static float sin(float i) {
+	public static final float sin(float i) {
 		i %= PIMUL2;
 		if(i < 0) return - sint[(int)(bootTmp * -i)];
 		return sint[(int)(bootTmp * i)];
 	}
 	
-	public static float cos(float i) {
+	public static final float cos(float i) {
 		i %= PIMUL2;
 		return cost[(int)(bootTmp * Math.abs(i))];
 	}
 	
-	public static float tan(float i) {
+	public static final float tan(float i) {
 		i %= PI;
 		if(i < 0) return - tant[(int)(bootTmp * -i)];
 		return tant[(int)(bootTmp * i)];
 	}
 	
-    public static float acos(float theta) {
+    public static final float acos(float theta) {
         int idx = (int)((theta + 1.0F) * halfABoot);
         if(idx >= boot) return Float.NaN;
         return acost[idx];
     }
     
-    public static float asin(float theta) {
+    public static final float asin(float theta) {
         int idx = (int)((theta + 1.0F) * halfABoot);
         if(idx >= boot) return Float.NaN;
         return asint[idx];
     }
     
-    public static float atan(float theta) {
+    public static final float atan(float theta) {
         int idx = (int)(theta * bootDiv256);
-        if(idx < 0){
+        if(idx < 0) {
             int negative = -idx;
-            if(negative < boot) return -atant[negative];
-            else return negativeHalfAPI;
+            if(negative < boot) {
+                //整形负最大值取反陷阱
+                if(negative == Integer.MIN_VALUE) return negativeHalfAPI;
+                return -atant[negative];
+            }   else return negativeHalfAPI;
         } else {
             if(idx < boot) return atant[idx];
             else return halfAPI;
@@ -118,24 +120,39 @@ public class GraphicUtils
         }
     }
 	
-	public static int absI(int x) {
+	public static final int absI(int x) {
 		return x < 0? -x: x;
 	}
 
-    public static float toDegrees(float rad) {
+    public static final float toDegrees(float rad) {
         return rad * 57.29577951308233F;
     }
 
-    public static float toRadians(float deg) {
+    public static final float toRadians(float deg) {
         return deg * 0.0174532925199433F;
     }
+
+    public static final float range(float p1[], float p2[])
+    {
+        float d1 = (p2[0]-p1[0]);
+        float d2 = (p2[1]-p1[1]);
+        float d3 = (p2[2]-p1[2]);
+        
+        return GraphicUtils.sqrt(d1*d1 + d2*d2 + d3*d3);
+    }
     
-    public static float random() {
+    public static final float rangeXY(float x0, float y0, float x2, float y2) {
+        x2 -= x0;
+        y2 -= y0;
+        return GraphicUtils.sqrt(x2*x2 + y2*y2);
+    }
+    
+    public static final float random() {
         ++curRandomIdx;
         return rantF[curRandomIdx &= boot_1];
     }
     
-	public static void drawLine(char fraps_buffer[][], int x1, int y1, int x2, int y2, char pixel, boolean noRewrite) {
+	public static final void drawLine(char fraps_buffer[][], int x1, int y1, int x2, int y2, char pixel, boolean noRewrite) {
 		//DDA
 		if(fraps_buffer == null) return;
 		
@@ -186,11 +203,11 @@ public class GraphicUtils
 		}
 	}
 	
-	public static void drawLine(char fraps_buffer[][], int x1, int y1, int x2, int y2, char pixel) {
+	public static final void drawLine(char fraps_buffer[][], int x1, int y1, int x2, int y2, char pixel) {
 		drawLine(fraps_buffer, x1, y1, x2, y2, pixel, false);
 	}
 
-    public static float vectorLength(float xyz[]) {
+    public static final float vectorLength(float xyz[]) {
         float x2 = xyz[0] * xyz[0];
         float y2 = xyz[1] * xyz[1];
         float z2 = xyz[2] * xyz[2];
@@ -198,7 +215,7 @@ public class GraphicUtils
         return GraphicUtils.sqrt(x2 + y2 + z2);
     }
     
-    public static float[] getDirectionVector(float speedVector[]) {
+    public static final float[] getDirectionVector(float speedVector[]) {
         float x = speedVector[0], y = speedVector[1], z = speedVector[2];
         float length = vectorLength(speedVector);
         
@@ -206,7 +223,7 @@ public class GraphicUtils
     }
     
 	
-	public static void drawCircle(char fraps_buffer[][], int x0, int y0, int r, char pixel) {
+	public static final void drawCircle(char fraps_buffer[][], int x0, int y0, int r, char pixel) {
 		
 		int   x = 0, y = r;
 		float d = 1.25F - r;
@@ -224,7 +241,7 @@ public class GraphicUtils
 	}
 	
 	//8对称标点
-	private static void circlePoints(char fraps_buffer[][], int x0, int y0, int x, int y, char pc) {
+	private static final void circlePoints(char fraps_buffer[][], int x0, int y0, int x, int y, char pc) {
 
 		int maxX = fraps_buffer[0].length;
 		int maxY = fraps_buffer.length;
@@ -266,31 +283,31 @@ public class GraphicUtils
 	    //System.out.println("atan2: " + d + ", " + atan2(y, x));
 	}
     
-    public static float sqrt(float f) {
+    public static final float sqrt(float f) {
         return (float) Math.sqrt(f);
     }
     
-    public static float max(float a, int b) {
+    public static final float max(float a, int b) {
         return a > b? a: b;
     }
     
-    public static float max(float a, float b) {
+    public static final float max(float a, float b) {
         return a > b? a: b;
     }
 
-    public static float min(float a, float b) {
+    public static final float min(float a, float b) {
         return a < b? a: b;
     }
 
-    public static int min(int a, int b) {
+    public static final int min(int a, int b) {
         return a < b? a: b;
     }
     
-    public static float abs(float f) {
+    public static final float abs(float f) {
         return Math.abs(f);
     }
     
-    public static float log(float x) {
+    public static final float log(float x) {
         return (float) Math.log(x);
     }
     
@@ -298,16 +315,16 @@ public class GraphicUtils
         return (float) Math.pow(x, y);
     }
     
-    public static int fastRanodmInt() {
+    public static final int fastRanodmInt() {
         ++curRandomIdx;
         return rantI[curRandomIdx &= boot_1];
     }
     
-    public static int randomInt(int min, int max) {
+    public static final int randomInt(int min, int max) {
         return randomMaker.nextInt(max-min) + min;
     }
     
-    public static int randomInt(int max) {
+    public static final int randomInt(int max) {
         return randomMaker.nextInt(max);
     }
 }

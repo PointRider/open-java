@@ -69,7 +69,7 @@ public class ScoreList extends CharDynamicHUD
 				temp.setLocation((short)(location[0] + 3 - centerX), (short)(location[1] + 4 + line - centerY));
 				temp.printNew();
 				
-				temp.setText(a.camp + ":" + (a.camp == camp? "Friend" : "Enemy"));
+				temp.setText(a.getCamp() + ":" + (a.getCamp() == camp? "Friend" : "Enemy"));
 				temp.setLocation((short)(location[0] - 3), (short)(location[1] + 4 + line - centerY));
 				temp.printNew();
 				

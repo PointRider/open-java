@@ -94,45 +94,33 @@ public class CharObject extends TDObject implements ThreeDs
 	}
 
 	@Override
-	public float[] getLocation()
-	{
-		// TODO 自动生成的方法存根
+	public final float[] getLocation() {
 		return location;
 	}
 
 	@Override
-	public float[] getRollAngle()
-	{
-		// TODO 自动生成的方法存根
+	public final float[] getRollAngle() {
 		return roll_angle;
 	}
 
 	@Override
-	public boolean getVisible()
-	{
-		// TODO 自动生成的方法存根
+	public final boolean getVisible() {
 		return visible;
 	}
 
 	@Override
-	public int getPointsCount()
-	{
-		// TODO 自动生成的方法存根
+	public final int getPointsCount() {
 		return points_count;
 	}
 
 	@Override
-	public float[] getPoint(int index)
-	{
-		// TODO 自动生成的方法存根
+	public final float[] getPoint(int index) {
 		return points.get(index);
 	}
 
 	@Override
 	public void run()
-	{
-		// TODO 自动生成的方法存根
-	}
+	{}
 
 	@Override
 	public char getSpecialDisplayChar() {

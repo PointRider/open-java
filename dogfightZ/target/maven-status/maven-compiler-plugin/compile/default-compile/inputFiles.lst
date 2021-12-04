@@ -25,7 +25,6 @@ D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\Ammo
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\Interfaces\Dynamic.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\HUDs\CharPasswordEdit.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\view\PiLog.java
-D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\Effects\ExplosionMaker.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\HUDs\CharProgressBar.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\Cameras\CharFrapsCamera.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\SoundTrack.java
@@ -43,6 +42,7 @@ D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogL
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\controller\PilotLogin.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\model\PlayerProfile.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\Interfaces\ThreeDs.java
+D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\GameManager.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\view\Menu.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\HUDs\CharSingleLineTextEdit.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\Objects\TDObject.java
@@ -72,6 +72,7 @@ D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\jmp123\decoder\
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\Objects\CharObject.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\startTheWorld\Start_GUI.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\controller\UserOperationMenu.java
+D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\GameManagement.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\jmp123\decoder\Layer2.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\controller\PilotLog.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\HUDs\CharHUD.java
@@ -79,6 +80,7 @@ D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\HUDs\
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\Worlds\CharTimeSpace.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\controller\ScreenResize.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\view\package-info.java
+D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\Ammo\Dangerous.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\service\package-info.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\startTheWorld\RecordUI.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\controller\PilotRegist.java
@@ -107,7 +109,6 @@ D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\jmp123\demo\Pla
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\jmp123\demo\Test.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\jmp123\decoder\Synthesis.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\utils\ResultList.java
-D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\Ammo\DecoyMaker.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\PlayersJetCamera.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\RandomClouds.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\dao\PlayerProfileDAO.java

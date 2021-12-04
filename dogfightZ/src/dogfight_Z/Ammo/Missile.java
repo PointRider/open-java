@@ -3,13 +3,14 @@ package dogfight_Z.Ammo;
 import java.util.ArrayList;
 
 import dogfight_Z.Aircraft;
+import dogfight_Z.GameManagement;
 import dogfight_Z.Effects.EngineFlame;
-import dogfight_Z.Effects.ExplosionMaker;
+import dogfight_Z.Effects.Particle;
 import graphic_Z.Cameras.CharFrapsCamera;
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.utils.GraphicUtils;
 
-public class Missile extends Aircraft implements Dynamic
+public class Missile extends Aircraft implements Dynamic, Dangerous
 {
 	protected	  boolean	actived;
 	public static int		maxLife = 500;
@@ -18,10 +19,9 @@ public class Missile extends Aircraft implements Dynamic
 	public		  long		lifeTo;
 	//public 		  float 	guideLocation[];
 	public		  float 	startGuideTime;
-	public		  Aircraft  from;
+	public		  Aircraft  launcher;
 	public		  Aircraft  target;
 	public		  CharFrapsCamera camera;
-	
 	public		  int    guideResolution;
 	public		  float guideFOV;
 	public		  float maxSpeed;
@@ -77,57 +77,53 @@ public class Missile extends Aircraft implements Dynamic
 	public Missile
 	(
 		//String modelFile, 
-		int    lifeTime,
+	    GameManagement gameManager,
+		int   lifeTime,
 		float Speed,
 		float maxSpeed,
-		float resistance_rate,
 		float Location[],
 		float Roll_angle[],
 		float guideStartTime,
 		Aircraft Target
-	)
-	{
-		this
-		(
-			lifeTime, Speed, maxSpeed, resistance_rate, Location, 
+	) {
+		this (
+		    gameManager,lifeTime, Speed, maxSpeed, Location, 
 			Roll_angle, guideStartTime, 100, 2.8F, null, Target, null
 		);
 	}
 	
 	public Missile
 	(
-		//String modelFile, 
-		//float Mess,
-		int    lifeTime,
+		GameManagement gameManager,
+		int   lifeTime,
 		float Speed,
 		float max_speed,
-		float resistance_rate,
 		float Location[],
 		float Roll_angle[],
 		float guideStartTime,
-		int    guide_Resolution,
+		int   guide_Resolution,
 		float guide_FOV, 
 		Aircraft From,
 		Aircraft Target,
 		CharFrapsCamera Camera
 	)
 	{
-		super(null, null, 0.0F, (short)-1, null, null, null, null, null, null, false);
+		super(gameManager, null, 0.0F, -1, null, null, null, false);
 		specialDisplay	= '@';
 		maxSpeed		= max_speed;
-		maxVelRollUp	= 20.0F;				//导弹最大上下翻滚能力
-		maxVelTurnLR	= 20.0F;				//导弹最大左右水平转向能力
-		maxVelRollLR	= 20.0F;				//导弹最大左右翻滚能力
-		from			= From;				//导弹发射源
+		setMaxVelRollUp(20.0F);				//导弹最大上下翻滚能力
+		setMaxVelTurnLR(20.0F);				//导弹最大左右水平转向能力
+		setMaxVelRollLR(20.0F);				//导弹最大左右翻滚能力
+		launcher			= From;				//导弹发射源
 		camera			= Camera;			//玩家摄像机，在跟随导弹视角后，将玩家视角归还给from所指示的源物体
 		actived			= true;				//导弹是否被激活
 		lifeLeft = life	= lifeTime;			//导弹有效时间(与speed一起决定最大射程)
-		speed			= Speed;			//导弹速度
+		setSpeed(Speed);			//导弹速度
 		startGuideTime	= guideStartTime;	//导弹发射后进入制导状态的时间
 		guideResolution = guide_Resolution;	//导弹制导分辨率
 		guideFOV		= guide_FOV;		//导弹最大搜寻视角
 		lifeTo = life + System.currentTimeMillis() / 1000;
-		resistanceRate_normal	= 0.0F;
+		setResistanceRate_normal(0.0F);
 		range_old		= 0.0F;
 		
 		if(lifeTime > maxLife) lifeTime = maxLife;
@@ -152,99 +148,59 @@ public class Missile extends Aircraft implements Dynamic
 		visible = true;
 	}
 	
-	public void trace()
-	{
-		if(target!= null)
-		{
-			if(!target.isAlive)
-			{
+	public void trace() {
+		if(target!= null) {
+			if(!target.isAlive()) {
 				target = null;
 				return;
 			}
-			
 			float point_on_Scr[] = new float[2];
 			float range = 
-			CharFrapsCamera.getXY_onCamera
-			(
+			CharFrapsCamera.getXY_onCamera (
 				target.location[0], target.location[1], target.location[2], 
-				guideResolution, guideResolution, location, cameraRollAngle, point_on_Scr, guideFOV
+				guideResolution, guideResolution, location, getCameraRollAngle(), point_on_Scr, guideFOV
 			);
 			
 			float lrRangeToCenterOnScreen    = point_on_Scr[0] - halfAResolution;
 			float up_dnRangeToCenterOnScreen = point_on_Scr[1] - halfAResolution;
-			
 			float range_diff = range_old - range;
 			float range_diff2 = range_diff * range_diff;
-			
-			//float lrRangeToCenterOnScreen_diff = GraphicUtils.abs(lrRangeToCenterOnScreen_old - lrRangeToCenterOnScreen);
-			//float lrRangeToCenterOnScreen_diff2 = lrRangeToCenterOnScreen_diff * lrRangeToCenterOnScreen_diff;
-			
-			//float up_dnRangeToCenterOnScreen_diff = GraphicUtils.abs(up_dnRangeToCenterOnScreen_old - up_dnRangeToCenterOnScreen);
-			//float up_dnRangeToCenterOnScreen_diff2 = up_dnRangeToCenterOnScreen_diff * up_dnRangeToCenterOnScreen_diff;
-			
 			float temp0 = range_diff2 * range_diff2 * halfAResolution;
-			
 			float lrControl = temp0 * lrRangeToCenterOnScreen;
 			float udControl = temp0 * up_dnRangeToCenterOnScreen;
-			
 			float lrRate = 1.0F;
 			float udRate = 1.0F;
 			
-			if(GraphicUtils.abs(lrControl) > GraphicUtils.abs(udControl))		udRate = GraphicUtils.abs(udControl / lrControl);
-			else if(GraphicUtils.abs(lrControl) < GraphicUtils.abs(udControl))	lrRate = GraphicUtils.abs(lrControl / udControl);
+			if(GraphicUtils.abs(lrControl) > GraphicUtils.abs(udControl))		
+			    udRate = GraphicUtils.abs(udControl / lrControl);
+			else if(GraphicUtils.abs(lrControl) < GraphicUtils.abs(udControl))	
+			    lrRate = GraphicUtils.abs(lrControl / udControl);
 			
-			if(!(range<0 || point_on_Scr[0]<0))
-			{
-				
-				/*侧桶滚， 现在的导弹设定中无需
-				if(maxVelRollUp > maxVelTurnLR)
-				{
-					if(lrRangeToCenterOnScreen > 0)
-						control_roll_lr(-maxVelRollLR);
-					else if(lrRangeToCenterOnScreen < 0)
-						control_roll_lr(maxVelRollLR);
-				}
-				else if(maxVelRollUp < maxVelTurnLR)
-				{
-					if(up_dnRangeToCenterOnScreen > 0)
-						control_roll_lr(-maxVelRollLR);
-					else if(up_dnRangeToCenterOnScreen < 0)
-						control_roll_lr(maxVelRollLR);
-				}
-				*/
-				
+			if(!(range<0 || point_on_Scr[0]<0)) {
 				if(lrControl > 0)
-					control_turn_lr(maxVelTurnLR, /*lrRate*/ lrControl, lrRate);
+					control_turn_lr(getMaxVelTurnLR(), /*lrRate*/ lrControl, lrRate);
 				else if(lrControl < 0)
-					control_turn_lr(-maxVelTurnLR, /*lrRate*/-lrControl, lrRate);
-				
+					control_turn_lr(-getMaxVelTurnLR(), /*lrRate*/-lrControl, lrRate);
 				if(udControl > 0)
-					control_roll_up_dn(-maxVelRollUp, /*udRate*/ udControl, udRate);
+					control_roll_up_dn(-getMaxVelRollUp(), /*udRate*/ udControl, udRate);
 				else if(udControl < 0)
-					control_roll_up_dn(maxVelRollUp, /*udRate*/ -udControl, udRate);
+					control_roll_up_dn(getMaxVelRollUp(), /*udRate*/ -udControl, udRate);
 				
-				//lrRangeToCenterOnScreen_old = lrRangeToCenterOnScreen;
-				//up_dnRangeToCenterOnScreen_old = up_dnRangeToCenterOnScreen;
-				
-					if
-					(
-						(
-							(
-								speed > maxSpeed / 3 ||
-								speed > target.speed + 50
-							)	&&	range < 10000 || 
-							range_old - range > 64 && range < 20000 && range > 0 && speed > target.speed + 50 && target.speed < 71
-						)
-					)	speed -= 5;
-					else if(speed < maxSpeed)	speed += 0.5;
-				
-				target.warning(from);
+				if(((
+							getSpeed() > maxSpeed / 3 ||
+							getSpeed() > target.getSpeed() + 50
+						)	&&	range < 10000 || 
+						range_old - range > 64 && range < 20000 && range > 0 && 
+						getSpeed() > target.getSpeed() + 50 && target.getSpeed() < 71
+					)
+				)	setSpeed(getSpeed() - 5);
+				else if(getSpeed() < maxSpeed)	setSpeed(getSpeed() + 0.5F);
+				target.warning(launcher);
 			}
-			
 			range_old = range;
 		}
 	}
-	
+	/*
 	protected static float range(float p1[], float p2[])
 	{
 		return GraphicUtils.abs
@@ -257,7 +213,7 @@ public class Missile extends Aircraft implements Dynamic
 			)
 		);
 	}
-	
+	*/
 	@Override
 	public void go()
 	{
@@ -267,15 +223,14 @@ public class Missile extends Aircraft implements Dynamic
 			return;
 		}
 		
-		cameraRollAngle[0] = -roll_angle[0];
-		cameraRollAngle[1] = -roll_angle[1];
-		cameraRollAngle[2] = -roll_angle[2];
+		getCameraRollAngle()[0] = -roll_angle[0];
+		getCameraRollAngle()[1] = -roll_angle[1];
+		getCameraRollAngle()[2] = -roll_angle[2];
 		
 		float x, y, z, t, r1, r2;
-		from.effects.add(new EngineFlame(location, 100 + (int)(50 * GraphicUtils.random())));
+		getGameManager().newEffect(new EngineFlame(location, 100 + (int)(50 * GraphicUtils.random())));
 		
-		for(int repeat = 0; repeat < 2; ++repeat)
-		{
+		for(int repeat = 0; repeat < 2; ++repeat) {
 			if(velocity_roll[0] != 0.0)
 				velocity_roll[0] /= 2;
 			if(velocity_roll[1] != 0.0)
@@ -288,7 +243,7 @@ public class Missile extends Aircraft implements Dynamic
 			//------------[go street]------------
 			r1 = GraphicUtils.toRadians(roll_angle[1]);
 			r2 = GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0]));
-			t  = GraphicUtils.cos(r1) * speed;
+			t  = GraphicUtils.cos(r1) * getSpeed();
 			x  = GraphicUtils.tan(r1) * t;
 			y  = GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[0])) * t;
 			z  = r2 * t;
@@ -304,13 +259,13 @@ public class Missile extends Aircraft implements Dynamic
 			//-----------------------------------
 			//location[0] += CharTimeSpace.g;
 			
-			if(target != null  &&  range(location, target.location) < 224)
+			if(target != null  &&  target.isAlive()  &&  GraphicUtils.range(location, target.location) < 224)
 			{
-				target.getDamage((int)(50 - 10 * GraphicUtils.random()), from, "Missile");
-				new ExplosionMaker(location, 15, (short)75, 0.025F, 0.1F, from.effects);
+				target.getDamage((int)(50 - 10 * GraphicUtils.random()), launcher, "Missile");
+				Particle.makeExplosion(getGameManager(), location, 15, 75, 0.025F, 0.1F);
 
-				target.colorFlash(255, 255, 255, 127, 16, 16, (short)20);
-				from.colorFlash(0, 192, 255, 0, 0, 0, (short)12);
+				if(target.isPlayer()) target.getGameManager().colorFlash(255, 255, 255, 127, 16, 16, 20);
+				if(launcher.isPlayer()) launcher.getGameManager().colorFlash(0, 192, 255, 0, 0, 0, 12);
 				
 				disable();
 				return;
@@ -320,53 +275,67 @@ public class Missile extends Aircraft implements Dynamic
 		--lifeLeft;
 	}
 	
-	public void disable() 
+	public final void disable() 
 	{
-		if(camera != null && from != null)
-			camera.connectLocationAndAngle(from.cameraLocation, from.cameraRollAngle);
+	    setHP(0);
+		if(camera != null && launcher != null)
+			camera.connectLocationAndAngle(launcher.getCameraLocation(), launcher.getCameraRollAngle());
 		actived = visible = false;
 	}
 
 	@Override
-	public boolean deleted()
-	{
+	public final boolean deleted() {
 		return !actived;
 	}
 
 	@Override
-	public int compareTo(Dynamic o)
-	{
+	public final int compareTo(Dynamic o) {
 		return (int) (getLife() - o.getLife());
 	}
 
 	@Override
-	public long getLife()
-	{
+	public final long getLife() {
 		return lifeTo;
-	}
-	
-	@Override
-	public void getDamage(int damage, Aircraft giver, String weaponName)
-	{
-	}
-	
-	@Override
-	public void randomRespawn()
-	{
-	}
-	
-	@Override
-	public void pollBack()
-	{
 	}
 
 	@Override
-	public int getHash()
-	{
-		// TODO 自动生成的方法存根
+	public final int getHash() {
 		return this.hashCode();
 	}
+
+    @Override
+    public final int getDamage() {
+        //disable();
+        return (int)(50 - 10 * GraphicUtils.random());
+    }
+
+    @Override
+    public final String getWeaponName() {
+        return "Missile";
+    }
+    
+    public final String getLauncherID() {
+        return launcher.getID();
+    }
 }
+
+
+/*侧桶滚， 现在的导弹设定中无需
+if(maxVelRollUp > maxVelTurnLR)
+{
+    if(lrRangeToCenterOnScreen > 0)
+        control_roll_lr(-maxVelRollLR);
+    else if(lrRangeToCenterOnScreen < 0)
+        control_roll_lr(maxVelRollLR);
+}
+else if(maxVelRollUp < maxVelTurnLR)
+{
+    if(up_dnRangeToCenterOnScreen > 0)
+        control_roll_lr(-maxVelRollLR);
+    else if(up_dnRangeToCenterOnScreen < 0)
+        control_roll_lr(maxVelRollLR);
+}
+*/
 
 /*  at function maxMoving
 float upT		= GraphicUtils.atan(l / deltaZ);

@@ -43,122 +43,15 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		YcenterI = resolution[1] >> 1;
 	}
 	
-	public static float rad(float x) {
-		return x * (GraphicUtils.PI / 180.0F);
-	}
-	
-	public static float range(float p1[], float p2[])
-	{
-		float d1 = (p2[0]-p1[0]);
-		float d2 = (p2[1]-p1[1]);
-		float d3 = (p2[2]-p1[2]);
-		
-		return GraphicUtils.sqrt(d1*d1 + d2*d2 + d3*d3);
-	}
-	
-	public static float getXY_onCamera
-	(
-		float X0, float Y0, float Z0,
-		int    resolution_X,
-		int    resolution_Y,
-		float cameraLocation[/*3*/], //x, y, z
-		float cameraRollAngl[/*3*/], //x, y, z
-		float result[/*2*/], //x, y
-		float FOV
-	)
-	{
-		float X, Y, Z, X1, Y1;
-		int    Xcenter = resolution_X >> 1, 
-			   Ycenter = resolution_Y >> 1;
-		
-		float cos$, sin$, temp=GraphicUtils.tan(FOV/2.0F);
-		float cr0 = rad(cameraRollAngl[0]);
-		float cr1 = rad(cameraRollAngl[1]);
-		float cr2 = rad(cameraRollAngl[2]);
-		
-		X0 -= cameraLocation[0];
-		Y0 -= cameraLocation[1];
-		Z0 -= cameraLocation[2];
-		
-		//---围绕摄像机旋转(或相对的，摄像机原地左右上下转动)---
-		/*
-		tmp1 = GraphicUtils.atan2(Y0, Z0)+cr0;
-		tmp2 = GraphicUtils.sqrt(Z0*Z0+Y0*Y0);
-		Z = GraphicUtils.cos(tmp1)*tmp2;
-		Y = GraphicUtils.sin(tmp1)*tmp2;
-		Y0 = Y;
-		Z0 = Z;
-		
-		tmp1 = GraphicUtils.atan2(Z0, X0)+cr1;
-		tmp2 = GraphicUtils.sqrt(X0*X0+Z0*Z0);
-		X = GraphicUtils.cos(tmp1)*tmp2;
-		Z = GraphicUtils.sin(tmp1)*tmp2;
-		Z0 = Z;
-		X0 = X;
-		*/
-
-		cos$ = GraphicUtils.cos(cr0);
-		sin$ = GraphicUtils.sin(cr0);
-		Z = cos$ * Z0 - sin$ * Y0;
-		Y = sin$ * Z0 + cos$ * Y0;
-		Z0 = Z;
-		Y0 = Y;
-
-		cos$ = GraphicUtils.cos(cr1);
-		sin$ = GraphicUtils.sin(cr1);
-		X = cos$ * X0 - sin$ * Z0;
-		Z = sin$ * X0 + cos$ * Z0;
-		X0 = X;
-		Z0 = Z;
-		//---旋转结束---
-		
-		if(Z0>=0 && result!=null)
-		{
-			//借用cos$作为临时变量计算小孔成像
-			cos$ = Xcenter*FOV/(Xcenter+temp*Z0);
-			X0 = X0 * cos$;
-			Y0 = Y0 * cos$;
-			
-			//屏幕视角绕Z轴转动
-			cos$ = GraphicUtils.cos(cr2);
-			sin$ = GraphicUtils.sin(cr2);
-			X = cos$ * X0 - sin$ * Y0;
-			Y = sin$ * X0 + cos$ * Y0;
-			X0 = X;
-			Y0 = Y;
-			
-			X1 = (short) (Y+Xcenter);
-			Y1 = (short) (X+Ycenter);
-			
-			if(X1>=0 && Y1>=0 && X1<resolution_X && Y1<resolution_Y)
-			{
-				result[0] = X1;
-				result[1] = Y1;
-			}
-			else result[0] = result[1] = -1;
-		}
-		
-		return Z0;
-	}
-	
-	public static float rangeXY(float x0, float y0, float x2, float y2)
-	{
-		x2 -= x0;
-		y2 -= y0;
-		return GraphicUtils.sqrt(x2*x2 + y2*y2);
-	}
-	
-	public void getXY_onCamera
-	(
+	public void getXY_onCamera (
 		float X0, float Y0, float Z0,
 		float cameraLocation[/*3*/], //x, y, z
 		float cameraRollAngl[/*3*/], //x, y, z
 		float result[/*2*/] //x, y
 	)	{getXY_onCamera(X0, Y0, Z0, resolution[0], resolution[1], cameraLocation, cameraRollAngl, result, FOV);}
 	
-	public void exposure(Iterable<Dynamic> objList, int unUsed)
-	{
-		for(ThreeDs aObject:objList) exposureObject(aObject, rad(roll_angle[0]), rad(roll_angle[1]), rad(roll_angle[2]));
+	public void exposure(Iterable<Dynamic> objList, int unUsed) {
+		for(ThreeDs aObject:objList) exposureObject(aObject, GraphicUtils.toRadians(roll_angle[0]), GraphicUtils.toRadians(roll_angle[1]), GraphicUtils.toRadians(roll_angle[2]));
 	}
 
     private static final int notOnScreen[] = {-1, -1, -1};
@@ -166,7 +59,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	protected float exposureObject(ThreeDs aObject, float cr0, float cr1, float cr2, boolean staticOver) {
 	    
 		float locationOfanObj[]  = aObject.getLocation();
-		float rge = range(locationOfanObj, location);
+		float rge = GraphicUtils.range(locationOfanObj, location);
 		if(aObject.getVisible() == false || rge > visibility * 10) return rge;
 		
 		char spc     = aObject.getSpecialDisplayChar();
@@ -179,9 +72,9 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		int X1, Y1, Z1, X2, Y2, Z2;
 		int index;
 		
-		float r0 = rad(rollAngleOfanObj[0]);
-		float r1 = rad(rollAngleOfanObj[1]);
-		float r2 = rad(rollAngleOfanObj[2]);
+		float r0 = GraphicUtils.toRadians(rollAngleOfanObj[0]);
+		float r1 = GraphicUtils.toRadians(rollAngleOfanObj[1]);
+		float r2 = GraphicUtils.toRadians(rollAngleOfanObj[2]);
 		
 		final float temp = GraphicUtils.tan(FOV/2.0F);
 		int p1[], p2[];
@@ -312,7 +205,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	) {
         
         float locationOfanObj[]  = aObject.getLocation();
-        float rge = range(locationOfanObj, cameraLocation);
+        float rge = GraphicUtils.range(locationOfanObj, cameraLocation);
         if(aObject.getVisible() == false || rge > visibility * 10) return rge;
         
         char spc     = aObject.getSpecialDisplayChar();
@@ -325,9 +218,9 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
         int X1, Y1, Z1, X2, Y2, Z2;
         int index;
         
-        float r0 = rad(rollAngleOfanObj[0]);
-        float r1 = rad(rollAngleOfanObj[1]);
-        float r2 = rad(rollAngleOfanObj[2]);
+        float r0 = GraphicUtils.toRadians(rollAngleOfanObj[0]);
+        float r1 = GraphicUtils.toRadians(rollAngleOfanObj[1]);
+        float r2 = GraphicUtils.toRadians(rollAngleOfanObj[2]);
         
         final float temp = GraphicUtils.tan(FOV/2.0F);
         int p1[], p2[];
@@ -463,7 +356,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	public Object exposure(Iterable<ThreeDs> objList)
 	{
 		for(ThreeDs aObject:objList) {
-		    exposureObject(aObject, rad(roll_angle[0]), rad(roll_angle[1]), rad(roll_angle[2]));
+		    exposureObject(aObject, GraphicUtils.toRadians(roll_angle[0]), GraphicUtils.toRadians(roll_angle[1]), GraphicUtils.toRadians(roll_angle[2]));
 		}
 		return null;
 	}
@@ -472,7 +365,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	{
 		for(Iterable<ThreeDs> aList:staticObjLists) { 
 			for(ThreeDs aObject:aList) {
-				exposureObject(aObject, rad(roll_angle[0]), rad(roll_angle[1]), rad(roll_angle[2]), true);
+				exposureObject(aObject, GraphicUtils.toRadians(roll_angle[0]), GraphicUtils.toRadians(roll_angle[1]), GraphicUtils.toRadians(roll_angle[2]), true);
 			}
 		}
 		return null;
@@ -494,36 +387,36 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	{
 		float z0, x0;
 		
-		z0 = GraphicUtils.cos(rad(roll_angle[0])) * (GraphicUtils.cos(rad(roll_angle[1])) * distance);
-		x0 = GraphicUtils.sin(rad(roll_angle[1])) * (GraphicUtils.cos(rad(roll_angle[0])) * distance);
+		z0 = GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * (GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[1])) * distance);
+		x0 = GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[1])) * (GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * distance);
 		location[2]+= z0;
-		location[1]-= GraphicUtils.tan(rad(roll_angle[0])) * z0;
+		location[1]-= GraphicUtils.tan(GraphicUtils.toRadians(roll_angle[0])) * z0;
 		location[0]+= GraphicUtils.abs(roll_angle[0]) > 90.0? -x0 : x0;
 	}
 	
 	public void goLeft(float distance)
 	{
-		location[1]-=GraphicUtils.cos(rad(roll_angle[0])) * distance;
-		location[2]-=GraphicUtils.sin(rad(roll_angle[0])) * distance;
-		location[0]-=GraphicUtils.sin(rad(roll_angle[2])) * distance;
+		location[1]-=GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * distance;
+		location[2]-=GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[0])) * distance;
+		location[0]-=GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[2])) * distance;
 	}
 	
 	public void goBack(float distance)
 	{
 		float z0, x0;
 		
-		z0 = GraphicUtils.cos(rad(roll_angle[0])) * (GraphicUtils.cos(rad(roll_angle[1])) * distance);
-		x0 = GraphicUtils.sin(rad(roll_angle[1])) * (GraphicUtils.cos(rad(roll_angle[0])) * distance);
+		z0 = GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * (GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[1])) * distance);
+		x0 = GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[1])) * (GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * distance);
 		location[2]-= z0;
-		location[1]+= GraphicUtils.tan(rad(roll_angle[0])) * z0;
+		location[1]+= GraphicUtils.tan(GraphicUtils.toRadians(roll_angle[0])) * z0;
 		location[0]-= GraphicUtils.abs(roll_angle[0]) > 90.0? -x0 : x0;
 	}
 	
 	public void goRight(float distance)
 	{
-		location[1]+=GraphicUtils.cos(rad(roll_angle[0])) * distance;
-		location[2]+=GraphicUtils.sin(rad(roll_angle[0])) * distance;
-		location[0]+=GraphicUtils.sin(rad(roll_angle[2])) * distance;
+		location[1]+=GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * distance;
+		location[2]+=GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[0])) * distance;
+		location[0]+=GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[2])) * distance;
 	}
 	
 	/*
@@ -545,9 +438,9 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		float cr0, cr1,cr2;
 		float tmp1, tmp2, temp=GraphicUtils.tan(FOV/2.0);
 		
-		cr0 = rad(cameraRollAngl[0]);
-		cr1 = rad(cameraRollAngl[1]);
-		cr2 = rad(cameraRollAngl[2]);
+		cr0 = GraphicUtils.toRadians(cameraRollAngl[0]);
+		cr1 = GraphicUtils.toRadians(cameraRollAngl[1]);
+		cr2 = GraphicUtils.toRadians(cameraRollAngl[2]);
 		
 		
 		X0 -= cameraLocation[0];
