@@ -70,9 +70,9 @@ public abstract class TDCamera<WorldType>
                Ycenter = resolution_Y >> 1;
         
         float cos$, sin$, temp=GraphicUtils.tan(FOV/2.0F);
-        float cr0 = GraphicUtils.toRadians(cameraRollAngl[0]);
-        float cr1 = GraphicUtils.toRadians(cameraRollAngl[1]);
-        float cr2 = GraphicUtils.toRadians(cameraRollAngl[2]);
+        float cr0 = cameraRollAngl[0];
+        float cr1 = cameraRollAngl[1];
+        float cr2 = cameraRollAngl[2];
         
         X0 -= cameraLocation[0];
         Y0 -= cameraLocation[1];

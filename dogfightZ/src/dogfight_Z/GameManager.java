@@ -76,4 +76,9 @@ public class GameManager implements GameManagement {
     public final void newEffect(Dynamic effect) {
         game.newEffect(effect);
     }
+
+    @Override
+    public int[] getResolution() {
+        return game.getResolution();
+    }
 }

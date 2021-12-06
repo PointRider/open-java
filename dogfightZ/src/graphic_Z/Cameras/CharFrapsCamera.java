@@ -51,7 +51,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	)	{getXY_onCamera(X0, Y0, Z0, resolution[0], resolution[1], cameraLocation, cameraRollAngl, result, FOV);}
 	
 	public void exposure(Iterable<Dynamic> objList, int unUsed) {
-		for(ThreeDs aObject:objList) exposureObject(aObject, GraphicUtils.toRadians(roll_angle[0]), GraphicUtils.toRadians(roll_angle[1]), GraphicUtils.toRadians(roll_angle[2]));
+		for(ThreeDs aObject:objList) exposureObject(aObject, roll_angle[0], roll_angle[1], roll_angle[2]);
 	}
 
     private static final int notOnScreen[] = {-1, -1, -1};
@@ -72,9 +72,9 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		int X1, Y1, Z1, X2, Y2, Z2;
 		int index;
 		
-		float r0 = GraphicUtils.toRadians(rollAngleOfanObj[0]);
-		float r1 = GraphicUtils.toRadians(rollAngleOfanObj[1]);
-		float r2 = GraphicUtils.toRadians(rollAngleOfanObj[2]);
+		float r0 = rollAngleOfanObj[0];
+		float r1 = rollAngleOfanObj[1];
+		float r2 = rollAngleOfanObj[2];
 		
 		final float temp = GraphicUtils.tan(FOV/2.0F);
 		int p1[], p2[];
@@ -218,9 +218,9 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
         int X1, Y1, Z1, X2, Y2, Z2;
         int index;
         
-        float r0 = GraphicUtils.toRadians(rollAngleOfanObj[0]);
-        float r1 = GraphicUtils.toRadians(rollAngleOfanObj[1]);
-        float r2 = GraphicUtils.toRadians(rollAngleOfanObj[2]);
+        float r0 = rollAngleOfanObj[0];
+        float r1 = rollAngleOfanObj[1];
+        float r2 = rollAngleOfanObj[2];
         
         final float temp = GraphicUtils.tan(FOV/2.0F);
         int p1[], p2[];
@@ -356,7 +356,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	public Object exposure(Iterable<ThreeDs> objList)
 	{
 		for(ThreeDs aObject:objList) {
-		    exposureObject(aObject, GraphicUtils.toRadians(roll_angle[0]), GraphicUtils.toRadians(roll_angle[1]), GraphicUtils.toRadians(roll_angle[2]));
+		    exposureObject(aObject, roll_angle[0], roll_angle[1], roll_angle[2]);
 		}
 		return null;
 	}
@@ -365,7 +365,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	{
 		for(Iterable<ThreeDs> aList:staticObjLists) { 
 			for(ThreeDs aObject:aList) {
-				exposureObject(aObject, GraphicUtils.toRadians(roll_angle[0]), GraphicUtils.toRadians(roll_angle[1]), GraphicUtils.toRadians(roll_angle[2]), true);
+				exposureObject(aObject, roll_angle[0], roll_angle[1], roll_angle[2], true);
 			}
 		}
 		return null;
@@ -387,36 +387,36 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	{
 		float z0, x0;
 		
-		z0 = GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * (GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[1])) * distance);
-		x0 = GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[1])) * (GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * distance);
+		z0 = GraphicUtils.cos(roll_angle[0]) * (GraphicUtils.cos(roll_angle[1]) * distance);
+		x0 = GraphicUtils.sin(roll_angle[1]) * (GraphicUtils.cos(roll_angle[0]) * distance);
 		location[2]+= z0;
-		location[1]-= GraphicUtils.tan(GraphicUtils.toRadians(roll_angle[0])) * z0;
-		location[0]+= GraphicUtils.abs(roll_angle[0]) > 90.0? -x0 : x0;
+		location[1]-= GraphicUtils.tan(roll_angle[0]) * z0;
+		location[0]+= GraphicUtils.abs(roll_angle[0]) > GraphicUtils.halfAPI? -x0 : x0;
 	}
 	
 	public void goLeft(float distance)
 	{
-		location[1]-=GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * distance;
-		location[2]-=GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[0])) * distance;
-		location[0]-=GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[2])) * distance;
+		location[1]-=GraphicUtils.cos(roll_angle[0]) * distance;
+		location[2]-=GraphicUtils.sin(roll_angle[0]) * distance;
+		location[0]-=GraphicUtils.sin(roll_angle[2]) * distance;
 	}
 	
 	public void goBack(float distance)
 	{
 		float z0, x0;
 		
-		z0 = GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * (GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[1])) * distance);
-		x0 = GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[1])) * (GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * distance);
+		z0 = GraphicUtils.cos(roll_angle[0]) * (GraphicUtils.cos(roll_angle[1]) * distance);
+		x0 = GraphicUtils.sin(roll_angle[1]) * (GraphicUtils.cos(roll_angle[0]) * distance);
 		location[2]-= z0;
-		location[1]+= GraphicUtils.tan(GraphicUtils.toRadians(roll_angle[0])) * z0;
-		location[0]-= GraphicUtils.abs(roll_angle[0]) > 90.0? -x0 : x0;
+		location[1]+= GraphicUtils.tan(roll_angle[0]) * z0;
+		location[0]-= GraphicUtils.abs(roll_angle[0]) > GraphicUtils.halfAPI? -x0 : x0;
 	}
 	
 	public void goRight(float distance)
 	{
-		location[1]+=GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * distance;
-		location[2]+=GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[0])) * distance;
-		location[0]+=GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[2])) * distance;
+		location[1]+=GraphicUtils.cos(roll_angle[0]) * distance;
+		location[2]+=GraphicUtils.sin(roll_angle[0]) * distance;
+		location[0]+=GraphicUtils.sin(roll_angle[2]) * distance;
 	}
 	
 	/*

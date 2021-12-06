@@ -54,18 +54,18 @@ public class Aircraft extends CharMessObject
 	protected float cannonLocation[];
 	//private boolean isAlive;
 	
-	private long respwanAtTime;
-	public int 	cameraLocationFlag;
+	private long  respwanAtTime;
+	public  int   cameraLocationFlag;
+	protected float directionXYZ[];
 	
 	//---------[state]----------
-	public boolean  isPushing;
-	public boolean  isCannonFiring;
-	public int		cannonFireLoadTime;
-	public float    motionRate;
-	protected int	cannonGunFlg;
-    protected int   missileFlg;
-	public CharFrapsCamera mainCamera;
-    private float speedVector[];
+	public boolean isPushing;
+	public boolean isCannonFiring;
+	public int     cannonFireLoadTime;
+	public float   motionRate;
+	protected int  cannonGunFlg;
+    protected int  missileFlg;
+	public         CharFrapsCamera mainCamera;
 	//--------------------------
 	public Aircraft locked_By;
 	public int		lockingLife;
@@ -151,7 +151,7 @@ public class Aircraft extends CharMessObject
 		cameraRollAngle     = new float[3];
 		cannonLocation		= new float[3];
 		cameraLocation		= new float[3];
-        speedVector         = new float[3];
+        directionXYZ        = new float[3];
 		effectMakingLocation= new float[2][3];
 		cameraLocationFlag	= 0;
 		setLockingPriority(lockingPriority_backup = 1);
@@ -166,14 +166,21 @@ public class Aircraft extends CharMessObject
 		control_stick_acc	= 0.0F;
 		acc_shift			= 0.05F;
 		//maxdeceleration		= 1.0F;
-		minStableSpeed		= 30.0F;
+		minStableSpeed		    = 30.0F;
 		resistanceRate_current	= 0.00500F;
 		resistanceRate_normal	= 0.00500F;
 		resistanceRate_breaking = 0.00575F;
+		/*
 		setMaxVelTurnLR(5.0F);
 		setMaxVelRollLR(9.0F);//
 		setMaxVelRollUp(9.0F);
 		maxVelRollDn		= 9.0F;
+		*/
+		setMaxVelTurnLR(0.08726646259971649F);
+        setMaxVelRollLR(0.15707963267948968F);//
+        setMaxVelRollUp(0.15707963267948968F);
+        setMaxVelRollDn(0.15707963267948968F);
+        
 		motionRate			= 0.0F;
 		cannonFireLoadTime	= 0;
 		isPushing			= false;
@@ -204,12 +211,10 @@ public class Aircraft extends CharMessObject
 		getCameraRollAngle()[1] = -roll_angle[1];
 		getCameraRollAngle()[2] = -roll_angle[2];
 	}
-	
-	
 
     public void getRelativePosition_XY(float y, float z, float result[])
 	{
-		float Y, Z, cos$, sin$, r0 = GraphicUtils.toRadians(getCameraRollAngle()[0]);
+		float Y, Z, cos$, sin$, r0 = getCameraRollAngle()[0];
 		
 		y -= location[1];
 		z -= location[2];
@@ -246,74 +251,66 @@ public class Aircraft extends CharMessObject
 	
 	public void roll_up_dn(float angleVel)
 	{
-		if(GraphicUtils.abs(roll_angle[1]) > 90.0)	
-		    roll_angle[0] += GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[2])) * angleVel / 6.4;
-			else roll_angle[0] -= GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[2])) * angleVel / 6.4;
+        angleVel /= 6.4;
+	    float sinR2MulAngleVel = GraphicUtils.sin(roll_angle[2]) * angleVel;
+	    
+		if(GraphicUtils.abs(roll_angle[1]) > GraphicUtils.RAD90)	
+		    roll_angle[0] += sinR2MulAngleVel;
+		else roll_angle[0] -= sinR2MulAngleVel;
 		
-		roll_angle[1] += GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[2])) * angleVel / 6.4;
-			
-		roll_angle[0] %= 360;//
-		//roll_angle[1] %= 360;//
+		roll_angle[1] += GraphicUtils.cos(roll_angle[2]) * angleVel;
+		roll_angle[0] %= GraphicUtils.RAD360;//
 		
-		if(roll_angle[1] > 180) roll_angle[1] = -180.0F + (roll_angle[1]-180.0F);
-		else if(roll_angle[1] < -180) roll_angle[1] = 180.0F + (roll_angle[1]+180.0F);
+		//if(roll_angle[1] > 180) roll_angle[1] = -180.0F + (roll_angle[1]-180.0F);
+        if(roll_angle[1] > GraphicUtils.RAD180) roll_angle[1] -= GraphicUtils.RAD360;
+		else if(roll_angle[1] < GraphicUtils.ngaHALFAPI) roll_angle[1] += GraphicUtils.RAD360;
 	}
 	
 	public void turn_lr(float angleVel)
 	{
-		if(GraphicUtils.abs(roll_angle[1]) > 90.0)	
-		    roll_angle[0] -= GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[2])) * angleVel / 6.4;
-			else roll_angle[0] += GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[2])) * angleVel / 6.4;
+        angleVel /= 6.4;
+	    float cosR2MulAngleVel = GraphicUtils.cos(roll_angle[2]) * angleVel;
+        
+		if(GraphicUtils.abs(roll_angle[1]) > GraphicUtils.RAD90)	
+		    roll_angle[0] -= cosR2MulAngleVel;
+		else roll_angle[0] += cosR2MulAngleVel;
 
-		roll_angle[1] += GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[2])) * angleVel / 6.4;
-		
-		roll_angle[0] %= 360;//
-		//roll_angle[1] %= 360;//
-		
-		if(roll_angle[1] > 180) roll_angle[1] = -180.0F + (roll_angle[1]-180.0F);
-		else if(roll_angle[1] < -180) roll_angle[1] = 180.0F + (roll_angle[1]+180.0F);
+		roll_angle[1] += GraphicUtils.sin(roll_angle[2]) * angleVel;
+		roll_angle[0] %= GraphicUtils.RAD360;//
+
+        if(roll_angle[1] > GraphicUtils.RAD180) roll_angle[1] -= GraphicUtils.PIMUL2;
+        else if(roll_angle[1] < GraphicUtils.ngaHALFAPI) roll_angle[1] += GraphicUtils.PIMUL2;
 	}
 	
-	public void roll_lr(float angleVel)
-	{
-		roll_angle[2] = (roll_angle[2] + (angleVel/1.8F)) % 360;
-	}
+	public void roll_lr(float angleVel) { roll_angle[2] = (roll_angle[2] + (angleVel/1.8F)) % GraphicUtils.PIMUL2; }
 	
 	public void control_roll_up_dn(float acceleration, float limit, float maxLimit)
 	{
 		velocity_roll[0] += acceleration * motionRate * limit;
 		
 		if(velocity_roll[0] < 0 && velocity_roll[0] < -maxVelRollDn * motionRate * maxLimit)
-		{
-			velocity_roll[0] = -maxVelRollDn * motionRate * maxLimit;
-		}
+		    velocity_roll[0] = -maxVelRollDn * motionRate * maxLimit;
 		else if(velocity_roll[0] >= 0 && velocity_roll[0] > getMaxVelRollUp() * motionRate * maxLimit)
-		{
-			velocity_roll[0] = getMaxVelRollUp() * motionRate * maxLimit;
-		}
+		    velocity_roll[0] = getMaxVelRollUp() * motionRate * maxLimit;
 	}
 	
 	public void control_roll_up_dn(float acceleration)
 	{
-		if(acceleration < 0 && acceleration < -maxVelRollDn * motionRate)
-		{
-			acceleration = -maxVelRollDn * motionRate;
-		}
-		else if(acceleration >= 0 && acceleration > getMaxVelRollUp() * motionRate)
-		{
-			acceleration = getMaxVelRollUp() * motionRate;
-		}
-
+	    if(acceleration < 0) {
+            if(acceleration < -maxVelRollDn) acceleration = -maxVelRollDn * motionRate;
+        } else {
+            if(acceleration > maxVelRollUp) acceleration = maxVelRollUp * motionRate;
+        }
 		velocity_roll[0] += acceleration * motionRate;
 		
-		if(velocity_roll[0] < 0 && velocity_roll[0] < -maxVelRollDn * motionRate)
-		{
-			velocity_roll[0] = -maxVelRollDn * motionRate;
+		if(velocity_roll[0] < 0) {
+		    if(velocity_roll[0] < -maxVelRollDn * motionRate)
+	            velocity_roll[0] = -maxVelRollDn * motionRate;
+		} else {
+		    if(velocity_roll[0] > maxVelRollUp * motionRate)
+	            velocity_roll[0] = maxVelRollUp * motionRate;
 		}
-		else if(velocity_roll[0] >= 0 && velocity_roll[0] > getMaxVelRollUp() * motionRate)
-		{
-			velocity_roll[0] = getMaxVelRollUp() * motionRate;
-		}
+		
 		if(acceleration != 0)velocity_roll[0] *= 1.025F;
 	}
 	
@@ -386,34 +383,31 @@ public class Aircraft extends CharMessObject
 	{
 		acceleration /= GraphicUtils.min(GraphicUtils.pow(3.0F, GraphicUtils.abs(acceleration)), 3.0F);
 		velocity_roll[2] += acceleration * motionRate * limit;
-		if(GraphicUtils.abs(velocity_roll[2]) > getMaxVelRollLR() * motionRate)
+		if(GraphicUtils.abs(velocity_roll[2]) > maxVelRollLR * motionRate)
 		{
 			if(velocity_roll[2] < 0)
-				velocity_roll[2] = -getMaxVelRollLR() * motionRate;
-			else velocity_roll[2] = getMaxVelRollLR() * motionRate;
+				velocity_roll[2] = -maxVelRollLR * motionRate;
+			else velocity_roll[2] = maxVelRollLR * motionRate;
 		}
 	}
 	
 	public void control_roll_lr(float acceleration)
 	{
 		acceleration /= GraphicUtils.min(GraphicUtils.pow(3.0F, GraphicUtils.abs(acceleration)), 3.0F);
-		if(acceleration < 0 && acceleration < -maxVelRollDn * motionRate)
-		{
-			acceleration = -maxVelRollDn * motionRate;
-		}
-		else if(acceleration >= 0 && acceleration > getMaxVelRollUp() * motionRate)
-		{
-			acceleration = getMaxVelRollUp() * motionRate;
-		}
+		if(acceleration < 0) {
+            if(acceleration < -maxVelRollLR) acceleration = -maxVelRollLR * motionRate;
+        } else {
+            if(acceleration > maxVelRollLR) acceleration = maxVelRollLR * motionRate;
+        }
 		velocity_roll[2] += acceleration * motionRate;
-		if(GraphicUtils.abs(velocity_roll[2]) > getMaxVelRollLR() * motionRate)
+		if(GraphicUtils.abs(velocity_roll[2]) > maxVelRollLR * motionRate)
 		{
 			if(velocity_roll[2] < 0)
-				velocity_roll[2] = -getMaxVelRollLR() * motionRate;
-			else velocity_roll[2] = getMaxVelRollLR() * motionRate;
+				velocity_roll[2] = -maxVelRollLR * motionRate;
+			else velocity_roll[2] = maxVelRollLR * motionRate;
 		}
 		
-		if(acceleration != 0)velocity_roll[2] *= 1.0375F;
+		if(acceleration != 0) velocity_roll[2] *= 1.0375F;
 	}
 	
 	public void control_turn_lr(float acceleration, float limit, float maxLimit)
@@ -429,23 +423,21 @@ public class Aircraft extends CharMessObject
 	
 	public void control_turn_lr(float acceleration)
 	{
-		if(acceleration < 0 && acceleration < -maxVelRollDn * motionRate)
-		{
-			acceleration = -maxVelRollDn * motionRate;
+		if(acceleration < 0) {
+            if(acceleration < -maxVelTurnLR) acceleration = -maxVelTurnLR * motionRate;
+		} else {
+		    if(acceleration > maxVelTurnLR) acceleration = maxVelTurnLR * motionRate;
 		}
-		else if(acceleration >= 0 && acceleration > getMaxVelRollUp() * motionRate)
-		{
-			acceleration = getMaxVelRollUp() * motionRate;
-		}
+		
 		velocity_roll[1] += acceleration * motionRate;
 		if(GraphicUtils.abs(velocity_roll[1]) > getMaxVelTurnLR() * motionRate)
 		{
 			if(velocity_roll[1] < 0)
-				velocity_roll[1] = -getMaxVelTurnLR() * motionRate;
-			else velocity_roll[1] = getMaxVelTurnLR() * motionRate;
+				velocity_roll[1] = -maxVelTurnLR * motionRate;
+			else velocity_roll[1] = maxVelTurnLR * motionRate;
 		}
 		
-		if(acceleration != 0)velocity_roll[1] *= 1.025F;
+		if(acceleration != 0) velocity_roll[1] *= 1.025F;
 	}
 	
 	public void makeDecoy()
@@ -574,23 +566,24 @@ public class Aircraft extends CharMessObject
 		getGameManager().newEffect(new EngineFlame(effectMakingLocation[1], 100 + (int)(50 * GraphicUtils.random()), '*'));
 	}
 	
-	public float[] getCurrentSpeedVector() {
-        return speedVector;
+	public float[] getCurrentDirectionXYZ() {
+        return directionXYZ;
     }
 	
     public void doMotion()
 	{
 		//------------[go street]------------
-        float r1 = GraphicUtils.toRadians(roll_angle[1]);
-        float r2 = GraphicUtils.toRadians(roll_angle[0]);
-		float t  = GraphicUtils.cos(r1) * getSpeed();
-		speedVector[0] = GraphicUtils.sin(r1) * getSpeed();
-		speedVector[1] = GraphicUtils.sin(r2) * t;
-		speedVector[2] = GraphicUtils.cos(r2) * t;
+        float r1 = roll_angle[1];
+        float r2 = roll_angle[0];
+        
+		float t        = GraphicUtils.cos(r1) * getSpeed();
 		
-		location[0]	-= speedVector[0];
-		location[1]	+= speedVector[1];
-		location[2]	+= speedVector[2];
+		location[0]	-= directionXYZ[0] = GraphicUtils.sin(r1) * getSpeed();
+		location[1]	+= directionXYZ[1] = GraphicUtils.sin(r2) * t;
+		location[2]	+= directionXYZ[2] = GraphicUtils.cos(r2) * t;
+		GraphicUtils.toDirectionVector(directionXYZ);
+		toDirectionXY(directionXYZ);
+		directionXYZ[2] = roll_angle[2];
 		//--------------[motion]-------------
 		roll_up_dn(velocity_roll[0]);
 		turn_lr(velocity_roll[1]);
@@ -598,7 +591,7 @@ public class Aircraft extends CharMessObject
 		//-----------------------------------
 		engine_rpm = getCurrentRPM(getMax_rpm(), getControl_stick_acc());
 		float F   = getCurrentForce(maxAccForce, getMax_rpm(), engine_rpm);
-		
+	
 		if(isPushing)
 		{
 			F += pushPower;
@@ -713,7 +706,7 @@ public class Aircraft extends CharMessObject
 		}
 	}
 	
-	private final void playersCameraManage() {
+	protected final void playersCameraManage() {
 		if(cameraLocationFlag == 0) {
 			float t1, t2, t3;
 			/*
@@ -727,36 +720,36 @@ public class Aircraft extends CharMessObject
 			getCameraLocation()[2] = -960;
 			
 			if(getCameraRollAngle()[0] < 0) {
-				if((-roll_angle[0]) - getCameraRollAngle()[0] < 180) t1 = -roll_angle[0] - getCameraRollAngle()[0];
-				else t1 = -roll_angle[0] - getCameraRollAngle()[0] - 360;
+				if((-roll_angle[0]) - getCameraRollAngle()[0] < GraphicUtils.PI) t1 = -roll_angle[0] - getCameraRollAngle()[0];
+				else t1 = -roll_angle[0] - getCameraRollAngle()[0] - GraphicUtils.PIMUL2;
 			} else if(getCameraRollAngle()[0] > 0) {
-				if(getCameraRollAngle()[0] - (-roll_angle[0]) < 180) t1 = -roll_angle[0] - getCameraRollAngle()[0];
-				else t1 = -roll_angle[0] - getCameraRollAngle()[0] + 360;
+				if(getCameraRollAngle()[0] - (-roll_angle[0]) < GraphicUtils.PI) t1 = -roll_angle[0] - getCameraRollAngle()[0];
+				else t1 = -roll_angle[0] - getCameraRollAngle()[0] + GraphicUtils.PIMUL2;
 			} else t1 = -roll_angle[0];
 			
 			if(getCameraRollAngle()[1] < 0) {
-				if((-roll_angle[1]) - getCameraRollAngle()[1] < 180) t2 = -roll_angle[1] - getCameraRollAngle()[1];
-				else t2 = -roll_angle[1] - getCameraRollAngle()[1] - 360;
+				if((-roll_angle[1]) - getCameraRollAngle()[1] < GraphicUtils.PI) t2 = -roll_angle[1] - getCameraRollAngle()[1];
+				else t2 = -roll_angle[1] - getCameraRollAngle()[1] - GraphicUtils.PIMUL2;
 			} else if(getCameraRollAngle()[1] > 0) {
-				if(getCameraRollAngle()[1] - (-roll_angle[1]) < 180) t2 = -roll_angle[1] - getCameraRollAngle()[1];
-				else t2 = -roll_angle[1] - getCameraRollAngle()[1] + 360;
+				if(getCameraRollAngle()[1] - (-roll_angle[1]) < GraphicUtils.PI) t2 = -roll_angle[1] - getCameraRollAngle()[1];
+				else t2 = -roll_angle[1] - getCameraRollAngle()[1] + GraphicUtils.PIMUL2;
 			} else t2 = -roll_angle[1];
 			
 			if(getCameraRollAngle()[2] < 0) {
-				if((-roll_angle[2]) - getCameraRollAngle()[2] < 180) t3 = -roll_angle[2] - getCameraRollAngle()[2];
-				else t3 = -roll_angle[2] - getCameraRollAngle()[2] - 360;
+				if((-roll_angle[2]) - getCameraRollAngle()[2] < GraphicUtils.PI) t3 = -roll_angle[2] - getCameraRollAngle()[2];
+				else t3 = -roll_angle[2] - getCameraRollAngle()[2] - GraphicUtils.PIMUL2;
 			} else if(getCameraRollAngle()[2] > 0) {
-				if(getCameraRollAngle()[2] - (-roll_angle[2]) < 180) t3 = -roll_angle[2] - getCameraRollAngle()[2];
-				else t3 = -roll_angle[2] - getCameraRollAngle()[2] + 360;
+				if(getCameraRollAngle()[2] - (-roll_angle[2]) < GraphicUtils.PI) t3 = -roll_angle[2] - getCameraRollAngle()[2];
+				else t3 = -roll_angle[2] - getCameraRollAngle()[2] + GraphicUtils.PIMUL2;
 			} else t3 = -roll_angle[2];
 			
 			t1 /= 6;
 			t2 /= 6;
 			t3 /= 6;
 			
-			getCameraRollAngle()[0] = (getCameraRollAngle()[0] + t1) % 360;
-			getCameraRollAngle()[1] = (getCameraRollAngle()[1] + t2) % 360;
-			getCameraRollAngle()[2] = (getCameraRollAngle()[2] + t3) % 360;
+			getCameraRollAngle()[0] = (getCameraRollAngle()[0] + t1) % GraphicUtils.PIMUL2;
+			getCameraRollAngle()[1] = (getCameraRollAngle()[1] + t2) % GraphicUtils.PIMUL2;
+			getCameraRollAngle()[2] = (getCameraRollAngle()[2] + t3) % GraphicUtils.PIMUL2;
 		} else {
 			if(cameraLocationFlag > 1) cameraLocationFlag = 0;
 			
@@ -813,21 +806,12 @@ public class Aircraft extends CharMessObject
 		playersCameraManage();
 	}
 	
-    /**
-     * 返回方向向量所对应的xyz夹角的弧度
-     * @param directionVector 方向向量
-     * @return 弧度制夹角
-     */
-    public static float[] getFakeDirectionXYZ(float directionVector[]) {
-        return new float[] {GraphicUtils.atan2(directionVector[2], -directionVector[1]), GraphicUtils.asin(directionVector[0]), 0/*GraphicUtils.asin(directionVector[1])*/};
-    }
-	
 	@Override
 	public void run() {
 		go();
 	}
 	
-	protected final void randomRespawn() {
+	protected void randomRespawn() {
 		setLockingPriority(0);
 		
 		setLocation
@@ -838,7 +822,7 @@ public class Aircraft extends CharMessObject
 		);
 		//setLocation(0, 0, 0);
 		
-		setRollAngle(GraphicUtils.random() * 360, 0, 0);
+		setRollAngle(GraphicUtils.random() * GraphicUtils.PIMUL2, 0, 0);
 		//setRollAngle(0, 0, 0);
 		
 		getCameraRollAngle()[0] = -roll_angle[0];
@@ -979,6 +963,10 @@ public class Aircraft extends CharMessObject
         this.maxVelRollUp = maxVelRollUp;
     }
 
+    public final void setMaxVelRollDn(float maxVelRollDn) {
+        this.maxVelRollDn = maxVelRollDn;
+    }
+
     public final float getMaxVelRollLR() {
         return maxVelRollLR;
     }
@@ -1003,6 +991,18 @@ public class Aircraft extends CharMessObject
         this.isAlive = isAlive;
     }
 */
+    /**
+     * 返回方向向量所对应的xyz夹角的弧度
+     * @param directionVector 方向向量
+     * @return 弧度制夹角
+     */
+    public static final void toDirectionXY(float directionXYZVector[]) {
+        float x = directionXYZVector[0];
+        directionXYZVector[0] = GraphicUtils.atan2(directionXYZVector[2], -directionXYZVector[1]);
+        directionXYZVector[1] = GraphicUtils.asin(x);
+        directionXYZVector[2] = 0;
+    }
+    
     public final float getMinStableSpeed() {
         return minStableSpeed;
     }

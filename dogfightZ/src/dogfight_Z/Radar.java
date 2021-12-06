@@ -15,9 +15,9 @@ public class Radar extends CharDynamicHUD
 	public LinkedListZ<ThreeDs> aircrafts;
 	public float maxSearchRange;
 	public float tmp_float_xy[];
-	public char Img[][];
-	public char back[][];
-	public int nowAngle;
+	public char  Img[][];
+	public char  back[][];
+	public float nowAngle;
 	public CharDynamicHUD painter;
 	
 	@Override
@@ -48,36 +48,25 @@ public class Radar extends CharDynamicHUD
 		maxSearchRange	= maxSearch_range;
 		Img				= new char[size][size];
 		back			= new char[size][size];
-		nowAngle		= 270;
+		nowAngle		= GraphicUtils.RAD270;
 		
 		painter = new CharDynamicHUD(HUDPainterImg, frapsBuffer, HUDLayer, scrResolution, size, size, Location_X, Location_Y , 0.0F, true);
 		//painter.location[0] += 1;
 		//painter.location[1] += 1;
-		if(HUDImgFile != null)try(FileReader data = new FileReader(HUDImgFile))
-		{
-			for(int i=0 ; i<size ; ++i)
-			{
-				for(int j=0 ; j<size ; ++j)
-				{
-					if(j != 0)
-						data.read();
+		if(HUDImgFile != null) try(FileReader data = new FileReader(HUDImgFile)) {
+			for(int i=0 ; i<size ; ++i) {
+				for(int j=0 ; j<size ; ++j) {
+					if(j != 0) data.read();
 					Img[i][j] = (char) data.read();
 				}
 				data.read();data.read();
 			}
-		}
-		catch(EOFException exc)
-		{
-		}
-		catch(IOException exc)
-		{
+		} catch(EOFException exc) {} catch(IOException exc) {
 			System.out.println("HUD load fault.");
 		}
 		
-		for(int i=0 ; i<size ; ++i)
-		{
-			for(int j=0 ; j<size ; ++j)
-				HUDImg[i][j] = back[i][j] = Img[i][j];
+		for(int i=0 ; i<size ; ++i) {
+			for(int j=0 ; j<size ; ++j) HUDImg[i][j] = back[i][j] = Img[i][j];
 		}
 	}
 	
@@ -90,26 +79,26 @@ public class Radar extends CharDynamicHUD
 	public void printNew()
 	{
 		if(!visible) return;
-		if(nowAngle == 270)
+		if(nowAngle == GraphicUtils.RAD270)
 			makeNewReady();
-		nowAngle+=6;
+		nowAngle += 0.1047197551196598F;
 		
 		painter.angle = nowAngle;
 		painter.printNew();
 		
 		int x, y, r = (size[0]>>1);
-		float theta = GraphicUtils.toRadians(nowAngle);
+		
 		for(int i=0 ; i<r ; ++i)
 		{
-			x = (int)(GraphicUtils.cos(theta) * i);
-			y = (int)(GraphicUtils.sin(theta) * i);
+			x = (int)(GraphicUtils.cos(nowAngle) * i);
+			y = (int)(GraphicUtils.sin(nowAngle) * i);
 			
 			x += centerX;
 			y += centerY;
 
 			HUDImg[y][x] = back[y][x];
 		}
-		nowAngle %= 360;
+		nowAngle %= GraphicUtils.RAD360;
 		super.printNew();
 	}
 	
@@ -135,8 +124,7 @@ public class Radar extends CharDynamicHUD
 		for(ThreeDs a : aircrafts)
 		{
 			aTarget = (Aircraft) a;
-			if(aTarget.getID().equals(myself.getID()) || aTarget.getCamp() == -1 || !aTarget.isAlive())
-				continue;
+			if(aTarget.getID().equals(myself.getID()) || aTarget.getCamp() == -1 || !aTarget.isAlive()) continue;
 			myself.getRelativePosition_XY(aTarget.location[1], aTarget.location[2], tmp_float_xy);
 			
 			range = rangeXY(aTarget.location[1], aTarget.location[2], myself.location[1], myself.location[2]);
@@ -149,7 +137,7 @@ public class Radar extends CharDynamicHUD
 				x += centerX;
 				y += centerY + 1;
 				
-				if(GraphicUtils.abs(myself.roll_angle[1]) < 90)
+				if(GraphicUtils.abs(myself.roll_angle[1]) < GraphicUtils.RAD90)
 					 y = size[1] - y;
 				else x = size[0] - x;
 				

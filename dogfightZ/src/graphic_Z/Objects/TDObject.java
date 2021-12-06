@@ -17,13 +17,11 @@ public abstract class TDObject
 	public static void getXYZ_afterRolling
 	(
 		float X0, float Y0, float Z0,
-		float rx, float ry, float rz,
-		
+		float r0, float r1, float r2,
 		float result[/*3*/]  //x, y, z
 	)
 	{
-		float X, Y, Z, cos$, sin$, 
-			r2 = GraphicUtils.toRadians(rz), r1 = GraphicUtils.toRadians(ry), r0 = GraphicUtils.toRadians(rx);
+		float X, Y, Z, cos$, sin$;
 		/*
 		X = GraphicUtils.cos(GraphicUtils.atan(Y0/X0)+GraphicUtils.toRadians(rz))*GraphicUtils.sqrt(X0*X0+Y0*Y0);
 		Y = GraphicUtils.sin(GraphicUtils.atan(Y0/X0)+GraphicUtils.toRadians(rz))*GraphicUtils.sqrt(X0*X0+Y0*Y0);
@@ -64,8 +62,7 @@ public abstract class TDObject
 	public static void getXYZ_beforeRolling
 	(
 		float X0, float Y0, float Z0,
-		float rx, float ry, float rz,
-		
+        float r0, float r1, float r2,
 		float result[]  //x, y, z
 	)
 	{
@@ -85,9 +82,8 @@ public abstract class TDObject
 		Y0 = (X0<0)?(-Y):Y;
 		X0 = (X0<0)?(-X):X;
 		*/
-		float X, Y, Z, cos$, sin$, 
-			r2 = -GraphicUtils.toRadians(rz), r1 = -GraphicUtils.toRadians(ry), r0 = -GraphicUtils.toRadians(rx);
-
+		float X, Y, Z, cos$, sin$;
+		
 		cos$ = GraphicUtils.cos(r0);
 		sin$ = GraphicUtils.sin(r0);
 		Z = cos$ * Z0 - sin$ * Y0;

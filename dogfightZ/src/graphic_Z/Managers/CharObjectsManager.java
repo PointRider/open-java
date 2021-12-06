@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.PriorityQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
@@ -17,6 +19,8 @@ public class CharObjectsManager extends TDObjectsManager
 	public List<Iterable<Dynamic>> dynamicObjLists;
 	public List<PriorityQueue<Dynamic>> selfDisposable;
 	
+	private ExecutorService epool;
+	
 	public CharObjectsManager()
 	{
 		count = 0;
@@ -24,6 +28,7 @@ public class CharObjectsManager extends TDObjectsManager
 		staticObjLists  = new ArrayList<Iterable<ThreeDs>>();
 		dynamicObjLists = new ArrayList<Iterable<Dynamic>>();
 		selfDisposable  = new ArrayList<PriorityQueue<Dynamic>>();
+		epool  = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 	}
 	
 	public Iterable<ThreeDs> newStaticObjectList(Iterable<ThreeDs> objLst)
@@ -73,15 +78,17 @@ public class CharObjectsManager extends TDObjectsManager
 	public void printNew()
 	{
 		for(Iterable<Dynamic> eachList:dynamicObjLists)
-			for(Dynamic aObj:eachList)
-				aObj.go();
+			for(Dynamic aObj:eachList) aObj.go();
+			    //epool.execute(aObj);//
 		
 		for(PriorityQueue<Dynamic> eachList:selfDisposable)
 			for(Dynamic aObj:eachList)
 				aObj.go();
 		
-		for(ThreeDs aObj:objects)
-			aObj.go();
+		for(ThreeDs aObj:objects) {
+		    //epool.execute(aObj);//
+		    aObj.go();
+		}
 	}
 	
 }

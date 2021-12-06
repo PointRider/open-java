@@ -68,7 +68,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 		if(lifeTime > maxLife)
 			lifeTime = maxLife;
 		
-		lifeTo			= lifeTime + System.currentTimeMillis() / 1000;
+		lifeTo			= lifeTime + System.currentTimeMillis();
 		
 		location[0] = Location[0];
 		location[1] = Location[1];
@@ -99,8 +99,8 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 		{
 			//------------[go street]------------
             speed -= speed * resistanceRate;
-            r1 = GraphicUtils.toRadians(roll_angle[1]);
-            r2 = GraphicUtils.toRadians(roll_angle[0]);
+            r1 = roll_angle[1];
+            r2 = roll_angle[0];
 			t  = GraphicUtils.cos(r1) * speed;
 			x  = GraphicUtils.sin(r1) * speed;
 			y  = GraphicUtils.sin(r2) * t;

@@ -111,10 +111,13 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 		super(gameManager, null, 0.0F, -1, null, null, null, false);
 		specialDisplay	= '@';
 		maxSpeed		= max_speed;
-		setMaxVelRollUp(20.0F);				//导弹最大上下翻滚能力
-		setMaxVelTurnLR(20.0F);				//导弹最大左右水平转向能力
-		setMaxVelRollLR(20.0F);				//导弹最大左右翻滚能力
-		launcher			= From;				//导弹发射源
+		
+        setMaxVelTurnLR(0.34906585039886595F);//导弹最大上下翻滚能力
+        setMaxVelRollLR(0.34906585039886595F);//导弹最大左右水平转向能力
+        setMaxVelRollUp(0.34906585039886595F);//导弹最大左右翻滚能力
+        setMaxVelRollDn(0.34906585039886595F);//导弹最大左右翻滚能力
+        
+		launcher		= From;				//导弹发射源
 		camera			= Camera;			//玩家摄像机，在跟随导弹视角后，将玩家视角归还给from所指示的源物体
 		actived			= true;				//导弹是否被激活
 		lifeLeft = life	= lifeTime;			//导弹有效时间(与speed一起决定最大射程)
@@ -122,7 +125,7 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 		startGuideTime	= guideStartTime;	//导弹发射后进入制导状态的时间
 		guideResolution = guide_Resolution;	//导弹制导分辨率
 		guideFOV		= guide_FOV;		//导弹最大搜寻视角
-		lifeTo = life + System.currentTimeMillis() / 1000;
+		lifeTo = life + System.currentTimeMillis();
 		setResistanceRate_normal(0.0F);
 		range_old		= 0.0F;
 		
@@ -241,11 +244,11 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 			if(life - lifeLeft > startGuideTime)
 				trace();
 			//------------[go street]------------
-			r1 = GraphicUtils.toRadians(roll_angle[1]);
-			r2 = GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0]));
+			r1 = roll_angle[1];
+			r2 = GraphicUtils.cos(roll_angle[0]);
 			t  = GraphicUtils.cos(r1) * getSpeed();
 			x  = GraphicUtils.tan(r1) * t;
-			y  = GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[0])) * t;
+			y  = GraphicUtils.sin(roll_angle[0]) * t;
 			z  = r2 * t;
 			
 			location[0]	-= x;
@@ -257,19 +260,19 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 			turn_lr(velocity_roll[1]);
 			roll_lr(velocity_roll[2]);
 			//-----------------------------------
-			//location[0] += CharTimeSpace.g;
 			
-			if(target != null  &&  target.isAlive()  &&  GraphicUtils.range(location, target.location) < 224)
-			{
-				target.getDamage((int)(50 - 10 * GraphicUtils.random()), launcher, "Missile");
-				Particle.makeExplosion(getGameManager(), location, 15, 75, 0.025F, 0.1F);
-
-				if(target.isPlayer()) target.getGameManager().colorFlash(255, 255, 255, 127, 16, 16, 20);
-				if(launcher.isPlayer()) launcher.getGameManager().colorFlash(0, 192, 255, 0, 0, 0, 12);
-				
-				disable();
-				return;
-			}
+			if(target != null  &&  target.isAlive()) {
+			    if(GraphicUtils.range(location, target.location) < 224) {
+    				target.getDamage((int)(50 - 10 * GraphicUtils.random()), launcher, "Missile");
+    				Particle.makeExplosion(getGameManager(), location, 15, 75, 0.025F, 0.1F);
+    
+    				if(target.isPlayer()) target.getGameManager().colorFlash(255, 255, 255, 127, 16, 16, 20);
+    				if(launcher.isPlayer()) launcher.getGameManager().colorFlash(0, 192, 255, 0, 0, 0, 12);
+    				
+    				disable();
+    				return;
+    			}
+			} else lifeLeft -= 3;
 		}
 				
 		--lifeLeft;

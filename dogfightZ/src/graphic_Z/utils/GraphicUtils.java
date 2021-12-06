@@ -7,7 +7,19 @@ public class GraphicUtils
     public  static final float PI = 3.141592653589793F;
     public  static final float halfAPI = PI / 2;
     public  static final float PIMUL2 = PI * 2;
+    public  static final float ngaHALFAPI = -halfAPI;
     public  static final float negativeHalfAPI = -halfAPI;
+    
+    public  static final float RAD0 = 0;
+    public  static final float RAD1 = 0.0174532925199433F;
+    public  static final float RAD30 = halfAPI / 3;
+    public  static final float RAD45 = PI / 4;
+    public  static final float RAD60 = RAD30 * 2;
+    public  static final float RAD90 = halfAPI;
+    public  static final float RAD180 = PI;
+    public  static final float RAD270 = halfAPI * 3;
+    public  static final float RAD360 = PIMUL2;
+    
 	private static final int boot = 65536;
     private static final int boot_1 = boot - 1;
     private static final int halfABoot = boot >> 1;
@@ -108,7 +120,7 @@ public class GraphicUtils
         }
     }
     
-    public static float atan2(float y, float x) {
+    public static final float atan2(float y, float x) {
         if(x > 0) return atan(y/x);
         else if(x < 0) {
              if(y >= 0) return atan(y/x) + PI;
@@ -127,11 +139,11 @@ public class GraphicUtils
     public static final float toDegrees(float rad) {
         return rad * 57.29577951308233F;
     }
-
+/*
     public static final float toRadians(float deg) {
         return deg * 0.0174532925199433F;
     }
-
+*/
     public static final float range(float p1[], float p2[])
     {
         float d1 = (p2[0]-p1[0]);
@@ -215,11 +227,17 @@ public class GraphicUtils
         return GraphicUtils.sqrt(x2 + y2 + z2);
     }
     
-    public static final float[] getDirectionVector(float speedVector[]) {
-        float x = speedVector[0], y = speedVector[1], z = speedVector[2];
+    public static final boolean inBox(int x, int y, int boxX, int boxY) {
+        return x >= 0  &&  x < boxX  &&  y >= 0  &&  y <= boxY;
+    }
+    
+    public static final void toDirectionVector(float speedVector[]) {
+        //float x = speedVector[0], y = speedVector[1], z = speedVector[2];
         float length = vectorLength(speedVector);
-        
-        return new float[] {x / length, y / length, z / length};
+        speedVector[0] /= length;
+        speedVector[1] /= length;
+        speedVector[2] /= length;
+        //return new float[] {x / length, y / length, z / length};
     }
     
 	

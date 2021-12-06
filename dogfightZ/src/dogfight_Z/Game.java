@@ -54,6 +54,7 @@ public class Game extends CharTimeSpace implements Runnable
 
 	private CharLabel 			EndScreen;
 	//public CharLabel            lbltest;
+	//private NPC npctest;
 	
 	private CharDynamicHUD		hud_roll_up_dn_angle;
 	
@@ -153,8 +154,6 @@ public class Game extends CharTimeSpace implements Runnable
 			Mess, 
 			searching_visibility, 
 			max_motionRate, 
-			visualManager.resolution[0], 
-			visualManager.resolution[1], 
 			camp, 
 			firedAmmo, 
 			waitToAddQue, 
@@ -348,9 +347,10 @@ public class Game extends CharTimeSpace implements Runnable
                 
                 cmp = new String(tmp);
                 newNPC(myJetModel_file, id, 10000, visibility * 10, Float.parseFloat(diff), Integer.parseInt(cmp)).randomRespawn();
-                
-                if(c == -1)
-                    break;
+                //npctest = (NPC) newNPC(myJetModel_file, id, 10000, visibility * 10, Float.parseFloat(diff), Integer.parseInt(cmp));
+                //npctest.randomRespawn();
+                //mainCamera.connectLocationAndAngle(npctest.getCameraLocation(), npctest.getCameraRollAngle());
+                if(c == -1) break;
             }
         }   catch(IOException exc) {}
 	}
@@ -603,10 +603,8 @@ public class Game extends CharTimeSpace implements Runnable
 	
 	private final void updateHUD() {
 	    
-        float direcXYZ[] = Aircraft.getFakeDirectionXYZ(GraphicUtils.getDirectionVector(getMyJet().getCurrentSpeedVector()));
-        direcXYZ[0] = GraphicUtils.toDegrees(direcXYZ[0]);
-        direcXYZ[1] = GraphicUtils.toDegrees(direcXYZ[1]);
-        //direcXYZ[2] = GraphicUtils.toDegrees(direcXYZ[2]);
+        float x = getMyJet().getCurrentDirectionXYZ()[0];
+        float y = getMyJet().getCurrentDirectionXYZ()[1];
 	    
         /*
 	    String testInfo = 
@@ -629,9 +627,21 @@ public class Game extends CharTimeSpace implements Runnable
                 String.format("%.2f", direcXYZ[0]) + ", " + 
                 String.format("%.2f", direcXYZ[1]) + ", " + 
                 String.format("%.2f", direcXYZ[2]);
-	    
-	    lbltest.setText(testInfo);
 	    */
+        /*
+	    lbltest.setText("tracing " + ((npctest.tracingTarget == null)? "null" : npctest.tracingTarget.getID()) + ",\n" + 
+                        "lockedBy " + ((npctest.locked_By == null)? "null" : npctest.locked_By.getID()) + ",\n" + 
+	                    "currentMaxLockingPriority " + npctest.currentMaxLockingPriority + ",\n" +
+                        "Selected " + npctest.lockingSelected + ",\n\n" + 
+	                    "lockTimeLeft " + npctest.lockTimeLeft + ",\n" + 
+	                    "locked " + npctest.locked + ",\n" + 
+                        "currentSelectObj " + ((npctest.currentSelectObj == null)? "null" : npctest.currentSelectObj.getID()) + ",\n\n" +
+	                    "missileLeft " + npctest.missileMagazineLeft
+	    );
+	    */
+        
+        
+        
 		lbl1.setText("speed: " + String.format("%.2f", getMyJet().getSpeed() * 14));
 		lbl2.setText("shift: " + String.format("%.2f", getMyJet().getControl_stick_acc()));
 		lbl3.setText("rpm  : " + String.format("%.2f", Aircraft.getCurrentRPM(getMyJet().getMax_rpm(), getMyJet().getControl_stick_acc())));
@@ -649,16 +659,17 @@ public class Game extends CharTimeSpace implements Runnable
 					hud_Radar.visible = lbl1.visible = lbl2.visible = lbl3.visible = lbl4.visible = true;
 			//------------[Dynamic HUDs]------------
 			
-			hud_roll_up_dn_angle.angle = GraphicUtils.abs(getMyJet().roll_angle[1]) > 90.0F? getMyJet().roll_angle[2] + 180 : getMyJet().roll_angle[2];
+			boolean tmpCondi = GraphicUtils.abs(getMyJet().roll_angle[1]) > GraphicUtils.RAD90;
+			hud_roll_up_dn_angle.angle = tmpCondi? getMyJet().roll_angle[2] + GraphicUtils.RAD180 : getMyJet().roll_angle[2];
+			float tmp = GraphicUtils.sin(tmpCondi? getMyJet().roll_angle[1] :-getMyJet().roll_angle[1]);
+			hud_roll_up_dn_angle.location[0] = (int) (GraphicUtils.sin(getMyJet().roll_angle[2]) * tmp * - resolution_min + (visualManager.getResolution_X()>>1));
+			hud_roll_up_dn_angle.location[1] = (int) (GraphicUtils.cos(getMyJet().roll_angle[2]) * tmp * - resolution_min + (visualManager.getResolution_Y()>>1));
 			
-			hud_roll_up_dn_angle.location[0] = (int) (GraphicUtils.sin(GraphicUtils.toRadians(getMyJet().roll_angle[2])) * GraphicUtils.sin((float) GraphicUtils.toRadians(GraphicUtils.abs(getMyJet().roll_angle[1]) > 90.0? -getMyJet().roll_angle[1] : getMyJet().roll_angle[1])) * - resolution_min + (visualManager.getResolution_X()>>1));
-			hud_roll_up_dn_angle.location[1] = (int) (GraphicUtils.cos(GraphicUtils.toRadians(getMyJet().roll_angle[2])) * GraphicUtils.sin((float) GraphicUtils.toRadians(GraphicUtils.abs(getMyJet().roll_angle[1]) > 90.0?  getMyJet().roll_angle[1] :-getMyJet().roll_angle[1])) * - resolution_min + (visualManager.getResolution_Y()>>1));
-			
-			hud_roll_up_dn_scrollBar.value = (int) (direcXYZ[1] / 5/*360 / 72*/);
-			hud_turn_lr_scrollBar.value    = (int) ((direcXYZ[0] + 180) / 5);
+			hud_roll_up_dn_scrollBar.value = (int) (y / 0.08726646259971647F/*5=(360 / 72)*/);
+			hud_turn_lr_scrollBar.value    = (int) ((x + GraphicUtils.RAD180) / 0.08726646259971647F);
 			 
 			if(hud_roll_up_dn_scrollBar.value > 0) {
-	            backRGB = (int) (direcXYZ[1] / 1.5F);
+	            backRGB = (int) (y / 0.02617993877991495F);
 			} else backRGB = 0;
 		}
 		else
@@ -692,6 +703,10 @@ public class Game extends CharTimeSpace implements Runnable
 			hud_decoyReloading_progressBar.value = 1.0F - (float)getMyJet().decoyReloadingTimeLeft / (float)getMyJet().decoyReloadingTime;	
 		}
 		else hud_decoyReloading_progressBar.visible = false;
+	}
+	
+	public int[] getResolution() {
+	    return visualManager.resolution;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -890,46 +905,56 @@ public class Game extends CharTimeSpace implements Runnable
         SinglePoint xy;
         xy = eventManager.popAMouseOpreation();
         
-        if(!(keyState_Up && keyState_Dn && keyState_Lf && keyState_Rt)) {
+        if(!(keyState_Up || keyState_Dn || keyState_Lf || keyState_Rt)) {
+            
             if(getMyJet().isCannonFiring) {
-                getMyJet().control_roll_lr((float)(-xy.x)/224.0F);
-                getMyJet().control_roll_up_dn((float)(-xy.y)/224.0F);
+                getMyJet().control_roll_lr((float)(-xy.x) * 7.791648446403259e-05F);
+                getMyJet().control_roll_up_dn((float)(-xy.y) * 7.791648446403259e-05F);
             } else {
-                getMyJet().control_roll_lr((float)(-xy.x)/96.0F);
-                getMyJet().control_roll_up_dn((float)(-xy.y)/96.0F);
+                getMyJet().control_roll_lr((float)(-xy.x) * 0.00018180513041607602F);
+                getMyJet().control_roll_up_dn((float)(-xy.y) * 0.00018180513041607602F);
             }
+            
+            /*
+            if(getMyJet().isCannonFiring) {
+                getMyJet().control_roll_lr((float)(-xy.x) / 224.0F);
+                getMyJet().control_roll_up_dn((float)(-xy.y) / 224.0F);
+            } else {
+                getMyJet().control_roll_lr((float)(-xy.x) / 96.0F);
+                getMyJet().control_roll_up_dn((float)(-xy.y) / 96.0F);
+            }*/
         }
         
 		if(keyState_W) getMyJet().control_acc(0.05F);
 		
 		if(keyState_A) {
-			if(getMyJet().isCannonFiring) getMyJet().control_turn_lr(-0.1875F);
-			else getMyJet().control_turn_lr(-0.5F);
+			if(getMyJet().isCannonFiring) getMyJet().control_turn_lr(-0.0032724923474893686F);
+			else getMyJet().control_turn_lr(-0.00872664625997165F);
 		}
 		
 		if(keyState_D) {
-			if(getMyJet().isCannonFiring) getMyJet().control_turn_lr(0.1875F);
-			else getMyJet().control_turn_lr(0.5F);
+			if(getMyJet().isCannonFiring) getMyJet().control_turn_lr(0.0032724923474893686F);
+			else getMyJet().control_turn_lr(0.00872664625997165F);
 		}
 		
 		if(keyState_Up) {
-            if(getMyJet().isCannonFiring) getMyJet().control_roll_up_dn(-0.1875F);
-            else getMyJet().control_roll_up_dn(-0.5F);
+            if(getMyJet().isCannonFiring) getMyJet().control_roll_up_dn(-0.0032724923474893686F);
+            else getMyJet().control_roll_up_dn(-0.00872664625997165F);
         }
         
         if(keyState_Dn) {
-            if(getMyJet().isCannonFiring) getMyJet().control_roll_up_dn(0.1875F);
-            else getMyJet().control_roll_up_dn(0.5F);
+            if(getMyJet().isCannonFiring) getMyJet().control_roll_up_dn(0.0032724923474893686F);
+            else getMyJet().control_roll_up_dn(0.00872664625997165F);
         }
 
         if(keyState_Lf) {
-            if(getMyJet().isCannonFiring) getMyJet().control_roll_lr(0.1875F);
-            else getMyJet().control_roll_lr(0.5F);
+            if(getMyJet().isCannonFiring) getMyJet().control_roll_lr(0.0032724923474893686F);
+            else getMyJet().control_roll_lr(0.00872664625997165F);
         }
         
         if(keyState_Rt) {
-            if(getMyJet().isCannonFiring) getMyJet().control_roll_lr(-0.1875F);
-            else getMyJet().control_roll_lr(-0.5F);
+            if(getMyJet().isCannonFiring) getMyJet().control_roll_lr(-0.0032724923474893686F);
+            else getMyJet().control_roll_lr(-0.00872664625997165F);
         }
         
 		if(keyState_S) getMyJet().control_brk();

@@ -73,8 +73,11 @@ private static ArrayList<float[]> missileModelData;
         float resistanceRate
     ) {
         float roll[] = new float[3];
+        /*
         for(float x=105 ; x<=255 ; x+=1/density) {
-            for(float y=-30 ; y<0 ; y+=1/density) {
+            for(float y=-30 ; y<0 ; y+=1/density) {*/
+        for(float x=1.8325957145940464F, delta=GraphicUtils.RAD1/density ; x<=4.450589592585541F ; x+=delta) {
+            for(float y=-0.5235987755982989F ; y<0 ; y+=delta) {
                 roll[0] = x;
                 roll[1] = y;
                 gameManager.throwDecoy (
@@ -99,8 +102,7 @@ private static ArrayList<float[]> missileModelData;
 		float Location[],
 		float Roll_angle[],
 		float Roll_angle_aircraft[]
-	)
-	{
+	) {
 		super(gameManager, null, 0.0F, -1, null, null, "\nDecory" + GraphicUtils.random(), false);
 		setCamp(campTo);
 		specialDisplay = '@';
@@ -127,7 +129,7 @@ private static ArrayList<float[]> missileModelData;
 		velocity = Speed * GraphicUtils.random() * 2;
 		setResistanceRate_normal(resistance_rate * GraphicUtils.random());
 		setHP(100);
-		setLockingPriority(-128/*-(short)(2.0 + 10.0 * GraphicUtils.random())*/);
+		setLockingPriority(-(int)(10.0F * GraphicUtils.random()));
 	}
 	
 	private Decoy
@@ -158,8 +160,8 @@ private static ArrayList<float[]> missileModelData;
             velocity -= velocity * getResistanceRate_normal() * 1.5;
             
 		    float x, y, z;
-			float r1 = GraphicUtils.toRadians(roll_angle[1] + Roll_angle_Aircraft[1]);
-	        float r2 = GraphicUtils.toRadians(roll_angle[0] + Roll_angle_Aircraft[0]);
+			float r1 = roll_angle[1] + Roll_angle_Aircraft[1];
+	        float r2 = roll_angle[0] + Roll_angle_Aircraft[0];
 	        float t  = GraphicUtils.cos(r1) * velocity;
 	        x  = GraphicUtils.sin(r1) * velocity;
 	        y  = GraphicUtils.sin(r2) * t;
@@ -169,8 +171,8 @@ private static ArrayList<float[]> missileModelData;
             location[1] += y;
             location[2] += z;
             
-	        r1 = GraphicUtils.toRadians(Roll_angle_Aircraft[1]);
-	        r2 = GraphicUtils.toRadians(Roll_angle_Aircraft[0]);
+	        r1 = Roll_angle_Aircraft[1];
+	        r2 = Roll_angle_Aircraft[0];
 	        t  = GraphicUtils.cos(r1) * getSpeed();
             x  = GraphicUtils.sin(r1) * getSpeed();
             y  = GraphicUtils.sin(r2) * t;

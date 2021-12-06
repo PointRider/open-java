@@ -1,6 +1,6 @@
 package graphic_Z.Objects;
 
-public class CharMessObject extends CharObject
+public class CharMessObject extends CharObject implements Runnable
 {
 	protected float mess;
 	protected float velocity[];
@@ -59,8 +59,7 @@ public class CharMessObject extends CharObject
 	}
 	
 	@Override
-	public void run()
-	{
+	public void run() {
 		go();
 	}
 }

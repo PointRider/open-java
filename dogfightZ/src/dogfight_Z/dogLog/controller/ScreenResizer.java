@@ -164,7 +164,7 @@ public class ScreenResizer extends Menu
 	            HUDImgFile, fraps_buffer, 
 	            HUDLayer, resolution, 
 	            size_X, size_Y, 
-	            (short)(resolution[0]/2), (short)(resolution[1]/2)
+	            resolution[0] >> 1, resolution[1] >> 1
 	        );
 	        
 	        HUDs.add(newHud);
@@ -197,7 +197,7 @@ public class ScreenResizer extends Menu
 	            HUDImgFile, fraps_buffer, 
 	            HUDLayer, resolution, 
 	            size_X, size_Y, 
-	            (resolution[0]>>1), (resolution[1]>>1),
+	            resolution[0] >> 1, resolution[1] >> 1,
 	            direction, 0, size_Show
 	        );
 	        
@@ -281,49 +281,49 @@ public class ScreenResizer extends Menu
         
         if(mainCamera.roll_source[0] < 0)
         {
-            if((-myJet.roll_angle[0]) - mainCamera.roll_source[0] < 180)
+            if((-myJet.roll_angle[0]) - mainCamera.roll_source[0] < GraphicUtils.RAD180)
                 t1 = -myJet.roll_angle[0] - mainCamera.roll_source[0];
             else
-                t1 = -myJet.roll_angle[0] - mainCamera.roll_source[0] - 360;
+                t1 = -myJet.roll_angle[0] - mainCamera.roll_source[0] - GraphicUtils.RAD360;
         }
         else if(mainCamera.roll_source[0] > 0)
         {
-            if(mainCamera.roll_source[0] - (-myJet.roll_angle[0]) < 180)
+            if(mainCamera.roll_source[0] - (-myJet.roll_angle[0]) < GraphicUtils.RAD180)
                 t1 = -myJet.roll_angle[0] - mainCamera.roll_source[0];
             else
-                t1 = -myJet.roll_angle[0] - mainCamera.roll_source[0] + 360;
+                t1 = -myJet.roll_angle[0] - mainCamera.roll_source[0] + GraphicUtils.RAD360;
         }
         else t1 = -myJet.roll_angle[0];
         
         if(mainCamera.roll_source[1] < 0)
         {
-            if((-myJet.roll_angle[1]) - mainCamera.roll_source[1] < 180)
+            if((-myJet.roll_angle[1]) - mainCamera.roll_source[1] < GraphicUtils.RAD180)
                 t2 = -myJet.roll_angle[1] - mainCamera.roll_source[1];
             else
-                t2 = -myJet.roll_angle[1] - mainCamera.roll_source[1] - 360;
+                t2 = -myJet.roll_angle[1] - mainCamera.roll_source[1] - GraphicUtils.RAD360;
         }
         else if(mainCamera.roll_source[1] > 0)
         {
-            if(mainCamera.roll_source[1] - (-myJet.roll_angle[1]) < 180)
+            if(mainCamera.roll_source[1] - (-myJet.roll_angle[1]) < GraphicUtils.RAD180)
                 t2 = -myJet.roll_angle[1] - mainCamera.roll_source[1];
             else
-                t2 = -myJet.roll_angle[1] - mainCamera.roll_source[1] + 360;
+                t2 = -myJet.roll_angle[1] - mainCamera.roll_source[1] + GraphicUtils.RAD360;
         }
         else t2 = -myJet.roll_angle[1];
         
         if(mainCamera.roll_source[2] < 0)
         {
-            if((-myJet.roll_angle[2]) - mainCamera.roll_source[2] < 180)
+            if((-myJet.roll_angle[2]) - mainCamera.roll_source[2] < GraphicUtils.RAD180)
                 t3 = -myJet.roll_angle[2] - mainCamera.roll_source[2];
             else
-                t3 = -myJet.roll_angle[2] - mainCamera.roll_source[2] - 360;
+                t3 = -myJet.roll_angle[2] - mainCamera.roll_source[2] - GraphicUtils.RAD360;
         }
         else if(mainCamera.roll_source[2] > 0)
         {
-            if(mainCamera.roll_source[2] - (-myJet.roll_angle[2]) < 180)
+            if(mainCamera.roll_source[2] - (-myJet.roll_angle[2]) < GraphicUtils.RAD180)
                 t3 = -myJet.roll_angle[2] - mainCamera.roll_source[2];
             else
-                t3 = -myJet.roll_angle[2] - mainCamera.roll_source[2] + 360;
+                t3 = -myJet.roll_angle[2] - mainCamera.roll_source[2] + GraphicUtils.RAD360;
         }
         else t3 = -myJet.roll_angle[2];
         
@@ -331,9 +331,9 @@ public class ScreenResizer extends Menu
         t2 /= 6;
         t3 /= 6;
         
-        mainCamera.roll_source[0] = (mainCamera.roll_source[0] + t1) % 360;
-        mainCamera.roll_source[1] = (mainCamera.roll_source[1] + t2) % 360;
-        mainCamera.roll_source[2] = (mainCamera.roll_source[2] + t3) % 360;
+        mainCamera.roll_source[0] = (mainCamera.roll_source[0] + t1) % GraphicUtils.RAD360;
+        mainCamera.roll_source[1] = (mainCamera.roll_source[1] + t2) % GraphicUtils.RAD360;
+        mainCamera.roll_source[2] = (mainCamera.roll_source[2] + t3) % GraphicUtils.RAD360;
     
         TDObject.getXYZ_afterRolling
         (
@@ -547,8 +547,8 @@ public class ScreenResizer extends Menu
         
         hud_crosshair.setLocation(((resolution_X >> 1) - (65 >> 1)), ((resolution_Y >> 1) - (11 >> 1)));
         
-        hud_roll_up_dn_angle.location[0] = (int) ((float) GraphicUtils.sin(GraphicUtils.toRadians(myJet.roll_angle[2])) * (float) GraphicUtils.sin(GraphicUtils.toRadians(GraphicUtils.abs(myJet.roll_angle[1]) > 90.0F? -myJet.roll_angle[1] : myJet.roll_angle[1])) * - resolution_min + (visualManager.resolution[0]>>1));
-        hud_roll_up_dn_angle.location[1] = (int) ((float) GraphicUtils.cos(GraphicUtils.toRadians(myJet.roll_angle[2])) * (float) GraphicUtils.sin(GraphicUtils.toRadians(GraphicUtils.abs(myJet.roll_angle[1]) > 90.0F?  myJet.roll_angle[1] :-myJet.roll_angle[1])) * - resolution_min + (visualManager.resolution[1]>>1));
+        hud_roll_up_dn_angle.location[0] = (int) (GraphicUtils.sin(myJet.roll_angle[2]) * GraphicUtils.sin(GraphicUtils.abs(myJet.roll_angle[1]) > 90.0F? -myJet.roll_angle[1] : myJet.roll_angle[1]) * - resolution_min + (visualManager.resolution[0]>>1));
+        hud_roll_up_dn_angle.location[1] = (int) (GraphicUtils.cos(myJet.roll_angle[2]) * GraphicUtils.sin(GraphicUtils.abs(myJet.roll_angle[1]) > 90.0F?  myJet.roll_angle[1] :-myJet.roll_angle[1]) * - resolution_min + (visualManager.resolution[1]>>1));
         
         hud_Radar.setLocation((visualManager.resolution[0] - 22), 1);
 	}

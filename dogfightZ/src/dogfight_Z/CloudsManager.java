@@ -28,13 +28,13 @@ public class CloudsManager implements Runnable
 		for(currentCloudsCount=0 ; currentCloudsCount < maxCloudsCount ; ++currentCloudsCount)
 		{
 			random1 = GraphicUtils.random();
-			if((int)(random1 * 1000000) % 2 == 0)
+			if((GraphicUtils.fastRanodmInt() & 1) == 0)
 				random1 = -random1;
 			random2 = GraphicUtils.random();
-			if((int)(random2 * 1000000) % 2 == 0)
+			if((GraphicUtils.fastRanodmInt() & 1) == 0)
 				random2 = -random2;
 			random3 = GraphicUtils.random();
-			if((int)(random3 * 1000000) % 2 == 0)
+			if((GraphicUtils.fastRanodmInt() & 1) == 0)
 				random3 = -random3;
 			
 			clouds.add

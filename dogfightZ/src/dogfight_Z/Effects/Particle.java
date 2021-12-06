@@ -27,11 +27,11 @@ public class Particle extends EngineFlame
 			visible = false;
 			end = true;
 		} else {
-			float x, y, z, t = GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[1])) * velocity;
+			float x, y, z, t = GraphicUtils.cos(roll_angle[1]) * velocity;
 			
-			x = GraphicUtils.tan(GraphicUtils.toRadians(roll_angle[1])) * t;
-			y = GraphicUtils.sin(GraphicUtils.toRadians(roll_angle[0])) * t;
-			z = GraphicUtils.cos(GraphicUtils.toRadians(roll_angle[0])) * t;
+			x = GraphicUtils.tan(roll_angle[1]) * t;
+			y = GraphicUtils.sin(roll_angle[0]) * t;
+			z = GraphicUtils.cos(roll_angle[0]) * t;
 			
 			location[0]	-= x;
 			location[1]	+= y;
@@ -48,10 +48,8 @@ public class Particle extends EngineFlame
         float roll[] = new float[3];
         roll[2] = 0;
         
-        for(float x=0 ; x<360 ; x+=1/density) 
-        {
-            for(float y=-30 ; y<90 ; y+=1/density/2)
-            {
+        for(float x = 0, dx = GraphicUtils.RAD1/density ; x<GraphicUtils.RAD360 ; x += dx) {
+            for(float y=-0.5235987755982989F, dy = GraphicUtils.RAD1/density/2/*-30 degrees*/ ; y<GraphicUtils.RAD90 ; y += dy) {
                 roll[0] = x;
                 roll[1] = y*2;
                 gameManager.newEffect(new Particle(location, roll, lifeTime + (int)(y * GraphicUtils.random()), velocity, resistanceRate));

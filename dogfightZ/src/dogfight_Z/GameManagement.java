@@ -31,5 +31,6 @@ public interface GameManagement {
     void newEffect(Dynamic effect);
 
     float[] getPlayerLocation();
-
+    
+    int[] getResolution();
 }

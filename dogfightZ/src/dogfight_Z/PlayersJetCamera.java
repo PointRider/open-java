@@ -66,7 +66,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 		setMaxSearchingRange(max_searchingRange);
 		currentMaxLockingPriority = 0;
 
-		hudDistance = new CharLabel(frapsBuffer, (short)0, resolution_XY, true);
+		hudDistance = new CharLabel(frapsBuffer, 0, resolution_XY, true);
 	}
 	
 	/*
@@ -96,7 +96,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 	@Override
 	public Object exposure()
 	{
-		reversedAngle[0] = roll_source[0] + 180;
+		reversedAngle[0] =  roll_source[0] + GraphicUtils.RAD180;
 		reversedAngle[1] = -roll_source[1];
 		reversedAngle[2] = -roll_source[2];
 		
@@ -127,7 +127,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 			r1 = rad(rollAngleOfanObj[1]);
 			r2 = rad(rollAngleOfanObj[2]);
 			*/
-			rge = exposureObject(aObject, GraphicUtils.toRadians(roll_angle[0]), GraphicUtils.toRadians(roll_angle[1]), GraphicUtils.toRadians(roll_angle[2]), false);
+			rge = exposureObject(aObject, roll_angle[0], roll_angle[1], roll_angle[2], false);
 			
 			if(rge > getMaxSearchingRange()) /*try*/
 			{
@@ -142,6 +142,10 @@ public class PlayersJetCamera extends CharFrapsCamera
 				resolution[0], resolution[1], location, roll_angle, point_on_Scr, FOV
 			);
 			
+
+            int p0 = (int) point_on_Scr[0];
+            int p1 = (int) point_on_Scr[1];
+            
 			if
 			(
 				range_to_Scr > 0    &&    range_to_Scr < getMaxSearchingRange()    &&    
@@ -151,10 +155,10 @@ public class PlayersJetCamera extends CharFrapsCamera
 				hudDistance.setText(String.format("%.0f", range_to_Scr));
 				if(a.getCamp() == thisCamp) //友军
 				{
-					hudFriends.location[0] = (int) point_on_Scr[0];
-					hudFriends.location[1] = (int) point_on_Scr[1];
+					hudFriends.location[0] = p0;
+					hudFriends.location[1] = p1;
 					hudFriends.printNew();	//盖章
-					hudDistance.setLocation((short)(hudFriends.location[0] - hudFriends.centerX), hudFriends.location[1] + hudFriends.centerY + 1);
+					hudDistance.setLocation(p0 - hudFriends.centerX, p1 + hudFriends.centerY + 1);
 					hudDistance.printNew();
 				}
 				else //敌军
@@ -167,11 +171,11 @@ public class PlayersJetCamera extends CharFrapsCamera
 						locked						= false;
 						lockingSelected				= true;
 						
-						hudLocking.location[0] = (int) point_on_Scr[0];
-						hudLocking.location[1] = (int) point_on_Scr[1];
+						hudLocking.location[0] = p0;
+						hudLocking.location[1] = p1;
 						hudLocking.printNew();	//盖章
-						GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, (int)point_on_Scr[0], (int)point_on_Scr[1], linePixel);
-						hudDistance.setLocation((int)(point_on_Scr[0] - hudLocking.centerX), (int)(point_on_Scr[1] + hudLocking.centerY));
+						GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, p0, p1, linePixel);
+						hudDistance.setLocation(p0 - hudLocking.centerX, p1 + hudLocking.centerY);
 						hudDistance.printNew();
 					}
 					else //未发生优先级切换
@@ -179,15 +183,16 @@ public class PlayersJetCamera extends CharFrapsCamera
 						if(/*myJet.missileMagazineLeft > 0  &&  */location == myJet.getCameraLocation() && currentSelectObj!=null && a!=null && currentSelectObj.getID().equals(a.getID())  &&  !reversed)//
 						{//如果正在锁定或者已锁定了a
 							lockingSelected = true;//设置已选择锁定a的状态
+							
 							if(locked)//已锁定
 							{
-								hudLocked.location[0] = (int) point_on_Scr[0];
-								hudLocked.location[1] = (int) point_on_Scr[1];
+								hudLocked.location[0] = p0;
+								hudLocked.location[1] = p1;
 								
-								GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, (int)point_on_Scr[0], (int)point_on_Scr[1], linePixel);
+								GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, p0, p1, linePixel);
 								a.warning(myJet);
 								
-								hudDistance.setLocation((short)(point_on_Scr[0] - hudLocked.centerX), (short)(point_on_Scr[1] + hudLocked.centerY));
+								hudDistance.setLocation(p0 - hudLocked.centerX, p1 + hudLocked.centerY);
 								hudDistance.printNew();
 							}
 							else//正在锁定
@@ -195,45 +200,45 @@ public class PlayersJetCamera extends CharFrapsCamera
 								if(--lockTimeLeft <= 0)//刚好锁定
 								{
 									locked = true;
-									hudLocked.location[0] = (int) point_on_Scr[0];
-									hudLocked.location[1] = (int) point_on_Scr[1];
+									
+									hudLocked.location[0] = p0;
+									hudLocked.location[1] = p1;
 									hudLocked.printNew();	//盖章
 
-									GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, (int)point_on_Scr[0], (int)point_on_Scr[1], linePixel);
+									GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, p0, p1, linePixel);
 									a.warning(myJet);
 									
-									hudDistance.setLocation((int)(point_on_Scr[0] - hudLocked.centerX), (int)(point_on_Scr[1] + hudLocked.centerY));
+									hudDistance.setLocation(p0 - hudLocked.centerX, p1 + hudLocked.centerY);
 									hudDistance.printNew();
 									
 									lockTimeLeft = lockTime;
 								}
 								else //还未锁定
 								{
-									hudLocking.location[0] = (int) point_on_Scr[0];
-									hudLocking.location[1] = (int) point_on_Scr[1];
+									hudLocking.location[0] = p0;
+									hudLocking.location[1] = p1;
 									hudLocking.printNew();	//盖章
 
-									GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, (int)point_on_Scr[0], (int)point_on_Scr[1], linePixel);
+									GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, p0, p1, linePixel);
 									a.warning(myJet);
 									
-									hudDistance.setLocation((int)(point_on_Scr[0] - hudLocking.centerX), (int)(point_on_Scr[1] + hudLocking.centerY));
+									hudDistance.setLocation(p0 - hudLocking.centerX, p1 + hudLocking.centerY);
 									hudDistance.printNew();
 								}
 							}
 						}
 						else//没有选择锁定的敌机
 						{
-							hudEnemy.location[0] = (int) point_on_Scr[0];
-							hudEnemy.location[1] = (int) point_on_Scr[1];
+							hudEnemy.location[0] = p0;
+							hudEnemy.location[1] = p1;
 							hudEnemy.printNew();//盖章
-							hudDistance.setLocation((int)(point_on_Scr[0] - hudEnemy.centerX), (int)(point_on_Scr[1] + hudEnemy.centerY));
+							hudDistance.setLocation(p0 - hudEnemy.centerX, p1 + hudEnemy.centerY);
 							hudDistance.printNew();
 						}
 					}
 				}
 			}
 		}
-		
 		
 		if(!lockingSelected) {
 			currentMaxLockingPriority = 0;

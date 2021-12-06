@@ -60,21 +60,17 @@ public class CharDynamicHUD extends CharImage
 	{
 		if(visible)
 		{
-			angle %= 360;
+			angle %= GraphicUtils.PIMUL2;
 			float x0, y0;
-			float r, X, Y, /*tmp,*/ cos$, sin$;
+			float X, Y, /*tmp,*/ cos$, sin$;
 			
-			for(int y=0 ; y<size[1] ; ++y)
-			{
-				for(int x=0 ; x<size[0] ; ++x)
-				{
-					if(HUDImg[y][x] != ' ' || !transparentAtSpace)
-					{
+			for(int y=0 ; y<size[1] ; ++y) {
+				for(int x=0 ; x<size[0] ; ++x) {
+					if(HUDImg[y][x] != ' ' || !transparentAtSpace) {
 						x0 = x-centerX;
 						y0 = y-centerY;
 						
-						if(angle != 0)
-						{
+						if(angle != 0) {
 							/*
 							r  = distance(x0, y0, 0, 0);
 							
@@ -85,9 +81,8 @@ public class CharDynamicHUD extends CharImage
 							x0 = ((x0<0)?(-X):X);
 							*/
 							
-							r = GraphicUtils.toRadians(angle);
-							cos$ = GraphicUtils.cos(r);
-							sin$ = GraphicUtils.sin(r);
+							cos$ = GraphicUtils.cos(angle);
+							sin$ = GraphicUtils.sin(angle);
 							X = cos$ * x0 - sin$ * y0;
 							Y = sin$ * x0 + cos$ * y0;
 							x0 = X;
