@@ -70,6 +70,8 @@ public class Aircraft extends CharMessObject
 	public Aircraft locked_By;
 	public int		lockingLife;
 	public boolean	lockedByEnemy;
+    public int      missileLockingLife;
+    public boolean  lockedByMissile;
 	//--------------------------
 	//---------[ammo]-----------
 	public int   missileMagazine;			//单次挂载最大弹容量
@@ -97,7 +99,7 @@ public class Aircraft extends CharMessObject
 	
 	public static float getCurrentForce(float maxAccForce, float max_rpm, float rpm)	//
 	{
-		float result = ((-1 / ( rpm/max_rpm*4.75F-5 )) - 0.2F) / 3.8F * maxAccForce;
+		float result = ((-1 / ( rpm / max_rpm * 4.75F-5 )) - 0.2F) / 3.8F * maxAccForce;
 		if(result < 0)
 			return 0;
 		else return result;
@@ -191,6 +193,7 @@ public class Aircraft extends CharMessObject
 		gameManager			= theGameManager;
 		locked_By			= null;
 		lockingLife			= 0;
+		missileLockingLife  = 0;
 		aircrafts			= Aircrafts;
 		missileMagazine		= 4;
 		missileMagazineLeft	= 4;
@@ -234,20 +237,25 @@ public class Aircraft extends CharMessObject
 		String modelFile,
 		float Mess, 
 		int Camp,
-		LinkedListZ<ThreeDs>   Aircrafts,
-		CharFrapsCamera		   MainCamera,
-		boolean                line
+		LinkedListZ<ThreeDs> Aircrafts,
+		CharFrapsCamera	     MainCamera,
+		boolean              line
 	)
 	{
 		this(theGameManager, modelFile, Mess, Camp, Aircrafts, MainCamera, "Me", line);
 	}
 	
-	public void warning(Aircraft source)
-	{
+	public void warning(Aircraft source) {
 		locked_By			= source;
 		lockedByEnemy		= true;
 		lockingLife			= 20;
 	}
+	
+	public void warningMissile(Aircraft source) {
+        locked_By           = source;
+        lockedByMissile     = true;
+        missileLockingLife  = 20;
+    }
 	
 	public void roll_up_dn(float angleVel)
 	{
@@ -286,13 +294,16 @@ public class Aircraft extends CharMessObject
 	
 	public void control_roll_up_dn(float acceleration, float limit, float maxLimit)
 	{
+	    maxLimit *= motionRate;
 		velocity_roll[0] += acceleration * motionRate * limit;
 		
-		if(velocity_roll[0] < 0 && velocity_roll[0] < -maxVelRollDn * motionRate * maxLimit)
-		    velocity_roll[0] = -maxVelRollDn * motionRate * maxLimit;
-		else if(velocity_roll[0] >= 0 && velocity_roll[0] > getMaxVelRollUp() * motionRate * maxLimit)
-		    velocity_roll[0] = getMaxVelRollUp() * motionRate * maxLimit;
+		if(velocity_roll[0] < 0 && velocity_roll[0] < -maxVelRollDn * maxLimit)
+		    velocity_roll[0] = -maxVelRollDn * maxLimit;
+		else if(velocity_roll[0] >= 0 && velocity_roll[0] > getMaxVelRollUp() * maxLimit)
+		    velocity_roll[0] = getMaxVelRollUp() * maxLimit;
 	}
+	
+	private float tmp;
 	
 	public void control_roll_up_dn(float acceleration)
 	{
@@ -304,11 +315,11 @@ public class Aircraft extends CharMessObject
 		velocity_roll[0] += acceleration * motionRate;
 		
 		if(velocity_roll[0] < 0) {
-		    if(velocity_roll[0] < -maxVelRollDn * motionRate)
-	            velocity_roll[0] = -maxVelRollDn * motionRate;
+		    if(velocity_roll[0] < (tmp = -maxVelRollDn * motionRate))
+	            velocity_roll[0] = tmp;
 		} else {
-		    if(velocity_roll[0] > maxVelRollUp * motionRate)
-	            velocity_roll[0] = maxVelRollUp * motionRate;
+		    if(velocity_roll[0] > (tmp = maxVelRollUp * motionRate))
+	            velocity_roll[0] = tmp;
 		}
 		
 		if(acceleration != 0)velocity_roll[0] *= 1.025F;
@@ -383,11 +394,11 @@ public class Aircraft extends CharMessObject
 	{
 		acceleration /= GraphicUtils.min(GraphicUtils.pow(3.0F, GraphicUtils.abs(acceleration)), 3.0F);
 		velocity_roll[2] += acceleration * motionRate * limit;
-		if(GraphicUtils.abs(velocity_roll[2]) > maxVelRollLR * motionRate)
+		if(GraphicUtils.abs(velocity_roll[2]) > (tmp = maxVelRollLR * motionRate))
 		{
 			if(velocity_roll[2] < 0)
-				velocity_roll[2] = -maxVelRollLR * motionRate;
-			else velocity_roll[2] = maxVelRollLR * motionRate;
+				velocity_roll[2] = -tmp;
+			else velocity_roll[2] = tmp;
 		}
 	}
 	
@@ -400,11 +411,11 @@ public class Aircraft extends CharMessObject
             if(acceleration > maxVelRollLR) acceleration = maxVelRollLR * motionRate;
         }
 		velocity_roll[2] += acceleration * motionRate;
-		if(GraphicUtils.abs(velocity_roll[2]) > maxVelRollLR * motionRate)
+		if(GraphicUtils.abs(velocity_roll[2]) > (tmp = maxVelRollLR * motionRate))
 		{
 			if(velocity_roll[2] < 0)
-				velocity_roll[2] = -maxVelRollLR * motionRate;
-			else velocity_roll[2] = maxVelRollLR * motionRate;
+				velocity_roll[2] = -tmp;
+			else velocity_roll[2] = tmp;
 		}
 		
 		if(acceleration != 0) velocity_roll[2] *= 1.0375F;
@@ -412,29 +423,31 @@ public class Aircraft extends CharMessObject
 	
 	public void control_turn_lr(float acceleration, float limit, float maxLimit)
 	{
+	    maxLimit *= motionRate;
 		velocity_roll[1] += acceleration * motionRate * limit;
-		if(GraphicUtils.abs(velocity_roll[1]) > getMaxVelTurnLR() * motionRate * maxLimit)
+		if(GraphicUtils.abs(velocity_roll[1]) > getMaxVelTurnLR() * maxLimit)
 		{
 			if(velocity_roll[1] < 0)
-				velocity_roll[1] = -getMaxVelTurnLR() * motionRate * maxLimit;
-			else velocity_roll[1] = getMaxVelTurnLR() * motionRate * maxLimit;
+				velocity_roll[1] = -getMaxVelTurnLR() * maxLimit;
+			else velocity_roll[1] = getMaxVelTurnLR() * maxLimit;
 		}
 	}
 	
 	public void control_turn_lr(float acceleration)
 	{
+	    tmp = maxVelTurnLR * motionRate;
 		if(acceleration < 0) {
-            if(acceleration < -maxVelTurnLR) acceleration = -maxVelTurnLR * motionRate;
+            if(acceleration < -maxVelTurnLR) acceleration = -tmp;
 		} else {
-		    if(acceleration > maxVelTurnLR) acceleration = maxVelTurnLR * motionRate;
+		    if(acceleration > maxVelTurnLR) acceleration = tmp;
 		}
 		
 		velocity_roll[1] += acceleration * motionRate;
 		if(GraphicUtils.abs(velocity_roll[1]) > getMaxVelTurnLR() * motionRate)
 		{
 			if(velocity_roll[1] < 0)
-				velocity_roll[1] = -maxVelTurnLR * motionRate;
-			else velocity_roll[1] = maxVelTurnLR * motionRate;
+				velocity_roll[1] = -tmp;
+			else velocity_roll[1] = tmp;
 		}
 		
 		if(acceleration != 0) velocity_roll[1] *= 1.025F;
@@ -801,8 +814,12 @@ public class Aircraft extends CharMessObject
 		defaultGo();
 		if(--lockingLife <= 0) {
 			lockedByEnemy = false;
-			locked_By = null;
+			if(lockedByMissile == false) locked_By = null;
 		}
+		if(--missileLockingLife <= 0) {
+            lockedByMissile = false;
+            if(lockedByEnemy == false) locked_By = null;
+        }
 		playersCameraManage();
 	}
 	

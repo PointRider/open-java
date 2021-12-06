@@ -3,13 +3,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.PriorityQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Objects.CharMessObject;
 import graphic_Z.Objects.CharObject;
+import graphic_Z.Worlds.CharWorld;
 import graphic_Z.utils.LinkedListZ;
 
 public class CharObjectsManager extends TDObjectsManager
@@ -19,16 +18,16 @@ public class CharObjectsManager extends TDObjectsManager
 	public List<Iterable<Dynamic>> dynamicObjLists;
 	public List<PriorityQueue<Dynamic>> selfDisposable;
 	
-	private ExecutorService epool;
+	private CharWorld inWorld;
 	
-	public CharObjectsManager()
+	public CharObjectsManager(CharWorld inWorld)
 	{
+	    this.inWorld    = inWorld;
 		count = 0;
 		objects         = new LinkedListZ<ThreeDs>();
 		staticObjLists  = new ArrayList<Iterable<ThreeDs>>();
 		dynamicObjLists = new ArrayList<Iterable<Dynamic>>();
 		selfDisposable  = new ArrayList<PriorityQueue<Dynamic>>();
-		epool  = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 	}
 	
 	public Iterable<ThreeDs> newStaticObjectList(Iterable<ThreeDs> objLst)
@@ -75,11 +74,10 @@ public class CharObjectsManager extends TDObjectsManager
 		objects.remove(obj);
 	}
 	
-	public void printNew()
-	{
+	public void printNew() {
 		for(Iterable<Dynamic> eachList:dynamicObjLists)
-			for(Dynamic aObj:eachList) aObj.go();
-			    //epool.execute(aObj);//
+			for(Dynamic aObj:eachList) //aObj.go();
+			    inWorld.execute(aObj);
 		
 		for(PriorityQueue<Dynamic> eachList:selfDisposable)
 			for(Dynamic aObj:eachList)

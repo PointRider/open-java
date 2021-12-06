@@ -11,7 +11,6 @@ import java.util.TreeSet;
 
 import javax.swing.JTextArea;
 
-import dogfight_Z.CloudsManager;
 import graphic_Z.Cameras.CharFrapsCamera;
 import graphic_Z.Cameras.TDCamera;
 import graphic_Z.Common.Operation;
@@ -30,6 +29,7 @@ import graphic_Z.Worlds.CharWorld;
 import graphic_Z.utils.Common;
 import graphic_Z.utils.GraphicUtils;
 import graphic_Z.utils.HzController;
+import dogfight_Z.dogLog.controller.dependencies.CloudsManager;
 import dogfight_Z.dogLog.view.Menu;
 
 public class ScreenResizer extends Menu
@@ -441,6 +441,7 @@ public class ScreenResizer extends Menu
         String hud_locking,
         String hud_locked,
         String hud_missileWarning,
+        String hud_lockingWarning,
 		String hud_radarBG,
 		String hud_radarPrinter,
 		String hud_scoreListBG,
@@ -484,18 +485,18 @@ public class ScreenResizer extends Menu
                 args, 
                 screen, 
                 1, 
-                resolutionSetting == null? Integer.parseInt(args[16]): resolutionSetting[0], 
-                resolutionSetting == null? Integer.parseInt(args[17]): resolutionSetting[1]
+                resolutionSetting == null? Integer.parseInt(args[17]): resolutionSetting[0], 
+                resolutionSetting == null? Integer.parseInt(args[18]): resolutionSetting[1]
         );
         constructor (
             args[0] ,args[1] , args[2], args[3], args[4], args[5] ,
             args[6] , args[7], args[8], args[9], args[10], args[11], 
-            args[12], args[13], args[14], args[15], 
-            Integer.parseInt(args[16]), 
+            args[12], args[13], args[14], args[15], args[16], 
             Integer.parseInt(args[17]), 
-            Integer.parseInt(args[18]),
+            Integer.parseInt(args[18]), 
             Integer.parseInt(args[19]),
             Integer.parseInt(args[20]),
+            Integer.parseInt(args[21]),
             resolutionSetting
 	     );
 	}

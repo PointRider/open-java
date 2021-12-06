@@ -11,14 +11,14 @@ import graphic_Z.utils.LinkedListZ;
 
 public class Radar extends CharDynamicHUD
 {
-	public Aircraft myself;
-	public LinkedListZ<ThreeDs> aircrafts;
-	public float maxSearchRange;
-	public float tmp_float_xy[];
-	public char  Img[][];
-	public char  back[][];
-	public float nowAngle;
-	public CharDynamicHUD painter;
+	private Aircraft myself;
+	private LinkedListZ<ThreeDs> aircrafts;
+	private float maxSearchRange;
+	private float tmp_float_xy[];
+	private char  Img[][];
+	private char  back[][];
+	private float nowAngle;
+	private CharDynamicHUD painter;
 	
 	@Override
 	public void reSizeScreen(int resolution[], char fraps_buffer[][]) {
@@ -49,6 +49,7 @@ public class Radar extends CharDynamicHUD
 		Img				= new char[size][size];
 		back			= new char[size][size];
 		nowAngle		= GraphicUtils.RAD270;
+		r               = size >> 1;
 		
 		painter = new CharDynamicHUD(HUDPainterImg, frapsBuffer, HUDLayer, scrResolution, size, size, Location_X, Location_Y , 0.0F, true);
 		//painter.location[0] += 1;
@@ -75,18 +76,17 @@ public class Radar extends CharDynamicHUD
 		return GraphicUtils.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
 	}
 	
+	private int x, y, r;
+	private float old;
+	
 	@Override
 	public void printNew()
 	{
 		if(!visible) return;
-		if(nowAngle == GraphicUtils.RAD270)
-			makeNewReady();
-		nowAngle += 0.1047197551196598F;
+		old = nowAngle += 0.1047197551196598F;
 		
 		painter.angle = nowAngle;
 		painter.printNew();
-		
-		int x, y, r = (size[0]>>1);
 		
 		for(int i=0 ; i<r ; ++i)
 		{
@@ -98,7 +98,12 @@ public class Radar extends CharDynamicHUD
 
 			HUDImg[y][x] = back[y][x];
 		}
+		
 		nowAngle %= GraphicUtils.RAD360;
+
+        if(old > nowAngle)
+            makeNewReady();
+        
 		super.printNew();
 	}
 	
@@ -112,7 +117,7 @@ public class Radar extends CharDynamicHUD
 	public void makeNewReady()
 	{
 		Aircraft aTarget = null;
-		float range, r = (size[0]>>1);
+		float range;
 		int x, y;
 		
 		for(int i=0 ; i<size[1] ; ++i)

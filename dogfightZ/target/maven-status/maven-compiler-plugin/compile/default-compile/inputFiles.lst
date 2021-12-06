@@ -15,6 +15,7 @@ D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\HUDs\
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\HUDs\TwoDs.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\jmp123\decoder\BitStreamMainData.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\controller\TipsConfirmMenu.java
+D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\RandomCloud.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\Keyboard_Mouse\KeyboardResponse.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\security\Irreversible.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\model\package-info.java
@@ -74,6 +75,7 @@ D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\startTheWorld\S
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\controller\UserOperationMenu.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\GameManagement.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\jmp123\decoder\Layer2.java
+D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\controller\dependencies\package-info.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\controller\PilotLog.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\HUDs\CharHUD.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\HUDs\Selectable.java
@@ -81,6 +83,7 @@ D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\World
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\controller\ScreenResize.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\view\package-info.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\Ammo\Dangerous.java
+D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\controller\dependencies\CloudsManager.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\service\package-info.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\startTheWorld\RecordUI.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\controller\PilotRegist.java
@@ -110,7 +113,6 @@ D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\jmp123\demo\Tes
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\jmp123\decoder\Synthesis.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\utils\ResultList.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\PlayersJetCamera.java
-D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\RandomClouds.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\dogfight_Z\dogLog\dao\PlayerProfileDAO.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\graphic_Z\Cameras\TDCamera.java
 D:\Application Development\Project\by Eclipse\Java\dogfightZ\src\jmp123\decoder\Layer3.java

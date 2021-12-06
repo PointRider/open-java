@@ -1,5 +1,6 @@
 package dogfight_Z;
 
+import java.util.ArrayList;
 import java.util.ListIterator;
 
 import dogfight_Z.Ammo.Decoy;
@@ -9,7 +10,6 @@ import graphic_Z.Interfaces.ThreeDs;
 public class GameManager implements GameManagement {
 
     private final Game game;
-    
     
     public GameManager(Game game) {
         this.game = game;
@@ -80,5 +80,15 @@ public class GameManager implements GameManagement {
     @Override
     public int[] getResolution() {
         return game.getResolution();
+    }
+
+    @Override
+    public void execute(Runnable task) {
+        game.execute(task);
+    }
+
+    @Override
+    public ArrayList<ThreeDs> getClouds() {
+        return game.getClouds();
     }
 }

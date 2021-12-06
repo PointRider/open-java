@@ -13,10 +13,10 @@ public class CharWorld extends TDWorld<CharWorld, CharObject, CharHUD>
 	
 	public CharWorld(int resolution_X, int resolution_Y)
 	{
-		super(60);				//default
+		super(64);				//default
 		
 		eventManager = new EventManager();
-		objectsManager = new CharObjectsManager();
+		objectsManager = new CharObjectsManager(this);
 		visualManager = new CharVisualManager(resolution_X, resolution_Y, this, eventManager.mainScr);
 
 	}
@@ -25,7 +25,7 @@ public class CharWorld extends TDWorld<CharWorld, CharObject, CharHUD>
 	{
 		super(refresh_rate);
 		eventManager = new EventManager();
-		objectsManager = new CharObjectsManager();
+		objectsManager = new CharObjectsManager(this);
 		visualManager = new CharVisualManager(resolution_X, resolution_Y, this, eventManager.mainScr);
 
 	}

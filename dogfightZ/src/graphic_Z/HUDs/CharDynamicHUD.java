@@ -71,16 +71,6 @@ public class CharDynamicHUD extends CharImage
 						y0 = y-centerY;
 						
 						if(angle != 0) {
-							/*
-							r  = distance(x0, y0, 0, 0);
-							
-							tmp = GraphicUtils.atan(y0/x0)+GraphicUtils.toRadians(angle);
-							X = GraphicUtils.cos(tmp) * r;
-							Y = GraphicUtils.sin(tmp) * r;
-							y0 = ((x0<0)?(-Y):Y);
-							x0 = ((x0<0)?(-X):X);
-							*/
-							
 							cos$ = GraphicUtils.cos(angle);
 							sin$ = GraphicUtils.sin(angle);
 							X = cos$ * x0 - sin$ * y0;

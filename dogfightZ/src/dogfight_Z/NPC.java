@@ -77,7 +77,10 @@ public class NPC extends Aircraft
 		turnRight			= (GraphicUtils.random() > 0.5? true : false);
 		turnUp  			= (GraphicUtils.random() > 0.5? true : false);
 		currentMaxLockingPriority = 0;
+		buf_a               = maxMotionRate / halfAResolution_Y;
 	}
+	
+	private final float buf_a;
 	
 	public void pursuit(float range_to_me) {
 		if(getSpeed() < tracingTarget.getSpeed() || range_to_me > 10000)
@@ -91,8 +94,8 @@ public class NPC extends Aircraft
             control_roll_lr((halfAResolution_Y - poScreen[1]) * maxMotionRate);
         }
 		
-        control_turn_lr((poScreen[0] - halfAResolution_X) * maxMotionRate / halfAResolution_X);
-        control_roll_up_dn((halfAResolution_Y - poScreen[1]) * maxMotionRate / halfAResolution_Y);
+        control_turn_lr((poScreen[0] - halfAResolution_X) * buf_a);
+        control_roll_up_dn((halfAResolution_Y - poScreen[1]) * buf_a);
 		//System.arraycopy(point_on_Scr, 0, point_on_Old, 0, 2);
 	}
 	
@@ -115,8 +118,9 @@ public class NPC extends Aircraft
 		if(getControl_stick_acc() < minAcc)      control_acc();
 		else if(getControl_stick_acc() > minAcc) control_dec();
 		
-		float ry = getCurrentDirectionXYZ()[1], rz = roll_angle[2], tmp = motionRate, tmp2;
-
+		float ry = getCurrentDirectionXYZ()[1], rz = roll_angle[2], 
+		        tmp = motionRate, tmp2 = RAD15 / tmp, tmp3 = RADnga15 / tmp;
+		
 		if(--goStreetTime > 0) {
 			//侧滚改正
             control_roll_lr(-rz / tmp);
@@ -126,18 +130,18 @@ public class NPC extends Aircraft
                 if((GraphicUtils.fastRanodmInt() & 1) == 0)
                     turnUp  = ((GraphicUtils.fastRanodmInt() & 1) == 0? true : false);//太高
                 else roll_up_dn_Time = 0;
-                control_roll_up_dn(RADnga15 / tmp); //down
+                control_roll_up_dn(tmp3); //down
             } else if(location[0] > -1250  &&  ry < RAD30) {
                 if((GraphicUtils.fastRanodmInt() & 1) == 0)
                     turnUp  = ((GraphicUtils.fastRanodmInt() & 1) == 0? true : false); //太低
                 else roll_up_dn_Time = 0;
-                control_roll_up_dn(RAD15 / tmp);    //up
+                control_roll_up_dn(tmp2);    //up
             }  else {
 				if(--roll_up_dn_Time > 0) {
 					if(turnUp && ry < maxRollAngle_lr)
-						control_roll_up_dn(RAD15 / tmp);
+						control_roll_up_dn(tmp2);
 					else if(!turnUp && ry > -maxRollAngle_lr)
-						control_roll_up_dn(RADnga15 / tmp);
+						control_roll_up_dn(tmp3);
 				}
 			}
             if(roll_up_dn_Time <= 0) control_roll_up_dn((-ry) / tmp);
@@ -147,16 +151,12 @@ public class NPC extends Aircraft
 		    tmp2 = getMaxVelTurnLR() / tmp;
 		    
 			if(turnRight) {
-		    
 				control_roll_lr((-maxRollAngle_lr - rz) / tmp);	
                 control_roll_up_dn(GraphicUtils.sin(maxRollAngle_lr) * tmp2);
-
                 control_turn_lr(GraphicUtils.cos(maxRollAngle_lr) * tmp2);
 			} else {
-
                 control_roll_lr((maxRollAngle_lr - rz) / tmp); 
                 control_roll_up_dn(GraphicUtils.sin(maxRollAngle_lr) * tmp2);
-
                 control_turn_lr(GraphicUtils.cos(maxRollAngle_lr) * -tmp2);
 			}
 			
@@ -211,22 +211,6 @@ public class NPC extends Aircraft
 		getCameraRollAngle()[1] = -roll_angle[1];
 		getCameraRollAngle()[2] = -roll_angle[2];
 		
-		/*boolean tracingTargetOnScreen = false;
-        
-        if(tracingTarget != null) {
-            rge = CharFrapsCamera.getXY_onCamera(
-                tracingTarget.location[0], tracingTarget.location[1], tracingTarget.location[2], 
-                scrResolution[0], scrResolution[1], location, getCameraRollAngle(), poScreen, fov_1stPerson
-            );
-            if(
-                rge > 0  && rge < maxSearchingRange &&    
-                poScreen[0] >= 0 && poScreen[0] < scrResolution[0]  &&
-                poScreen[1] >= 0 && poScreen[1] < scrResolution[1]
-            ) tracingTargetOnScreen = true;
-        } else {
-
-            rge = -1.0F;
-        }*/
 		tracingTarget = null;
         float range_to_Scr;
         Aircraft aJet;
@@ -240,7 +224,9 @@ public class NPC extends Aircraft
                 aJet.location[0], aJet.location[1], aJet.location[2], 
                scrResolution[0], scrResolution[1], location, getCameraRollAngle(), point_on_Scr, fov_1stPerson
             );
-          
+            
+            if(range_to_Scr > maxSearchingRange) continue;
+            
             if(
                 range_to_Scr > 0 &&    
                 point_on_Scr[0] >= 0 && point_on_Scr[0] < scrResolution[0]  &&
@@ -284,11 +270,7 @@ public class NPC extends Aircraft
                         }
                     }
                 }
-               
-           } else if(aJet == tracingTarget) {
-               //tracingTargetOnScreen = false;
-               rge = -1.0F;
-           }
+           } else if(aJet == tracingTarget) rge = -1.0F;
         }
         
         if(!lockingSelected) {
@@ -313,77 +295,12 @@ public class NPC extends Aircraft
 			lockedByEnemy = false;
 			locked_By     = null;
 		}
-
-		//playersCameraManage();
 	}
 	
-
-    private static float rangeXY;
-    public void trace()
-    {
-        Aircraft aJet;
-        currentMaxLockingPriority = 0;
-        lockingSelected = false;
-        
-        for(ThreeDs a : aircrafts) {
-            aJet = (Aircraft) a;
-            if(aJet.getCamp() == getCamp()  ||  !aJet.isAlive()) continue;
-            
-            float range_to_Scr = CharFrapsCamera.getXY_onCamera(
-                aJet.location[0], aJet.location[1], aJet.location[2], 
-                scrResolution[0], scrResolution[1], location, getCameraRollAngle(), point_on_Scr, fov_1stPerson
-            );
-            
-            if
-            (
-                range_to_Scr > 0    &&    range_to_Scr < maxSearchingRange    &&    
-                GraphicUtils.rangeXY(point_on_Scr[0], point_on_Scr[1], halfAResolution_X, halfAResolution_Y) < 24
-            ) {
-                if(currentSelectObj == null || 
-                        GraphicUtils.abs(currentSelectObj.getLockingPriority()) < GraphicUtils.abs(aJet.getLockingPriority()) /*&& 
-                        !currentSelectObj.getID().equals(aJet.getID())*/
-                ) { //当前选择目标切换到优先级更高的   (发生切换)
-                    if(aJet.getLockingPriority() > 0) {
-                        tracingTarget           = aJet;
-                        rangeXY = GraphicUtils.rangeXY(point_on_Scr[0], point_on_Scr[1], halfAResolution_X, halfAResolution_Y);
-                        if(rangeXY < 12  &&  range_to_Scr < 75000) cannonOpenFire(); else cannonStopFiring();
-                        pursuit(range_to_Scr);
-                    }
-                    //currentMaxLockingPriority   = (int) GraphicUtils.abs(aJet.getLockingPriority());
-                    currentSelectObj            = aJet;
-                    lockTimeLeft                = lockTime;
-                    locked                      = false;
-                    lockingSelected             = true;
-                } else {//已有选择的目标
-                    if(currentSelectObj == aJet) {
-                        lockingSelected = true;
-                        if(!locked && --lockTimeLeft <= 0)  locked = true; 
-                    }
-                }
-            }
-        }
-        
-        if(!lockingSelected)
-        {
-            currentMaxLockingPriority = 0;
-            currentSelectObj          = null;
-            lockTimeLeft              = lockTime;
-            tracingTarget             = null;
-        }
-        
-        if(currentSelectObj!=null && currentSelectObj.getLockingPriority() >= 0) currentSelectObj.warning(this);
-   /* } else {
-        currentMaxLockingPriority = 0;
-        currentSelectObj          = null;
-        lockTimeLeft              = lockTime;
-        tracingTarget             = null;
-        cannonStopFiring();
-    }*/
-    }
+    private float rangeXY;
 	
 	@Override
-	public void warning(Aircraft source)
-	{
+	public void warning(Aircraft source) {
 		if(lockedByEnemy) makeDecoy();
 		
 		if(missileFireWaitingTimeLeft > 0)
@@ -394,13 +311,11 @@ public class NPC extends Aircraft
 		lockingLife			= 20;
 	}
 	
-	public void rename(String newName)
-	{
+	public void rename(String newName) {
 		setID(newName);
 	}
 	
-	public void rename()
-	{
+	public void rename() {
 		setID("NPC " + GraphicUtils.fastRanodmInt());
 	}
 }

@@ -69,4 +69,9 @@ public class CharImage extends CharHUD
         location[0] = X;
         location[1] = Y;
     }
+
+    public final int[] getSize() {
+        return size;
+    }
+    
 }

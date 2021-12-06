@@ -54,6 +54,7 @@ dogfight_Z\Aircraft.class
 dogfight_Z\dogLog\view\PiLog.class
 dogfight_Z\dogLog\view\PiLog$4.class
 dogfight_Z\Ammo\CannonAmmo.class
+dogfight_Z\RandomCloud.class
 graphic_Z\Interfaces\Dynamic.class
 dogfight_Z\dogLog\dao\PlayerProfileDAOImp.class
 dogfight_Z\dogLog\controller\TipsMenu$1.class
@@ -97,6 +98,7 @@ startTheWorld\Start_GUI$7$1.class
 dogfight_Z\dogLog\security\securityTest.class
 graphic_Z\HUDs\CharLoopingScrollBar$Direction.class
 jmp123\decoder\Layer1.class
+dogfight_Z\dogLog\controller\dependencies\CloudsManager.class
 dogfight_Z\MouseWheelControl.class
 dogfight_Z\ScoreList.class
 startTheWorld\GameStartGUI.class
@@ -154,13 +156,13 @@ dogfight_Z\ContinueListener.class
 startTheWorld\GameStartGUI$ListPlayerMouseListener.class
 dogfight_Z\dogLog\view\PiLog$1.class
 startTheWorld\GameStartGUI$AddNPCListener.class
-dogfight_Z\RandomClouds.class
 dogfight_Z\dogLog\dao\PlayerProfileDAO.class
 graphic_Z\Managers\CharObjectsManager.class
 dogfight_Z\dogLog\controller\UserOperationMenu$6.class
 dogfight_Z\GameRun.class
 dogfight_Z\dogLog\controller\PilotLogin$1.class
 dogfight_Z\dogLog\controller\ScreenResizer$VManager.class
+dogfight_Z\PlayersJetCamera$1.class
 jmp123\decoder\Layer3$1.class
 dogfight_Z\dogLog\security\Reversible.class
 graphic_Z\HUDs\CharProgressBar$Direction.class

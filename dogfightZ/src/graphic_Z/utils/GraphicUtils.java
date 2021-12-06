@@ -158,6 +158,13 @@ public class GraphicUtils
         y2 -= y0;
         return GraphicUtils.sqrt(x2*x2 + y2*y2);
     }
+
+    public static final float range_YZ (float p1[], float p2[]) {
+        float d1 = p2[1]-p1[1];
+        float d2 = p2[2]-p1[2];
+        
+        return GraphicUtils.sqrt(d1*d1 + d2*d2);
+    }
     
     public static final float random() {
         ++curRandomIdx;

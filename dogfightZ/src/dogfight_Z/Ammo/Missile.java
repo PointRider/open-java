@@ -198,7 +198,7 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 					)
 				)	setSpeed(getSpeed() - 5);
 				else if(getSpeed() < maxSpeed)	setSpeed(getSpeed() + 0.5F);
-				target.warning(launcher);
+				target.warningMissile(launcher);
 			}
 			range_old = range;
 		}
@@ -234,15 +234,11 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 		getGameManager().newEffect(new EngineFlame(location, 100 + (int)(50 * GraphicUtils.random())));
 		
 		for(int repeat = 0; repeat < 2; ++repeat) {
-			if(velocity_roll[0] != 0.0)
-				velocity_roll[0] /= 2;
-			if(velocity_roll[1] != 0.0)
-				velocity_roll[1] /= 2;
-			if(velocity_roll[2] != 0.0)
-				velocity_roll[2] /= 2;
+			if(velocity_roll[0] != 0.0F) velocity_roll[0] /= 2;
+			if(velocity_roll[1] != 0.0F) velocity_roll[1] /= 2;
+			if(velocity_roll[2] != 0.0F) velocity_roll[2] /= 2;
 			
-			if(life - lifeLeft > startGuideTime)
-				trace();
+			if(life - lifeLeft > startGuideTime) trace();
 			//------------[go street]------------
 			r1 = roll_angle[1];
 			r2 = GraphicUtils.cos(roll_angle[0]);

@@ -27,7 +27,6 @@ import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Managers.EventManager;
 import graphic_Z.Worlds.CharTimeSpace;
 import graphic_Z.utils.GraphicUtils;
-import graphic_Z.utils.HzController;
 
 public class Game extends CharTimeSpace implements Runnable
 {
@@ -92,8 +91,6 @@ public class Game extends CharTimeSpace implements Runnable
 	public StringBuilder tmp;
 	//public ArrayList<HashSet<Aircraft>> camps;
 	private CloudsManager cloudMan;
-	private Thread        cloudManThread;
-	private HzController   cloudRefreshRateController;
 
 	private boolean keyState_W;
 	private boolean keyState_A;
@@ -229,7 +226,8 @@ public class Game extends CharTimeSpace implements Runnable
 	        String hud_enemy,
 	        String hud_locking,
 	        String hud_locked,
-	        String hud_missileWarning
+	        String hud_missileWarning,
+            String hud_lockingWarning
 	    ) {
 	    mainCamera = new PlayersJetCamera (
             fov, visibility, 
@@ -237,35 +235,47 @@ public class Game extends CharTimeSpace implements Runnable
             visualManager.resolution, 
             visualManager.fraps_buffer,
             this, getMyJet(), 
-            new CharDynamicHUD (
+            new CharImage (
                 hud_friend,
                 visualManager.fraps_buffer,
-                0, visualManager.resolution,
-                6, 5
+                6, 5, 0, 0, 0, 
+                visualManager.resolution,
+                true
             ), 
-            new CharDynamicHUD (
+            new CharImage (
                 hud_enemy,
                 visualManager.fraps_buffer,
-                0, visualManager.resolution,
-                5, 6
+                5, 6, 0, 0, 0, 
+                visualManager.resolution,
+                true
             ),
-            new CharDynamicHUD (
+            new CharImage (
                 hud_locking,
                 visualManager.fraps_buffer,
-                0, visualManager.resolution,
-                5, 6
+                5, 6, 0, 0, 0, 
+                visualManager.resolution,
+                true
             ),
-            new CharDynamicHUD (
+            new CharImage (
                 hud_locked,
                 visualManager.fraps_buffer,
-                0, visualManager.resolution,
-                5, 6
+                5, 6, 0, 0, 0, 
+                visualManager.resolution,
+                true
             ),
-            new CharDynamicHUD (
+            new CharImage (
                 hud_missileWarning,
                 visualManager.fraps_buffer,
-                0, visualManager.resolution,
-                7, 6
+                7, 6, 0, 0, 0, 
+                visualManager.resolution,
+                true
+            ),
+            new CharImage (
+                hud_lockingWarning,
+                visualManager.fraps_buffer,
+                7, 6, 0, 0, 0, 
+                visualManager.resolution,
+                true
             ),
             visualManager.staticObjLists
         );
@@ -278,7 +288,8 @@ public class Game extends CharTimeSpace implements Runnable
             String hud_enemy,
             String hud_locking,
             String hud_locked,
-            String hud_missileWarning
+            String hud_missileWarning,
+            String hud_lockingWarning
         ) {
 	    gBlack = 1;
         setMyJet(new Aircraft(gameManager, myJetModel_file, 10000, playersCamp, objectsManager.objects, null, "Me", true));
@@ -286,7 +297,7 @@ public class Game extends CharTimeSpace implements Runnable
         scoreList.add(getMyJet());
         objectsManager.newMessObject(getMyJet());
 
-        initMainCamera(hud_friend, hud_enemy, hud_locking, hud_locked, hud_missileWarning);
+        initMainCamera(hud_friend, hud_enemy, hud_locking, hud_locked, hud_missileWarning, hud_lockingWarning);
 
         getMyJet().mainCamera = mainCamera;
         mainCamera.connectLocationAndAngle(getMyJet().getCameraLocation(), getMyJet().getCameraRollAngle());
@@ -373,8 +384,10 @@ public class Game extends CharTimeSpace implements Runnable
         final int progressBarLocationBaseX = (int) (resolutionX * 0.75);
         final int progressBarLocationBaseY = (int) (resolutionY * 0.65);
 
-        mainCamera.hudWarning_missile.location[0] = (resolutionX - 16);
-        mainCamera.hudWarning_missile.location[1] = (resolutionY >> 1);
+        mainCamera.getHudWarning_missile().location[0] = (resolutionX - 16);
+        mainCamera.getHudWarning_missile().location[1] = (resolutionY >> 1);
+        mainCamera.getHudWarningLocking().location[0] = (resolutionX - 16);
+        mainCamera.getHudWarningLocking().location[1] = (resolutionY >> 1);
         
         //lbltest = visualManager.newLabel("", 18, (int)(resolutionY * 0.8), 99);
                 
@@ -425,10 +438,7 @@ public class Game extends CharTimeSpace implements Runnable
 	private final void initClouds() {
         clouds = new ArrayList<ThreeDs>();
         objectsManager.newStaticObjectList(clouds);
-
-        cloudRefreshRateController = new HzController(refreshHz >> 1); //32Hz
-        cloudMan = new CloudsManager(clouds, cloudRefreshRateController, mainCamera, visibility);
-        cloudManThread = new Thread(cloudMan);
+        cloudMan = new CloudsManager(gameManager, refreshHz >> 1, visibility);
 	}
 	
 	private final void initKeyboardAndMouse() {
@@ -469,6 +479,7 @@ public class Game extends CharTimeSpace implements Runnable
         String hud_locking,
         String hud_locked,
         String hud_missileWarning,
+        String hud_lockingWarning,
 		String hud_radarBG,
 		String hud_radarPrinter,
 		String hud_scoreListBG,
@@ -488,7 +499,7 @@ public class Game extends CharTimeSpace implements Runnable
 		initUI(fontSize, fontIndx);
 		initRank();
 		initDatastructure(hud_scoreListBG, resolutionX, resolutionY);
-		initMe(myJetModel_file, hud_friend, hud_enemy, hud_locking, hud_locked, hud_missileWarning);
+		initMe(myJetModel_file, hud_friend, hud_enemy, hud_locking, hud_locked, hud_missileWarning, hud_lockingWarning);
 		initPlayers(myJetModel_file, cfg_file, rec_file);
         initHUDs(resolutionX, resolutionY, 
             hud_horizonIndicator,
@@ -556,8 +567,10 @@ public class Game extends CharTimeSpace implements Runnable
         final int progressBarLocationBaseY  = (int) (resolution_Y * 0.65);
         final int progressBarLocationBaseY2 = (int) (resolution_Y * 0.3);
 
-        mainCamera.hudWarning_missile.location[0] = (resolution_X - 16);
-        mainCamera.hudWarning_missile.location[1] = (resolution_Y >> 1);
+        mainCamera.getHudWarning_missile().location[0] = (resolution_X - 16);
+        mainCamera.getHudWarning_missile().location[1] = (resolution_Y >> 1);
+        mainCamera.getHudWarningLocking().location[0] = (resolution_X - 16);
+        mainCamera.getHudWarningLocking().location[1] = (resolution_Y >> 1);
         
         //lbltest.setLocation(18, (int)(resolution_Y * 0.8));
         
@@ -640,8 +653,6 @@ public class Game extends CharTimeSpace implements Runnable
 	    );
 	    */
         
-        
-        
 		lbl1.setText("speed: " + String.format("%.2f", getMyJet().getSpeed() * 14));
 		lbl2.setText("shift: " + String.format("%.2f", getMyJet().getControl_stick_acc()));
 		lbl3.setText("rpm  : " + String.format("%.2f", Aircraft.getCurrentRPM(getMyJet().getMax_rpm(), getMyJet().getControl_stick_acc())));
@@ -671,9 +682,7 @@ public class Game extends CharTimeSpace implements Runnable
 			if(hud_roll_up_dn_scrollBar.value > 0) {
 	            backRGB = (int) (y / 0.02617993877991495F);
 			} else backRGB = 0;
-		}
-		else
-		{
+		} else {
 			hud_roll_up_dn_angle.visible = hud_roll_up_dn_scrollBar.visible = hud_turn_lr_scrollBar.visible = 
 					hud_Radar.visible = lbl1.visible = lbl2.visible = lbl3.visible = lbl4.visible = false;
 			lbl1.visible = lbl2.visible = lbl3.visible = lbl4.visible = false;
@@ -709,7 +718,6 @@ public class Game extends CharTimeSpace implements Runnable
 	    return visualManager.resolution;
 	}
 
-	@SuppressWarnings("deprecation")
 	private final void keyResponse() {
 		
 		flgWheelUp = flgWheelDn = false;
@@ -886,19 +894,21 @@ public class Game extends CharTimeSpace implements Runnable
                     mainCamera.resizeScreen(visualManager.resolution[0], visualManager.resolution[1] - 1);
                     reLocateHUD();
                 break;
+                /*
 				case KeyEvent.VK_E:
-					bgmThread.stop();
+					//bgmThread.stop();
 					soundTrack.switchPrevious();
-					bgmThread = new Thread(soundTrack);
-					bgmThread.start();
+					//bgmThread = new Thread(soundTrack);
+					
+					//bgmThread.start();
 				break;
 					
 				case KeyEvent.VK_R:
-					bgmThread.stop();
+					//bgmThread.stop();
 					soundTrack.switchNext();
-					bgmThread = new Thread(soundTrack);
-					bgmThread.start();
-				break;
+					//bgmThread = new Thread(soundTrack);
+					//bgmThread.start();
+				break;*/
 			}
 		}
 		
@@ -990,9 +1000,8 @@ public class Game extends CharTimeSpace implements Runnable
 		if(gameStopTime == -1)
 			lblGameTimeLeft.visible = false;
 		
-        cloudManThread.start();
-        bgmThread.start();
-		
+		execute(cloudMan);
+        execute(bgmThread);
 		//游戏主循环
 		while(gameStopTime == -1  ||  (leftTime = gameStopTime - ((double)System.currentTimeMillis()/1000.0)) > 0)
 		{
@@ -1062,12 +1071,6 @@ public class Game extends CharTimeSpace implements Runnable
 		}	catch(IOException exc){}
 	}
 	
-	@Override
-	protected final void finalize() throws Throwable{
-		cloudManThread.interrupt();
-		bgmThread.interrupt();
-	}
-	
 	public final void addGBlack(float val) {
 	    if((gBlack += val) > 255) gBlack = 255;
 	}
@@ -1076,12 +1079,12 @@ public class Game extends CharTimeSpace implements Runnable
         Game game = new Game(
             args[0] ,args[1] , args[2], args[3], args[4], args[5] ,
             args[6] , args[7], args[8], args[9], args[10], args[11], 
-            args[12], args[13], args[14], args[15], 
-            Integer.parseInt(args[16]), 
+            args[12], args[13], args[14], args[15], args[16], 
             Integer.parseInt(args[17]), 
-            Integer.parseInt(args[18]),
+            Integer.parseInt(args[18]), 
             Integer.parseInt(args[19]),
-            Integer.parseInt(args[20])
+            Integer.parseInt(args[20]),
+            Integer.parseInt(args[21])
         );
         
         game.getIntoGameWorld();
@@ -1130,5 +1133,13 @@ public class Game extends CharTimeSpace implements Runnable
     
     public final void newEffect(Dynamic effect) {
         effects.add(effect);
+    }
+    
+    public final void newCloud(RandomCloud cloud) {
+        clouds.add(cloud);
+    }
+    
+    public final ArrayList<ThreeDs> getClouds() {
+        return clouds;
     }
 }

@@ -372,8 +372,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	}
 	
 	@Override
-	public void run()
-	{
+	public void run() {
 		exposureStatic();
 	}
 	

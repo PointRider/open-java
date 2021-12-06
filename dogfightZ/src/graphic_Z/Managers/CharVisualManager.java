@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.swing.JTextArea;
 
@@ -37,13 +35,11 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	public		Object	                     mainCameraFeedBack;
 	private     StringBuilder                scr_show;
 	private     Thread                       tmpThread;
-	private     ExecutorService              epool;
 	//private Thread staticObjExposureThread;
 	
 	public CharVisualManager(int resolution_X, int resolution_Y, CharWorld inWhichWorld, JTextArea main_scr)
 	{
 		super(resolution_X, resolution_Y, inWhichWorld);
-		
 		mainCameraFeedBack = null;
 		scr_show        = new StringBuilder(resolution_X * resolution_Y);
 		refreshHz       = inWorld.refreshHz;
@@ -89,8 +85,6 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		cameras = new ArrayList<CharFrapsCamera>();
 
 		mainScr = main_scr;
-		
-		epool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 	}
 	
 	public void reSizeScreen(int x, int y) {
@@ -114,11 +108,6 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 			ahud = (CharHUD) hud;
 			ahud.reSizeScreen(resolution, fraps_buffer);
 		}
-	}
-
-	@Override
-	protected void finalize() throws Throwable { 
-		epool.shutdownNow();
 	}
 	
 	public void newCamera()
@@ -300,7 +289,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 			System.arraycopy(emptyLine, 0, fraps_buffer[i], 0, resolution[0]);
 		
 		for(CharFrapsCamera aCamera : cameras) {
-			epool.execute(aCamera);
+		    inWorld.execute(aCamera);
 			//new Thread(aCamera).start();
 		}
 	}

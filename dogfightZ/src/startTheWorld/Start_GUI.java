@@ -193,6 +193,7 @@ public class Start_GUI extends JFrame {
                         "resources/MyJetHUD_Locking.hud",
                         "resources/MyJetHUD_Locked.hud",
                         "resources/MissileWarning.hud",
+                        "resources/LockingWarning.hud",
                         "resources/RadarHUD.hud",
                         "resources/RaderPainter.hud",
                         "resources/ScoreHUD.hud",

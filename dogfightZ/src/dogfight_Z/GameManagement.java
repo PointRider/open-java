@@ -1,5 +1,6 @@
 package dogfight_Z;
 
+import java.util.ArrayList;
 import java.util.ListIterator;
 
 import dogfight_Z.Ammo.Decoy;
@@ -33,4 +34,8 @@ public interface GameManagement {
     float[] getPlayerLocation();
     
     int[] getResolution();
+    
+    void execute(Runnable task);
+    
+    ArrayList<ThreeDs> getClouds();
 }
