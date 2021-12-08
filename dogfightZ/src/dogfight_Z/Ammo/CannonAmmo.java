@@ -115,7 +115,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 				if(aJet.getID().charAt(0) != '\n' && aJet.isAlive() && GraphicUtils.range(location, aJet.location) < 480) {
 					if(aJet.getCamp() != myCamp) {
 						aJet.getDamage(5, launcher, "Cannon");
-						Particle.makeExplosion(gameManager, location, 10, 75, 0.01F, 0.1F);
+						Particle.makeExplosion(gameManager, location, 10, 75000, 0.01F, 0.1F);
 						if(aJet.isPlayer()) aJet.getGameManager().colorFlash(255, 255, 128, 128, 16, 16, 2);
 						if(launcher.isPlayer()) launcher.getGameManager().colorFlash(255, 255, 128, 96, 72, 0, 2);
 						disable();
@@ -124,8 +124,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 				}
 			}
 		}
-		
-		--lifeLeft;
+		lifeLeft -= 1000;
 	}
 	
 	public final void disable() {

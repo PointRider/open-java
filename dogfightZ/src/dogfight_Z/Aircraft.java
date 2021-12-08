@@ -4,6 +4,7 @@ import dogfight_Z.Ammo.CannonAmmo;
 import dogfight_Z.Ammo.Decoy;
 import dogfight_Z.Ammo.Missile;
 import dogfight_Z.Effects.EngineFlame;
+import dogfight_Z.Effects.EngineFlame2;
 import dogfight_Z.Effects.Particle;
 import graphic_Z.Cameras.CharFrapsCamera;
 import graphic_Z.Interfaces.ThreeDs;
@@ -154,7 +155,7 @@ public class Aircraft extends CharMessObject
 		cannonLocation		= new float[3];
 		cameraLocation		= new float[3];
         directionXYZ        = new float[3];
-		effectMakingLocation= new float[2][3];
+		effectMakingLocation= new float[3][3];
 		cameraLocationFlag	= 0;
 		setLockingPriority(lockingPriority_backup = 1);
 		setCamp(Camp);
@@ -338,7 +339,7 @@ public class Aircraft extends CharMessObject
 			getGameManager().addKillTip(giver, this, weaponName);
 			++dead;
 			++giver.killed;
-			Particle.makeExplosion(getGameManager(), location, 20, 75, 0.075F, 0.2F);
+			Particle.makeExplosion(getGameManager(), location, 20, 40000, 0.075F, 0.2F);
 			setRespwanAtTime(System.currentTimeMillis() + getGameManager().getRespawnTime());
 			//}
 		}
@@ -457,7 +458,7 @@ public class Aircraft extends CharMessObject
 	{
 		if(decoyMagazineLeft > 0 && isAlive())
 		{
-			Decoy.make(getGameManager(), getCamp(), location, roll_angle, getSpeed(), 64.0F, 300000, 0.04F, 0.125F);
+			Decoy.make(getGameManager(), getCamp(), location, roll_angle, getSpeed(), 64.0F, 150000, 0.04F, 0.125F);
 
 			if(--decoyMagazineLeft == 0)
 				decoyReloadingTimeLeft = decoyReloadingTime;
@@ -506,7 +507,7 @@ public class Aircraft extends CharMessObject
         {
             m = new Missile
             (
-                getGameManager(), 1280, getSpeed()/2+5, 512, cannonLocation, 
+                getGameManager(), 1280000, getSpeed()/2+5, 512, cannonLocation, 
                 roll_angle, 20, 512, 3.0F, this, target, mainCamera
             );
         }
@@ -514,7 +515,7 @@ public class Aircraft extends CharMessObject
         {
             m = new Missile
             (
-                getGameManager(), 1280, getSpeed()/2+5, 512, cannonLocation, 
+                getGameManager(), 1280000, getSpeed()/2+5, 512, cannonLocation, 
                 roll_angle, 20, 512, 3.0F, this, target, null
             );
         }
@@ -575,21 +576,43 @@ public class Aircraft extends CharMessObject
 		effectMakingLocation[1][1] += location[1];
 		effectMakingLocation[1][2] += location[2];
 		
-		getGameManager().newEffect(new EngineFlame(effectMakingLocation[0], 100 + (int)(50 * GraphicUtils.random()), '*'));
-		getGameManager().newEffect(new EngineFlame(effectMakingLocation[1], 100 + (int)(50 * GraphicUtils.random()), '*'));
+		getGameManager().newEffect(new EngineFlame(effectMakingLocation[0], 75000 + (int)(75000 * GraphicUtils.random()), '*'));
+		getGameManager().newEffect(new EngineFlame(effectMakingLocation[1], 75000 + (int)(75000 * GraphicUtils.random()), '*'));
 	}
-	
+
+    public void pushEffectRun() {
+        effectMakingLocation[2][0] = 120;
+        effectMakingLocation[2][1] = 0;
+        effectMakingLocation[2][2] = -240;
+        
+        getXYZ_afterRolling
+        (
+            effectMakingLocation[2][0], 
+            effectMakingLocation[2][1], 
+            effectMakingLocation[2][2],
+            roll_angle[0],
+            roll_angle[1],
+            roll_angle[2],
+            effectMakingLocation[2]
+        );
+        
+        effectMakingLocation[2][0] += location[0];
+        effectMakingLocation[2][1] += location[1];
+        effectMakingLocation[2][2] += location[2];
+        
+        getGameManager().newEffect(new EngineFlame2(effectMakingLocation[2], 10000, '*'));
+    }
+    
 	public float[] getCurrentDirectionXYZ() {
         return directionXYZ;
     }
 	
-    public void doMotion()
-	{
+    public void doMotion() {
 		//------------[go street]------------
         float r1 = roll_angle[1];
         float r2 = roll_angle[0];
         
-		float t        = GraphicUtils.cos(r1) * getSpeed();
+		float t  = GraphicUtils.cos(r1) * getSpeed();
 		
 		location[0]	-= directionXYZ[0] = GraphicUtils.sin(r1) * getSpeed();
 		location[1]	+= directionXYZ[1] = GraphicUtils.sin(r2) * t;
@@ -605,14 +628,12 @@ public class Aircraft extends CharMessObject
 		engine_rpm = getCurrentRPM(getMax_rpm(), getControl_stick_acc());
 		float F   = getCurrentForce(maxAccForce, getMax_rpm(), engine_rpm);
 	
-		if(isPushing)
-		{
+		if(isPushing) {
 			F += pushPower;
 			if(isPlayer()) getGameManager().addGBlack(1.3F);
-			if((pushTimeLeft = getPushTimeLeft() - 2) <= 0)
-				isPushing = false;
-		}
-		else if(getPushTimeLeft() < getMaxPushTime())pushTimeLeft = getPushTimeLeft() + 1;
+			if((pushTimeLeft = getPushTimeLeft() - 2) <= 0) isPushing = false;
+			pushEffectRun();
+		} else if(getPushTimeLeft() < getMaxPushTime())pushTimeLeft = getPushTimeLeft() + 1;
 		
 		if(velocity_roll[0] != 0.0F)
 			velocity_roll[0] /= 1.050F;
@@ -627,15 +648,12 @@ public class Aircraft extends CharMessObject
 		if(getSpeed() > maxSpeed)
 			setSpeed(maxSpeed);
 		
-		if(getSpeed() < getMinStableSpeed())
-		{
+		if(getSpeed() < getMinStableSpeed()) {
 			motionRate = getSpeed() * 0.8F / getMinStableSpeed();
 			if(location[0] < 200)
 				location[0] += CharTimeSpace.g * (1.0F - getSpeed() / getMinStableSpeed());
 			else location[0] = 200;
-		}
-		else 
-		{
+		} else {
 			motionRate = 0.8F;
 			if(location[0] > 200) location[0] = 200;
 			float a = GraphicUtils.abs(velocity_roll[0]) / getMaxVelRollUp();
@@ -680,7 +698,7 @@ public class Aircraft extends CharMessObject
 					cannonLocation[2] += location[2];
 					getGameManager().fireAmmo(
 						new CannonAmmo (
-							getGameManager(), 400, getCamp(), 400 + getSpeed(), 0.00175F, 
+							getGameManager(), 400000, getCamp(), 400 + getSpeed(), 0.00175F, 
 							cannonLocation, roll_angle, aircrafts, this
 						)
 					);
@@ -831,8 +849,7 @@ public class Aircraft extends CharMessObject
 	protected void randomRespawn() {
 		setLockingPriority(0);
 		
-		setLocation
-		(
+		setLocation (
 			200,
 			getGameManager().getPlayerCameraLocation()[1] + GraphicUtils.random() * getGameManager().getWeaponMaxSearchingRange() * ((GraphicUtils.fastRanodmInt() & 1) == 0? -1 : 1),
 			getGameManager().getPlayerCameraLocation()[2] + GraphicUtils.random() * getGameManager().getWeaponMaxSearchingRange() * ((GraphicUtils.fastRanodmInt() & 1) == 0? -1 : 1)

@@ -69,7 +69,7 @@ public class EngineFlame extends CharObject implements Dynamic
 		points_count = missileModelData.size();
 		
 		lifeLeft = life = lifeTime;
-		lifeTo = life + System.currentTimeMillis() / 1000;
+		lifeTo = life + System.currentTimeMillis();
 		
 		//resistanceRate	= resistance_rate;
 		end				= false;
@@ -82,23 +82,14 @@ public class EngineFlame extends CharObject implements Dynamic
 		this(Location, lifeTime);
 		specialDisplay = specialDisplayChar;
 	}
-	/*
-	public EngineFlame(float Location[], short lifeTime)
-	{
-		this(Location, lifeTime, false, 0.0);
-	}
-	*/
 	
 	@Override
 	public void go()
 	{
-		if(lifeLeft <= 0)
-		{
+		if(lifeLeft <= 0) {
 			visible = false;
 			end = true;
-		}
-		else
-			--lifeLeft;
+		} else lifeLeft -= 1000;
 	}
 
 	@Override

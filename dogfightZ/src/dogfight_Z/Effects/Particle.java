@@ -38,9 +38,9 @@ public class Particle extends EngineFlame
 			location[2]	+= z;
 			
 			velocity -= velocity * resistanceRate * 1.5;
-			location[0] += CharTimeSpace.g * (life - lifeLeft) * 0.0275 - (life-lifeLeft) * resistanceRate * 2.4;
+			location[0] += (life - lifeLeft) * (CharTimeSpace.g * 0.0275F - resistanceRate * 2.4F) * 0.001F;
 			
-			--lifeLeft;
+			lifeLeft -= 1000;
 		}
 	}
 	
@@ -52,7 +52,7 @@ public class Particle extends EngineFlame
             for(float y=-0.5235987755982989F, dy = GraphicUtils.RAD1/density/2/*-30 degrees*/ ; y<GraphicUtils.RAD90 ; y += dy) {
                 roll[0] = x;
                 roll[1] = y*2;
-                gameManager.newEffect(new Particle(location, roll, lifeTime + (int)(y * GraphicUtils.random()), velocity, resistanceRate));
+                gameManager.newEffect(new Particle(location, roll, lifeTime + (int)(lifeTime * GraphicUtils.random()), velocity, resistanceRate));
             }
         }
     }

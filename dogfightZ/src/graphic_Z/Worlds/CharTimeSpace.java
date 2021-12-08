@@ -2,7 +2,7 @@ package graphic_Z.Worlds;
 
 public class CharTimeSpace extends CharWorld
 {
-	public static double  g;			//重力加速度
+	public static float  g;			//重力加速度
 	//public static double valRate;	//帧速率
 	
 	public CharTimeSpace(int resolution_X, int resolution_Y)
@@ -10,7 +10,7 @@ public class CharTimeSpace extends CharWorld
 		super(resolution_X, resolution_Y);
 	}
 	
-	public CharTimeSpace(int resolution_X, int resolution_Y, int refresh_rate, double g)
+	public CharTimeSpace(int resolution_X, int resolution_Y, int refresh_rate, float g)
 	{
 		super(resolution_X, resolution_Y, refresh_rate);
 		CharTimeSpace.g = g;
@@ -24,7 +24,7 @@ public class CharTimeSpace extends CharWorld
 	*/
 	public CharTimeSpace(int resolution_X, int resolution_Y, int refresh_rate)
 	{
-		this(resolution_X, resolution_Y, refresh_rate, 9.8);
+		this(resolution_X, resolution_Y, refresh_rate, 9.8F);
 	}
 	
 	public void buffStatic() {

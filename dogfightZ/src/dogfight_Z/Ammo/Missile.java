@@ -231,7 +231,7 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 		getCameraRollAngle()[2] = -roll_angle[2];
 		
 		float x, y, z, t, r1, r2;
-		getGameManager().newEffect(new EngineFlame(location, 100 + (int)(50 * GraphicUtils.random())));
+		getGameManager().newEffect(new EngineFlame(location, 75000 + (int)(75000 * GraphicUtils.random())));
 		
 		for(int repeat = 0; repeat < 2; ++repeat) {
 			if(velocity_roll[0] != 0.0F) velocity_roll[0] /= 2;
@@ -260,7 +260,7 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 			if(target != null  &&  target.isAlive()) {
 			    if(GraphicUtils.range(location, target.location) < 224) {
     				target.getDamage((int)(50 - 10 * GraphicUtils.random()), launcher, "Missile");
-    				Particle.makeExplosion(getGameManager(), location, 15, 75, 0.025F, 0.1F);
+    				Particle.makeExplosion(getGameManager(), location, 15, 75000, 0.025F, 0.1F);
     
     				if(target.isPlayer()) target.getGameManager().colorFlash(255, 255, 255, 127, 16, 16, 20);
     				if(launcher.isPlayer()) launcher.getGameManager().colorFlash(0, 192, 255, 0, 0, 0, 12);
@@ -268,10 +268,10 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
     				disable();
     				return;
     			}
-			} else lifeLeft -= 3;
+			} else lifeLeft -= 3000;
 		}
 				
-		--lifeLeft;
+		lifeLeft -= 1000;
 	}
 	
 	public final void disable() 

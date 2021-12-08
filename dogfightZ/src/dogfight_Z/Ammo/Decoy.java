@@ -82,7 +82,7 @@ private static ArrayList<float[]> missileModelData;
                 roll[1] = y;
                 gameManager.throwDecoy (
                     new Decoy (
-                        gameManager, camp, lifeTime, velocity, speedAircraft, 
+                        gameManager, camp, lifeTime + (int) (GraphicUtils.random() * lifeTime), velocity, speedAircraft, 
                         resistanceRate, location, roll, 
                         new float[] {rollAngle_aircraft[0], rollAngle_aircraft[1], rollAngle_aircraft[2]}
                     )
@@ -132,8 +132,7 @@ private static ArrayList<float[]> missileModelData;
 		setLockingPriority(-(int)(10.0F * GraphicUtils.random()));
 	}
 	
-	private Decoy
-	(
+	private Decoy (
 	    GameManagement gameManager,
 		short lifeTime,
 		float Speed,
@@ -142,10 +141,8 @@ private static ArrayList<float[]> missileModelData;
 		float Location[],
 		float Roll_angle[],
 		float Roll_angle_aircraft[]
-	)
-	{
-		this
-		(
+	) {
+		this (
 		    gameManager, -1, lifeTime, Speed, Speed_aircraft, 
 			resistance_rate, Location, Roll_angle, 
 			Roll_angle_aircraft
@@ -153,8 +150,7 @@ private static ArrayList<float[]> missileModelData;
 	}
 	
 	@Override
-	public void go()
-	{
+	public void go() {
 		if(lifeLeft <= 0) disable();
 		else {
             velocity -= velocity * getResistanceRate_normal() * 1.5;
@@ -183,7 +179,7 @@ private static ArrayList<float[]> missileModelData;
 
             location[0] += (CharTimeSpace.g - getResistanceRate_normal()) * (life - lifeLeft) * 0.0000125F;
             
-			getGameManager().newEffect(new EngineFlame(location, 25 + (int)(50 * GraphicUtils.random()), '*'));
+			getGameManager().newEffect(new EngineFlame(location, 25000 + (int)(50000 * GraphicUtils.random()), '*'));
 			lifeLeft -= 1000;
 		}
 	}

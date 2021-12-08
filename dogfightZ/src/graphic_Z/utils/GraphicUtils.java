@@ -1,6 +1,7 @@
 package graphic_Z.utils;
 
 import java.util.Random;
+import net.jafama.FastMath;
 
 public class GraphicUtils
 {
@@ -95,13 +96,13 @@ public class GraphicUtils
 	
     public static final float acos(float theta) {
         int idx = (int)((theta + 1.0F) * halfABoot);
-        if(idx >= boot) return Float.NaN;
+        if(idx >= boot  ||  idx < 0) return Float.NaN;
         return acost[idx];
     }
     
     public static final float asin(float theta) {
         int idx = (int)((theta + 1.0F) * halfABoot);
-        if(idx >= boot) return Float.NaN;
+        if(idx >= boot  ||  idx < 0) return Float.NaN;
         return asint[idx];
     }
     
@@ -309,7 +310,7 @@ public class GraphicUtils
 	}
     
     public static final float sqrt(float f) {
-        return (float) Math.sqrt(f);
+        return (float) FastMath.sqrtQuick(f);
     }
     
     public static final float max(float a, int b) {
@@ -333,11 +334,11 @@ public class GraphicUtils
     }
     
     public static final float log(float x) {
-        return (float) Math.log(x);
+        return (float) FastMath.logQuick(x);
     }
     
     public static float pow(float x, float y) {
-        return (float) Math.pow(x, y);
+        return (float) FastMath.powQuick(x, y);
     }
     
     public static final int fastRanodmInt() {

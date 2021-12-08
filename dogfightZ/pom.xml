@@ -7,6 +7,12 @@
   
   <dependencies>
 	<dependency>
+	   <groupId>net.jafama</groupId>
+	   <artifactId>jafama</artifactId>
+	   <version>2.3.2</version>
+	   <scope>compile</scope>
+	</dependency>
+	<dependency>
 	   <groupId>org.xerial</groupId>
 	   <artifactId>sqlite-jdbc</artifactId>
 	   <version>3.8.11.2</version>
@@ -29,30 +35,40 @@
     </resources>
     
     <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.0</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-      <plugin>
-      
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-jar-plugin</artifactId>
-      <configuration>
-          <archive>
-              <manifest>
-                  <mainClass>startTheWorld.Start_GUI</mainClass>
-                  <addClasspath>true</addClasspath>
-                  <classpathPrefix>lib/</classpathPrefix>
-              </manifest>
-          </archive>
-          <classesDirectory>
-          </classesDirectory>
-      </configuration>
-  </plugin>
+		<plugin>
+		  <artifactId>maven-compiler-plugin</artifactId>
+		  <version>3.6.0</version>
+		  <configuration>
+		    <source>1.8</source>
+		    <target>1.8</target>
+		  </configuration>
+		</plugin>
+
+		<plugin>
+		    <artifactId>maven-assembly-plugin</artifactId>
+		    <configuration>
+		        <descriptorRefs>
+		            <descriptorRef>jar-with-dependencies</descriptorRef>
+		        </descriptorRefs>
+		        <archive>
+		            <manifest>
+		                <mainClass>startTheWorld.Start_GUI</mainClass>
+		            </manifest>
+		            <manifestEntries>
+		            	<Class-Path>net/jafama</Class-Path>
+		            </manifestEntries>
+		        </archive>
+		    </configuration>
+		    <executions>
+		        <execution>
+		            <id>make-assembly</id>
+		            <phase>package</phase>
+		            <goals>
+		                <goal>assembly</goal>
+		            </goals>
+		        </execution>
+		    </executions>
+		</plugin>
     </plugins>
     
   </build>

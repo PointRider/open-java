@@ -1,6 +1,7 @@
 dogfight_Z\Ammo\Decoy.class
 startTheWorld\GameStartGUI$MyIDChangedListener.class
 dogfight_Z\dogLog\view\Menu$2.class
+dogfight_Z\Effects\EngineFlame2.class
 dogfight_Z\dogLog\controller\PilotLogin$2.class
 dogfight_Z\SoundTrack.class
 dogfight_Z\dogLog\controller\PilotRegist$2.class
