@@ -6,7 +6,6 @@ import java.awt.FontFormatException;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
@@ -70,9 +69,7 @@ public class EventManager extends JFrame
 	protected	LinkedList<SinglePoint>	EventFrapsQueue_mouse;	//鼠标事件队列，存储鼠标位移坐标(x,y)
 	public		LinkedList<Integer> EventFrapsQueue_keyboard;	//键盘事件队列，存储键盘扫描码
 	
-	public EventManager(int maxKeyBuffer_size)
-	{
-	    
+	public EventManager(int maxKeyBuffer_size) {
 		EventFrapsQueue_mouse	 = new LinkedList<SinglePoint>();
 		EventFrapsQueue_keyboard = new LinkedList<Integer>();
 		
@@ -127,36 +124,27 @@ public class EventManager extends JFrame
 		this(6);
 	}
 	
-	public void setScrZoom(int size)
-	{
+	public void setScrZoom(int size) {
 	    fontSize = size;
 	    mainScr.setFont(supportedFonts[currentFontIdx].deriveFont(Font.PLAIN, fontSize));
 	}
 
-    public void switchFont(int idx)
-    {
+    public void switchFont(int idx) {
         if(idx < 0 || idx > supportedFonts.length) return;
         mainScr.setFont(supportedFonts[idx].deriveFont(Font.PLAIN, fontSize));
         currentFontIdx = idx;
     }
     
-	public int popAKeyOpreation()
-	{
+	public int popAKeyOpreation() {
 		int keyCode = -1;
-		if(EventFrapsQueue_keyboard.size() > 0)
-		{
+		if(EventFrapsQueue_keyboard.size() > 0) {
 			keyCode = EventFrapsQueue_keyboard.poll();
-			if(keyCode == KeyEvent.VK_ESCAPE)
-				System.exit(0);
 		}
-		
 		return keyCode;
 	}
 	
-	public SinglePoint popAMouseOpreation()
-	{
-		if(EventFrapsQueue_mouse.size() > 0)
-		{
+	public SinglePoint popAMouseOpreation() {
+		if(EventFrapsQueue_mouse.size() > 0) {
 			SinglePoint xy = new SinglePoint(EventFrapsQueue_mouse.poll());
 			xy.x -= PCScreenCenter_X;
 			xy.y -= PCScreenCenter_Y;

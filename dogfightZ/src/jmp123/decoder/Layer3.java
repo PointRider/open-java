@@ -226,8 +226,7 @@ public final class Layer3 extends AbstractLayer {
 	protected void initialize() {
 		if (coresEnabled) {
 			audiodataCh0.start();
-			if (nch == 2)
-				audiodataCh1.start();
+			if (nch == 2) audiodataCh1.start();
 		}
 	}
 

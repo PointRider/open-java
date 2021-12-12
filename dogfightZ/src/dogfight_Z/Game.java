@@ -4,7 +4,10 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelListener;
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -52,7 +55,7 @@ public class Game extends CharTimeSpace implements Runnable
 	private CharLabel lblKillTipList;
 
 	private CharLabel 			EndScreen;
-	//public CharLabel            lbltest;
+	//public CharLabel          lbltest;
 	//private NPC npctest;
 	
 	private CharDynamicHUD		hud_roll_up_dn_angle;
@@ -132,6 +135,8 @@ public class Game extends CharTimeSpace implements Runnable
 	
 	private GameManager gameManager;
 	
+	private boolean paused;
+	
 	private final void initRank(){
 		scoreList = new LinkedList<Aircraft>();
 	}
@@ -142,7 +147,7 @@ public class Game extends CharTimeSpace implements Runnable
 		float Mess,
 		float searching_visibility,
 		float max_motionRate,
-		int    camp
+		int   camp
 	) {
 		NPC npc = new NPC (
 			gameManager, 
@@ -213,6 +218,7 @@ public class Game extends CharTimeSpace implements Runnable
         //foreRGB = new Color(255, 255, 255);
         backRGB = 0;
         gameManager = new GameManager(this);
+        paused = false;
 	}
 	/*
 	 "resources/MyJetHUD_Friend.hud" 
@@ -221,6 +227,7 @@ public class Game extends CharTimeSpace implements Runnable
 	 "resources/MyJetHUD_Locked.hud" 
 	 "resources/MissileWarning.hud" 
 	 */
+	
 	private final void initMainCamera(
 	        String hud_friend,
 	        String hud_enemy,
@@ -894,21 +901,24 @@ public class Game extends CharTimeSpace implements Runnable
                     mainCamera.resizeScreen(visualManager.resolution[0], visualManager.resolution[1] - 1);
                     reLocateHUD();
                 break;
-                /*
+                
 				case KeyEvent.VK_E:
-					//bgmThread.stop();
-					soundTrack.switchPrevious();
-					//bgmThread = new Thread(soundTrack);
-					
-					//bgmThread.start();
+    				    soundTrack.interrupt();
+    					soundTrack.switchPrevious();
+    					bgmThread = new Thread(soundTrack);
+    					bgmThread.start();
 				break;
 					
 				case KeyEvent.VK_R:
-					//bgmThread.stop();
-					soundTrack.switchNext();
-					//bgmThread = new Thread(soundTrack);
-					//bgmThread.start();
-				break;*/
+    				    soundTrack.interrupt();
+    					//soundTrack.switchNext();
+    					bgmThread = new Thread(soundTrack);
+    					bgmThread.start();
+				break;
+                
+                case KeyEvent.VK_ESCAPE:
+                    
+                    break;
 			}
 		}
 		
@@ -924,15 +934,6 @@ public class Game extends CharTimeSpace implements Runnable
                 getMyJet().control_roll_lr((float)(-xy.x) * 0.00018180513041607602F);
                 getMyJet().control_roll_up_dn((float)(-xy.y) * 0.00018180513041607602F);
             }
-            
-            /*
-            if(getMyJet().isCannonFiring) {
-                getMyJet().control_roll_lr((float)(-xy.x) / 224.0F);
-                getMyJet().control_roll_up_dn((float)(-xy.y) / 224.0F);
-            } else {
-                getMyJet().control_roll_lr((float)(-xy.x) / 96.0F);
-                getMyJet().control_roll_up_dn((float)(-xy.y) / 96.0F);
-            }*/
         }
         
 		if(keyState_W) getMyJet().control_acc(0.05F);
@@ -977,18 +978,46 @@ public class Game extends CharTimeSpace implements Runnable
 		
 		if(keyState_SPACE) getMyJet().cannonOpenFire();
 		else getMyJet().cannonStopFiring();
-		/*
-		if(myJet.isCannonFiring) {
-            myJet.control_roll_lr((float)(-xy.x)/224.0F);
-            myJet.control_roll_up_dn((float)(-xy.y)/224.0F);
-        } else {
-            myJet.control_roll_lr((float)(-xy.x)/96.0F);
-            myJet.control_roll_up_dn((float)(-xy.y)/96.0F);
-        }
-		*/
+		
 		scoreShow.visible = keyState_TAB;
 		mainCamera.setReversed(keyState_V);
 	}
+	
+	public final void exit() {
+	    File screenSizeFile      = new File("resources/screenSize.cfg");
+        FileOutputStream fos     = null;
+        DataOutputStream dos     = null;
+        BufferedOutputStream bos = null;
+        
+        if(!screenSizeFile.exists()) {
+            try {
+                screenSizeFile.createNewFile();
+            } catch (IOException e) { e.printStackTrace(); }
+        }
+        
+        try {
+            fos = new FileOutputStream(screenSizeFile);
+            bos = new BufferedOutputStream(fos);
+            dos = new DataOutputStream(bos);
+            dos.writeInt(getResolution()[0]);
+            dos.writeInt(getResolution()[1]);
+            dos.writeInt(scrSize);
+            dos.writeInt(fontIdx);
+        } catch (IOException e1) { e1.printStackTrace(); } finally {
+            if(dos != null) try {
+                dos.close();
+            } catch (IOException e1) { e1.printStackTrace(); }
+        }
+        System.exit(0);
+	}
+
+    public void pause() {
+        paused = true;
+    }
+    
+    public void resume() {
+        paused = false;
+    }
 	
 	@Override
 	public final void run()
@@ -1001,10 +1030,17 @@ public class Game extends CharTimeSpace implements Runnable
 			lblGameTimeLeft.visible = false;
 		
 		execute(cloudMan);
-        execute(bgmThread);
+		execute(bgmThread);
+        ///bgmThread.start();
 		//游戏主循环
 		while(gameStopTime == -1  ||  (leftTime = gameStopTime - ((double)System.currentTimeMillis()/1000.0)) > 0)
 		{
+		    if(paused) try {
+		        synchronized(this) { wait(); }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+		    
 			buffStatic();
 			if(gameStopTime != -1)
 			{
@@ -1070,7 +1106,7 @@ public class Game extends CharTimeSpace implements Runnable
 			fw.write('\n');
 		}	catch(IOException exc){}
 	}
-	
+    
 	public final void addGBlack(float val) {
 	    if((gBlack += val) > 255) gBlack = 255;
 	}

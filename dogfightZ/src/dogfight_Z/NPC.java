@@ -265,8 +265,8 @@ public class NPC extends Aircraft
                     } else {//已有选择的目标
                         if(currentSelectObj == aJet) {
                             lockingSelected = true;
-                            aJet.warning(this);
-                            if(!locked && --lockTimeLeft <= 0)  locked = true; 
+                            if(aJet.getLockingPriority() > 0)  aJet.warning(this);
+                            if(!locked && --lockTimeLeft <= 0) locked = true; 
                         }
                     }
                 }

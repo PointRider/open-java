@@ -21,10 +21,15 @@ import javax.imageio.ImageIO;
 
 import javax.swing.JButton;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -100,6 +105,9 @@ public class Start_GUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+
+    private int resX = 192, resY = 108, fontSize = 8, fontIdx = 1;
+    
 	public Start_GUI(String[] Args) {
 		super("Welcome to dogfight_Z !");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -115,14 +123,14 @@ public class Start_GUI extends JFrame {
 		File picture = new File("resources/GuiBackground.jpg");
 		BufferedImage sourceImg = null;
 		try {
-				sourceImg = ImageIO.read(new FileInputStream(picture));
+			sourceImg = ImageIO.read(new FileInputStream(picture));
 		} catch (FileNotFoundException e2) {
-					// TODO 自动生成的 catch 块
-					e2.printStackTrace();
+			// TODO 自动生成的 catch 块
+			e2.printStackTrace();
 		} catch (IOException e2) {
-					// TODO 自动生成的 catch 块
-					e2.printStackTrace();
-				} 
+			// TODO 自动生成的 catch 块
+			e2.printStackTrace();
+		} 
 		BackgroundPanel bgp=new BackgroundPanel(sourceImg);
 		bgp.setBounds(0,0,800,450);
 		
@@ -171,6 +179,48 @@ public class Start_GUI extends JFrame {
 		btnNewButton3.setBounds(24, 300, 200, 40);
 		bgp.add(btnNewButton3);
 		btnNewButton3.setFont(new Font("宋体", Font.BOLD, 22));
+
+        FileInputStream fis = null;
+        DataInputStream dis = null;
+        BufferedInputStream bis = null;
+
+        File screenSizeFile = new File("resources/screenSize.cfg");
+        FileOutputStream fos = null;
+        DataOutputStream dos = null;
+        BufferedOutputStream bos = null;
+		if(!screenSizeFile.exists()) {
+		    try {
+                screenSizeFile.createNewFile();
+                fos = new FileOutputStream(screenSizeFile);
+                bos = new BufferedOutputStream(fos);
+                dos = new DataOutputStream(bos);
+                dos.writeInt(resX);
+                dos.writeInt(resY);
+                dos.writeInt(fontSize);
+                dos.writeInt(fontIdx);
+            } catch (IOException e1) { e1.printStackTrace(); } finally {
+                if(dos != null) try {
+                    dos.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+		} else try {
+            fis = new FileInputStream(screenSizeFile);
+            bis = new BufferedInputStream(fis);
+            dis = new DataInputStream(bis);
+            resX = dis.readInt();
+            resY = dis.readInt();
+            fontSize = dis.readInt();
+            fontIdx  = dis.readInt();
+        } catch (IOException e1) { e1.printStackTrace(); } finally {
+            if(dis != null) try {
+                dis.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+		
 		
 		//监听Start按钮，当被点击时，
 		//将选择的难度添加到 beready中，
@@ -200,7 +250,8 @@ public class Start_GUI extends JFrame {
                         "resources/config_NPC.cfg",
                         "resources/gameRecord.rec",
                         "resources/config_OST.cfg",
-                        "192", "108", "64", "8", "1"
+                        Integer.toString(resX), Integer.toString(resY), 
+                        "64", Integer.toString(fontSize), Integer.toString(fontIdx)
 				    };
 				    
 				    GameRun.main(args);

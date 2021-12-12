@@ -42,18 +42,17 @@ public class SoundTrack implements Runnable
 		}	catch(IOException exc){}
 	}
 	
-	public void switchNext()
-	{
-		if(currentPlayingIndex < soundTrack.size()-1)
-			++currentPlayingIndex;
-		else currentPlayingIndex = 0;
+	public void switchNext() {
+		//if(++currentPlayingIndex == soundTrack.size()) currentPlayingIndex = 0;
 	}
 	
-	public void switchPrevious()
-	{
-		if(currentPlayingIndex > 0)
-			--currentPlayingIndex;
-		else currentPlayingIndex = soundTrack.size()-1;
+	public void switchPrevious() {
+		if(currentPlayingIndex-- == 0) currentPlayingIndex = soundTrack.size()-1;
+        if(currentPlayingIndex-- == 0) currentPlayingIndex = soundTrack.size()-1;
+	}
+	
+	public void interrupt() {
+	    if(player != null) player.setInterrupted(true);
 	}
 	
 	@Override

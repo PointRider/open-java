@@ -18,8 +18,18 @@ public abstract class AbstractDecoder {
 	private final Header header;
 	private final IAudio audio;
 	private AbstractLayer layer;
+	private boolean isInterrupted;
+    //private boolean isInterrupted;
+	
+	public synchronized final boolean isInterrupted() {
+        return isInterrupted;
+    }
 
-	/**
+    public synchronized final void setInterrupted(boolean isInterrupted) {
+        this.isInterrupted = isInterrupted;
+    }
+    
+    /**
 	 * 用指定的音频输出audio创建一个AbstractDecoder对象。
 	 * @param audio 音频输出对象。若为 <b>null</b>，解码但不产生输出。
 	 */
@@ -27,22 +37,31 @@ public abstract class AbstractDecoder {
 		this.audio = audio;
 		header = new Header();
 		buf = new byte[8192];
+		isInterrupted = false;
 	}
-
+    
 	/**
 	 * 开始解码，直至到达流的结尾或被用户终止。
 	 * <p>如果解码过程中被用户终止，将以立即方式结束音乐数据解码。
 	 * @see AbstractLayer#close(boolean)
 	 */
 	public final void run() {
-		boolean isInterrupted = false;
 
+        isInterrupted = false;
+        
+	    try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // TODO 自动生成的 catch 块
+            e.printStackTrace();
+        }
+        
 		if (layer != null) {
 			layer.initialize();
 			
-			while (!eof) {
+			while (!(eof || isInterrupted)) {
 				pos = layer.decodeAudioData(buf, pos);
-				eof = isInterrupted = !cooperate();
+				//eof = isInterrupted = !cooperate();
 				nextFrameHeader();
 			}
 			//System.out.println("\nAbstractDecoder.run: eof = " + eof + ", isInterrupted = " + isInterrupted);

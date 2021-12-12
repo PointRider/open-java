@@ -25,7 +25,6 @@ public class ContinueListener implements KeyListener
 		
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
@@ -34,22 +33,21 @@ public class ContinueListener implements KeyListener
 		{
 			paused = !paused;
 			
-			if(paused)
-			{
+			if(paused) {
 				pauseTime = System.currentTimeMillis() / 1000;
-				gameThread.suspend();
-				myGame.bgmThread.suspend();
-			}
-			else
-			{
+				myGame.pause();
+			} else {
 				pauseTime = System.currentTimeMillis() / 1000 - pauseTime;
-				gameThread.resume();
 				myGame.gameStopTime += pauseTime;
-				myGame.bgmThread.resume();
+				myGame.resume();
+				synchronized(myGame) {
+				    myGame.notifyAll();
+				}
 			}
 		}
-		else if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
-			System.exit(0);
+		else if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+		    myGame.exit();
+		}
 	}
 
 	@Override
