@@ -16,13 +16,15 @@ public class SoundTrack implements Runnable
 	private int currentPlayingIndex;
 	
 	private MiniPlayer player;
+	private boolean interruptFlag;
 	
 	public SoundTrack(String sountrack_info_file)
 	{
+	    interruptFlag = false;
 		soundTrack = new ArrayList<String>();
 		soundTrack.clear();
 		currentPlayingIndex = 0;
-		
+		player = null;
 		try(InputStreamReader reader = new InputStreamReader(new FileInputStream(sountrack_info_file), "GBK"))
 		{
 			String tmp;
@@ -43,16 +45,17 @@ public class SoundTrack implements Runnable
 	}
 	
 	public void switchNext() {
-		//if(++currentPlayingIndex == soundTrack.size()) currentPlayingIndex = 0;
+		if(++currentPlayingIndex == soundTrack.size()) currentPlayingIndex = 0;
 	}
 	
 	public void switchPrevious() {
 		if(currentPlayingIndex-- == 0) currentPlayingIndex = soundTrack.size()-1;
-        if(currentPlayingIndex-- == 0) currentPlayingIndex = soundTrack.size()-1;
 	}
 	
 	public void interrupt() {
-	    if(player != null) player.setInterrupted(true);
+	    if(player != null  &&  soundTrack.size() > 0) {
+	        player.setInterrupted(interruptFlag = true);
+	    }
 	}
 	
 	@Override
@@ -68,9 +71,11 @@ public class SoundTrack implements Runnable
 				{
 					player.open(soundTrack.get(currentPlayingIndex));
 					player.run();
-					switchNext();
+					if(!interruptFlag) {
+					    switchNext();
+					    interruptFlag = false;
+					}
 				}
-				
 			}
 			catch (IOException e)
 			{

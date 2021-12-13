@@ -902,16 +902,16 @@ public class Game extends CharTimeSpace implements Runnable
                     reLocateHUD();
                 break;
                 
-				case KeyEvent.VK_E:
+				case -KeyEvent.VK_E:
     				    soundTrack.interrupt();
     					soundTrack.switchPrevious();
     					bgmThread = new Thread(soundTrack);
     					bgmThread.start();
 				break;
 					
-				case KeyEvent.VK_R:
+				case -KeyEvent.VK_R:
     				    soundTrack.interrupt();
-    					//soundTrack.switchNext();
+    					soundTrack.switchNext();
     					bgmThread = new Thread(soundTrack);
     					bgmThread.start();
 				break;

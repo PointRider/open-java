@@ -22,11 +22,6 @@ public class KeyboardResponse implements KeyListener
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-	    switch(e.getKeyCode()) {
-        case KeyEvent.VK_E: case KeyEvent.VK_R:
-            return;
-        }
-	    
 		if(FrapsEventQueue_keyboard.size() < maxKeyCodeBufferSize)
 			FrapsEventQueue_keyboard.addLast(e.getKeyCode());
 		
@@ -40,13 +35,6 @@ public class KeyboardResponse implements KeyListener
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
-	    switch(e.getKeyCode()) {
-	    case KeyEvent.VK_E: case KeyEvent.VK_R:
-	        if(FrapsEventQueue_keyboard.size() < maxKeyCodeBufferSize)
-	            FrapsEventQueue_keyboard.addLast(e.getKeyCode());
-	        break;
-	    }
-	    /*
 		if(FrapsEventQueue_keyboard.size() < maxKeyCodeBufferSize)
 			FrapsEventQueue_keyboard.addLast(-e.getKeyCode());
 		
@@ -55,7 +43,7 @@ public class KeyboardResponse implements KeyListener
 		
 		if(FrapsEventQueue_keyboard.size() < maxKeyCodeBufferSize)
 			if(e.isControlDown())FrapsEventQueue_keyboard.addLast(-KeyEvent.VK_CONTROL);
-		*/
+		
 	}
 
 }
