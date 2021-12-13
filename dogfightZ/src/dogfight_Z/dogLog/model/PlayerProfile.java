@@ -31,8 +31,8 @@ public class PlayerProfile extends SimplePrimaryKey implements Serializable {
     public PlayerProfile() {
     }
     
-    public PlayerProfile(int userID, String userName, String userPass, String userNick, BigDecimal userBank, BigDecimal userExp, int gameRecordShared,
-            LocalDateTime createTime, int resolutionX, int resolutionY, int fontSize, int fontIndx) {
+    public PlayerProfile(Integer userID, String userName, String userPass, String userNick, BigDecimal userBank, BigDecimal userExp, Integer gameRecordShared,
+            LocalDateTime createTime, Integer resolutionX, Integer resolutionY, Integer fontSize, Integer fontIndx) {
         super();
         this.userID          = userID;
         this.userName        = userName;
@@ -62,6 +62,21 @@ public class PlayerProfile extends SimplePrimaryKey implements Serializable {
         this.resolutionY     = rs.getInt("resolutionY");
         this.fontSize        = rs.getInt("fontSize");
         this.fontIndx        = rs.getInt("fontIndx");
+    }
+
+    public PlayerProfile(PlayerProfile another) {
+        this.userID          = new Integer(another.userID);
+        this.userName        = new String(another.userName);
+        this.userPass        = new String(another.userPass);
+        this.userNick        = new String(another.userNick);
+        this.userBank        = new BigDecimal(another.userBank.toString());
+        this.userExp         = new BigDecimal(another.userExp.toString());
+        this.gameRecordShare = new Integer(another.gameRecordShare);
+        this.createTime      = another.createTime;
+        this.resolutionX     = new Integer(another.resolutionX);
+        this.resolutionY     = new Integer(another.resolutionY);
+        this.fontSize        = new Integer(another.fontSize);
+        this.fontIndx        = new Integer(another.fontIndx);
     }
 
     @Override

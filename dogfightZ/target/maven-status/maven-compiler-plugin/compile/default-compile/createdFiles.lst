@@ -53,6 +53,7 @@ dogfight_Z\PlayersJetCamera.class
 graphic_Z\Managers\VisualManager.class
 dogfight_Z\Aircraft.class
 dogfight_Z\dogLog\view\PiLog.class
+dogfight_Z\dogLog\controller\ProfileSettingsMenu$3$1.class
 dogfight_Z\dogLog\view\PiLog$4.class
 dogfight_Z\Ammo\CannonAmmo.class
 dogfight_Z\RandomCloud.class
@@ -136,6 +137,7 @@ dogfight_Z\dogLog\controller\ProfileSettingsMenu$4.class
 graphic_Z\Interfaces\ThreeDs.class
 startTheWorld\Start_GUI$4.class
 graphic_Z\HUDs\CharDynamicHUD.class
+dogfight_Z\dogLog\controller\ProfileSettingsMenu$3$2.class
 jmp123\demo\Play.class
 dogfight_Z\dogLog\controller\PilotRegist$1$1.class
 dogfight_Z\dogLog\security\Irreversible.class
@@ -185,6 +187,7 @@ dogfight_Z\Ammo\Dangerous.class
 dogfight_Z\dogLog\controller\TipsConfirmMenu.class
 graphic_Z\Cameras\CharFrapsCamera.class
 dogfight_Z\dogLog\utils\JDBCFactory.class
+dogfight_Z\dogLog\controller\ProfileSettingsMenu$10.class
 dogfight_Z\dogLog\controller\PilotRegist$1.class
 startTheWorld\SoundTrackSelector.class
 dogfight_Z\dogLog\view\Menu.class

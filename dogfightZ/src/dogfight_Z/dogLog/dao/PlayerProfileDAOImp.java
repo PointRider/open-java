@@ -146,8 +146,13 @@ public class PlayerProfileDAOImp implements PlayerProfileDAO {
         if(p == null) return 0;
         String where = null;
         
+        boolean userNameConditionFlag = false;
+        
         if(p.getUserID() != null) where = " where `userID` = ?";
-        else if(p.getUserName() != null) where = " where `userName` = ?";
+        else if(p.getUserName() != null) {
+            where = " where `userName` = ?";
+            userNameConditionFlag = true;
+        }
         else return 0;
 
         String sql = "update `PlayerProfile` set ";
@@ -214,6 +219,9 @@ public class PlayerProfileDAOImp implements PlayerProfileDAO {
             args.add(p.getFontIndx());
             notFirst = true;
         }
+        
+        if(userNameConditionFlag) args.add(p.getUserName());
+        else args.add(p.getUserID());
         
         int updated = 0;
         JDBCConnection conn = null;

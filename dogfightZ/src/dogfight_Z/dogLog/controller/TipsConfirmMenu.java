@@ -27,12 +27,17 @@ public class TipsConfirmMenu extends Menu {
         if(scrBuffer != null) super.screenBuffer = scrBuffer;
         //this.callBack = callBack;
         this.exitCall = exitCall;
+        int tipsLength = tip.length();
+        for(int i = 0, j = tipsLength; i < j; ++i) {
+            if(tip.charAt(i) > 127) ++tipsLength;
+        }
+        
         lblTip = new CharLabel(
             screenBuffer, 
             1, 
             resolution, 
             tip, 
-            (resolutionX >> 1) - (tip.length() >> 1), 
+            (resolutionX >> 1) - (tipsLength >> 1), 
             resolutionY >> 1,
             false
         );

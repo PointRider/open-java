@@ -49,96 +49,23 @@ public class PilotRegist extends Menu {
         setScreenSize = null;
         
         lblTiltle = new CharLabel(
-            screenBuffer, 
-            1, 
-            resolution, 
+            screenBuffer, 1, resolution, 
             "DOGFIGHT Z - PILOT REGIST", 
-            (resolution[0] >> 1) - 12, 
-            6,
-            false
+            (resolution[0] >> 1) - 12, 6, false
         );
         
-        lblUsername = new CharLabel(
-            screenBuffer, 
-            2, 
-            resolution, 
-            "Username:", 
-            8, 
-            12,
-            false
-        );
-        
-        tbUsername = new CharSingleLineTextEdit(
-            screenBuffer, 
-            resolution, 
-            20, 
-            12, 
-            36, "Use this and password to login."
-        );
-        
-        lblUserPass = new CharLabel(
-            screenBuffer, 
-            3, 
-            resolution, 
-            "Password:", 
-            8, 
-            15,
-            false
-        );
-        
-        pasUserPass = new CharPasswordEdit(
-            screenBuffer, 
-            resolution, 
-            20, 
-            15, 
-            36, "This can be reset after login."
-        );
-
-        lblUserPassConfirm = new CharLabel(
-            screenBuffer, 
-            4, 
-            resolution, 
-            " Confirm:", 
-            8, 
-            18,
-            false
-        );
-        
-        pasUserPassConfirm = new CharPasswordEdit(
-            screenBuffer, 
-            resolution, 
-            20, 
-            18, 
-            36, "Repeat again."
-        );
-        
-        lblUserNick = new CharLabel(
-            screenBuffer, 
-            5, 
-            resolution, 
-            "Nickname:", 
-            8, 
-            21,
-            false
-        );
-        
-        tbUserNick = new CharSingleLineTextEdit(
-            screenBuffer, 
-            resolution, 
-            20, 
-            21, 
-            36
-        );
+        lblUsername = new CharLabel(screenBuffer, 2,  resolution, "Username:", 8, 12, false);
+        tbUsername = new CharSingleLineTextEdit(screenBuffer, resolution, 20, 12, 36, "Use this and password to login.");
+        lblUserPass = new CharLabel(screenBuffer, 3, resolution, "Password:", 8, 15, false);
+        pasUserPass = new CharPasswordEdit(screenBuffer, resolution, 20, 15, 36, "This can be reset after login.");
+        lblUserPassConfirm = new CharLabel(screenBuffer, 4, resolution, " Confirm:", 8, 18, false);
+        pasUserPassConfirm = new CharPasswordEdit(screenBuffer, resolution, 20, 18, 36, "Repeat again.");
+        lblUserNick = new CharLabel(screenBuffer, 5, resolution, "Nickname:", 8, 21, false);
+        tbUserNick = new CharSingleLineTextEdit(screenBuffer, resolution, 20, 21, 36);
         
         btnUserRecordShareSetup = new CharButton(
-            screenBuffer, 
-            resolution, 
-            "Share my game record: YES", 
-            10, 
-            26,
-            44,
+            screenBuffer, resolution, "Share my game record: YES", 10, 26, 44,
             new Operable() {
-
                 @Override
                 public Operation call() {
                     showConfirmDialog("你想要将自己的游戏记录设置为所有用户可见吗？","YES!", "NO.", 
@@ -157,21 +84,14 @@ public class PilotRegist extends Menu {
                             }
                         }
                     );
-                    
                     return new Operation(false, null, null, null, null, null);
                 }
             }
         );
 
         btnUserScreenSetup = new CharButton(
-            screenBuffer, 
-            resolution, 
-            "Setup Screen Size", 
-            10, 
-            29,
-            44,
+            screenBuffer, resolution, "Setup Screen Size", 10, 29, 44,
             new Operable() {
-
                 @Override
                 public Operation call() {
                     return new Operation(false, new ScreenResize(args, screen, resolution[0], resolution[1], setScreenSize), null, null, null, null);
@@ -180,12 +100,7 @@ public class PilotRegist extends Menu {
         );
         
         btnConfirm = new CharButton(
-            screenBuffer, 
-            resolution, 
-            "O K", 
-            10, 
-            32,
-            20,
+            screenBuffer, resolution, "O K", 10, 32, 20,
             new Operable() {
                 @Override
                 public Operation call() {
@@ -244,12 +159,7 @@ public class PilotRegist extends Menu {
         );
         
         btnCancel = new CharButton(
-            screenBuffer, 
-            resolution, 
-            "Cancel", 
-            34, 
-            32,
-            20,
+            screenBuffer, resolution, "Cancel", 34, 32, 20,
             new Operable() {
                 @Override
                 public Operation call() {

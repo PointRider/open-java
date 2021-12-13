@@ -7,6 +7,7 @@ import dogfight_Z.dogLog.controller.TipsMenu;
 import graphic_Z.Common.Operation;
 import graphic_Z.HUDs.CharButton;
 import graphic_Z.HUDs.CharLabel;
+import graphic_Z.HUDs.CharPasswordEdit;
 import graphic_Z.HUDs.CharSingleLineTextEdit;
 import graphic_Z.HUDs.Operable;
 
@@ -146,7 +147,7 @@ public abstract class Menu implements DogMenu {
         return o;
     }
 
-    protected void showConfirmDialog(String tip, String confirm, String cancel, Runnable confirmed, Runnable canceled) {
+    public void showConfirmDialog(String tip, String confirm, String cancel, Runnable confirmed, Runnable canceled) {
         currentDialog = new TipsConfirmMenu(
             args, 
             screenBuffer,
@@ -167,7 +168,7 @@ public abstract class Menu implements DogMenu {
         );
     }
     
-    protected void showConfirmDialog(String tip, String confirm, String cancel, Runnable confirmed) {
+    public void showConfirmDialog(String tip, String confirm, String cancel, Runnable confirmed) {
         Runnable cancelCall = new Runnable() {
             @Override
             public void run() {
@@ -190,7 +191,7 @@ public abstract class Menu implements DogMenu {
         );
     }
     
-    protected void showTipsDialog(String tip, Runnable confirmed) {
+    public void showTipsDialog(String tip, Runnable confirmed) {
         currentDialog = new TipsMenu(
             args, 
             screenBuffer,
@@ -202,7 +203,7 @@ public abstract class Menu implements DogMenu {
         );
     }
     
-    protected void showTipsDialog(String tip) {
+    public void showTipsDialog(String tip) {
         currentDialog = new TipsMenu(
             args, 
             screenBuffer,
@@ -219,7 +220,7 @@ public abstract class Menu implements DogMenu {
         );
     }
     
-    protected void closeDialog() {
+    public void closeDialog() {
         currentDialog = null;
     }
     
@@ -245,6 +246,18 @@ public abstract class Menu implements DogMenu {
     
     public CharSingleLineTextEdit newCharSingleLineTextEdit(int localtionX, int locationY, int width) {
         return new CharSingleLineTextEdit(screenBuffer, resolution, localtionX, locationY, width);
+    }
+
+    public CharSingleLineTextEdit newCharPasswordEdit(int localtionX, int locationY, int width) {
+        return new CharPasswordEdit(screenBuffer, resolution, localtionX, locationY, width);
+    }
+    
+    public CharSingleLineTextEdit newCharSingleLineTextEdit(int localtionX, int locationY, int width, String placeholder) {
+        return new CharSingleLineTextEdit(screenBuffer, resolution, localtionX, locationY, width, placeholder);
+    }
+
+    public CharSingleLineTextEdit newCharPasswordEdit(int localtionX, int locationY, int width, String placeholder) {
+        return new CharPasswordEdit(screenBuffer, resolution, localtionX, locationY, width, placeholder);
     }
     
     @Override

@@ -38,4 +38,10 @@ public class PlayerProfileServiceImp implements PlayerProfileService {
     public static PlayerProfileServiceImp getPlayerProfileService() {
         return playerProfileService;
     }
+
+    @Override
+    public boolean editProfile(PlayerProfile newProfileInfo) {
+        if(newProfileInfo.getUserPass() != null) newProfileInfo.setUserPass(PiLog.getPasswordencoder().encrypt(newProfileInfo.getUserPass()));
+        return PlayerProfileDAOImp.getPlayerProfileDAO().updatePlayerProfiles(newProfileInfo) > 0;
+    }
 }
