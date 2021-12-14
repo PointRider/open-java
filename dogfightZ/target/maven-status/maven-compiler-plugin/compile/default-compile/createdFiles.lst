@@ -97,6 +97,7 @@ dogfight_Z\GameManager.class
 graphic_Z\Common\Operation.class
 graphic_Z\Managers\CharVisualManager.class
 startTheWorld\Start_GUI$7$1.class
+dogfight_Z\Game$1.class
 dogfight_Z\dogLog\security\securityTest.class
 graphic_Z\HUDs\CharLoopingScrollBar$Direction.class
 jmp123\decoder\Layer1.class
