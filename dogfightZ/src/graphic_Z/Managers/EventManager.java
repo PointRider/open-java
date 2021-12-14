@@ -84,7 +84,7 @@ public class EventManager extends JFrame
 		addKeyListener(keyResponse);
 		
 		setSize(PCScreenCenter_X << 1, PCScreenCenter_Y << 1);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		//---------------------------Setup GUI----------------------------------
 		setLocation(0, 0);

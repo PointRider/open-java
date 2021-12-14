@@ -2,6 +2,7 @@ package dogfight_Z;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelListener;
 import java.io.BufferedOutputStream;
@@ -31,8 +32,7 @@ import graphic_Z.Managers.EventManager;
 import graphic_Z.Worlds.CharTimeSpace;
 import graphic_Z.utils.GraphicUtils;
 
-public class Game extends CharTimeSpace implements Runnable
-{
+public class Game extends CharTimeSpace implements Runnable {
     private float fov = 2.2F;
 	private float visibility = 12480;
 	private float gBlack;
@@ -129,13 +129,14 @@ public class Game extends CharTimeSpace implements Runnable
 	private String recFile;
 	
 	private SoundTrack  soundTrack;
-	public  Thread		bgmThread;
 	
 	public long gameStopTime;
 	
 	private GameManager gameManager;
 	
 	private boolean paused;
+	
+	private volatile boolean running;
 	
 	private final void initRank(){
 		scoreList = new LinkedList<Aircraft>();
@@ -374,14 +375,14 @@ public class Game extends CharTimeSpace implements Runnable
 	}
 	
 	private final void initHUDs(
-	        int resolutionX, int resolutionY, 
-	        String hud_horizonIndicator,
-	        String hud_crosshairImg,
-	        String hud_loopingScrollBar_vertical,
-	        String hud_loopingScrollBar_horizon,
-	        String hud_radarBG,
-	        String hud_radarPrinter
-	    ) {
+        int resolutionX, int resolutionY, 
+        String hud_horizonIndicator,
+        String hud_crosshairImg,
+        String hud_loopingScrollBar_vertical,
+        String hud_loopingScrollBar_horizon,
+        String hud_radarBG,
+        String hud_radarPrinter
+    ) {
 	    resolution_min = GraphicUtils.min(visualManager.getResolution_X(), visualManager.getResolution_Y()) >> 1;
 	    scoreShow.visible = false;
         visualManager.newDynamicHUD(scoreShow);
@@ -452,7 +453,7 @@ public class Game extends CharTimeSpace implements Runnable
         Object mouse = new MouseWheelControl(eventManager.EventFrapsQueue_keyboard);
         eventManager.mainScr.addMouseWheelListener((MouseWheelListener) mouse);
         eventManager.mainScr.addMouseListener((MouseListener) mouse);
-        eventManager.addKeyListener(new ContinueListener(this, Thread.currentThread()));
+        eventManager.addKeyListener(new ContinueListener(this));
 
         keyState_W =
         keyState_A =
@@ -470,12 +471,10 @@ public class Game extends CharTimeSpace implements Runnable
 	}
 	
 	private final void initSoundTrack(String bgm_file) {
-        soundTrack    = new SoundTrack(bgm_file);
-        bgmThread     = new Thread(soundTrack);
+        soundTrack = new SoundTrack(gameManager, bgm_file);
 	}
 	
-	public Game
-	(
+	public Game(
 		String myJetModel_file,
 		String hud_horizonIndicator,
 		String hud_loopingScrollBar_vertical,
@@ -498,10 +497,8 @@ public class Game extends CharTimeSpace implements Runnable
 		int refresh_rate,
 		int fontSize,
 		int fontIndx
-	)
-	{
+	) {
 		super(resolutionX, resolutionY, refresh_rate);
-		
 		initClasses();
 		initUI(fontSize, fontIndx);
 		initRank();
@@ -905,19 +902,17 @@ public class Game extends CharTimeSpace implements Runnable
 				case -KeyEvent.VK_E:
     				    soundTrack.interrupt();
     					soundTrack.switchPrevious();
-    					bgmThread = new Thread(soundTrack);
-    					bgmThread.start();
+    			        execute(soundTrack);
 				break;
 					
 				case -KeyEvent.VK_R:
     				    soundTrack.interrupt();
     					soundTrack.switchNext();
-    					bgmThread = new Thread(soundTrack);
-    					bgmThread.start();
+    			        execute(soundTrack);
 				break;
                 
-                case KeyEvent.VK_ESCAPE:
-                    
+                case -KeyEvent.VK_ESCAPE:
+                    exit();
                     break;
 			}
 		}
@@ -984,6 +979,8 @@ public class Game extends CharTimeSpace implements Runnable
 	}
 	
 	public final void exit() {
+        setRunning(false);
+        
 	    File screenSizeFile      = new File("resources/screenSize.cfg");
         FileOutputStream fos     = null;
         DataOutputStream dos     = null;
@@ -1008,7 +1005,7 @@ public class Game extends CharTimeSpace implements Runnable
                 dos.close();
             } catch (IOException e1) { e1.printStackTrace(); }
         }
-        System.exit(0);
+        //System.exit(0);
 	}
 
     public void pause() {
@@ -1028,12 +1025,14 @@ public class Game extends CharTimeSpace implements Runnable
 		int    min, hor, sec, tmp;
 		if(gameStopTime == -1)
 			lblGameTimeLeft.visible = false;
-		
+		setRunning(true);
 		execute(cloudMan);
-		execute(bgmThread);
+		execute(soundTrack);
         ///bgmThread.start();
 		//游戏主循环
-		while(gameStopTime == -1  ||  (leftTime = gameStopTime - ((double)System.currentTimeMillis()/1000.0)) > 0)
+		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+		
+		while(isRunning() && (gameStopTime == -1  ||  (leftTime = gameStopTime - ((double)System.currentTimeMillis()/1000.0)) > 0))
 		{
 		    if(paused) try {
 		        synchronized(this) { wait(); }
@@ -1105,6 +1104,24 @@ public class Game extends CharTimeSpace implements Runnable
 			fw.write(Integer.toString(getMyJet().dead));
 			fw.write('\n');
 		}	catch(IOException exc){}
+		
+		eventManager.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {}
+            @Override
+            public void keyPressed(KeyEvent e) {}
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    soundTrack.interrupt();
+                    shutdown();
+                    eventManager.removeKeyListener(this);
+                    eventManager.setVisible(false);
+                    eventManager.dispose();
+                }
+            }
+		});
 	}
     
 	public final void addGBlack(float val) {
@@ -1122,7 +1139,6 @@ public class Game extends CharTimeSpace implements Runnable
             Integer.parseInt(args[20]),
             Integer.parseInt(args[21])
         );
-        
         game.getIntoGameWorld();
         game.run();
     }
@@ -1177,5 +1193,13 @@ public class Game extends CharTimeSpace implements Runnable
     
     public final ArrayList<ThreeDs> getClouds() {
         return clouds;
+    }
+
+    public final boolean isRunning() {
+        return running;
+    }
+
+    public final void setRunning(boolean running) {
+        this.running = running;
     }
 }

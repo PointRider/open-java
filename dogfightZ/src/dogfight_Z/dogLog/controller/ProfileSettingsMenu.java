@@ -348,7 +348,7 @@ public class ProfileSettingsMenu extends Menu {
             );
             PlayerProfileServiceImp.getPlayerProfileService().editProfile(newProfileInfo);
             
-            widgets[4].setText("My Screen Size: " + setScreenSize[0] + "," + setScreenSize[1] + "," + setScreenSize[2] + "," + setScreenSize[3]);
+            widgets[3].setText("My Screen Size: " + setScreenSize[0] + "," + setScreenSize[1] + "," + setScreenSize[2] + "," + setScreenSize[3]);
         }
         return null;
     }

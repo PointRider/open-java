@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.utils.GraphicUtils;
-import graphic_Z.utils.HzController;
+//import graphic_Z.utils.HzController;
 
 public class CloudsManager implements Runnable
 {
@@ -14,16 +14,19 @@ public class CloudsManager implements Runnable
 	private ArrayList<ThreeDs> clouds;
 	private float visibility;
 	private float playerCameraLocation[];
-	private HzController rateController;
-	private Thread rateSynThread;
+	//private HzController rateController;
+	//private Thread rateSynThread;
 	private GameManagement gameManager;
+    private long refreshWaitNanoTime;
+    private long nextRefreshTime;
 	
 	public CloudsManager(GameManagement gameManager, int refreshRate, float range) {
 
         this.gameManager = gameManager;
         
         this.clouds         = gameManager.getClouds();
-        this.rateController = new HzController(refreshRate);
+        refreshWaitNanoTime = 1000000000L / refreshRate;
+        //this.rateController = new HzController(refreshRate);
         this.visibility     = range;
         this.playerCameraLocation = gameManager.getPlayerCameraLocation();
         
@@ -51,17 +54,23 @@ public class CloudsManager implements Runnable
 	public void run()
 	{
 		try {
-			while(true) {
-				rateSynThread = new Thread(rateController);
+			while(gameManager.isRunning()) {
+		        nextRefreshTime = System.nanoTime() + refreshWaitNanoTime;
+				/*rateSynThread = new Thread(rateController);
 				rateSynThread.setPriority(Thread.MAX_PRIORITY);
-				rateSynThread.start();
+				rateSynThread.start();*/
 				for(int i=0 ; i<currentCloudsCount ; ++i) {
 					aCloud = (RandomCloud) clouds.get(i);
 					
 					if(GraphicUtils.range_YZ(aCloud.location, playerCameraLocation) > visibility * 1.10F)
 						gameManager.execute(aCloud);
 				}
-				rateSynThread.join();
+				//rateSynThread.join();
+				long now = nextRefreshTime - System.nanoTime();
+		        
+		        if(now > 0) {
+		            synchronized(this) {wait(now / 1000000, (int) (now % 1000000));}
+		        }
 			}
 		} catch(InterruptedException e) {e.printStackTrace();}
 	}

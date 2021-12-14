@@ -22,6 +22,7 @@ public class CloudsManager implements Runnable
 	private HzController rateController;
 	private Thread rateSynThread;
 	private ExecutorService epool;
+    public volatile boolean working;
 	
 	public CloudsManager(ArrayList<ThreeDs> clouds, HzController rateController, TDCamera<CharWorld> playerCamera, float visibility) {
 	    epool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -48,15 +49,15 @@ public class CloudsManager implements Runnable
 		this.rateController = rateController;
 		this.playerCamera   = playerCamera;
 		this.visibility     = visibility;
+		this.working        = true;
 	}
-	
 	
 
 	@Override
 	public void run()
 	{
 		try {
-			while(true) {
+			while(working) {
 				rateSynThread = new Thread(rateController);
 				rateSynThread.setPriority(Thread.MAX_PRIORITY);
 				rateSynThread.start();

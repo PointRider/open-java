@@ -17,9 +17,11 @@ public class SoundTrack implements Runnable
 	
 	private MiniPlayer player;
 	private boolean interruptFlag;
+	private GameManagement gameManager;
 	
-	public SoundTrack(String sountrack_info_file)
+	public SoundTrack(GameManagement gameManager, String sountrack_info_file)
 	{
+	    this.gameManager = gameManager;
 	    interruptFlag = false;
 		soundTrack = new ArrayList<String>();
 		soundTrack.clear();
@@ -61,13 +63,14 @@ public class SoundTrack implements Runnable
 	@Override
 	public void run()
 	{
+	    Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 		if(soundTrack.size() > 0)
 		{
 			player = new MiniPlayer(new Audio());
 			
 			try
 			{
-				while(true)
+				while(gameManager.isRunning())
 				{
 					player.open(soundTrack.get(currentPlayingIndex));
 					player.run();
@@ -76,9 +79,7 @@ public class SoundTrack implements Runnable
 					    interruptFlag = false;
 					}
 				}
-			}
-			catch (IOException e)
-			{
+			} catch (IOException e) {
 				JOptionPane.showMessageDialog(null, e.toString());
 				
 				e.printStackTrace();

@@ -96,7 +96,6 @@ public class ScreenResizer extends Menu
             supportedFonts[1] = Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemResourceAsStream("DejaVuSansMono_0.ttf"));
             supportedFonts[2] = Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemResourceAsStream("simsun.ttc"));
         } catch (FontFormatException | IOException e) {
-            // TODO 自动生成的 catch 块
             e.printStackTrace();
         }
     };
@@ -126,12 +125,11 @@ public class ScreenResizer extends Menu
 	    }
 	    
 	    public void printNew(JTextArea mainScr) {
-	        
-	        for (
-	            Iterator<HUD> iter = HUDs.iterator();
-	            iter.hasNext();
-	            iter.next().printNew()
-	        );
+            for (
+                Iterator<HUD> iter = HUDs.iterator();
+                iter.hasNext();
+                iter.next().printNew()
+            );
 	    }
 	    /*
 	    public void reSizeScreen(int x, int y) {
@@ -727,11 +725,17 @@ public class ScreenResizer extends Menu
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     protected void afterRefreshEvent() {
 
         if(cloudManThread != null) {
-            cloudManThread.stop();
+            synchronized(cloudMan) {
+                cloudMan.working = false;
+            }
+            try {
+                cloudManThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             cloudManThread = null;
         }
     }

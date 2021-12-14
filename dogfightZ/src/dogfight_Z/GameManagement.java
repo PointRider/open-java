@@ -38,4 +38,6 @@ public interface GameManagement {
     void execute(Runnable task);
     
     ArrayList<ThreeDs> getClouds();
+    
+    boolean isRunning();
 }

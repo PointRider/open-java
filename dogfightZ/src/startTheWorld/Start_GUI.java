@@ -1,7 +1,5 @@
 package startTheWorld;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -55,7 +53,7 @@ public class Start_GUI extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					Start_GUI frame = new Start_GUI(args);
@@ -255,6 +253,7 @@ public class Start_GUI extends JFrame {
 				    };
 				    
 				    GameRun.main(args);
+				    dispose();
 				}
 			}
 		);

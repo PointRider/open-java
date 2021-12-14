@@ -1258,7 +1258,7 @@ public final class Layer3 extends AbstractLayer {
 					pcmbufCount--;
 				}
 			} catch (InterruptedException e) {
-				System.out.println("Layer3.decodeAudioData: " + e.getMessage());
+				//System.out.println("Layer3.decodeAudioData: " + e.getMessage());
 				return off;
 			}
 		} else {
@@ -1330,7 +1330,7 @@ public final class Layer3 extends AbstractLayer {
 				if (nch == 2)
 					audiodataCh1.join();
 			} catch (InterruptedException e) {
-				System.out.println("Layer3.close: " + e.getMessage());
+				//System.out.println("Layer3.close: " + e.getMessage());
 			}
 		}
 
@@ -1498,7 +1498,7 @@ public final class Layer3 extends AbstractLayer {
 			try {
 				decodeAudioDataConcurrent();
 			} catch (InterruptedException e) {
-				System.out.println("Layer3.AudioDataConcurrent.run: " + e.getMessage());
+				//System.out.println("Layer3.AudioDataConcurrent.run: " + e.getMessage());
 			}
 
 			synchronized (outputLock) {

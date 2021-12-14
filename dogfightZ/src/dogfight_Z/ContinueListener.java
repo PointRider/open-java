@@ -6,15 +6,13 @@ import java.awt.event.KeyListener;
 public class ContinueListener implements KeyListener
 {
 	protected Game myGame;
-	protected Thread gameThread;
 	public    boolean paused;
 	private	  long pauseTime;
 	
-	public ContinueListener(Game gme, Thread game_thread)
+	public ContinueListener(Game gme)
 	{
 		pauseTime = 0;
 		myGame = gme;
-		gameThread = game_thread;
 		paused = false;
 	}
 	
@@ -45,9 +43,9 @@ public class ContinueListener implements KeyListener
 				}
 			}
 		}
-		else if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+		/*else if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 		    myGame.exit();
-		}
+		}*/
 	}
 
 	@Override

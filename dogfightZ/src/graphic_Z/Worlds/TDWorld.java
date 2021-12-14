@@ -6,8 +6,8 @@ import graphic_Z.Managers.VisualManager;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public abstract class TDWorld<WorldType, ObjectType, HUDType>
-{
+public abstract class TDWorld<WorldType, ObjectType, HUDType> {
+    
 	public TDObjectsManager         objectsManager;
 	public VisualManager<WorldType> visualManager;
 	public EventManager             eventManager;
@@ -15,18 +15,16 @@ public abstract class TDWorld<WorldType, ObjectType, HUDType>
 	public int refreshHz;
     private ExecutorService epool;
     
-	public TDWorld(int refresh_rate)
-	{
+	public TDWorld(int refresh_rate) {
 		refreshHz = refresh_rate;
-        epool  = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        epool     = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 	}
 	
 	public void getIntoGameWorld() {
 		eventManager.setVisible(true);
 	}
 
-	public void exitTheWorld()
-	{
+	public void exitTheWorld() {
 		eventManager.setVisible(false);
 	}
 
@@ -35,7 +33,11 @@ public abstract class TDWorld<WorldType, ObjectType, HUDType>
     }
 
     @Override
-    protected void finalize() throws Throwable { 
+    protected void finalize() {
+        shutdown();
+    }
+    
+    protected void shutdown() {
         epool.shutdownNow();
     }
     

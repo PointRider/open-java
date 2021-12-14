@@ -26,29 +26,29 @@ public class Aircraft extends CharMessObject
 	private boolean iAmPlayer;
 	
 	private float speed;
-	private float maxSpeed;				//限制最高速度
-	private float maxAccForce;			//最大推力(与mess一起决定最大加速度)
+	private float maxSpeed;				      //限制最高速度
+	private float maxAccForce;			      //最大推力(与mess一起决定最大加速度)
 	
-	private float control_stick_acc;	//当前引擎档位(通过getCurrentForce函数获得当前引擎推力)HashSet<ThreeDs>
-	private static final float maxShift = 32;	//最大操纵杆档位
+	private float control_stick_acc;	      //当前引擎档位(通过getCurrentForce函数获得当前引擎推力)HashSet<ThreeDs>
+	private static final float maxShift = 32; //最大操纵杆档位
 	
-	private float engine_rpm;			//引擎转速
-	private float max_rpm;				//最大转速
-	private float pushPower;			//当前加力燃烧推力
-	private float maxPushTime;			//最大加力燃烧时间
-	private float pushTimeLeft;			//加力燃烧剩余时间
+	private float engine_rpm;			      //引擎转速
+	private float max_rpm;				      //最大转速
+	private float pushPower;			      //当前加力燃烧推力
+	private float maxPushTime;			      //最大加力燃烧时间
+	private float pushTimeLeft;			      //加力燃烧剩余时间
 	
-	private float acc_shift;			//上拨操纵杆速度(固定)
+	private float acc_shift;			      //上拨操纵杆速度(固定)
 	
-	private float resistanceRate_current;	//当前空气阻力系数
-	private float resistanceRate_normal;	//无动作时空气阻力系数
-	private float resistanceRate_breaking;	//打开减速板时的空气阻力系数
+	private float resistanceRate_current;	  //当前空气阻力系数
+	private float resistanceRate_normal;	  //无动作时空气阻力系数
+	private float resistanceRate_breaking;	  //打开减速板时的空气阻力系数
 	
-	private float minStableSpeed;		//最小稳定速度(达到最大升力)
-	private float maxVelRollUp;			//最大向上翻滚速度
-	private float maxVelRollDn;			//最大向下翻滚速度
-	private float maxVelRollLR;			//最大左右翻滚速度
-	private float maxVelTurnLR;			//最大左右水平转向速度
+	private float minStableSpeed;		      //最小稳定速度(达到最大升力)
+	private float maxVelRollUp;			      //最大向上翻滚速度
+	private float maxVelRollDn;			      //最大向下翻滚速度
+	private float maxVelRollLR;			      //最大左右翻滚速度
+	private float maxVelTurnLR;			      //最大左右水平转向速度
 
 	private float cameraRollAngle[];
 	protected float cameraLocation[];
@@ -98,28 +98,23 @@ public class Aircraft extends CharMessObject
 	public float fov_current;
 	public float fov_gunFiring;
 	
-	public static float getCurrentForce(float maxAccForce, float max_rpm, float rpm)	//
-	{
+	public static float getCurrentForce(float maxAccForce, float max_rpm, float rpm) {
 		float result = ((-1 / ( rpm / max_rpm * 4.75F-5 )) - 0.2F) / 3.8F * maxAccForce;
 		if(result < 0)
 			return 0;
 		else return result;
 	}
 	
-	public static float getCurrentRPM(float max_rpm, float shift)	//ln(shift) / ln(max_rpm)
-	{
-		if(shift>0.0F && maxShift>0.0F)
-		{
+	public static float getCurrentRPM(float max_rpm, float shift) /*/ln(shift) / ln(max_rpm)*/ {
+		if(shift>0.0F && maxShift>0.0F) {
 			float currentForceRate = (GraphicUtils.log(shift) / GraphicUtils.log(maxShift));
 			if(currentForceRate > 0.0F)
 				return currentForceRate * max_rpm;
 			else return 0.0F;
-		}
-		else return 0.0F;
+		} else return 0.0F;
 	}
 
-	public Aircraft
-	(
+	public Aircraft (
 	    GameManagement         theGameManager,
 		String                 modelFile, 
 		float                  Mess, 
@@ -128,8 +123,7 @@ public class Aircraft extends CharMessObject
 		CharFrapsCamera		   MainCamera, 
 		String                 id,
 		boolean                line
-	)
-	{
+	) {
 		super(modelFile, Mess, line);
 		killed				= dead = 0;
 		/*

@@ -18,7 +18,7 @@ import graphic_Z.HUDs.HUD;
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Worlds.CharWorld;
-import graphic_Z.utils.HzController;
+//import graphic_Z.utils.HzController;
 
 public class CharVisualManager extends VisualManager<CharWorld> implements Runnable
 {
@@ -34,20 +34,23 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	public		List<PriorityQueue<Dynamic>> selfDisposable;
 	public		Object	                     mainCameraFeedBack;
 	private     StringBuilder                scr_show;
-	private     Thread                       tmpThread;
+	private     long                         refreshWaitNanoTime;
+    private     long                         nextRefreshTime;
+	//private     Thread                       tmpThread;
 	//private Thread staticObjExposureThread;
 	
 	public CharVisualManager(int resolution_X, int resolution_Y, CharWorld inWhichWorld, JTextArea main_scr)
 	{
 		super(resolution_X, resolution_Y, inWhichWorld);
-		mainCameraFeedBack = null;
-		scr_show        = new StringBuilder(resolution_X * resolution_Y);
-		refreshHz       = inWorld.refreshHz;
-		staticObjLists	= inWorld.objectsManager.staticObjLists;
-		dynamicObjLists	= inWorld.objectsManager.dynamicObjLists;
-		selfDisposable  = inWorld.objectsManager.selfDisposable;
+		mainCameraFeedBack  = null;
+		scr_show            = new StringBuilder(resolution_X * resolution_Y);
+		refreshHz           = inWorld.refreshHz;
+		refreshWaitNanoTime = 1000000000L / refreshHz;
+		staticObjLists      = inWorld.objectsManager.staticObjLists;
+		dynamicObjLists	    = inWorld.objectsManager.dynamicObjLists;
+		selfDisposable      = inWorld.objectsManager.selfDisposable;
 
-		hzController    = new HzController(refreshHz);
+		//hzController    = new HzController(refreshHz);
 		//point = '*';					//default
 		point = new char[POINTLEVEL + 1];
 		point[0]  = '@';
@@ -281,10 +284,10 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	}
 	
 	public void buff() {
-		
-		tmpThread = new Thread(hzController);
+	    nextRefreshTime = System.nanoTime() + refreshWaitNanoTime;
+		/*tmpThread = new Thread(hzController);
 		tmpThread.setPriority(Thread.MAX_PRIORITY);
-		tmpThread.start();
+		tmpThread.start();*/
 		for(int i=0 ; i<resolution[1] ; ++i)
 			System.arraycopy(emptyLine, 0, fraps_buffer[i], 0, resolution[0]);
 		
@@ -296,12 +299,22 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	
 	public void printNew()	//关于颜色、多摄像机的改进待做(包括裸眼3D)
 	{
-		if(tmpThread == null) return;
-		
+		//if(tmpThread == null) return;
+	    
 		refresh();
-
-		try{tmpThread.join();} catch (InterruptedException e) {}
-		tmpThread = null;
+		long now = nextRefreshTime - System.nanoTime();
+		
+		if(now > 0) {
+	        try {
+	            //System.out.println(now);
+                synchronized(this) {wait(now / 1000000, (int) (now % 1000000));}
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+		}
+		
+		/*try{tmpThread.join();} catch (InterruptedException e) {}
+		tmpThread = null;*/
 		
 		boolean firstInLine, firstLine;
 		

@@ -91,4 +91,9 @@ public class GameManager implements GameManagement {
     public ArrayList<ThreeDs> getClouds() {
         return game.getClouds();
     }
+
+    @Override
+    public boolean isRunning() {
+        return game.isRunning();
+    }
 }
