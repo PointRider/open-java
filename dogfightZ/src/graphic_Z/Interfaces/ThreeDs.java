@@ -4,7 +4,9 @@ import java.util.ListIterator;
 
 public interface ThreeDs extends Runnable
 {
-	boolean constructWithLine();
+    public static enum DrawingMethod {drawPoint, drawLine, drawTriangleSurface};
+    
+    DrawingMethod getDrawingMethod();
 	float[] getLocation();
 	float[] getRollAngle();
 	boolean getVisible();
@@ -13,4 +15,5 @@ public interface ThreeDs extends Runnable
 	void    go();
     char	getSpecialDisplayChar();
 	void    setIterator(ListIterator<ThreeDs> itr);
+	char    getSurfaceChar(int index);
 }

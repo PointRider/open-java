@@ -122,9 +122,9 @@ public class Aircraft extends CharMessObject
 		LinkedListZ<ThreeDs>   Aircrafts,
 		CharFrapsCamera		   MainCamera, 
 		String                 id,
-		boolean                line
+		DrawingMethod          drawingMethod
 	) {
-		super(modelFile, Mess, line);
+		super(modelFile, Mess, drawingMethod);
 		killed				= dead = 0;
 		/*
 		fov_1stPerson		= 2.6;
@@ -234,10 +234,10 @@ public class Aircraft extends CharMessObject
 		int Camp,
 		LinkedListZ<ThreeDs> Aircrafts,
 		CharFrapsCamera	     MainCamera,
-		boolean              line
+        DrawingMethod        drawingMethod
 	)
 	{
-		this(theGameManager, modelFile, Mess, Camp, Aircrafts, MainCamera, "Me", line);
+		this(theGameManager, modelFile, Mess, Camp, Aircrafts, MainCamera, "Me", drawingMethod);
 	}
 	
 	public void warning(Aircraft source) {

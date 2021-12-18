@@ -55,7 +55,7 @@ public class NPC extends Aircraft
 		LinkedList<ListIterator<ThreeDs>>		delete_que,
 		LinkedListZ<ThreeDs>	Aircrafts
 	) {
-		super(theGameManager, modelFile, Mess, camp, Aircrafts, null, id, true);
+		super(theGameManager, modelFile, Mess, camp, Aircrafts, null, id, DrawingMethod.drawLine);
 		scrResolution		= new int[2];
 		point_on_Scr		= new float[2];
 		poScreen            = new float[2];

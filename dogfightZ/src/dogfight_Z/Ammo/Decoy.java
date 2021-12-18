@@ -103,7 +103,7 @@ private static ArrayList<float[]> missileModelData;
 		float Roll_angle[],
 		float Roll_angle_aircraft[]
 	) {
-		super(gameManager, null, 0.0F, -1, null, null, "\nDecory" + GraphicUtils.random(), false);
+		super(gameManager, null, 0.0F, -1, null, null, "\nDecory" + GraphicUtils.random(), DrawingMethod.drawPoint);
 		setCamp(campTo);
 		specialDisplay = '@';
 		location[0] = Location[0];

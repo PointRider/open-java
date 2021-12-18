@@ -24,9 +24,9 @@ public class CharMessObject extends CharObject implements Runnable
 		velocity_roll[2] = another.velocity_roll[2];
 	}
 	*/
-	public CharMessObject(String ModelFile, float Mess, boolean lineConstruct)
+	public CharMessObject(String ModelFile, float Mess, DrawingMethod drawingMethod)
 	{
-		super(ModelFile, lineConstruct);
+		super(ModelFile, drawingMethod);
 
 		mess = Mess;
 		
@@ -43,7 +43,7 @@ public class CharMessObject extends CharObject implements Runnable
 	}
 	
 	public CharMessObject(String ModelFile, float Mess) {
-		this(ModelFile, Mess, false);
+		this(ModelFile, Mess, DrawingMethod.drawPoint);
 	}
 
 	@Override

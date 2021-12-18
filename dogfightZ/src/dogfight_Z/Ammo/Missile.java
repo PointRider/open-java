@@ -108,7 +108,7 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 		CharFrapsCamera Camera
 	)
 	{
-		super(gameManager, null, 0.0F, -1, null, null, null, false);
+		super(gameManager, null, 0.0F, -1, null, null, null, DrawingMethod.drawPoint);
 		specialDisplay	= '@';
 		maxSpeed		= max_speed;
 		

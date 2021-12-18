@@ -14,6 +14,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	//private static	final float PI = GraphicUtils.PI;
 	public int	                   resolution[];			//分辨率(x,y)(引用，实体在CharVisualManager中)
 	public char	                   fraps_buffer[][];		//帧缓冲区(引用，实体在CharVisualManager中)
+	private float                  zBuffer[][];
 	public List<Iterable<ThreeDs>> staticObjLists;
 	public LinkedList<Thread>      ThreadSyncQueue;
 
@@ -34,6 +35,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	{
 		super(FOV, visblt, inWhichWorld);
 		staticObjLists	= static_objLists;
+		zBuffer         = inWhichWorld.visualManager.zBuffer;
 		resolution		= resolution_XY;
 		fraps_buffer	= frapsBuffer;
 		ThreadSyncQueue = new LinkedList<Thread>();
@@ -54,7 +56,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		for(ThreeDs aObject:objList) exposureObject(aObject, roll_angle[0], roll_angle[1], roll_angle[2]);
 	}
 
-    private static final int notOnScreen[] = {-1, -1, -1};
+    private static final float[] notOnScreen = {-5.0F, -5.0F, -5.0F};
     
 	protected float exposureObject(ThreeDs aObject, float cr0, float cr1, float cr2, boolean staticOver) {
 	    
@@ -62,22 +64,22 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		float rge = GraphicUtils.range(locationOfanObj, location);
 		if(aObject.getVisible() == false || rge > visibility * 10) return rge;
 		
-		char spc     = aObject.getSpecialDisplayChar();
+		char spc     = aObject.getSpecialDisplayChar(), suc = '\0';
 		int  pcount  = aObject.getPointsCount();
 		
 		float rollAngleOfanObj[] = aObject.getRollAngle();
 		float aPointOfanObj[]    = null;
 		
 		//float X0, Y0, Z0, X, Y, Z;
-		int X1, Y1, Z1, X2, Y2, Z2;
-		int index;
+		float X1, Y1, Z1, X2, Y2, Z2, Z3;
+		int index, x, y;
 		
 		float r0 = rollAngleOfanObj[0];
 		float r1 = rollAngleOfanObj[1];
 		float r2 = rollAngleOfanObj[2];
 		
 		final float temp = GraphicUtils.tan(FOV/2.0F);
-		int p1[], p2[];
+		float p1[], p2[], p3[];
 		
 		//   x r/v
 		for(int i=0 ; i<pcount ;) //for each point
@@ -142,18 +144,79 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 					X = cos$ * X0 - sin$ * Y0;
 					Y = sin$ * X0 + cos$ * Y0;
 					
-					int result[] = {(int)Y+XcenterI, (int)X+YcenterI, (int)Z0};
+					float result[] = {Y+XcenterI, X+YcenterI, Z0};
 					return result;
 				}
 				return notOnScreen;
 			};
 			
+			//获取一个点在屏幕上的x,y坐标以及距离屏幕的深度z
+            p1 = getPoint.run(aPointOfanObj[0], aPointOfanObj[1], aPointOfanObj[2]);
+            X1 = p1[0];
+            Y1 = p1[1];
+            Z1 = p1[2];
+            
+            switch(aObject.getDrawingMethod()) {
+            case drawTriangleSurface:
+
+                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5]);
+                Z2 = p2[2];
+                p3 = getPoint.run(aPointOfanObj[6], aPointOfanObj[7], aPointOfanObj[8]);
+                Z3 = p3[2];
+                
+                suc = aObject.getSurfaceChar(i);
+
+                if(Z1 < 0  ||  Z2 < 0  || Z3 < 0) {
+                    ++i;
+                    continue;
+                }
+                
+                GraphicUtils.drawTriangleSurface_ZBuffer(fraps_buffer, zBuffer, p1, p2, p3, suc, staticOver);
+                
+                ++i;
+                break;
+            case drawLine:
+                //获取二个点在屏幕上的x,y坐标以及距离屏幕的深度z
+                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5]);
+                X2 = p2[0];
+                Y2 = p2[1];
+                Z2 = p2[2];
+                
+                if(Z1 < 0  ||  Z2 < 0) {
+                    ++i;
+                    continue; 
+                }
+                
+                index = (int)((Z1 * 38) / visibility);
+                
+                if(index < 0) index = 0;
+                else if(index > CharVisualManager.POINTLEVEL) index = CharVisualManager.POINTLEVEL;
+                
+                GraphicUtils.drawLine(fraps_buffer, X1, Y1, X2, Y2, (spc =='\0'? inWorld.visualManager.point[index] : spc), staticOver);
+                ++i;
+                break;
+            case drawPoint:
+                x = (int)(X1 + 0.5F);
+                y = (int)(Y1 + 0.5F);
+                if(x>=0 && y>=0 && x<resolution[0] && y<resolution[1]) {
+                    index = (int)((Z1 * 38) / visibility);
+
+                    if(index < 0) index = 0;
+                    else if(index > CharVisualManager.POINTLEVEL) index = CharVisualManager.POINTLEVEL;
+                    
+                    if(!staticOver  ||  fraps_buffer[y][x] == ' ')
+                        fraps_buffer[y][x] = (spc =='\0'? inWorld.visualManager.point[index] : spc);
+                }
+                i += GraphicUtils.max(5 * (rge / visibility), 1);
+                break;
+            }
+			/*
 			p1 = getPoint.run(aPointOfanObj[0], aPointOfanObj[1], aPointOfanObj[2]);
 			X1 = p1[0];
 			Y1 = p1[1];
 			Z1 = p1[2];
 			
-			if(aObject.constructWithLine()) {
+			if(aObject.getDrawingMethod() == DrawingMethod.drawLine) {
 				p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5]);
 				X2 = p2[0];
 				Y2 = p2[1];
@@ -172,8 +235,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 				GraphicUtils.drawLine(fraps_buffer, X1, Y1, X2, Y2, (spc =='\0'? inWorld.visualManager.point[index] : spc), staticOver);
 				++i;
 			} else {
-				if(Z1 >=0 && X1>=0 && Y1>=0 && X1<resolution[0] && Y1<resolution[1])
-				{
+				if(Z1 >=0 && X1>=0 && Y1>=0 && X1<resolution[0] && Y1<resolution[1]) {
 					index = (int)((Z1 * 38) / visibility);
 
 					if(index < 0) index = 0;
@@ -183,12 +245,29 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 						fraps_buffer[Y1][X1] = (spc =='\0'? inWorld.visualManager.point[index] : spc);
 				}
 				i += GraphicUtils.max(5 * (rge / visibility), 1);
-			}
+			}*/
 		}
 		return rge;
 	}
 	
-	public static float exposureAnObject (
+	public static final float exposureAnObject (
+        char    fraps_buffer[][],
+        int     resolution[],
+        float  cameraLocation[],
+        float  visibility,
+        float  FOV,
+        int     XcenterI, 
+        int     YcenterI,
+        ThreeDs aObject, 
+        float  cr0, 
+        float  cr1, 
+        float  cr2, 
+        boolean staticOver, 
+        char    pointChar[]) {return exposureAnObject (
+            fraps_buffer, resolution, cameraLocation, visibility, FOV, XcenterI, YcenterI, aObject, cr0, cr1, cr2, staticOver, null
+	);}
+	
+	public static final float exposureAnObject (
 	    char    fraps_buffer[][],
 	    int     resolution[],
 	    float  cameraLocation[],
@@ -201,29 +280,30 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	    float  cr1, 
 	    float  cr2, 
 	    boolean staticOver, 
-	    char    pointChar[]
+	    char    pointChar[],
+	    float   zBuffer[][]
 	) {
         
         float locationOfanObj[]  = aObject.getLocation();
         float rge = GraphicUtils.range(locationOfanObj, cameraLocation);
         if(aObject.getVisible() == false || rge > visibility * 10) return rge;
         
-        char spc     = aObject.getSpecialDisplayChar();
+        char spc     = aObject.getSpecialDisplayChar(), suc = '\0';
         int  pcount  = aObject.getPointsCount();
         
         float rollAngleOfanObj[] = aObject.getRollAngle();
         float aPointOfanObj[]    = null;
         
         //float X0, Y0, Z0, X, Y, Z;
-        int X1, Y1, Z1, X2, Y2, Z2;
-        int index;
+        float X1, Y1, Z1, X2, Y2, Z2, Z3;
+        int index, x, y;
         
         float r0 = rollAngleOfanObj[0];
         float r1 = rollAngleOfanObj[1];
         float r2 = rollAngleOfanObj[2];
         
         final float temp = GraphicUtils.tan(FOV/2.0F);
-        int p1[], p2[];
+        float p1[], p2[], p3[];
         
         //   x r/v
         for(int i=0 ; i<pcount ;) //for each point
@@ -276,7 +356,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
                 Z0 = Z;
                 //---旋转结束---
                 
-                if(Z0>=0)
+                if(Z0 >= 0)
                 {
                     //借用cos$作临时变量，计算小孔成像
                     cos$ = XcenterI*FOV/(XcenterI+temp*Z0);
@@ -288,20 +368,39 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
                     X = cos$ * X0 - sin$ * Y0;
                     Y = sin$ * X0 + cos$ * Y0;
                     
-                    int result[] = {(int)Y+XcenterI, (int)X+YcenterI, (int)Z0};
+                    float result[] = {Y+XcenterI, X+YcenterI, Z0};
                     return result;
                 }
-                int result[] = {-1, -1, -1};
-                return result;
+                return notOnScreen;
             };
             
+            //获取一个点在屏幕上的x,y坐标以及距离屏幕的深度z
             p1 = getPoint.run(aPointOfanObj[0], aPointOfanObj[1], aPointOfanObj[2]);
-
             X1 = p1[0];
             Y1 = p1[1];
             Z1 = p1[2];
             
-            if(aObject.constructWithLine()) {
+            switch(aObject.getDrawingMethod()) {
+            case drawTriangleSurface:
+
+                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5]);
+                Z2 = p2[2];
+                p3 = getPoint.run(aPointOfanObj[6], aPointOfanObj[7], aPointOfanObj[8]);
+                Z3 = p3[2];
+                
+                suc = aObject.getSurfaceChar(i);
+
+                if(Z1 < 0  ||  Z2 < 0  || Z3 < 0) {
+                    ++i;
+                    continue;
+                }
+                
+                GraphicUtils.drawTriangleSurface_ZBuffer(fraps_buffer, zBuffer, p1, p2, p3, suc, staticOver);
+                
+                ++i;
+                break;
+            case drawLine:
+                //获取二个点在屏幕上的x,y坐标以及距离屏幕的深度z
                 p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5]);
                 X2 = p2[0];
                 Y2 = p2[1];
@@ -319,19 +418,22 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
                 
                 GraphicUtils.drawLine(fraps_buffer, X1, Y1, X2, Y2, (spc =='\0'? pointChar[index] : spc), staticOver);
                 ++i;
-            } else {
-                if(X1>=0 && Y1>=0 && X1<resolution[0] && Y1<resolution[1])
-                {
+                break;
+            case drawPoint:
+                x = (int)(X1 += 0.5F);
+                y = (int)(Y1 += 0.5F);
+                if(x>=0 && y>=0 && x<resolution[0] && y<resolution[1]) {
                     index = (int)((Z1 * 38) / visibility);
 
                     if(index < 0) index = 0;
                     else if(index > CharVisualManager.POINTLEVEL) index = CharVisualManager.POINTLEVEL;
                     
-                    if(!staticOver  ||  fraps_buffer[Y1][X1] == ' ')
-                        fraps_buffer[Y1][X1] = (spc =='\0'? pointChar[index] : spc);
+                    if(!staticOver  ||  fraps_buffer[y][x] == ' ')
+                        fraps_buffer[y][x] = (spc =='\0'? pointChar[index] : spc);
                 }
                 i += GraphicUtils.max(5 * (rge / visibility), 1);
-            }
+                break;
+            } 
         }
         return rge;
     }
@@ -346,7 +448,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	}
 	
 	interface XYLambdaI {
-		int[] run(float X0, float Y0, float Z0);
+		float[] run(float X0, float Y0, float Z0);
 	}
 	
 	protected float exposureObject(ThreeDs aObject, float cr0, float cr1, float cr2) {
@@ -382,8 +484,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		return null;
 	}
 	
-	public void goStreet(float distance)
-	{
+	public void goStreet(float distance) {
 		float z0, x0;
 		
 		z0 = GraphicUtils.cos(roll_angle[0]) * (GraphicUtils.cos(roll_angle[1]) * distance);

@@ -22,6 +22,7 @@ import graphic_Z.HUDs.CharLoopingScrollBar;
 import graphic_Z.HUDs.CharProgressBar;
 import graphic_Z.HUDs.HUD;
 import graphic_Z.Interfaces.ThreeDs;
+import graphic_Z.Interfaces.ThreeDs.DrawingMethod;
 import graphic_Z.Managers.EventManager;
 import graphic_Z.Objects.CharMessObject;
 import graphic_Z.Objects.TDObject;
@@ -259,7 +260,7 @@ public class ScreenResizer extends Menu
 	
 	private void initMe(String myJetModel_file, int x, int y) {
 
-        myJet = new CharMessObject(myJetModel_file, 10000, true);
+        myJet = new CharMessObject(myJetModel_file, 10000, DrawingMethod.drawLine);
         myJet.setLocation(0, 0, 60);
         myJet.specialDisplay = '@';
 

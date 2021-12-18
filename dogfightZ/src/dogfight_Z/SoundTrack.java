@@ -81,7 +81,6 @@ public class SoundTrack implements Runnable
 				}
 			} catch (IOException e) {
 				JOptionPane.showMessageDialog(null, e.toString());
-				
 				e.printStackTrace();
 			}
 		}

@@ -28,6 +28,7 @@ import graphic_Z.HUDs.CharLoopingScrollBar;
 import graphic_Z.HUDs.CharProgressBar;
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
+import graphic_Z.Interfaces.ThreeDs.DrawingMethod;
 import graphic_Z.Managers.EventManager;
 import graphic_Z.Worlds.CharTimeSpace;
 import graphic_Z.utils.GraphicUtils;
@@ -300,7 +301,7 @@ public class Game extends CharTimeSpace implements Runnable {
             String hud_lockingWarning
         ) {
 	    gBlack = 1;
-        setMyJet(new Aircraft(gameManager, myJetModel_file, 10000, playersCamp, objectsManager.objects, null, "Me", true));
+        setMyJet(new Aircraft(gameManager, myJetModel_file, 10000, playersCamp, objectsManager.objects, null, "Me", DrawingMethod.drawLine));
         
         scoreList.add(getMyJet());
         objectsManager.newMessObject(getMyJet());
@@ -498,7 +499,7 @@ public class Game extends CharTimeSpace implements Runnable {
 		int fontSize,
 		int fontIndx
 	) {
-		super(resolutionX, resolutionY, refresh_rate);
+		super(resolutionX, resolutionY, refresh_rate, false);
 		initClasses();
 		initUI(fontSize, fontIndx);
 		initRank();

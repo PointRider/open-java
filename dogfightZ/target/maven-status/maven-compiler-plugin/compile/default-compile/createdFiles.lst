@@ -1,4 +1,5 @@
 dogfight_Z\Ammo\Decoy.class
+graphic_Z\Interfaces\ThreeDs$DrawingMethod.class
 startTheWorld\GameStartGUI$MyIDChangedListener.class
 dogfight_Z\dogLog\view\Menu$2.class
 dogfight_Z\Effects\EngineFlame2.class
@@ -123,11 +124,13 @@ graphic_Z\utils\Common.class
 graphic_Z\Objects\TDObject.class
 dogfight_Z\dogLog\controller\PilotLog$2.class
 dogfight_Z\dogLog\model\playerBGM.class
+graphic_Z\Cameras\CharFrapsCamera$1.class
 dogfight_Z\dogLog\view\PiLog$5.class
 dogfight_Z\dogLog\controller\UserOperationMenu$4.class
 jmp123\decoder\Layer3.class
 graphic_Z\Managers\TDObjectsManager.class
 dogfight_Z\dogLog\utils\JDBCFactory$1.class
+graphic_Z\demo\CubeA.class
 dogfight_Z\Effects\EngineFlame.class
 graphic_Z\utils\LinkedListZ.class
 dogfight_Z\dogLog\controller\ProfileSettingsMenu$5.class
@@ -173,6 +176,7 @@ graphic_Z\HUDs\CharProgressBar$Direction.class
 startTheWorld\GameStartGUI$TimeChangedListener.class
 dogfight_Z\dogLog\view\Menu$3.class
 dogfight_Z\dogLog\controller\UserOperationMenu$5.class
+graphic_Z\Objects\CharObject$1.class
 startTheWorld\Start_GUI$1.class
 startTheWorld\GameStartGUI$rollDiffChangeListener.class
 dogfight_Z\dogLog\controller\ProfileSettingsMenu$1.class

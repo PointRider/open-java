@@ -172,54 +172,176 @@ public class GraphicUtils
         return rantF[curRandomIdx &= boot_1];
     }
     
-	public static final void drawLine(char fraps_buffer[][], int x1, int y1, int x2, int y2, char pixel, boolean noRewrite) {
+    public static final void drawTriangleSurface_ZBuffer
+    (char fraps_buffer[][], float zBuffer[][], float xyz1[], float xyz2[], float xyz3[], char pixel, boolean noRewrite) {
+        
+        if(xyz1[1] == xyz2[1] && xyz2[1] == xyz3[1]) return;
+        
+        float tmp[];
+        if(xyz3[1] < xyz1[1]) {
+            tmp  = xyz1;
+            xyz1 = xyz3;
+            xyz3 = tmp;
+        }
+        
+        if(xyz2[1] < xyz1[1]) {
+            tmp  = xyz1;
+            xyz1 = xyz2;
+            xyz2 = tmp;
+        }
+        
+        if(xyz3[1] < xyz2[1]) {
+            tmp  = xyz3;
+            xyz3 = xyz2;
+            xyz2 = tmp;
+        }
+        
+        float x1 = xyz1[0], x2 = xyz2[0], x3 = xyz3[0];
+        float y1 = xyz1[1], y2 = xyz2[1], y3 = xyz3[1];
+        float z1 = xyz1[2], z2 = xyz2[2], z3 = xyz3[2];
+        float dx = x3-x1, dy = y3-y1, dz = z3-z1;
+        float x0, xi, z0, zi, yi, dx0, dy0, dytmp, ditmp;
+
+        dx0 = x1-x2;
+        dy0 = y1-y2;
+    
+        xi = dx * -dy0 / dy + x1;
+        zi = dz * -dy0 / dy + z1;
+        x0 = x2;
+        z0 = z2;
+        drawHorizonLine(fraps_buffer, zBuffer, (int)x0, (int)xi, (int)y2, z0, zi, pixel, noRewrite);
+    
+        for(yi = y2 - 1; yi >= y1; --yi) {
+            dytmp = yi-y1;
+            ditmp = yi-y2;
+            xi = dx * dytmp / dy + x1;
+            zi = dz * dytmp / dy + z1;
+            x0 = dx0 * ditmp / dy0 + x2;
+            z0 = (z1-z2) * ditmp / dy0 + z2;
+            drawHorizonLine(fraps_buffer, zBuffer, (int)x0, (int)xi, (int)yi, z0, zi, pixel, noRewrite);
+        }
+
+        dx0 = x3-x2;
+        dy0 = y3-y2;
+        for(yi = y2 + 1; yi <= y3; ++yi) {
+            dytmp = yi-y1;
+            ditmp = yi-y2;
+            xi = dx * dytmp / dy + x1;
+            zi = dz * dytmp / dy + z1;
+            x0 = dx0 * ditmp / dy0 + x2;
+            z0 = (z3-z2) * ditmp / dy0 + z2;
+            drawHorizonLine(fraps_buffer, zBuffer, (int)x0, (int)xi, (int)yi, z0, zi, pixel, noRewrite);
+        }
+    }
+    
+    public static void drawHorizonLine(char fraps_buffer[][], float zBuffer[][], int x1, int x2, int y, float z1, float z2, char pixel, boolean noRewrite) {
+        
+        int width  = fraps_buffer[0].length;
+        int height = fraps_buffer.length;
+        float z;
+        
+        /*
+         z = (xi-x1)(z2-z1) / (x2-x1) + z1
+        */
+        
+        if(x1 < x2) for(int xi = x1; xi <= x2; ++xi) {
+            if(xi >= 0 && y >= 0 && xi < width && y < height && (!noRewrite  ||  fraps_buffer[y][xi] == ' ')) {
+                if(zBuffer != null) {
+                    z = (xi-x1) * (z2-z1) / (x2-x1) + z1;
+                    if(z > zBuffer[y][xi]) continue;
+                    else zBuffer[y][xi] = z;
+                }
+                fraps_buffer[y][xi] = pixel;
+            }
+        } else if(x1 > x2) for(int xi = x1; xi >= x2; --xi) {
+            if(xi >= 0 && y >= 0 && xi < width && y < height && (!noRewrite  ||  fraps_buffer[y][xi] == ' ')) {
+                if(zBuffer != null) {
+                    z = (xi-x1) * (z2-z1) / (x2-x1) + z1;
+                    if(z > zBuffer[y][xi]) continue;
+                    else zBuffer[y][xi] = z;
+                }
+                fraps_buffer[y][xi] = pixel;
+            }
+        } else if(x1 >= 0 && y >= 0 && x1 < width && y < height && (!noRewrite  ||  fraps_buffer[y][x1] == ' ')) {
+            if(zBuffer != null) {
+                if(z1 > zBuffer[y][x1]) return;
+                else zBuffer[y][x1] = z1;
+            }
+            fraps_buffer[y][x1] = pixel;
+        }
+    }
+
+    public static void main(String args[]) {
+        //float angle = -999.23F;
+        //System.out.println("asin: " + Math.asin(angle) + ", " + asin(angle));
+        //System.out.println("acos: " + Math.acos(angle) + ", " + acos(angle));
+        //System.out.println("atan: " + Math.atan(angle) + ", " + atan(angle));
+        //float x = -123, y = -4.56F;
+        //float d = (float) Math.atan2(y, x);
+        //System.out.println("atan2: " + d + ", " + atan2(y, x));
+        char buffer[][] = new char[32][64];
+        float xyz1[] = {12, 26, 45};
+        float xyz2[] = {32, 17, 45};
+        float xyz3[] = {35, 26, 45};
+        
+        for(int i = 0, ei = buffer.length; i < ei; ++i) {
+            for(int j = 0, ej = buffer[0].length; j < ej; ++j) {
+                buffer[i][j] = ' ';
+            }
+        }
+        drawTriangleSurface_ZBuffer(buffer, null, xyz1, xyz2, xyz3, '#', false);
+        for(int i = 0, ei = buffer.length; i < ei; ++i) {
+            System.out.println(buffer[i]);
+        }
+    }
+    
+	public static final void drawLine(char fraps_buffer[][], float x1, float y1, float x2, float y2, char pixel, boolean noRewrite) {
 		//DDA
 		if(fraps_buffer == null) return;
 		
 		int maxX = fraps_buffer[0].length;
 		int maxY = fraps_buffer.length;
 		
-		int deltaX = x2 - x1;
-		int deltaY = y2 - y1;
+		float deltaX = x2 - x1;
+		float deltaY = y2 - y1;
 		
 		int drX, drY;
 		
-		if(absI(deltaX) > absI(deltaY)) {
+		if(abs(deltaX) > abs(deltaY)) {
 			
 			float k = (float)deltaY / (float)deltaX;
 			float y = y1;
-			int   x = x1;
+			float x = x1;
 			
 			if(x < x2) for(; x <= x2; y += k) {
-				drX = x++;
-				drY = (int)(y + 0.5);
+				drX = (int)((x++) + 0.5F);
+				drY = (int)(y + 0.5F);
 				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX && (!noRewrite  ||  fraps_buffer[drY][drX] == ' '))
 					fraps_buffer[drY][drX] = pixel;
 			} else for(; x >= x2; y-=k) {
-				drX = x--;
-				drY = (int)(y + 0.5);
+			    drX = (int)((x--) + 0.5F);
+				drY = (int)(y + 0.5F);
 				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX && (!noRewrite  ||  fraps_buffer[drY][drX] == ' '))
-				fraps_buffer[drY][drX] = pixel;
+				    fraps_buffer[drY][drX] = pixel;
 			}
 			
 		} else {
 			
 			float k = (float)deltaX / (float)deltaY;
 			float x = x1;
-			int   y = y1;
+			float y = y1;
 			
 			if(y < y2) for(; y <= y2; x+=k) {
-				drX = (int)(x + 0.5);
-				drY = y++;
+				drX = (int)(x + 0.5F);
+				drY = (int)((y++) + 0.5F);
 				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX && (!noRewrite  ||  fraps_buffer[drY][drX] == ' '))
 					fraps_buffer[drY][drX] = pixel;
 			} else for(; y >= y2; x-=k) {
-				drX = (int)(x + 0.5);
-				drY = y--;
+				drX = (int)(x + 0.5F);
+				drY = (int)((y--) + 0.5F);
 				if(drY >= 0 && drY < maxY && drX >=0 && drX < maxX && (!noRewrite  ||  fraps_buffer[drY][drX] == ' '))
 					fraps_buffer[drY][drX] = pixel;
 			}
-			
 		}
 	}
 	
@@ -298,16 +420,6 @@ public class GraphicUtils
 		tx = x0 - y;
 		if(tx >= 0  &&  tx < maxX  &&  ty >= 0  &&  ty < maxY) fraps_buffer[ty][tx] = pc;
 	}
-	
-	public static void main(String args[]) {
-	    //float angle = -999.23F;
-		//System.out.println("asin: " + Math.asin(angle) + ", " + asin(angle));
-	    //System.out.println("acos: " + Math.acos(angle) + ", " + acos(angle));
-		//System.out.println("atan: " + Math.atan(angle) + ", " + atan(angle));
-	    //float x = -123, y = -4.56F;
-	    //float d = (float) Math.atan2(y, x);
-	    //System.out.println("atan2: " + d + ", " + atan2(y, x));
-	}
     
     public static final float sqrt(float f) {
         return (float) FastMath.sqrtQuick(f);
@@ -354,3 +466,25 @@ public class GraphicUtils
         return randomMaker.nextInt(max);
     }
 }
+
+/*
+//先用a、b或c、b比较
+a b c #
+c b a -> c a b -> b a c -> a b c #
+
+a c b -> a b c #
+c a b -> b a c -> a b c #
+
+b a c -> a b c #
+b c a -> a c b -> a b c #
+
+//先用a、c比较
+a b c #
+c b a -> a b c #
+
+a c b -> a b c #
+c a b -> a c b -> a b c #
+
+b a c -> a b c #
+b c a -> b a c -> a b c #
+*/

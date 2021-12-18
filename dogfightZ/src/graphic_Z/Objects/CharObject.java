@@ -13,8 +13,9 @@ public class CharObject extends TDObject implements ThreeDs
 	public char specialDisplay;
 	public int points_count;			//物体点个数
 	public List<float[]> points;		//物体每个点坐标
-	private boolean lineConstruct;
+	private DrawingMethod drawingMethod;
 	protected ListIterator<ThreeDs> myPosition;
+	protected char surfaceChar[];
 	/*
 	public CharObject(CharObject another)
 	{
@@ -35,11 +36,12 @@ public class CharObject extends TDObject implements ThreeDs
 	}
 	*/
 	
-	public CharObject(String ModelFile, boolean lineConstruct)
+	
+	public CharObject(String ModelFile, DrawingMethod drawingMethod)
 	{
 		super();
 		myPosition = null;
-		this.lineConstruct = lineConstruct;
+		this.drawingMethod = drawingMethod;
 		specialDisplay = '\0';
 		points = new ArrayList<float[]>();
 		location[0]   = location[1]   = location[2]   = 0.0F;
@@ -52,18 +54,30 @@ public class CharObject extends TDObject implements ThreeDs
 			float newPonit[] = null;
 			for(points_count=0 ; true ; ++points_count)
 			{
-				if(lineConstruct) newPonit = new float[6];
+				if(drawingMethod == DrawingMethod.drawLine) newPonit = new float[6];
 				else newPonit = new float[3];
+				
+				switch(drawingMethod) {
+        			case drawPoint:           newPonit = new float[3]; break;
+        			case drawLine:            newPonit = new float[6]; break;
+        			case drawTriangleSurface: newPonit = new float[9]; break;
+				}
 				
 				newPonit[0] = (float) data.readDouble();
 				newPonit[1] = (float) data.readDouble();
 				newPonit[2] = (float) data.readDouble();
 				
-				if(lineConstruct) {
+				if(drawingMethod == DrawingMethod.drawLine || drawingMethod == DrawingMethod.drawTriangleSurface) {
 					newPonit[3] = (float) data.readDouble();
 					newPonit[4] = (float) data.readDouble();
 					newPonit[5] = (float) data.readDouble();
 				}
+				
+				if(drawingMethod == DrawingMethod.drawTriangleSurface) {
+                    newPonit[6] = (float) data.readDouble();
+                    newPonit[7] = (float) data.readDouble();
+                    newPonit[8] = (float) data.readDouble();
+                }
 				
 				points.add(newPonit);
 			}
@@ -71,7 +85,7 @@ public class CharObject extends TDObject implements ThreeDs
 	}
 	
 	public CharObject(String ModelFile) {
-		this(ModelFile, false);
+		this(ModelFile, DrawingMethod.drawPoint);
 	}
 
 	public void setLocation(float x, float y, float z)
@@ -128,12 +142,18 @@ public class CharObject extends TDObject implements ThreeDs
 	}
 
 	@Override
-	public boolean constructWithLine() {
-		return lineConstruct;
+	public DrawingMethod getDrawingMethod() {
+		return drawingMethod;
 	}
 
 	@Override
 	public void setIterator(ListIterator<ThreeDs> itr) {
 		myPosition = itr;
 	}
+
+    @Override
+    public final char getSurfaceChar(int index) {
+        if(surfaceChar != null) return surfaceChar[index];
+        return '\0';
+    }
 }

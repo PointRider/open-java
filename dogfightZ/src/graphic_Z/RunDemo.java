@@ -6,8 +6,8 @@ import graphic_Z.Cameras.CharFrapsCamera;
 import graphic_Z.Common.SinglePoint;
 //import graphic_Z.HUDs.CharDynamicHUD;
 import graphic_Z.HUDs.CharLabel;
-import graphic_Z.Objects.CharMessObject;
 import graphic_Z.Worlds.CharTimeSpace;
+import graphic_Z.demo.CubeA;
 import graphic_Z.utils.GraphicUtils;
 
 public class RunDemo
@@ -23,12 +23,14 @@ public class RunDemo
 		float fov = 1.0F;
 		int scrSize = 16;
 		
-		CharTimeSpace testWorld = new CharTimeSpace(Short.parseShort(args[3]), Short.parseShort(args[4]));
+		CharTimeSpace testWorld = new CharTimeSpace(Short.parseShort(args[3]), Short.parseShort(args[4]), true);
 		//System.out.println("testWorld created.");
 		
-		CharMessObject mainBox = testWorld.objectsManager.newMessObject(new CharMessObject(args[0], 10, false));
+		CubeA mainBox = new CubeA("rec3D.dat");
+		testWorld.objectsManager.newMessObject(mainBox);
+		//CharMessObject mainBox = testWorld.objectsManager.newMessObject(new CharMessObject(args[0], 10, DrawingMethod.drawPoint));
 		//mainBox.specialDisplay = '';
-		mainBox.setLocation(0, 0, 0);
+		mainBox.setLocation(0, 0, 60);
 		mainBox.visible = true;
 		//System.out.println("objMan loaded.");
 		CharFrapsCamera mainCamera = testWorld.visualManager.newCamera(fov);
@@ -69,23 +71,19 @@ public class RunDemo
 			
 			SinglePoint xy = testWorld.eventManager.popAMouseOpreation();
 			
-			if(GraphicUtils.abs(mainCamera.roll_angle[1]) > 90.0)
-			{
+			if(GraphicUtils.abs(mainCamera.roll_angle[1]) > 90.0) {
 				mainCamera.roll_angle[0] -= GraphicUtils.sin(rad(mainCamera.roll_angle[2])) * xy.y / 64;
 				mainCamera.roll_angle[0] += GraphicUtils.cos(rad(mainCamera.roll_angle[2])) * xy.x / 64;
-			}
-			else
-			{
+			} else {
 				mainCamera.roll_angle[0] += GraphicUtils.sin(rad(mainCamera.roll_angle[2])) * xy.y / 64;
 				mainCamera.roll_angle[0] -= GraphicUtils.cos(rad(mainCamera.roll_angle[2])) * xy.x / 64;
 			}
 			mainCamera.roll_angle[1] += GraphicUtils.sin(rad(mainCamera.roll_angle[2])) * xy.x / 64;
 			mainCamera.roll_angle[1] += GraphicUtils.cos(rad(mainCamera.roll_angle[2])) * xy.y / 64;
 			
-			
-			mainCamera.roll_angle[0] %= 360;
-			mainCamera.roll_angle[1] %= 360;
-			mainCamera.roll_angle[2] %= 360;
+			mainCamera.roll_angle[0] %= GraphicUtils.PIMUL2;
+			mainCamera.roll_angle[1] %= GraphicUtils.PIMUL2;
+			mainCamera.roll_angle[2] %= GraphicUtils.PIMUL2;
 			
 			/*
 			if(mainCamera.roll_angle[1] < -90)	

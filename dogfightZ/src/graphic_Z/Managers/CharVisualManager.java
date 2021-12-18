@@ -26,6 +26,10 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	protected	char	                     blank;				//空白样式
 	public		char	                     fraps_buffer[][];			//帧缓冲，实体
 	public      char                         emptyLine[];
+
+    public      float                        zBuffer[][];       
+    public      float                        zEmptyLine[];
+    
 	public      static final int             POINTLEVEL = 19;
 	protected	List<CharFrapsCamera>        cameras;
 	protected	JTextArea	                 mainScr;		//在主屏幕引用
@@ -36,12 +40,25 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	private     StringBuilder                scr_show;
 	private     long                         refreshWaitNanoTime;
     private     long                         nextRefreshTime;
-	//private     Thread                       tmpThread;
+    private     boolean                      usingZBuffer;
+    
+	public final boolean isUsingZBuffer() {
+        return usingZBuffer;
+    }
+
+    public final void setUsingZBuffer(boolean usingZBuffer) {
+        this.usingZBuffer = usingZBuffer;
+    }
+
+    //private     Thread                       tmpThread;
 	//private Thread staticObjExposureThread;
+    public CharVisualManager(int resolution_X, int resolution_Y, CharWorld inWhichWorld, JTextArea main_scr) {
+        this(resolution_X, resolution_Y, inWhichWorld, main_scr, false);
+    }
 	
-	public CharVisualManager(int resolution_X, int resolution_Y, CharWorld inWhichWorld, JTextArea main_scr)
-	{
+	public CharVisualManager(int resolution_X, int resolution_Y, CharWorld inWhichWorld, JTextArea main_scr, boolean useZBuffer) {
 		super(resolution_X, resolution_Y, inWhichWorld);
+		usingZBuffer        = useZBuffer;
 		mainCameraFeedBack  = null;
 		scr_show            = new StringBuilder(resolution_X * resolution_Y);
 		refreshHz           = inWorld.refreshHz;
@@ -78,11 +95,23 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		
 		fraps_buffer = new char[resolution_Y][];
 		emptyLine    = new char[resolution_X];
+		if(useZBuffer) {
+		    zBuffer    = new float[resolution_Y][];
+	        zEmptyLine = new float[resolution_X];
+	        
+	        for(int i=0 ; i<resolution_Y ; ++i)
+	            zBuffer[i] = new float[resolution_X];
+	        for(int i=0 ; i<resolution_X ; ++i)
+	            zEmptyLine[i] = Float.NaN;
+		} else {
+		    zBuffer    = null;
+		    zEmptyLine = null;
+		}
 		
-		for(short i=0 ; i<resolution_Y ; ++i)
+		for(int i=0 ; i<resolution_Y ; ++i)
 			fraps_buffer[i] = new char[resolution_X];
 
-		for(short i=0 ; i<resolution_X ; ++i)
+		for(int i=0 ; i<resolution_X ; ++i)
 			emptyLine[i] = blank;
 		
 		cameras = new ArrayList<CharFrapsCamera>();
@@ -288,9 +317,21 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		/*tmpThread = new Thread(hzController);
 		tmpThread.setPriority(Thread.MAX_PRIORITY);
 		tmpThread.start();*/
-		for(int i=0 ; i<resolution[1] ; ++i)
+	    /*
+	    for(int i=0 ; i<resolution_Y ; ++i)
+            zBuffer[i] = new float[resolution_X];
+        for(int i=0 ; i<resolution_X ; ++i)
+            zEmptyLine[i] = Float.NaN;*/
+	    int i;
+	    if(isUsingZBuffer()) {
+	        for(i=0 ; i<resolution[1] ; ++i) {
+	            System.arraycopy(emptyLine, 0, fraps_buffer[i], 0, resolution[0]);
+                System.arraycopy(zEmptyLine, 0, zBuffer[i], 0, resolution[0]);
+	        }
+	    } else for(i=0 ; i<resolution[1] ; ++i) {
 			System.arraycopy(emptyLine, 0, fraps_buffer[i], 0, resolution[0]);
-		
+	    }
+	    
 		for(CharFrapsCamera aCamera : cameras) {
 		    inWorld.execute(aCamera);
 			//new Thread(aCamera).start();

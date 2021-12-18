@@ -54,7 +54,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 		Aircraft souce
 	)
 	{
-		super(null, 1, true);
+		super(null, 1, DrawingMethod.drawLine);
 		this.gameManager = gameManager;
 		specialDisplay	= '@';
 		temp 			= new float[3];
