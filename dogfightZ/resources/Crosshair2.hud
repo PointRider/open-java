@@ -1,14 +1,12 @@
-                    O                                                           O                    
-                  O                                                               O                  
-                                                                                                     
+                    +                             |                             +                    
+                  o                                                               o                  
+                O                                 |                                 O                
               O                                                                       O              
-            O                                     V                                     O            
+            O                                     |                                     O            
                                                                                                      
-          O                                                                               O          
+          o                                                                               o          
                                                                                                      
-        O                                                                                   O        
-                                                                                                     
-                                                                                                     
+        +                                                                                   +        
                                                                                                      
                                                                                                      
                                                                                                      
@@ -22,12 +20,14 @@
                                                                                                      
                                                                                                      
                                                                                                      
-        O                                         ^                                         O        
+                                                                                                     
+                                                                                                     
+        +                                         ^                                         +        
                             /                     |                     \                            
-          O                                                                               O          
-                          /                       |                       \                          
+          o                                                                               o          
+                        /   /                     |                     \   \                        
             O                                                                           O            
-              O         /                                                   \         O              
-                                                  A                                                  
-                  O                                                               O                  
-                    O                                                           O                    
+              O     /     /                                               \     \     O              
+                O                                 A                                 O                
+                  o                                                               o                  
+                    +                                                           +                    

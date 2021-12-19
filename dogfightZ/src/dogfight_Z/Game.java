@@ -34,6 +34,53 @@ import graphic_Z.Worlds.CharTimeSpace;
 import graphic_Z.utils.GraphicUtils;
 
 public class Game extends CharTimeSpace implements Runnable {
+    
+    private static String s_hudShiftValue = "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "32\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "24\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "16\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "08\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "- \n" + 
+                                            "00\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--\n" + 
+                                            "--";
+    
     private float fov = 2.2F;
 	private float visibility = 12480;
 	private float gBlack;
@@ -46,10 +93,11 @@ public class Game extends CharTimeSpace implements Runnable {
 	private CharLabel lbl3;
 	private CharLabel lbl4; 
 	private CharLabel lbl5;
-    private CharLabel lbl6;
-    private CharLabel lbl7;
-    private CharLabel lbl8;
+    //private CharLabel lbl6;
+    //private CharLabel lbl7;
+    //private CharLabel lbl8;
     private CharLabel lbl9;
+    private CharLabel lbl10;
 	
     private CharLabel lblRespawnTimeLeft;
 	private CharLabel lblGameTimeLeft;
@@ -65,10 +113,11 @@ public class Game extends CharTimeSpace implements Runnable {
     private CharLabel hud_roll_up_dn_scrollBar_pointer;
     private CharLoopingScrollBar hud_turn_lr_scrollBar;
 	private CharLoopingScrollBar hud_roll_up_dn_scrollBar;
+    private CharLoopingScrollBar hud_shift_scrollBar;
 	
 	private CharProgressBar		hud_HP_progressBar;
 	private CharProgressBar		hud_pushTime_progressBar;
-	private CharProgressBar		hud_cannon_progressBar;
+	private CharLabel    		hud_cannon_progressBar;
 	private CharProgressBar		hud_cannonReloading_progressBar;
 	private CharProgressBar		hud_missile_progressBar;
 	private CharProgressBar		hud_missileReloading_progressBar;
@@ -380,18 +429,22 @@ public class Game extends CharTimeSpace implements Runnable {
         String hud_horizonIndicator,
         String hud_crosshairImg,
         String hud_loopingScrollBar_vertical,
+        String hud_shiftScrollBar_vertical,
         String hud_loopingScrollBar_horizon,
         String hud_radarBG,
         String hud_radarPrinter
     ) {
 	    resolution_min = GraphicUtils.min(visualManager.getResolution_X(), visualManager.getResolution_Y()) >> 1;
 	    scoreShow.visible = false;
-        visualManager.newDynamicHUD(scoreShow);
-        EndScreen = visualManager.newLabel("      TIME UP\nPress ESC Key To Exit.", ((resolutionX>>1) - 9), (int)(resolutionY * 0.3), 999);
+        visualManager.newDynamicHUD(scoreShow);          //
+        EndScreen = visualManager.newLabel("      GAME OVER\n\nPress ESC Key To Exit.", ((resolutionX>>1) - 9), (int)(resolutionY * 0.3), 999);
         EndScreen.visible = false;
         
-        final int progressBarLocationBaseX = (int) (resolutionX * 0.75);
-        final int progressBarLocationBaseY = (int) (resolutionY * 0.65);
+        final int progressBarLocationBaseX0 = (resolutionX >> 1) - 24;
+        final int progressBarLocationBaseY  = 5;
+        final int progressBarLocationBaseXA = (int) (resolutionX>>1) + 26;
+        final int progressBarLocationBaseXB = (int) (resolutionX>>1) - 31;
+        final int progressBarLocationBaseYB = (int) (resolutionY>>1) + 7;
 
         mainCamera.getHudWarning_missile().location[0] = (resolutionX - 16);
         mainCamera.getHudWarning_missile().location[1] = (resolutionY >> 1);
@@ -400,38 +453,42 @@ public class Game extends CharTimeSpace implements Runnable {
         
         //lbltest = visualManager.newLabel("", 18, (int)(resolutionY * 0.8), 99);
                 
-        lbl1 = visualManager.newLabel(" ", (resolutionX - 18), (int)(resolutionY * 0.3), 100);
+        lbl1 = visualManager.newLabel(" ", (resolutionX>>1) + 27, (resolutionY>>1) - 7, 32899);
         lbl2 = visualManager.newLabel(" ", (resolutionX - 18), (int)(resolutionY * 0.3 + 1), 101);
         lbl3 = visualManager.newLabel(" ", (resolutionX - 18), (int)(resolutionY * 0.3 + 2), 102);
-        lbl4 = visualManager.newLabel(" ", (resolutionX - 18), (int)(resolutionY * 0.3 + 3), 103);
-        lbl5 = visualManager.newLabel("HP:[                    ]", progressBarLocationBaseX, progressBarLocationBaseY, 204);
-        lbl6 = visualManager.newLabel("AB:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 2), 207);
-        lbl7 = visualManager.newLabel("CN:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 4), 206);
-        lbl8 = visualManager.newLabel("MS:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 6), 208);
-        lbl9 = visualManager.newLabel("DC:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 8), 256);
-        
+        lbl4 = visualManager.newLabel(" ", (resolutionX>>1) - 30, (resolutionY>>1) - 7, 32898);
+        lbl5 = visualManager.newLabel("HP:[                                            ]", progressBarLocationBaseX0, progressBarLocationBaseY, 204);
+        //lbl6 = visualManager.newLabel("AB:[                    ]", progressBarLocationBaseX1, (progressBarLocationBaseY + 2), 207);
+        //lbl7 = visualManager.newLabel("CN:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 4), 206);
+        //lbl8 = visualManager.newLabel("MS:[                    ]", progressBarLocationBaseX, (progressBarLocationBaseY + 6), 208);
+        lbl9 = visualManager.newLabel("DECOY:[    ]", (resolutionX - 18), (resolutionY >> 1) + 9, 256);
         lblRespawnTimeLeft = visualManager.newLabel(" ", ((resolutionX>>1) - 9), (int)(resolutionY * 0.3), 999);
         lblGameTimeLeft = visualManager.newLabel(" ", ((resolutionX>>1) - 11), 3, 998);
         lblKillTipList = visualManager.newLabel(" ", 3, 3, 123);
         
-        hud_HP_progressBar          = visualManager.newProgressBar((progressBarLocationBaseX + 4), progressBarLocationBaseY, 205, 20, '|', CharProgressBar.Direction.horizon, 1.0F);
-        hud_pushTime_progressBar    = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 2), 209, 20, '|', CharProgressBar.Direction.horizon, 1.0F);
+        hud_HP_progressBar          = visualManager.newProgressBar((progressBarLocationBaseX0 + 4), progressBarLocationBaseY, 205, 44, '=', CharProgressBar.Direction.horizon, 1.0F);
+        hud_pushTime_progressBar    = visualManager.newProgressBar((resolutionX >> 1) + (resolutionX >> 2) + 1, (resolutionY >> 1) + 22, 209, 45, '=', CharProgressBar.Direction.vertical, 1.0F);
         
-        hud_cannon_progressBar = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 4), 210, 20, '|', CharProgressBar.Direction.horizon, 1.0F);
-        hud_cannonReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 5), 212, 25, '-', CharProgressBar.Direction.horizon, 1.0F);
-        hud_missile_progressBar = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 6), 214, 20, '|', CharProgressBar.Direction.horizon, 1.0F);
-        hud_missileReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 7), 216, 25, '-', CharProgressBar.Direction.horizon, 1.0F);
-        hud_decoy_progressBar = visualManager.newProgressBar((progressBarLocationBaseX + 4), (progressBarLocationBaseY + 8), 218, 20, '|', CharProgressBar.Direction.horizon, 1.0F);
-        hud_decoyReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseX, (progressBarLocationBaseY + 9), 220, 25, '-', CharProgressBar.Direction.horizon, 1.0F);
+        //hud_cannon_progressBar = visualManager.newProgressBar(progressBarLocationBaseXA, progressBarLocationBaseYB, 40000, 8, '|', CharProgressBar.Direction.horizon, 1.0F);
+        hud_cannon_progressBar = visualManager.newLabel("0", progressBarLocationBaseXA + 2, progressBarLocationBaseYB, 40000);
+        hud_cannonReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseXA, progressBarLocationBaseYB + 1, 40001, 6, '=', CharProgressBar.Direction.horizon, 1.0F);
+        hud_missile_progressBar = visualManager.newProgressBar(progressBarLocationBaseXB + 1, progressBarLocationBaseYB, 40002, 4, 'A', CharProgressBar.Direction.horizon, 1.0F);
+        hud_missileReloading_progressBar = visualManager.newProgressBar(progressBarLocationBaseXB, progressBarLocationBaseYB + 1, 40003, 6, '=', CharProgressBar.Direction.horizon, 1.0F);
+        hud_decoy_progressBar = visualManager.newProgressBar((resolutionX - 11), (resolutionY >> 1) + 9, 218, 4, '=', CharProgressBar.Direction.horizon, 1.0F);
+        hud_decoyReloading_progressBar = visualManager.newProgressBar((resolutionX - 18), (resolutionY >> 1) + 10, 220, 12, '-', CharProgressBar.Direction.horizon, 1.0F);
         
         hud_roll_up_dn_angle        = visualManager.newDynamicHUD(hud_horizonIndicator, 21, 51, 33);
         hud_roll_up_dn_scrollBar    = visualManager.newLoopingScrollBar(hud_loopingScrollBar_vertical, 50, 72, 4, 43, CharLoopingScrollBar.Direction.vertical);
+        hud_shift_scrollBar         = visualManager.newLoopingScrollBar(hud_shiftScrollBar_vertical, 52, 43, 4, 43, CharLoopingScrollBar.Direction.vertical);
         hud_turn_lr_scrollBar       = visualManager.newLoopingScrollBar(hud_loopingScrollBar_horizon, 2135, 72, 2, 71, CharLoopingScrollBar.Direction.horizon);
         hud_turn_lr_scrollBar.location[1] = resolutionY - 1;
-        hud_roll_up_dn_scrollBar.location[0] = (int) (resolutionX * 0.2);
-        hud_turn_lr_scrollBar_pointer = visualManager.newLabel("V\n|", resolutionX>>1, resolutionY - 3, 2134);
-        hud_roll_up_dn_scrollBar_pointer = visualManager.newLabel(">", (int) (resolutionX * 0.2) - 3, resolutionY>>1, 2136);
-        hud_crosshair = visualManager.newImage(hud_crosshairImg, 32765, 65, 11, ((resolutionX >> 1) - (65 >> 1)), ((resolutionY >> 1) - (11 >> 1)));
+        hud_roll_up_dn_scrollBar.location[0] = (resolutionX >> 1) - (resolutionX >> 2);
+        hud_shift_scrollBar.location[0] = (resolutionX >> 1) + (resolutionX >> 2);
+        lbl10 = visualManager.newLabel(s_hudShiftValue, (resolutionX >> 1) + (resolutionX >> 2) - 1, (resolutionY >> 1) - 22, 17);
+        //hud_shift_scrollBar
+        hud_turn_lr_scrollBar_pointer = visualManager.newLabel("|\nV\n|", resolutionX>>1, resolutionY - 4, 2134);
+        hud_roll_up_dn_scrollBar_pointer = visualManager.newLabel("=>", (resolutionX >> 1) - (resolutionX >> 2) - 4, resolutionY>>1, 2136);
+        hud_crosshair = visualManager.newImage(hud_crosshairImg, 32765, 65, 17, ((resolutionX >> 1) - (65 >> 1)), ((resolutionY >> 1) - (17 >> 1)));
         //"107"  "57" 160 84
         hud_Radar = new Radar
         (
@@ -479,6 +536,7 @@ public class Game extends CharTimeSpace implements Runnable {
 		String myJetModel_file,
 		String hud_horizonIndicator,
 		String hud_loopingScrollBar_vertical,
+        String hud_shiftScrollBar_vertical,
 		String hud_loopingScrollBar_horizon,
 		String hud_crosshairImg,
         String hud_friend,
@@ -510,6 +568,7 @@ public class Game extends CharTimeSpace implements Runnable {
             hud_horizonIndicator,
             hud_crosshairImg,
             hud_loopingScrollBar_vertical,
+            hud_shiftScrollBar_vertical,
             hud_loopingScrollBar_horizon,
             hud_radarBG,
             hud_radarPrinter
@@ -566,12 +625,21 @@ public class Game extends CharTimeSpace implements Runnable {
 	
 	private final void reLocateHUD() {
 	    resolution_min = GraphicUtils.min(visualManager.getResolution_X(), visualManager.getResolution_Y()) >> 1;
+		
 	    final int resolution_X = visualManager.resolution[0], resolution_Y = visualManager.resolution[1];
-	    final int progressBarLocationBaseX  = (int) (resolution_X * 0.75);
+	    final int progressBarLocationBaseX0  = (resolution_X >> 1) - 24;
         final int progressBarLocationBaseX2 = (int) (resolution_X - 18);
-        final int progressBarLocationBaseY  = (int) (resolution_Y * 0.65);
+        final int progressBarLocationBaseY  = 5;
         final int progressBarLocationBaseY2 = (int) (resolution_Y * 0.3);
 
+        final int progressBarLocationBaseX3 = (resolution_X>>1) + 27;
+        final int progressBarLocationBaseY3 = (resolution_Y>>1) - 7;
+        final int progressBarLocationBaseX4 = (resolution_X>>1) - 30;
+
+        final int progressBarLocationBaseXA = (int) (resolution_X>>1) + 26;
+        final int progressBarLocationBaseXB = (int) (resolution_X>>1) - 31;
+        final int progressBarLocationBaseYB = (int) (resolution_Y>>1) + 7;
+        
         mainCamera.getHudWarning_missile().location[0] = (resolution_X - 16);
         mainCamera.getHudWarning_missile().location[1] = (resolution_Y >> 1);
         mainCamera.getHudWarningLocking().location[0] = (resolution_X - 16);
@@ -579,40 +647,43 @@ public class Game extends CharTimeSpace implements Runnable {
         
         //lbltest.setLocation(18, (int)(resolution_Y * 0.8));
         
-        lbl1.setLocation(progressBarLocationBaseX2, (int)(progressBarLocationBaseY2));
-        lbl2.setLocation(progressBarLocationBaseX2, (int)(progressBarLocationBaseY2 + 1));
-        lbl3.setLocation(progressBarLocationBaseX2, (int)(progressBarLocationBaseY2 + 2));
-        lbl4.setLocation(progressBarLocationBaseX2, (int)(progressBarLocationBaseY2 + 3));
+        lbl1.setLocation(progressBarLocationBaseX3, progressBarLocationBaseY3);
+        lbl2.setLocation(progressBarLocationBaseX2, (progressBarLocationBaseY2 + 1));
+        lbl3.setLocation(progressBarLocationBaseX2, (progressBarLocationBaseY2 + 2));
+        lbl4.setLocation(progressBarLocationBaseX4, progressBarLocationBaseY3);
         
-        lbl5.setLocation(progressBarLocationBaseX, progressBarLocationBaseY);
-        lbl6.setLocation(progressBarLocationBaseX, progressBarLocationBaseY + 2);
-        lbl7.setLocation(progressBarLocationBaseX, progressBarLocationBaseY + 4);
-        lbl8.setLocation(progressBarLocationBaseX, progressBarLocationBaseY + 6);
-        lbl9.setLocation(progressBarLocationBaseX, progressBarLocationBaseY + 8);
+        lbl5.setLocation(progressBarLocationBaseX0, progressBarLocationBaseY);
+        //lbl6.setLocation(progressBarLocationBaseX, progressBarLocationBaseY + 2);
+        //lbl7.setLocation(progressBarLocationBaseX, progressBarLocationBaseY + 4);
+        //lbl8.setLocation(progressBarLocationBaseX, progressBarLocationBaseY + 6);
+        lbl9.setLocation((resolution_X - 18), (resolution_Y >> 1) + 9);
 
-        EndScreen.setLocation(((resolution_X>>1) - 9), (int)(resolution_Y * 0.3));
-        lblRespawnTimeLeft.setLocation(((resolution_X>>1) - 9), (int)(resolution_Y * 0.3));
+        EndScreen.setLocation(((resolution_X>>1) - 9), (int) (resolution_Y * 0.3));
+        lblRespawnTimeLeft.setLocation(((resolution_X>>1) - 9), (int) (resolution_Y * 0.3));
         lblGameTimeLeft.setLocation(((resolution_X>>1) - 11), 3);
         
-        hud_HP_progressBar.setLocation(progressBarLocationBaseX + 4, progressBarLocationBaseY);
-        hud_pushTime_progressBar.setLocation(progressBarLocationBaseX + 4, progressBarLocationBaseY + 2);
-        hud_cannon_progressBar.setLocation(progressBarLocationBaseX + 4, progressBarLocationBaseY + 4);
-        hud_cannonReloading_progressBar.setLocation(progressBarLocationBaseX, progressBarLocationBaseY + 5);
+        hud_HP_progressBar.setLocation(progressBarLocationBaseX0 + 4, progressBarLocationBaseY);
+        hud_pushTime_progressBar.setLocation((resolution_X >> 1) + (resolution_X >> 2) + 1, (resolution_Y >> 1) + 22);
+        hud_cannon_progressBar.setLocation(progressBarLocationBaseX3 + 1, progressBarLocationBaseYB);
+        hud_cannonReloading_progressBar.setLocation(progressBarLocationBaseXA, progressBarLocationBaseYB + 1);
         
-        hud_missile_progressBar.setLocation(progressBarLocationBaseX + 4, progressBarLocationBaseY + 6);
-        hud_missileReloading_progressBar.setLocation(progressBarLocationBaseX, progressBarLocationBaseY + 7);
-        hud_decoy_progressBar.setLocation(progressBarLocationBaseX + 4, progressBarLocationBaseY + 8);
-        hud_decoyReloading_progressBar.setLocation(progressBarLocationBaseX, progressBarLocationBaseY + 9);
+        hud_missile_progressBar.setLocation(progressBarLocationBaseXB + 1, progressBarLocationBaseYB);
+        hud_missileReloading_progressBar.setLocation(progressBarLocationBaseXB, progressBarLocationBaseYB + 1);
+        hud_decoy_progressBar.setLocation((resolution_X - 11), (resolution_Y >> 1) + 9);
+        hud_decoyReloading_progressBar.setLocation((resolution_X - 18), (resolution_Y >> 1) + 10);
         
         hud_turn_lr_scrollBar.location[1] = resolution_Y - 1;
         hud_turn_lr_scrollBar.location[0] = resolution_X >> 1;
-        hud_roll_up_dn_scrollBar.location[1] = (int) (resolution_Y >> 1);
-        hud_roll_up_dn_scrollBar.location[0] = (int) (resolution_X * 0.2F);
+        hud_roll_up_dn_scrollBar.location[1] = (resolution_Y >> 1);
+        hud_roll_up_dn_scrollBar.location[0] =  (resolution_X >> 1) - (resolution_X >> 2);
+        hud_shift_scrollBar.location[1] = (resolution_Y >> 1);
+        hud_shift_scrollBar.location[0] =  (resolution_X >> 1) + (resolution_X >> 2);
+        lbl10.setLocation((resolution_X >> 1) + (resolution_X >> 2) - 1, (resolution_Y >> 1) - 22);
 
-        hud_turn_lr_scrollBar_pointer.setLocation(resolution_X>>1, resolution_Y - 3);
-        hud_roll_up_dn_scrollBar_pointer.setLocation((int) (resolution_X * 0.2) - 3, resolution_Y>>1);
+        hud_turn_lr_scrollBar_pointer.setLocation(resolution_X>>1, resolution_Y - 4);
+        hud_roll_up_dn_scrollBar_pointer.setLocation((resolution_X >> 1) - (resolution_X >> 2) - 4, resolution_Y>>1);
         
-        hud_crosshair.setLocation(((resolution_X >> 1) - (65 >> 1)), ((resolution_Y >> 1) - (11 >> 1)));
+        hud_crosshair.setLocation(((resolution_X >> 1) - (65 >> 1)), ((resolution_Y >> 1) - (17 >> 1)));
         
         hud_Radar.setLocation((visualManager.resolution[0] - 12), 11);
         
@@ -658,20 +729,21 @@ public class Game extends CharTimeSpace implements Runnable {
 	    );
 	    */
         
-		lbl1.setText("speed: " + String.format("%.2f", getMyJet().getSpeed() * 14));
+		lbl1.setText(String.format("%.0f", getMyJet().getSpeed() * 12));
 		lbl2.setText("shift: " + String.format("%.2f", getMyJet().getControl_stick_acc()));
 		lbl3.setText("rpm  : " + String.format("%.2f", Aircraft.getCurrentRPM(getMyJet().getMax_rpm(), getMyJet().getControl_stick_acc())));
-		lbl4.setText("hight: " + String.format("%.2f", -getMyJet().location[0] + 200));
+		lbl4.setText(String.format("%.0f", (-getMyJet().location[0] + 200) / 10));
 		//lbl5.setText("roll_angle: " + String.format("%.2f", myJet.roll_angle[2]));
 		//lbl6.setText("cameraRoll: " + String.format("%.2f", myJet.cameraRollAngle[2]));
 		
 		hud_HP_progressBar.value = (float)getMyJet().getHP() / 100.0F;
 		hud_pushTime_progressBar.value = getMyJet().getPushTimeLeft() / getMyJet().getMaxPushTime();
-		hud_cannon_progressBar.value = (float)getMyJet().cannonMagazineLeft / (float)getMyJet().cannonMagazine;
-		
+		//hud_cannon_progressBar.value = (float)getMyJet().cannonMagazineLeft / (float)getMyJet().cannonMagazine;
+		hud_cannon_progressBar.setText(Integer.toString(getMyJet().cannonMagazineLeft));
+        
 		if(getMyJet().isAlive()) {
 			lblRespawnTimeLeft.visible = false;
-			hud_roll_up_dn_angle.visible = hud_roll_up_dn_scrollBar.visible = hud_turn_lr_scrollBar.visible = 
+			hud_roll_up_dn_angle.visible = hud_roll_up_dn_scrollBar.visible = lbl10.visible = hud_pushTime_progressBar.visible = hud_shift_scrollBar.visible = hud_turn_lr_scrollBar.visible = 
 					hud_Radar.visible = lbl1.visible = lbl2.visible = lbl3.visible = lbl4.visible = true;
 			//------------[Dynamic HUDs]------------
 			
@@ -683,12 +755,12 @@ public class Game extends CharTimeSpace implements Runnable {
 			
 			hud_roll_up_dn_scrollBar.value = (int) (y / 0.08726646259971647F/*5=(360 / 72)*/);
 			hud_turn_lr_scrollBar.value    = (int) ((x + GraphicUtils.RAD180) / 0.08726646259971647F);
-			 
+			hud_shift_scrollBar.value      = GraphicUtils.max((int) ((32 - getMyJet().getControl_stick_acc()) / (38.0F / 43.0F) + 4), 1);
 			if(hud_roll_up_dn_scrollBar.value > 0) {
 	            backRGB = (int) (y / 0.02617993877991495F);
 			} else backRGB = 0;
 		} else {
-			hud_roll_up_dn_angle.visible = hud_roll_up_dn_scrollBar.visible = hud_turn_lr_scrollBar.visible = 
+			hud_roll_up_dn_angle.visible = hud_roll_up_dn_scrollBar.visible = lbl10.visible = hud_pushTime_progressBar.visible = hud_shift_scrollBar.visible = hud_turn_lr_scrollBar.visible = 
 					hud_Radar.visible = lbl1.visible = lbl2.visible = lbl3.visible = lbl4.visible = false;
 			lbl1.visible = lbl2.visible = lbl3.visible = lbl4.visible = false;
 			lblRespawnTimeLeft.visible = true;
@@ -1133,12 +1205,12 @@ public class Game extends CharTimeSpace implements Runnable {
         Game game = new Game(
             args[0] ,args[1] , args[2], args[3], args[4], args[5] ,
             args[6] , args[7], args[8], args[9], args[10], args[11], 
-            args[12], args[13], args[14], args[15], args[16], 
-            Integer.parseInt(args[17]), 
+            args[12], args[13], args[14], args[15], args[16], args[17], 
             Integer.parseInt(args[18]), 
-            Integer.parseInt(args[19]),
+            Integer.parseInt(args[19]), 
             Integer.parseInt(args[20]),
-            Integer.parseInt(args[21])
+            Integer.parseInt(args[21]),
+            Integer.parseInt(args[22])
         );
         game.getIntoGameWorld();
         game.run();

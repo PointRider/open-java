@@ -177,19 +177,19 @@ public class GraphicUtils
         
         if(xyz1[1] == xyz2[1] && xyz2[1] == xyz3[1]) return;
         
+        //先按照待绘制的三角形位于屏幕中的顶点y坐标进行排序
+        //使得xyz1数组指向最低点的x,y,z坐标，xyz2指向中间点，xyz3为最高点
         float tmp[];
         if(xyz3[1] < xyz1[1]) {
             tmp  = xyz1;
             xyz1 = xyz3;
             xyz3 = tmp;
         }
-        
         if(xyz2[1] < xyz1[1]) {
             tmp  = xyz1;
             xyz1 = xyz2;
             xyz2 = tmp;
         }
-        
         if(xyz3[1] < xyz2[1]) {
             tmp  = xyz3;
             xyz3 = xyz2;
@@ -202,15 +202,16 @@ public class GraphicUtils
         float dx = x3-x1, dy = y3-y1, dz = z3-z1;
         float x0, xi, z0, zi, yi, dx0, dy0, dytmp, ditmp;
 
+        //先以中间点开始，横向绘制一行像素
         dx0 = x1-x2;
         dy0 = y1-y2;
-    
         xi = dx * -dy0 / dy + x1;
         zi = dz * -dy0 / dy + z1;
         x0 = x2;
         z0 = z2;
         drawHorizonLine(fraps_buffer, zBuffer, (int)x0, (int)xi, (int)y2, z0, zi, pixel, noRewrite);
-    
+        
+        //绘制中间点以下的像素
         for(yi = y2 - 1; yi >= y1; --yi) {
             dytmp = yi-y1;
             ditmp = yi-y2;
@@ -221,6 +222,7 @@ public class GraphicUtils
             drawHorizonLine(fraps_buffer, zBuffer, (int)x0, (int)xi, (int)yi, z0, zi, pixel, noRewrite);
         }
 
+        //绘制中间点以上的像素
         dx0 = x3-x2;
         dy0 = y3-y2;
         for(yi = y2 + 1; yi <= y3; ++yi) {
@@ -234,15 +236,12 @@ public class GraphicUtils
         }
     }
     
-    public static void drawHorizonLine(char fraps_buffer[][], float zBuffer[][], int x1, int x2, int y, float z1, float z2, char pixel, boolean noRewrite) {
+    public static void drawHorizonLine
+    (char fraps_buffer[][], float zBuffer[][], int x1, int x2, int y, float z1, float z2, char pixel, boolean noRewrite) {
         
         int width  = fraps_buffer[0].length;
         int height = fraps_buffer.length;
         float z;
-        
-        /*
-         z = (xi-x1)(z2-z1) / (x2-x1) + z1
-        */
         
         if(x1 < x2) for(int xi = x1; xi <= x2; ++xi) {
             if(xi >= 0 && y >= 0 && xi < width && y < height && (!noRewrite  ||  fraps_buffer[y][xi] == ' ')) {
@@ -437,6 +436,10 @@ public class GraphicUtils
         return a < b? a: b;
     }
 
+    public static final int max(int a, int b) {
+        return a > b? a: b;
+    }
+    
     public static final int min(int a, int b) {
         return a < b? a: b;
     }

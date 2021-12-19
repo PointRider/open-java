@@ -14,6 +14,7 @@ public class GameRun {
         "Jet.dat",
         "Crosshair2.hud",
         "LoopingScrollBar1.hud",
+        "LoopingScrollBar2.hud",
         "LoopingScrollBar3.hud",
         "HUD3.hud",
         "MyJetHUD_Friend.hud",
@@ -25,15 +26,21 @@ public class GameRun {
         "RadarHUD.hud",
         "RaderPainter.hud",
         "ScoreHUD.hud",
+        "GuiBackground.jpg"
+    };
+    
+    private static final String DATAFILELIST[] = {
         "config_NPC.cfg",
         "config_OST.cfg",
-        "GuiBackground.jpg"
     };
     
     public static void initEnviroment() {
         makeDir("resources");
-        for(String resource : RESOURCESLIST) {
+        for(String resource : DATAFILELIST) {
             if(!fileExists("resources/" + resource)) extractResource(resource, "resources/");
+        }
+        for(String resource : RESOURCESLIST) {
+            extractResource(resource, "resources/");
         }
     }
     
@@ -63,7 +70,7 @@ public class GameRun {
         try {
             newFile = new File(path + resourceName);
             newFile.createNewFile();
-            output       = new FileOutputStream(new File(path + resourceName));
+            output       = new FileOutputStream(new File(path + resourceName), false);
             inputBuffer  = new BufferedInputStream(ClassLoader.getSystemResourceAsStream(resourceName));
             outputBuffer = new BufferedOutputStream(output);
             
@@ -88,12 +95,12 @@ public class GameRun {
         newGame = new Game(
             args[0] ,args[1] , args[2], args[3], args[4], args[5] ,
             args[6] , args[7], args[8], args[9], args[10], args[11], 
-            args[12], args[13], args[14], args[15], args[16], 
-            Integer.parseInt(args[17]), 
+            args[12], args[13], args[14], args[15], args[16], args[17], 
             Integer.parseInt(args[18]), 
-            Integer.parseInt(args[19]),
+            Integer.parseInt(args[19]), 
             Integer.parseInt(args[20]),
-            Integer.parseInt(args[21])
+            Integer.parseInt(args[21]),
+            Integer.parseInt(args[22])
         );
         
         Thread gameThread = new Thread(newGame);

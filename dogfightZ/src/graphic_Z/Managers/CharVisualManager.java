@@ -292,11 +292,8 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		//try{Thread.sleep(refreshDelay);} catch(InterruptedException e) {}
 	}
 	
-	public void refresh()
-	{
+	public void refresh() {
 		for(CharFrapsCamera aCamera : cameras) {
-			//new Thread(aCamera).start();
-
 			for(Iterable<Dynamic> eachList:dynamicObjLists)
 				aCamera.exposure(eachList, 0);
 			for(Iterable<Dynamic> eachList:selfDisposable)
@@ -313,15 +310,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	}
 	
 	public void buff() {
-	    nextRefreshTime = System.nanoTime() + refreshWaitNanoTime;
-		/*tmpThread = new Thread(hzController);
-		tmpThread.setPriority(Thread.MAX_PRIORITY);
-		tmpThread.start();*/
-	    /*
-	    for(int i=0 ; i<resolution_Y ; ++i)
-            zBuffer[i] = new float[resolution_X];
-        for(int i=0 ; i<resolution_X ; ++i)
-            zEmptyLine[i] = Float.NaN;*/
+	    nextRefreshTime = System.nanoTime() + refreshWaitNanoTime; 
 	    int i;
 	    if(isUsingZBuffer()) {
 	        for(i=0 ; i<resolution[1] ; ++i) {
@@ -338,10 +327,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		}
 	}
 	
-	public void printNew()	//关于颜色、多摄像机的改进待做(包括裸眼3D)
-	{
-		//if(tmpThread == null) return;
-	    
+	public void printNew() {
 		refresh();
 		long now = nextRefreshTime - System.nanoTime();
 		
@@ -353,9 +339,6 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
                 e.printStackTrace();
             }
 		}
-		
-		/*try{tmpThread.join();} catch (InterruptedException e) {}
-		tmpThread = null;*/
 		
 		boolean firstInLine, firstLine;
 		

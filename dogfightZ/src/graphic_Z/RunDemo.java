@@ -13,8 +13,7 @@ import graphic_Z.utils.GraphicUtils;
 public class RunDemo
 {
 	
-	private static float rad(float x)
-	{
+	private static float rad(float x) {
 		return x * GraphicUtils.PI / 180.0F;
 	}
 

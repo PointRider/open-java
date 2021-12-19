@@ -43,6 +43,7 @@ public class CharImage extends CharHUD
 					if(j != 0) data.read();
 					HUDImg[i][j] = (char) data.read();
 				}
+				//\r\n
 				data.read();data.read();
 			}
 		} catch(EOFException exc) {} catch(IOException exc) {

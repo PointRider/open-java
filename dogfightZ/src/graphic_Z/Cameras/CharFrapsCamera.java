@@ -88,7 +88,8 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 			
 			XYLambdaI getPoint = (float X0, float Y0, float Z0) -> {
 				float X, Y, Z/*, tmp1, tmp2*/, cos$, sin$;
-				//获取点随着物体分别绕X、Y、Z坐标轴滚动前的原坐标
+				//物体上的每个点 绕物体自身中心点旋转
+				//r0、r1、r2是绕x、y、z轴的旋转角度（弧度制）
 				cos$ = GraphicUtils.cos(r2);
 				sin$ = GraphicUtils.sin(r2);
 				X = cos$ * X0 - sin$ * Y0;

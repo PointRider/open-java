@@ -89,6 +89,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 		inWhichWorld.execute(new Runnable() {
             @Override
             public void run() {
+                //Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
                 try {
                     while(true) {
                         hudWarningLocking.visible = !hudWarningLocking.visible;

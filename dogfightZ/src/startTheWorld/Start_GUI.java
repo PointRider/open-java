@@ -234,6 +234,7 @@ public class Start_GUI extends JFrame {
 			            "resources/Jet.dat",
                         "resources/Crosshair2.hud",
                         "resources/LoopingScrollBar1.hud",
+                        "resources/LoopingScrollBar2.hud",
                         "resources/LoopingScrollBar3.hud",
                         "resources/HUD3.hud",
                         "resources/MyJetHUD_Friend.hud",

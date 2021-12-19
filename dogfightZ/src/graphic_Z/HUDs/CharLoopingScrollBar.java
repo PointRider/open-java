@@ -62,29 +62,21 @@ public class CharLoopingScrollBar extends CharDynamicHUD
 	}
 	
 	@Override
-	public void printNew()
-	{
+	public void printNew() {
 		int x1, y1;
-		if(visible)
-		{
+		if(visible) {
 			if(value < 0) value = size[0] - (-value) & size[0];
-			for(int y=0 ; y<size[1] ; ++y)
-			{
-				for(int xi=0, x=0 ; xi < size[0]; ++xi)
-				{
+			for(int y=0 ; y<size[1] ; ++y) {
+				for(int xi=0, x=0 ; xi < size[0]; ++xi) {
 					x = (xi + value) % size[0];
 					
-					if(x < size_show && HUDImg[y][xi] != ' ')
-					{
-						if(direction == Direction.horizon)
-						{
+					if(x < size_show && HUDImg[y][xi] != ' ') {
+						if(direction == Direction.horizon) {
 							x1 = x+location[0] - (size_show >> 1);
 							y1 = y+location[1] - (size[1] >> 1);
 							if(y1 >= 0  &&  x1 >= 0  &&  y1 < resolution[1]  &&  x1 < resolution[0])
 								fraps_buffer[y1][x1] = HUDImg[y][xi];
-						}
-						else
-						{
+						} else {
 							x1 = y+location[0] - (size[1] >> 1);
 							y1 = x+location[1] - (size_show >> 1);
 							if(y1 >= 0  &&  x1 >= 0  &&  y1 < resolution[1]  &&  x1 < resolution[0])
