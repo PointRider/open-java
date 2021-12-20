@@ -1187,6 +1187,7 @@ public class Game extends CharTimeSpace implements Runnable {
             @Override
             public void keyReleased(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    setRunning(false);
                     soundTrack.interrupt();
                     shutdown();
                     eventManager.removeKeyListener(this);
