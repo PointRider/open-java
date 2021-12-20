@@ -199,7 +199,7 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 				)	setSpeed(getSpeed() - 5);
 				else if(getSpeed() < maxSpeed)	setSpeed(getSpeed() + 0.5F);
 				target.warningMissile(launcher);
-			}
+			} else if(range < 0) lifeLeft -= 2000;
 			range_old = range;
 		}
 	}
