@@ -1,4 +1,4 @@
-# 	dogfightZ 	![img](file:///D:/Application%20Development/Project/by%20Eclipse/Java/dogfightZ/dogfightZ.ico)
+# 	dogfightZ 	![img](dogfightZ.ico)
 
 基于 
 
@@ -28,11 +28,11 @@
 
 1. ##### 使用 “dogfight启动游戏.bat” 或 双击target目录下的jar包 启动游戏，来到菜单界面
 
-   ![1640329895417](C:\Users\Zafkiel\AppData\Roaming\Typora\typora-user-images\1640329895417.png)
+   ![1640329895417](readmeImg/1640329895417.png)
 
 2. ##### 点击Start ! 按钮即可开始游戏，开始游戏后请关闭输入法，使用 [ 和 ]（缩放） 、IJKL（显示尺寸）和MN（字体）键调整画面以适配屏幕
 
-   ![1640330552519](C:\Users\Zafkiel\AppData\Roaming\Typora\typora-user-images\1640330552519.png)
+   ![1640330552519](readmeImg/1640330552519.png)
 
    
 
@@ -103,17 +103,17 @@
 
 - **导弹 MIS** 发射前需要先锁定敌机：使用火控雷达照射敌机（将敌机标识保持在准星附近）即可开始锁定，锁定过程需要2s，锁定后会显示LOCKD（如下图）
 
-  ![1640330316765](C:\Users\Zafkiel\AppData\Roaming\Typora\typora-user-images\1640330316765.png)
+  ![1640330316765](readmeImg/1640330316765.png)
 
   此时发射导弹，导弹将自动跟踪敌机。导弹伤害较高，摧毁一架敌机一般需要2～3枚导弹（一次装填4枚），适合打击视线范围外的目标。需要注意的是，开始锁定敌机时，敌机能够感受到被锁定，并释放多个诱饵弹干扰锁定，需要等待干扰弹脱离火控雷达照射范围后才能正常锁定敌机。导弹和诱饵弹的装填时间一致。
 
 - **诱饵弹 Decoy** 可以短暂干扰敌机锁定。战机被敌机尝试锁定时，屏幕右侧会出现锁定告警标志并闪烁（闪烁时间逐渐加快），如下图：
 
-  ![1640330418838](C:\Users\Zafkiel\AppData\Roaming\Typora\typora-user-images\1640330418838.png)
+  ![1640330418838](readmeImg/1640330418838.png)
 
   此时应按 **X键** 释放诱饵弹干扰敌机锁定，并做机动动作，摆脱敌机追踪，否则如果该标志变为下图所示，即表明敌导弹已经发射，只能尝试做大幅度机动动作摆脱攻击：
 
-  ![1640330423561](C:\Users\Zafkiel\AppData\Roaming\Typora\typora-user-images\1640330423561.png)
+  ![1640330423561](readmeImg/1640330423561.png)
 
   
 
@@ -133,7 +133,7 @@
 
 - 当您驾驶战机持续做大幅度机动动作（如大角度转向、打开加力燃烧）时，由于人体对加速度G值的承受能力有限，视力会受到影响，您将会屏幕亮度将会降低、变红，如图所示
 
-  ![1640330718405](C:\Users\Zafkiel\AppData\Roaming\Typora\typora-user-images\1640330718405.png)
+  ![1640330718405](readmeImg/1640330718405.png)
 
   此时只需停止做大幅度机动动作，即可逐渐恢复视觉
 
@@ -153,7 +153,7 @@ dogfightZ-jar-with-dependencies.jar是独立的可执行游戏本体，在正确
 
 项目源代码总体分为4个大包，如图所示
 
-![1640331259439](C:\Users\Zafkiel\AppData\Roaming\Typora\typora-user-images\1640331259439.png)
+![1640331259439](readmeImg/1640331259439.png)
 
 - jmp123 是引入的外部开源（GPLv3）项目，仅用于解码播放MP3 BGM
 
@@ -173,7 +173,7 @@ dogfightZ-jar-with-dependencies.jar是独立的可执行游戏本体，在正确
 
 graphic_Z 是自主研发的基于小孔成像原理与图形光栅化的字符3D画面框架
 
-![1640331356171](C:\Users\Zafkiel\AppData\Roaming\Typora\typora-user-images\1640331356171.png)
+![1640331356171](readmeImg/1640331356171.png)
 
 - **Cameras包**提供3D镜头类，其中包含了最核心的3D算法
 
@@ -197,7 +197,7 @@ graphic_Z 是自主研发的基于小孔成像原理与图形光栅化的字符3
 
 ### **dogfight_Z包内容**
 
-![1640331619902](C:\Users\Zafkiel\AppData\Roaming\Typora\typora-user-images\1640331619902.png)
+![1640331619902](readmeImg/1640331619902.png)
 
 - **Ammo包**内为战机可以发射的弹药，有机炮炮弹（CannonAmmo）、诱饵弹（Decoy）、导弹（Missile）
 
@@ -223,11 +223,11 @@ graphic_Z 是自主研发的基于小孔成像原理与图形光栅化的字符3
 
 - **Radar**类是基于动态HUD（CharDynamicHUD）实现的敌我搜寻雷达，可以自我为中心，不断搜寻附近的敌机和友机，并将相对位置显示在雷达界面中，如图所示，@字符代表的是敌机（后期版本改为X），o字符代表友机，玩家自己位于中心
 
-![1640331760931](C:\Users\Zafkiel\AppData\Roaming\Typora\typora-user-images\1640331760931.png)
+![1640331760931](readmeImg/1640331760931.png)
 
 - **ScoreList**是记分板类，基于CharDynamicHUD
 
-![1640331794348](C:\Users\Zafkiel\AppData\Roaming\Typora\typora-user-images\1640331794348.png)
+![1640331794348](readmeImg/1640331794348.png)
 
 - **SoundTrack**类为BGM播放列表类，载入播放列表，可在游戏运行中切换歌曲，并使用JMP123库解码播放。
 
@@ -239,69 +239,69 @@ graphic_Z 是自主研发的基于小孔成像原理与图形光栅化的字符3
 
 3D游戏与2D游戏最大的不同点在于多了一个纵深的空间轴向，同样大小的物体在距离视角不同距离的位置上会形成大小不同的像，小孔成像原理反应了这种纵深距离与尺寸的对应关系，如下图所示
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps1.jpg) 
+![img](readmeImg/wps1.jpg) 
 
 小孔之所以能成像是因为光屏上的每一点都只能通过小孔接收到一个方向传来的光，所以光屏上每一点都是外部某个确定点的映射。相反如果开孔过大，物体上的一个点发出的光会在光屏上的一片区域形成光斑，如下如所示，如果有多个这样的光斑叠加在一起，必定会是模糊一片，所以只有小孔能够成像
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps2.jpg) 
+![img](readmeImg/wps2.jpg) 
 
  
 
 由于小孔成像成的是倒像，于是我们将光屏以小孔为中心作对称，让物体发出的光都会会聚到光屏后的一点，这样就简化了计算如图所示
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps3.jpg) 
+![img](readmeImg/wps3.jpg) 
 
 X0、Y0、Z0在通过算法前分别为物体上每个点与镜头形成的相对位置，通过算法后，X0和Y0就是这个点在屏幕上的坐标
 
 **/src/graphic_Z/Cameras/CharFrapsCamera.java**
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps13.jpg) 
+![img](readmeImg/wps13.jpg) 
 
 由于游戏世界中每个物体可以自由移动、转动，而玩家的视野也会跟随玩家自由移动、转动，故，故每个角色元素都有自己在游戏世界中的坐标位置、旋转角度，而每个物体上的每个点都有相对于自己中心的旋转角度和旋转后的位置，再者，玩家镜头也有自己在世界中的坐标和自由转动的角度，要实现小孔程序，就要在这几个不同的坐标系之间进行转换，才能得到每个点相对于镜头的坐标。算法如下（这些代码位于小孔成像之前）
 
 **/src/graphic_Z/Cameras/CharFrapsCamera.java**
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps15.jpg) 
+![img](readmeImg/wps15.jpg) 
 
 有了以上基础，我们计算出了物体每一个点在屏幕上的位置坐标，我们需要有一个“感光底片”来接收“小孔”所成的像。我们使用了一个二维字符数组，首先将所有位置设为空格，然后将有光照到的坐标上设置为白色的字符，这样就形成了**一帧**的图像，这个数组称为帧缓冲（fraps_buffer），这属于**图形光栅化**。代码如图所示：
 
 **/src/graphic_Z/Cameras/CharFrapsCamera.java**
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps6.jpg) 
+![img](readmeImg/wps6.jpg) 
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps7.jpg) 
+![img](readmeImg/wps7.jpg) 
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps8.jpg) 
+![img](readmeImg/wps8.jpg) 
 
 为了加速性能，我们知道三维物体经过小孔成像透视变换后，直线仍为直线，所以我们可以采用2维直线绘制算法去绘制物体模型，如图所示：
 
 **/src/graphic_Z/Cameras/CharFrapsCamera.java**
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps9.jpg) 
+![img](readmeImg/wps9.jpg) 
 
 最后，对于远处的物体，在屏幕上很小，如果绘制每一个顶点，就很浪费性能，所以在以点为基本图形元素绘制物体的过程中，我们采取根据距离不同，跳过绘制部分点的策略，如图（i是物体点的下标，rge为点到镜头的相对距离，visibility为最大能见度）：
 
 **/src/graphic_Z/Cameras/CharFrapsCamera.java**
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps10.jpg) 
+![img](readmeImg/wps10.jpg) 
 
 每次刷新，VisualManager会让所有注册的镜头在帧缓冲上对每个物体列表中的每个物体进行曝光（多镜头设计是为了以后进行双眼视差真3D视觉输出（类似于VR设备），左边输出左眼看到的图像，右边输出右眼看到的图像），每个物体曝光后形成的3D画面还需要叠加2D的HUD图形，如下图所示
 
 **/src/graphic_Z/Managers/CharVisualManager.java**
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps11.jpg) 
+![img](readmeImg/wps11.jpg) 
 
 最后VisualManager将帧缓冲的字符拼接为字符串，刷新到文本框（mainScr）（tmpThread的任务是sleep几十毫秒，来控制屏幕帧率）
 
 **/src/graphic_Z/Managers/CharVisualManager.java**
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps12.jpg) 
+![img](readmeImg/wps12.jpg) 
 
 
 
 ### 游戏内采用的坐标系
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps5.jpg)
+![img](readmeImg/wps5.jpg)
 
 
 
@@ -311,13 +311,13 @@ X0、Y0、Z0在通过算法前分别为物体上每个点与镜头形成的相�
 
 **/src/graphic_Z/utils/GraphicUtils.java**
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps16.jpg) 
+![img](readmeImg/wps16.jpg) 
 
 以下是对应的几个函数值获取方法：
 
 **/src/graphic_Z/utils/GraphicUtils.java**
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps17.jpg) 
+![img](readmeImg/wps17.jpg) 
 
 
 
@@ -327,13 +327,13 @@ X0、Y0、Z0在通过算法前分别为物体上每个点与镜头形成的相�
 
 **/src/graphic_Z/Worlds/CharTimeSpace.java** (Game类的基类)
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps18.jpg) 
+![img](readmeImg/wps18.jpg) 
 
 下图是ObjectsManager的printNew()
 
 **/src/graphic_Z/Manager/CharObjectsManager.java**
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps19.jpg) 
+![img](readmeImg/wps19.jpg) 
 
 VisualManager的printNew()就是介绍小孔成像算法最后的那段代码。
 
@@ -341,23 +341,23 @@ ObjectsManager调用每个物体的go()方法，对于飞行器类：
 
 **/src/dogfight_Z/Aircraft.java**
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps20.jpg) 
+![img](readmeImg/wps20.jpg) 
 
 WeaponSystemRun是武器系统的运行方法，而doMotion()为飞行运动的核心代码，如下图所示
 
 **/src/dogfight_Z/Aircraft.java**
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps21.jpg) 
+![img](readmeImg/wps21.jpg) 
 
 在执行doMotion算法之前，Game类中主循环接收到用户的击键后，会调用类似于以下方法的代码去改变几个运动状态向量（velocity_roll、roll_angle等）：
 
 **/src/dogfight_Z/Aircraft.java**
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps22.jpg) 
+![img](readmeImg/wps22.jpg) 
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps23.jpg) 
+![img](readmeImg/wps23.jpg) 
 
- 
+
 
 ### **导弹跟踪算法**
 
@@ -365,7 +365,7 @@ WeaponSystemRun是武器系统的运行方法，而doMotion()为飞行运动的�
 
 **/src/dogfight_Z/Ammo/Missile.java**
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps24.jpg) 
+![img](readmeImg/wps24.jpg) 
 
 
 
@@ -377,7 +377,7 @@ NPC主要有两种状态：1.巡航状态，2.追踪并攻击以及逃离攻击
 
 **/src/dogfight_Z/NPC.java**
 
-![img](file:///C:\Users\Zafkiel\AppData\Local\Temp\ksohtml5524\wps25.jpg) 
+![img](readmeImg/wps25.jpg) 
 
 NPC追踪玩家攻击的算法与导弹追踪目标的算法很类似，在其基础上增加了火控锁定和武器控制，代码比较冗长，暂不张贴于此，详见NPC类中的trace()和pursuit(float range_to_me)算法。
 
