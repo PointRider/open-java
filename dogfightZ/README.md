@@ -38,7 +38,6 @@
 
    #### **游戏试玩预览视频**[**https://www.bilibili.com/video/BV1XU4y1T794**](https://www.bilibili.com/video/BV1XU4y1T794)
 
-   <iframe src="//player.bilibili.com/player.html?aid=677078701&bvid=BV1XU4y1T794&cid=457036601&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
 
 
