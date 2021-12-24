@@ -1,0 +1,10 @@
+/.settings
+.classpath
+.project
+/bin
+/target/archive-tmp
+/target/classes
+/target/generated-sources
+/target/maven-archiver
+/target/maven-status
+/target/dogfightZ.jar
