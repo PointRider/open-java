@@ -264,8 +264,19 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
         float  cr1, 
         float  cr2, 
         boolean staticOver, 
-        char    pointChar[]) {return exposureAnObject (
-            fraps_buffer, resolution, cameraLocation, visibility, FOV, XcenterI, YcenterI, aObject, cr0, cr1, cr2, staticOver, null
+        char    pointChar[]
+     ) {return exposureAnObject (
+            fraps_buffer, 
+            resolution, 
+            cameraLocation, 
+            visibility, 
+            FOV, 
+            XcenterI, YcenterI, 
+            aObject, 
+            cr0, cr1, cr2, 
+            staticOver, 
+            pointChar, 
+            null
 	);}
 	
 	public static final float exposureAnObject (

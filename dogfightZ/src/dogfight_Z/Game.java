@@ -1160,6 +1160,7 @@ public class Game extends CharTimeSpace implements Runnable {
 			printNew();
 			//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 		}
+		
 		getMyJet().visible = false;
 		buffStatic();
 		EndScreen.visible = true;

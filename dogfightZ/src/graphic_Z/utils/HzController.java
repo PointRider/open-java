@@ -3,8 +3,8 @@ package graphic_Z.utils;
 public class HzController implements Runnable
 {
 	int refresh_delay;
-	public HzController(int refresh_rate) {
-		this.refresh_delay = 1000 / refresh_rate;
+	private HzController(int Hz) {
+		this.refresh_delay = msOfHz(Hz);
 	}
 
 	@Override
@@ -16,5 +16,12 @@ public class HzController implements Runnable
 			e.printStackTrace();
 		}
 	}
-
+	
+	public static int msOfHz(int Hz) {
+	    return 1000 / Hz;
+	}
+	
+    public static int nanoOfHz(int Hz) {
+        return 1000000000 / Hz;
+    }
 }

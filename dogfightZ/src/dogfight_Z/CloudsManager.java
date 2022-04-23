@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.utils.GraphicUtils;
+import graphic_Z.utils.HzController;
 //import graphic_Z.utils.HzController;
 
 public class CloudsManager implements Runnable
@@ -25,7 +26,7 @@ public class CloudsManager implements Runnable
         this.gameManager = gameManager;
         
         this.clouds         = gameManager.getClouds();
-        refreshWaitNanoTime = 1000000000L / refreshRate;
+        refreshWaitNanoTime = HzController.msOfHz(refreshRate);
         //this.rateController = new HzController(refreshRate);
         this.visibility     = range;
         this.playerCameraLocation = gameManager.getPlayerCameraLocation();

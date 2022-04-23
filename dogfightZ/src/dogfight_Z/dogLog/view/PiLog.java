@@ -40,7 +40,7 @@ public class PiLog extends JFrame {
     private Stack<DogMenu> menuStack; 
     private DogMenu        baseMenu;
     private boolean        running;
-    private HzController   secondRefresher;
+    //private HzController   secondRefresher;
     
     static {
         try {
@@ -219,22 +219,22 @@ public class PiLog extends JFrame {
         menuStack.peek().refresh();
         
         running = true;
-        secondRefresher = new HzController(2);
-        
+        //secondRefresher = new HzController(2);
+        int delayMs = HzController.msOfHz(2);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Thread syn = null;
+                //Thread syn = null;
                 try {
                     while(running) {
-                        syn = new Thread(secondRefresher);
+                        //syn = new Thread(secondRefresher);
                         synchronized(menuStack) {
                             menuStack.peek().refresh();
                         }
-                        syn.join();
+                        //syn.join();
+                        synchronized(this) {wait(delayMs);}
                     }
                 } catch (InterruptedException e) {
-                    // TODO 自动生成的 catch 块
                     e.printStackTrace();
                 }
             }

@@ -29,7 +29,6 @@ import graphic_Z.Objects.TDObject;
 import graphic_Z.Worlds.CharWorld;
 import graphic_Z.utils.Common;
 import graphic_Z.utils.GraphicUtils;
-import graphic_Z.utils.HzController;
 import dogfight_Z.dogLog.controller.dependencies.CloudsManager;
 import dogfight_Z.dogLog.view.Menu;
 
@@ -82,7 +81,7 @@ public class ScreenResizer extends Menu
 	//public ArrayList<HashSet<Aircraft>> camps;
 	private CloudsManager cloudMan;
 	private Thread        cloudManThread;
-	public  HzController  cloudRefreshRateController;
+	//public  HzController  cloudRefreshRateController;
 
     private VManager visualManager;
 	private int scrSize = 8;
@@ -419,8 +418,8 @@ public class ScreenResizer extends Menu
         clouds = new ArrayList<ThreeDs>();
         visualManager.staticObjLists.add(clouds);
 
-        cloudRefreshRateController = new HzController(32);
-        cloudMan = new CloudsManager(clouds, cloudRefreshRateController, mainCamera, visibility);
+        //cloudRefreshRateController = new HzController(2);
+        cloudMan = new CloudsManager(clouds, 2, mainCamera, visibility);
         cloudManThread = new Thread(cloudMan);
 	}
 	

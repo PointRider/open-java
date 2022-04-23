@@ -19,12 +19,11 @@ public class CloudsManager implements Runnable
 	private ArrayList<ThreeDs> clouds;
 	private float visibility;
 	private TDCamera<CharWorld> playerCamera;
-	private HzController rateController;
-	private Thread rateSynThread;
+	private int flashDelay;
 	private ExecutorService epool;
     public volatile boolean working;
 	
-	public CloudsManager(ArrayList<ThreeDs> clouds, HzController rateController, TDCamera<CharWorld> playerCamera, float visibility) {
+	public CloudsManager(ArrayList<ThreeDs> clouds, int flashRate, TDCamera<CharWorld> playerCamera, float visibility) {
 	    epool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         float random1, random2, random3;
 		for(currentCloudsCount=0 ; currentCloudsCount < maxCloudsCount ; ++currentCloudsCount)
@@ -45,31 +44,29 @@ public class CloudsManager implements Runnable
 				(playerCamera.location, visibility, -2250, 0.1F)
 			);
 		}
-		this.clouds         = clouds;
-		this.rateController = rateController;
-		this.playerCamera   = playerCamera;
-		this.visibility     = visibility;
-		this.working        = true;
+		this.clouds       = clouds;
+		this.flashDelay   = HzController.msOfHz(flashRate);
+		this.playerCamera = playerCamera;
+		this.visibility   = visibility;
+		this.working      = true;
 	}
 	
 
 	@Override
 	public void run()
 	{
-		try {
-			while(working) {
-				rateSynThread = new Thread(rateController);
-				rateSynThread.setPriority(Thread.MAX_PRIORITY);
-				rateSynThread.start();
-				for(int i=0 ; i<currentCloudsCount ; ++i) {
-					aCloud = (RandomCloud) clouds.get(i);
-					
-					if(range_YZ(aCloud.location, playerCamera.location) > visibility * 1.10F)
-					    epool.execute(aCloud);
-				}
-				rateSynThread.join();
-			}
-		} catch(InterruptedException e) {e.printStackTrace();}
+		for(int i=0 ; i<currentCloudsCount ; ++i) {
+			aCloud = (RandomCloud) clouds.get(i);
+			
+			if(range_YZ(aCloud.location, playerCamera.location) > visibility * 1.10F)
+			    epool.execute(aCloud);
+		}
+		synchronized(this) {try {
+            wait(flashDelay);
+        } catch (InterruptedException e) {
+            // TODO 自动生成的 catch 块
+            e.printStackTrace();
+        }}
 	}
 
 	private static float range_YZ (float p1[], float p2[]) {
