@@ -152,9 +152,9 @@ public class RandomCloud extends CharObject implements Runnable, ThreeDs
 		this
 		(
 		    playerCameraLocation, Visibility, Hight,
-			GraphicUtils.random() * 300, 
-			GraphicUtils.random() * 1000, 
-			GraphicUtils.random() * 1000,
+			GraphicUtils.random() * 600, 
+			GraphicUtils.random() * 2000, 
+			GraphicUtils.random() * 2000,
 			max_density
 		);
 	}
@@ -176,7 +176,7 @@ public class RandomCloud extends CharObject implements Runnable, ThreeDs
 		if((GraphicUtils.fastRanodmInt() & 1) == 0)
 			location[2] = -location[2];
 		
-		location[0] = /*location_player[0] < hight - visibility? hight + location_player[0] - location[0] * 2 * size[1] :*/ hight - location[0] * 2 * size[1];
+		location[0] = hight - location[0] * 2 * size[1]; /*location_player[0] < hight - visibility? hight + location_player[0] - location[0] * 2 * size[1] :*/ 
 		location[1] = location[1] * visibility + playerCameraLocation[1];
 		location[2] = location[2] * visibility + playerCameraLocation[2];
 		/*

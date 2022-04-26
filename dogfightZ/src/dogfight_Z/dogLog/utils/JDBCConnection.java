@@ -158,7 +158,13 @@ public class JDBCConnection {
             } finally { asyncLock.writeLock().unlock(); }
         }
     }
-
+    
+    public void submit(Transaction trans) {
+        start();
+        if(trans.trying()) commit();
+        else rollback();
+    }
+    
     //关闭数据库连接
     void close()
     {
@@ -718,7 +724,21 @@ public class JDBCConnection {
             return false;
         }
     }
+    /*
+    public boolean addSqlBatch(String ddl) {
+        if(connection == null  ||  bat_ppdstmt == null) return false;
+        if(opened  &&  getWorkingTime() > timeOutSec) return false;
 
+        try {
+            bat_ppdstmt.addBatch(ddl);
+            return true;
+        } catch(SQLException e) {
+            bat_ppdstmt = null;
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+    */
     public boolean submitUpdateBatch() throws SQLException {
         if(connection == null  ||  bat_ppdstmt == null) return false;
         if(opened  &&  getWorkingTime() > timeOutSec) return false;
