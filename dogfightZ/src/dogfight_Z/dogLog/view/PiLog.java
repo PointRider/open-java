@@ -231,8 +231,9 @@ public class PiLog extends JFrame {
                         synchronized(menuStack) {
                             menuStack.peek().refresh();
                         }
+                        Thread.sleep(delayMs);
                         //syn.join();
-                        synchronized(this) {wait(delayMs);}
+                        //synchronized(this) {wait(delayMs);}
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

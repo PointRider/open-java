@@ -334,10 +334,12 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		if(now > 0) {
 	        try {
 	            //System.out.println(now);
-                synchronized(this) {wait(now / 1000000, (int) (now % 1000000));}
+	            Thread.sleep(now / 1000000, (int) (now % 1000000));
+                //synchronized(this) {wait(now / 1000000, (int) (now % 1000000));}
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+		    
 		}
 		
 		boolean firstInLine, firstLine;

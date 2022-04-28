@@ -9,7 +9,7 @@ import graphic_Z.Cameras.TDCamera;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Worlds.CharWorld;
 import graphic_Z.utils.GraphicUtils;
-import graphic_Z.utils.HzController;
+//import graphic_Z.utils.HzController;
 
 public class CloudsManager implements Runnable
 {
@@ -19,11 +19,11 @@ public class CloudsManager implements Runnable
 	private ArrayList<ThreeDs> clouds;
 	private float visibility;
 	private TDCamera<CharWorld> playerCamera;
-	private int flashDelay;
+	//private int flashDelay;
 	private ExecutorService epool;
     public volatile boolean working;
 	
-	public CloudsManager(ArrayList<ThreeDs> clouds, int flashRate, TDCamera<CharWorld> playerCamera, float visibility) {
+	public CloudsManager(ArrayList<ThreeDs> clouds, /*int flashRate,*/ TDCamera<CharWorld> playerCamera, float visibility) {
 	    epool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
         float random1, random2, random3;
 		for(currentCloudsCount=0 ; currentCloudsCount < maxCloudsCount ; ++currentCloudsCount)
@@ -45,7 +45,7 @@ public class CloudsManager implements Runnable
 			);
 		}
 		this.clouds       = clouds;
-		this.flashDelay   = HzController.msOfHz(flashRate);
+		//this.flashDelay   = HzController.msOfHz(flashRate);
 		this.playerCamera = playerCamera;
 		this.visibility   = visibility;
 		this.working      = true;
@@ -61,12 +61,6 @@ public class CloudsManager implements Runnable
 			if(range_YZ(aCloud.location, playerCamera.location) > visibility * 1.10F)
 			    epool.execute(aCloud);
 		}
-		synchronized(this) {try {
-            wait(flashDelay);
-        } catch (InterruptedException e) {
-            // TODO 自动生成的 catch 块
-            e.printStackTrace();
-        }}
 	}
 
 	private static float range_YZ (float p1[], float p2[]) {

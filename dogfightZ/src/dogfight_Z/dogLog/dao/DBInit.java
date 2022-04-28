@@ -99,18 +99,30 @@ public class DBInit {
         "  `userID` COLLATE BINARY ASC" + 
         ")"*/
         "CREATE TABLE `PlayerProfile` (" + 
-        "  `userID` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," + 
+        "  `userID` integer NOT NULL PRIMARY KEY AUTOINCREMENT," + 
         "  `userName` varchar(64) NOT NULL," + 
         "  `userPass` varchar(64) NOT NULL," + 
         "  `userNick` varchar(64)," + 
         "  `userBank` decimal(12,2) DEFAULT 0.00," + 
+        "  `userExp` decimal(12,2) DEFAULT 0.00," + 
         "  `gameRecordShare` integer NOT NULL," + 
         "  `createTime` datetime NOT NULL DEFAULT (datetime('now', 'localtime'))," + 
         "  `resolutionX` integer DEFAULT 160," + 
         "  `resolutionY` integer DEFAULT 83," + 
         "  `fontSize` integer DEFAULT 10," + 
+        "  `fontIndx` integer DEFAULT 1," +
         "  CONSTRAINT `uidKey` UNIQUE (`userID` COLLATE BINARY ASC)," + 
         "  CONSTRAINT `unameKey` UNIQUE (`userName` COLLATE BINARY ASC)" + 
+        ")", 
+
+        "CREATE UNIQUE INDEX `uidIdx`" + 
+        "ON `PlayerProfile` (" + 
+        "  `userID` COLLATE BINARY ASC" + 
+        ")",  
+        
+        "CREATE UNIQUE INDEX `unameIdx`" + 
+        "ON `PlayerProfile` (" + 
+        "  `userName` COLLATE BINARY ASC" + 
         ")", 
         
         "CREATE TABLE `bgmLists` (" + 
@@ -181,16 +193,6 @@ public class DBInit {
         "  `userID` COLLATE BINARY ASC" + 
         ")", 
         
-        "CREATE UNIQUE INDEX `uidIdx`" + 
-        "ON `PlayerProfile` (" + 
-        "  `userID` COLLATE BINARY ASC" + 
-        ")",  
-        
-        "CREATE UNIQUE INDEX `unameIdx`" + 
-        "ON `PlayerProfile` (" + 
-        "  `userName` COLLATE BINARY ASC" + 
-        ")", 
-        
         "CREATE TABLE `userKeyMap` (" + 
         "  `userID` integer NOT NULL," + 
         "  `W` integer," + 
@@ -224,6 +226,11 @@ public class DBInit {
         "  `N` integer," + 
         "  PRIMARY KEY (`userID`)," + 
         "  CONSTRAINT `fk_userKeyMap_PlayerProfile_1` FOREIGN KEY (`userID`) REFERENCES `PlayerProfile` (`userID`) ON DELETE CASCADE" + 
+        ")",
+        
+        "CREATE INDEX `index_userID_on_keyMap`" + 
+        "ON `userKeyMap` (" + 
+        "  `userID` COLLATE BINARY ASC" + 
         ")"
     };
     

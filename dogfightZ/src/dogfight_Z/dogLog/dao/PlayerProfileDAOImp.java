@@ -48,6 +48,7 @@ public class PlayerProfileDAOImp implements PlayerProfileDAO {
                       p.getFontIndx()
                 );
         } catch (SQLException e) {
+            //e.printStackTrace();
         } finally {
             if(conn != null) JDBCFactory.returnBack(conn);
         }

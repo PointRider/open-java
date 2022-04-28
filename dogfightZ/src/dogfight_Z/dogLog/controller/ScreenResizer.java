@@ -419,7 +419,7 @@ public class ScreenResizer extends Menu
         visualManager.staticObjLists.add(clouds);
 
         //cloudRefreshRateController = new HzController(2);
-        cloudMan = new CloudsManager(clouds, 2, mainCamera, visibility);
+        cloudMan = new CloudsManager(clouds, mainCamera, visibility);
         cloudManThread = new Thread(cloudMan);
 	}
 	
@@ -634,7 +634,6 @@ public class ScreenResizer extends Menu
         );
         
         visualManager.printNew(screen);
-        
     }
     
     public void resizeScreen(int x, int y) {
@@ -688,7 +687,6 @@ public class ScreenResizer extends Menu
                 reLocateHUD();
                 break;
         }
-        
         return null;
     }
 
