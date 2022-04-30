@@ -26,8 +26,8 @@ public class MouseResponse implements MouseMotionListener
 		
 		FrapsEventQueue_mouse = FrapsEventQueue;
 		
-		PCScreenCenter_X = ((int)java.awt.Toolkit.getDefaultToolkit().getScreenSize().width / 2);
-		PCScreenCenter_Y = ((int)java.awt.Toolkit.getDefaultToolkit().getScreenSize().height / 2);
+		PCScreenCenter_X = ((int)java.awt.Toolkit.getDefaultToolkit().getScreenSize().width >> 1);
+		PCScreenCenter_Y = ((int)java.awt.Toolkit.getDefaultToolkit().getScreenSize().height >> 1);
 		
 		rbt.mouseMove(PCScreenCenter_X, PCScreenCenter_Y);
 	}

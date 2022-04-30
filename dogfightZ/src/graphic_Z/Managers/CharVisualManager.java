@@ -18,6 +18,7 @@ import graphic_Z.HUDs.HUD;
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Worlds.CharWorld;
+import graphic_Z.utils.HzController;
 //import graphic_Z.utils.HzController;
 
 public class CharVisualManager extends VisualManager<CharWorld> implements Runnable
@@ -34,12 +35,13 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	protected	List<CharFrapsCamera>        cameras;
 	protected	JTextArea	                 mainScr;		//在主屏幕引用
 	public		List<Iterable<ThreeDs>>      staticObjLists;
-	public		List<Iterable<Dynamic>>      dynamicObjLists;
+	//public		List<Iterable<Dynamic>>      dynamicObjLists;
 	public		List<PriorityQueue<Dynamic>> selfDisposable;
 	public		Object	                     mainCameraFeedBack;
 	private     StringBuilder                scr_show;
 	private     long                         refreshWaitNanoTime;
     private     long                         nextRefreshTime;
+    private     long                         now;
     private     boolean                      usingZBuffer;
     
 	public final boolean isUsingZBuffer() {
@@ -62,9 +64,9 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		mainCameraFeedBack  = null;
 		scr_show            = new StringBuilder(resolution_X * resolution_Y);
 		refreshHz           = inWorld.refreshHz;
-		refreshWaitNanoTime = 1000000000L / refreshHz;
+		refreshWaitNanoTime = HzController.nanoOfHz(refreshHz);
 		staticObjLists      = inWorld.objectsManager.staticObjLists;
-		dynamicObjLists	    = inWorld.objectsManager.dynamicObjLists;
+		//dynamicObjLists	    = inWorld.objectsManager.dynamicObjLists;
 		selfDisposable      = inWorld.objectsManager.selfDisposable;
 
 		//hzController    = new HzController(refreshHz);
@@ -294,8 +296,8 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	
 	public void refresh() {
 		for(CharFrapsCamera aCamera : cameras) {
-			for(Iterable<Dynamic> eachList:dynamicObjLists)
-				aCamera.exposure(eachList, 0);
+			/*for(Iterable<Dynamic> eachList:dynamicObjLists)
+				aCamera.exposure(eachList, 0);*/
 			for(Iterable<Dynamic> eachList:selfDisposable)
 				aCamera.exposure(eachList, 0);
 			
@@ -329,7 +331,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	
 	public void printNew() {
 		refresh();
-		long now = nextRefreshTime - System.nanoTime();
+		now = nextRefreshTime - System.nanoTime();
 		
 		if(now > 0) {
 	        try {

@@ -1103,6 +1103,7 @@ public class Game extends CharTimeSpace implements Runnable {
 		execute(soundTrack);
         ///bgmThread.start();
 		//游戏主循环
+	    
 		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 		
 		while(isRunning() && (gameStopTime == -1  ||  (leftTime = gameStopTime - ((double)System.currentTimeMillis()/1000.0)) > 0))

@@ -6,6 +6,8 @@ import graphic_Z.Cameras.CharFrapsCamera;
 import graphic_Z.Common.SinglePoint;
 //import graphic_Z.HUDs.CharDynamicHUD;
 import graphic_Z.HUDs.CharLabel;
+//import graphic_Z.Interfaces.ThreeDs.DrawingMethod;
+//mport graphic_Z.Objects.CharMessObject;
 import graphic_Z.Worlds.CharTimeSpace;
 import graphic_Z.demo.CubeA;
 import graphic_Z.utils.GraphicUtils;
@@ -26,8 +28,8 @@ public class RunDemo
 		//System.out.println("testWorld created.");
 		
 		CubeA mainBox = new CubeA("rec3D.dat");
+		//CharMessObject mainBox = testWorld.objectsManager.newMessObject(new CharMessObject("Jet.dat", 10, DrawingMethod.drawLine));
 		testWorld.objectsManager.newMessObject(mainBox);
-		//CharMessObject mainBox = testWorld.objectsManager.newMessObject(new CharMessObject(args[0], 10, DrawingMethod.drawPoint));
 		//mainBox.specialDisplay = '';
 		mainBox.setLocation(0, 0, 60);
 		mainBox.visible = true;

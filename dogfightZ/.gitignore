@@ -8,3 +8,5 @@
 /target/maven-archiver
 /target/maven-status
 /target/dogfightZ.jar
+/target/resources
+/common
