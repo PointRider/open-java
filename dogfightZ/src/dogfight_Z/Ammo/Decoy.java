@@ -126,7 +126,7 @@ private static ArrayList<float[]> missileModelData;
 		roll_angle[1] = Roll_angle[1];
 		roll_angle[2] = Roll_angle[2];
 		
-		velocity = Speed * GraphicUtils.random() * 2;
+		velocity = Speed * GraphicUtils.random();
 		setResistanceRate_normal(resistance_rate * GraphicUtils.random());
 		setHP(100);
 		setLockingPriority(-(int)(10.0F * GraphicUtils.random()));
@@ -153,7 +153,7 @@ private static ArrayList<float[]> missileModelData;
 	public void go() {
 		if(lifeLeft <= 0) disable();
 		else {
-            velocity -= velocity * getResistanceRate_normal() * 1.5;
+            velocity -= velocity * getResistanceRate_normal();
             
 		    float x, y, z;
 			float r1 = roll_angle[1] + Roll_angle_Aircraft[1];
@@ -166,6 +166,8 @@ private static ArrayList<float[]> missileModelData;
             location[0] -= x;
             location[1] += y;
             location[2] += z;
+            
+            speed -= speed * getResistanceRate_normal();
             
 	        r1 = Roll_angle_Aircraft[1];
 	        r2 = Roll_angle_Aircraft[0];

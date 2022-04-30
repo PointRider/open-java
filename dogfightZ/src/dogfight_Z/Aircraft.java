@@ -25,7 +25,7 @@ public class Aircraft extends CharMessObject
 	public  LinkedListZ<ThreeDs>	aircrafts;
 	private boolean iAmPlayer;
 	
-	private float speed;
+	protected float speed;
 	private float maxSpeed;				      //限制最高速度
 	private float maxAccForce;			      //最大推力(与mess一起决定最大加速度)
 	
@@ -452,7 +452,7 @@ public class Aircraft extends CharMessObject
 	{
 		if(decoyMagazineLeft > 0 && isAlive())
 		{
-			Decoy.make(getGameManager(), getCamp(), location, roll_angle, getSpeed(), 64.0F, 150000, 0.04F, 0.125F);
+			Decoy.make(getGameManager(), getCamp(), location, roll_angle, getSpeed(), 38.4F, 150000, 0.04F, 0.000078125F);
 
 			if(--decoyMagazineLeft == 0)
 				decoyReloadingTimeLeft = decoyReloadingTime;
