@@ -808,21 +808,27 @@ public class Game extends CharTimeSpace implements Runnable {
 			{
 				//-----------[Mouse]---------
 			
-				case 4096:
-					if(!flgWheelUp)
-					{
-						getMyJet().control_acc(0.2F);
-						flgWheelUp = true;
-					}
-				break;
+				case 4096:if(!flgWheelUp) {
+					//getMyJet().control_acc(0.2F);
+				    if(!getMyJet().isPushing) {
+				        if(getMyJet().fov_1stPerson > getMyJet().fov_gunFiring)
+	                        getMyJet().fov_1stPerson -= 0.2F;
+	                    if(getMyJet().fov_3thPerson > getMyJet().fov_gunFiring)
+	                        getMyJet().fov_3thPerson -= 0.2F;
+				    }
+					flgWheelUp = true;
+				} break;
 				
-				case 8192:
-					if(!flgWheelDn)
-					{
-						getMyJet().control_dec();
-						flgWheelDn = true;
-					}
-				break;
+				case 8192:if(!flgWheelDn) {
+					//getMyJet().control_dec();
+                    if(!getMyJet().isPushing) {
+    				    if(getMyJet().fov_1stPerson < getMyJet().fov_1stPerson_base)
+                            getMyJet().fov_1stPerson += 0.2F;
+                        if(getMyJet().fov_3thPerson < getMyJet().fov_3thPerson_base)
+                            getMyJet().fov_3thPerson += 0.2F;
+                    }
+					flgWheelDn = true;
+				} break;
 				
 				case 16385:
 					keyState_SPACE = true;
@@ -995,49 +1001,29 @@ public class Game extends CharTimeSpace implements Runnable {
 		
         SinglePoint xy;
         xy = eventManager.popAMouseOpreation();
-        
+        float currentRange = (getMyJet().fov_1stPerson_base - getMyJet().fov_1stPerson) / getMyJet().fov_range;
+        float tmpF = (0.00018180513041607602F - currentRange * 0.00007791648446403259F);
         if(!(keyState_Up || keyState_Dn || keyState_Lf || keyState_Rt)) {
             
-            if(getMyJet().isCannonFiring) {
-                getMyJet().control_roll_lr((float)(-xy.x) * 7.791648446403259e-05F);
-                getMyJet().control_roll_up_dn((float)(-xy.y) * 7.791648446403259e-05F);
-            } else {
-                getMyJet().control_roll_lr((float)(-xy.x) * 0.00018180513041607602F);
-                getMyJet().control_roll_up_dn((float)(-xy.y) * 0.00018180513041607602F);
-            }
+            /*if(getMyJet().isCannonFiring) {//7.791648446403259e-05F
+                getMyJet().control_roll_lr((float)(-xy.x) * tmpF);
+                getMyJet().control_roll_up_dn((float)(-xy.y) * tmpF);
+            } else {*/
+            getMyJet().control_roll_lr((float)(-xy.x) * tmpF);
+            getMyJet().control_roll_up_dn((float)(-xy.y) * tmpF);
+            //}
         }
         
 		if(keyState_W) getMyJet().control_acc(0.05F);
 		
-		if(keyState_A) {
-			if(getMyJet().isCannonFiring) getMyJet().control_turn_lr(-0.0032724923474893686F);
-			else getMyJet().control_turn_lr(-0.00872664625997165F);
-		}
-		
-		if(keyState_D) {
-			if(getMyJet().isCannonFiring) getMyJet().control_turn_lr(0.0032724923474893686F);
-			else getMyJet().control_turn_lr(0.00872664625997165F);
-		}
-		
-		if(keyState_Up) {
-            if(getMyJet().isCannonFiring) getMyJet().control_roll_up_dn(-0.0032724923474893686F);
-            else getMyJet().control_roll_up_dn(-0.00872664625997165F);
-        }
-        
-        if(keyState_Dn) {
-            if(getMyJet().isCannonFiring) getMyJet().control_roll_up_dn(0.0032724923474893686F);
-            else getMyJet().control_roll_up_dn(0.00872664625997165F);
-        }
+		tmpF = (0.0087F - currentRange * 0.0043F);;
 
-        if(keyState_Lf) {
-            if(getMyJet().isCannonFiring) getMyJet().control_roll_lr(0.0032724923474893686F);
-            else getMyJet().control_roll_lr(0.00872664625997165F);
-        }
-        
-        if(keyState_Rt) {
-            if(getMyJet().isCannonFiring) getMyJet().control_roll_lr(-0.0032724923474893686F);
-            else getMyJet().control_roll_lr(-0.00872664625997165F);
-        }
+		if(keyState_A)  getMyJet().control_turn_lr(-tmpF);
+		if(keyState_D)  getMyJet().control_turn_lr(tmpF);
+		if(keyState_Up) getMyJet().control_roll_up_dn(-tmpF);
+        if(keyState_Dn) getMyJet().control_roll_up_dn(tmpF);
+        if(keyState_Lf) getMyJet().control_roll_lr(tmpF);
+        if(keyState_Rt) getMyJet().control_roll_lr(-tmpF);
         
 		if(keyState_S) getMyJet().control_brk();
 		else getMyJet().control_stop_breaking();

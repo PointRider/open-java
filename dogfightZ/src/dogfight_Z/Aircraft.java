@@ -94,6 +94,9 @@ public class Aircraft extends CharMessObject
 	
 	public float fov_1stPerson;
 	public float fov_3thPerson;
+    public float fov_1stPerson_base;
+    public float fov_3thPerson_base;
+    public float fov_range;
 	public float fov_pushing;
 	public float fov_current;
 	public float fov_gunFiring;
@@ -136,10 +139,13 @@ public class Aircraft extends CharMessObject
 
         fov_1stPerson       = 9.28F;
         fov_3thPerson       = 9.28F;
+        fov_1stPerson_base  = 9.28F;
+        fov_3thPerson_base  = 9.28F;
         fov_pushing         = 9.36F;
         fov_gunFiring       = 8.9F;
         fov_current         = 9.28F;
-        
+        fov_range           = fov_1stPerson_base - fov_gunFiring;
+                
 		setRespwanAtTime(0);
 		specialDisplay		= '@';
 		ID					= id;
@@ -800,8 +806,8 @@ public class Aircraft extends CharMessObject
 		if(mainCamera.location != getCameraLocation()) fov_current = 9.37F; //视角跟随导弹时
 		else if(isPushing) fov_current += (fov_pushing / fov_current - 1) * 2;
 		else {
-			if(isCannonFiring) fov_current += (fov_gunFiring / fov_current - 1);
-			else switch(cameraLocationFlag) {
+			/*if(isCannonFiring) fov_current += (fov_gunFiring / fov_current - 1);
+			else*/ switch(cameraLocationFlag) {
 				case 0: fov_current += (fov_3thPerson / fov_current - 1) / 2; break;
 				case 1: fov_current += (fov_1stPerson / fov_current - 1) / 2; break;
 			}
