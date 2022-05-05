@@ -1,12 +1,13 @@
-/.settings
 .classpath
 .project
 /bin
+/common
+/.settings
+/resources/gameRecord.rec
 /target/archive-tmp
 /target/classes
+/target/dogfightZ.jar
 /target/generated-sources
 /target/maven-archiver
 /target/maven-status
-/target/dogfightZ.jar
 /target/resources
-/common

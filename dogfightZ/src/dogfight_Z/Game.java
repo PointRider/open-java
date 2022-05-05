@@ -292,6 +292,7 @@ public class Game extends CharTimeSpace implements Runnable {
             visibility * 10, 0, 100, 
             visualManager.resolution, 
             visualManager.fraps_buffer,
+            visualManager.motionalBlur,
             this, getMyJet(), 
             new CharImage (
                 hud_friend,
@@ -691,7 +692,9 @@ public class Game extends CharTimeSpace implements Runnable {
 	}
 	
 	private final void updateHUD() {
-	    
+
+        updateKillList();
+        
         float x = getMyJet().getCurrentDirectionXYZ()[0];
         float y = getMyJet().getCurrentDirectionXYZ()[1];
 	    
@@ -1041,8 +1044,11 @@ public class Game extends CharTimeSpace implements Runnable {
 
         if(keyState_X) getMyJet().makeDecoy();
         
-		if(keyState_SHIFT) getMyJet().control_push();
-		else getMyJet().control_stop_pushing();
+		if(keyState_SHIFT) {
+		    getMyJet().control_push();
+		} else {
+		    getMyJet().control_stop_pushing();
+		}
 		
 		if(keyState_SPACE) getMyJet().cannonOpenFire();
 		else getMyJet().cannonStopFiring();
@@ -1124,7 +1130,6 @@ public class Game extends CharTimeSpace implements Runnable {
 				lblGameTimeLeft.setText("Round Time Left: " + hor + ':' + min + ':' + sec);
 			}
 			
-			updateKillList();
 			updateHUD();
 			
 			while(!deleteQue.isEmpty()) {
@@ -1158,6 +1163,7 @@ public class Game extends CharTimeSpace implements Runnable {
 			
 			//XXXXXXXXXXXXX[print new]XXXXXXXXXXXXXX
 			lockedEnemy = (Aircraft) visualManager.mainCameraFeedBack;
+            visualManager.setEnableMotionalBlur(getMyJet().isPushing);
 			printNew();
 			//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 		}

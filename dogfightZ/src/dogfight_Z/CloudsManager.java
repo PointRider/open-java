@@ -68,7 +68,8 @@ public class CloudsManager implements Runnable
 				
 				long now = nextRefreshTime - System.nanoTime();
 		        if(now > 0) {
-		            synchronized(this) {wait(now / 1000000, (int) (now % 1000000));}
+		            //synchronized(this) {wait(now / 1000000, (int) (now % 1000000));}
+		            Thread.sleep(now / 1000000, (int) (now % 1000000));
 		        }
 			}
 		} catch(InterruptedException e) {e.printStackTrace();}

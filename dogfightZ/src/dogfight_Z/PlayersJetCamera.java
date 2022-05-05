@@ -1,6 +1,7 @@
 package dogfight_Z;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import graphic_Z.Cameras.CharFrapsCamera;
 import graphic_Z.HUDs.CharImage;
@@ -51,6 +52,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 		int            lock_time,
 		int[]          resolution_XY, 
 		char[][]       frapsBuffer,
+		ConcurrentLinkedQueue<char[][]> motional_blur,
 		CharWorld      inWhichWorld,
 		Aircraft       my_jet,
 		CharImage      hud_friends,
@@ -61,7 +63,7 @@ public class PlayersJetCamera extends CharFrapsCamera
         CharImage      hudWarningLocking,
 		List<Iterable<ThreeDs>> static_objLists
 	) {
-		super(FOV, visblt, resolution_XY, frapsBuffer, inWhichWorld, static_objLists);
+		super(FOV, visblt, resolution_XY, frapsBuffer, motional_blur, inWhichWorld, static_objLists);
 		thisCamp	= this_camp;
 		hudFriends	= hud_friends;
 		hudEnemy	= hud_enemy;

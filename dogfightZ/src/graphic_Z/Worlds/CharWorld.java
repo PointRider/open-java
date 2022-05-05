@@ -11,6 +11,8 @@ public class CharWorld extends TDWorld<CharWorld, CharObject, CharHUD>
 	public CharObjectsManager objectsManager;
 	public CharVisualManager  visualManager;
 	
+	public static final int DEFAULTMOTIONBLURLEVEL = 8;
+	
 	public CharWorld(int resolution_X, int resolution_Y) {
 		super(64);				//default
 		eventManager   = new EventManager();
@@ -18,7 +20,6 @@ public class CharWorld extends TDWorld<CharWorld, CharObject, CharHUD>
 		visualManager  = new CharVisualManager(resolution_X, resolution_Y, this, eventManager.mainScr);
 	}
 	
-
     public CharWorld(int resolution_X, int resolution_Y, int refresh_rate) {
         this(resolution_X, resolution_Y, refresh_rate, false);
     }
@@ -27,7 +28,7 @@ public class CharWorld extends TDWorld<CharWorld, CharObject, CharHUD>
 		super(refresh_rate);
 		eventManager   = new EventManager();
 		objectsManager = new CharObjectsManager(/*this*/);
-		visualManager  = new CharVisualManager(resolution_X, resolution_Y, this, eventManager.mainScr, useZBuffer);
+		visualManager  = new CharVisualManager(resolution_X, resolution_Y, this, eventManager.mainScr, useZBuffer, DEFAULTMOTIONBLURLEVEL);
 	}
 	
 	public void setRefreshRate(int refresh_rate) {

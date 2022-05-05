@@ -349,8 +349,7 @@ public class Aircraft extends CharMessObject
 	
 	public void control_push() //in a game frap
 	{
-		if(getPushTimeLeft() > getMaxPushTime() / 3)
-		{
+		if(getPushTimeLeft() > getMaxPushTime() / 3) {
 			isPushing = true;
 			resistanceRate_current = resistanceRate_normal;
 		}

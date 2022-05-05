@@ -42,10 +42,10 @@ public class GraphicUtils
 	    randomMaker = new Random();
 		sint  = new float[boot];
 		cost  = new float[boot];
+        tant  = new float[boot];
 		asint = new float[boot];
 		acost = new float[boot];
         atant = new float[boot];
-        tant  = new float[boot];
         rantF = new float[boot];
         rantI = new int[boot];
 		
@@ -79,18 +79,18 @@ public class GraphicUtils
 	
 	public static final float sin(float i) {
 		i %= PIMUL2;
-		if(i < 0) return - sint[(int)(bootTmp * -i)];
+		if(i < 0) return - sint[-(int)(bootTmp * i)];
 		return sint[(int)(bootTmp * i)];
 	}
 	
 	public static final float cos(float i) {
 		i %= PIMUL2;
-		return cost[(int)(bootTmp * Math.abs(i))];
+		return cost[FastMath.abs((int)(bootTmp * i))];
 	}
 	
 	public static final float tan(float i) {
 		i %= PI;
-		if(i < 0) return - tant[(int)(bootTmp * -i)];
+		if(i < 0) return - tant[-(int)(bootTmp * i)];
 		return tant[(int)(bootTmp * i)];
 	}
 	

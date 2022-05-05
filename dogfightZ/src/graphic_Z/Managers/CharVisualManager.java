@@ -1,6 +1,7 @@
 package graphic_Z.Managers;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.Iterator;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -26,11 +27,10 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	public		char	                     point[];			//点样式
 	protected	char	                     blank;				//空白样式
 	public		char	                     fraps_buffer[][];			//帧缓冲，实体
+    public      ConcurrentLinkedQueue<char[][]>         motionalBlur;
 	public      char                         emptyLine[];
-
     public      float                        zBuffer[][];       
     public      float                        zEmptyLine[];
-    
 	public      static final int             POINTLEVEL = 19;
 	protected	List<CharFrapsCamera>        cameras;
 	protected	JTextArea	                 mainScr;		//在主屏幕引用
@@ -43,8 +43,14 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
     private     long                         nextRefreshTime;
     private     long                         now;
     private     boolean                      usingZBuffer;
+    public      boolean                      enableMotionalBlur;
+    private     int                          motionalBlurLevel;
     
-	public final boolean isUsingZBuffer() {
+	public final int getMotionalBlurLevel() {
+        return motionalBlurLevel;
+    }
+
+    public final boolean isUsingZBuffer() {
         return usingZBuffer;
     }
 
@@ -52,13 +58,24 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
         this.usingZBuffer = usingZBuffer;
     }
 
+    public final boolean isEnableMotionalBlur() {
+        return enableMotionalBlur;
+    }
+
+    public final void setEnableMotionalBlur(boolean enableMotionalBlur) {
+        this.enableMotionalBlur = enableMotionalBlur;
+    }
     //private     Thread                       tmpThread;
 	//private Thread staticObjExposureThread;
     public CharVisualManager(int resolution_X, int resolution_Y, CharWorld inWhichWorld, JTextArea main_scr) {
-        this(resolution_X, resolution_Y, inWhichWorld, main_scr, false);
+        this(resolution_X, resolution_Y, inWhichWorld, main_scr, false, 8);
+    }
+    
+    public CharVisualManager(int resolution_X, int resolution_Y, CharWorld inWhichWorld, JTextArea main_scr, int motionalBlurLevel) {
+        this(resolution_X, resolution_Y, inWhichWorld, main_scr, false, motionalBlurLevel);
     }
 	
-	public CharVisualManager(int resolution_X, int resolution_Y, CharWorld inWhichWorld, JTextArea main_scr, boolean useZBuffer) {
+	public CharVisualManager(int resolution_X, int resolution_Y, CharWorld inWhichWorld, JTextArea main_scr, boolean useZBuffer, int motional_blurLevel) {
 		super(resolution_X, resolution_Y, inWhichWorld);
 		usingZBuffer        = useZBuffer;
 		mainCameraFeedBack  = null;
@@ -68,7 +85,8 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		staticObjLists      = inWorld.objectsManager.staticObjLists;
 		//dynamicObjLists	    = inWorld.objectsManager.dynamicObjLists;
 		selfDisposable      = inWorld.objectsManager.selfDisposable;
-
+		enableMotionalBlur  = false;
+		motionalBlurLevel   = motional_blurLevel;
 		//hzController    = new HzController(refreshHz);
 		//point = '*';					//default
 		point = new char[POINTLEVEL + 1];
@@ -96,6 +114,13 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		blank = ' ';					//default
 		
 		fraps_buffer = new char[resolution_Y][];
+		if(motionalBlurLevel > 0) {
+		    motionalBlur = new ConcurrentLinkedQueue<char[][]>();
+		    /*for(int i = 0; i < motionalBlurLevel; ++i) {
+		        motionalBlur.addFirst(new char[resolution_Y][resolution_X]);
+		    }*/
+		} else motionalBlur = null;
+		
 		emptyLine    = new char[resolution_X];
 		if(useZBuffer) {
 		    zBuffer    = new float[resolution_Y][];
@@ -146,14 +171,14 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	
 	public void newCamera()
 	{
-		CharFrapsCamera newCamera = new CharFrapsCamera(1.0F, 1000.0F, resolution, fraps_buffer, inWorld, staticObjLists);
+		CharFrapsCamera newCamera = new CharFrapsCamera(1.0F, 1000.0F, resolution, fraps_buffer, motionalBlur, inWorld, staticObjLists);
 		cameras.add(newCamera);
 		//staticObjExposureThread = new Thread(newCamera);
 	}
 	
 	public CharFrapsCamera newCamera(float FOV)
 	{
-		CharFrapsCamera newCma = new CharFrapsCamera(FOV, 1000.0F, resolution, fraps_buffer, inWorld, staticObjLists);
+		CharFrapsCamera newCma = new CharFrapsCamera(FOV, 1000.0F, resolution, fraps_buffer, motionalBlur, inWorld, staticObjLists);
 		cameras.add(newCma);
 		//staticObjExposureThread = new Thread(newCma);
 		return newCma;
@@ -161,7 +186,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	
 	public CharFrapsCamera newCamera(float FOV, float visibility)
 	{
-		CharFrapsCamera newCma = new CharFrapsCamera(FOV, visibility, resolution, fraps_buffer, inWorld, staticObjLists);
+		CharFrapsCamera newCma = new CharFrapsCamera(FOV, visibility, resolution, fraps_buffer, motionalBlur, inWorld, staticObjLists);
 		cameras.add(newCma);
 		//staticObjExposureThread = new Thread(newCma);
 		return newCma;
@@ -294,6 +319,14 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		//try{Thread.sleep(refreshDelay);} catch(InterruptedException e) {}
 	}
 	
+	private final void printBlur(char[][] blurFrame) {
+	    for(int i=0 ; i<resolution[1] ; ++i)
+            for(int j=0 ; j<resolution[0] ; ++j){
+                if(fraps_buffer[i][j] == ' '  &&  blurFrame[i][j] != ' ')
+                    fraps_buffer[i][j] = '.';
+            }
+	}
+	//private char [][] blurFrame;
 	public void refresh() {
 		for(CharFrapsCamera aCamera : cameras) {
 			/*for(Iterable<Dynamic> eachList:dynamicObjLists)
@@ -309,6 +342,15 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 			iter.hasNext();
 			iter.next().printNew()
 		);
+		
+		//if(enableMotionalBlur) {
+	        if(motionalBlur.size() > motionalBlurLevel - 1) {
+		        for(char [][] frame : motionalBlur) {
+		            printBlur(frame);
+		        }
+    		    motionalBlur.poll();
+		    }
+		//}
 	}
 	
 	public void buff() {

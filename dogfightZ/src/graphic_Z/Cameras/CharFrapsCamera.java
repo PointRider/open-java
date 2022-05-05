@@ -2,6 +2,7 @@ package graphic_Z.Cameras;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
@@ -14,6 +15,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	//private static	final float PI = GraphicUtils.PI;
 	public int	                   resolution[];			//分辨率(x,y)(引用，实体在CharVisualManager中)
 	public char	                   fraps_buffer[][];		//帧缓冲区(引用，实体在CharVisualManager中)
+    public ConcurrentLinkedQueue<char[][]>    motionalBlur;
 	private float                  zBuffer[][];
 	public List<Iterable<ThreeDs>> staticObjLists;
 	public LinkedList<Thread>      ThreadSyncQueue;
@@ -29,6 +31,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		float	visblt,
 		int	    resolution_XY[],
 		char	frapsBuffer[][],
+		ConcurrentLinkedQueue<char[][]> motional_blur,
 		CharWorld inWhichWorld,
 		List<Iterable<ThreeDs>> static_objLists
 	)
@@ -38,8 +41,8 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		zBuffer         = inWhichWorld.visualManager.zBuffer;
 		resolution		= resolution_XY;
 		fraps_buffer	= frapsBuffer;
+        motionalBlur    = motional_blur;
 		ThreadSyncQueue = new LinkedList<Thread>();
-		
 		//buffing
 		XcenterI = resolution[0] >> 1;
 		YcenterI = resolution[1] >> 1;
@@ -211,46 +214,12 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
                 i += GraphicUtils.max(5 * (rge / visibility), 1);
                 break;
             }
-			/*
-			p1 = getPoint.run(aPointOfanObj[0], aPointOfanObj[1], aPointOfanObj[2]);
-			X1 = p1[0];
-			Y1 = p1[1];
-			Z1 = p1[2];
-			
-			if(aObject.getDrawingMethod() == DrawingMethod.drawLine) {
-				p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5]);
-				X2 = p2[0];
-				Y2 = p2[1];
-				Z2 = p2[2];
-				
-				if(Z1 < 0  ||  Z2 < 0) {
-				    ++i;
-				    continue; 
-				}
-				
-				index = (int)((Z1 * 38) / visibility);
-				
-				if(index < 0) index = 0;
-				else if(index > CharVisualManager.POINTLEVEL) index = CharVisualManager.POINTLEVEL;
-				
-				GraphicUtils.drawLine(fraps_buffer, X1, Y1, X2, Y2, (spc =='\0'? inWorld.visualManager.point[index] : spc), staticOver);
-				++i;
-			} else {
-				if(Z1 >=0 && X1>=0 && Y1>=0 && X1<resolution[0] && Y1<resolution[1]) {
-					index = (int)((Z1 * 38) / visibility);
-
-					if(index < 0) index = 0;
-					else if(index > CharVisualManager.POINTLEVEL) index = CharVisualManager.POINTLEVEL;
-					
-					if(!staticOver  ||  fraps_buffer[Y1][X1] == ' ')
-						fraps_buffer[Y1][X1] = (spc =='\0'? inWorld.visualManager.point[index] : spc);
-				}
-				i += GraphicUtils.max(5 * (rge / visibility), 1);
-			}*/
 		}
 		return rge;
 	}
 	
+	//char                      fraps_buffer[][]
+	//ThreeDs aObject, float cr0, float cr1, float cr2, boolean staticOver
 	public static final float exposureAnObject (
         char    fraps_buffer[][],
         int     resolution[],
@@ -474,15 +443,60 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		}
 		return null;
 	}
+	/*
+	 * char    fraps_buffer[][],
+        int     resolution[],
+        float  cameraLocation[],
+        float  visibility,
+        float  FOV,
+        int     XcenterI, 
+        int     YcenterI,
+        ThreeDs aObject, 
+        float  cr0, 
+        float  cr1, 
+        float  cr2, 
+        boolean staticOver, 
+        char    pointChar[]
+	 */
+	private char [][] blurFrame;
 	
 	public Object exposureStatic()
 	{
-		for(Iterable<ThreeDs> aList:staticObjLists) { 
-			for(ThreeDs aObject:aList) {
-				exposureObject(aObject, roll_angle[0], roll_angle[1], roll_angle[2], true);
-			}
-		}
-		return null;
+        if(inWorld.visualManager.enableMotionalBlur) {
+            
+            blurFrame = new char[resolution[1]][resolution[0]];
+            for(int i=0 ; i<resolution[1] ; ++i) {
+                System.arraycopy(inWorld.visualManager.emptyLine, 0, blurFrame[i], 0, resolution[0]);
+            }
+            
+        	for(Iterable<ThreeDs> aList:staticObjLists) { 
+        		for(ThreeDs aObject:aList) {
+        			//exposureObject(aObject, roll_angle[0], roll_angle[1], roll_angle[2], true);
+        		    exposureAnObject(
+        		        blurFrame, resolution, location, visibility, FOV, 
+        	            XcenterI, YcenterI, 
+        	            aObject, 
+        	            roll_angle[0], roll_angle[1], roll_angle[2], 
+        	            false, inWorld.visualManager.point
+        		    );
+        		}
+        	}
+
+            if(motionalBlur.size() < inWorld.visualManager.getMotionalBlurLevel())
+                motionalBlur.add(blurFrame);
+        } else {
+            for(Iterable<ThreeDs> aList:staticObjLists) { 
+                for(ThreeDs aObject:aList) {
+                    exposureObject(aObject, roll_angle[0], roll_angle[1], roll_angle[2], true);
+                }
+            }
+            if(motionalBlur.size() < inWorld.visualManager.getMotionalBlurLevel())
+                motionalBlur.add(fraps_buffer);
+            /*motionalBlur.poll();
+            motionalBlur.add(fraps_buffer);*/
+        }
+        
+        return null;
 	}
 	
 	@Override
