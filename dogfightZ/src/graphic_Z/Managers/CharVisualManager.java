@@ -323,34 +323,23 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	    for(int i=0 ; i<resolution[1] ; ++i)
             for(int j=0 ; j<resolution[0] ; ++j){
                 if(fraps_buffer[i][j] == ' '  &&  blurFrame[i][j] != ' ')
-                    fraps_buffer[i][j] = '.';
+                    fraps_buffer[i][j] = /*blurFrame[i][j]*/'.';
             }
 	}
 	//private char [][] blurFrame;
 	public void refresh() {
 		for(CharFrapsCamera aCamera : cameras) {
-			/*for(Iterable<Dynamic> eachList:dynamicObjLists)
-				aCamera.exposure(eachList, 0);*/
 			for(Iterable<Dynamic> eachList:selfDisposable)
 				aCamera.exposure(eachList, 0);
-			
 			mainCameraFeedBack = aCamera.exposure();
 		}
-		
+        
 		for	(
 			Iterator<HUD> iter = HUDs.iterator();
 			iter.hasNext();
 			iter.next().printNew()
 		);
 		
-		//if(enableMotionalBlur) {
-	        if(motionalBlur.size() > motionalBlurLevel - 1) {
-		        for(char [][] frame : motionalBlur) {
-		            printBlur(frame);
-		        }
-    		    motionalBlur.poll();
-		    }
-		//}
 	}
 	
 	public void buff() {
@@ -367,7 +356,6 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	    
 		for(CharFrapsCamera aCamera : cameras) {
 		    inWorld.execute(aCamera);
-			//new Thread(aCamera).start();
 		}
 	}
 	
@@ -385,7 +373,14 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
             }
 		    
 		}
-		
+
+        if(motionalBlur.size() > motionalBlurLevel - 1) {
+            for(char [][] frame : motionalBlur) {
+                printBlur(frame);
+            }
+            motionalBlur.poll();
+        }
+        
 		boolean firstInLine, firstLine;
 		
 		scr_show.delete(0, scr_show.length());

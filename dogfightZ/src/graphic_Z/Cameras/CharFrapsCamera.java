@@ -664,7 +664,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
         	            XcenterI, YcenterI, 
         	            aObject, 
         	            roll_angle[0], roll_angle[1], roll_angle[2], 
-        	            false, '.'
+        	            false, /*inWorld.visualManager.point*/'.'
         		    );
         		}
         	}

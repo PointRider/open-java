@@ -821,12 +821,12 @@ public class Game extends CharTimeSpace implements Runnable {
 				
 				case 8192:if(!flgWheelDn) {
 					//getMyJet().control_dec();
-                    if(!getMyJet().isPushing) {
+                    //if(!getMyJet().isPushing) {
     				    if(getMyJet().fov_1stPerson < getMyJet().fov_1stPerson_base)
                             getMyJet().fov_1stPerson += 0.2F;
                         if(getMyJet().fov_3thPerson < getMyJet().fov_3thPerson_base)
                             getMyJet().fov_3thPerson += 0.2F;
-                    }
+                    //}
 					flgWheelDn = true;
 				} break;
 				
