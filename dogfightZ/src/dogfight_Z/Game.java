@@ -1149,7 +1149,13 @@ public class Game extends CharTimeSpace implements Runnable {
 			
 			//XXXXXXXXXXXXX[print new]XXXXXXXXXXXXXX
 			lockedEnemy = (Aircraft) visualManager.mainCameraFeedBack;
-            visualManager.setEnableMotionalBlur(getMyJet().isPushing);
+			if(getMyJet().isPushing) {
+	            visualManager.setEnableMotionalBlur(true);
+                getMyJet().fov_1stPerson = getMyJet().fov_1stPerson_base;
+                getMyJet().fov_3thPerson = getMyJet().fov_3thPerson_base;
+			} else {
+			    visualManager.setEnableMotionalBlur(false);
+			}
 			printNew();
 			//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 		}

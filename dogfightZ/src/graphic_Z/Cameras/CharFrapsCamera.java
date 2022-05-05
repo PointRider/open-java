@@ -84,42 +84,52 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		final float temp = GraphicUtils.tan(FOV/2.0F);
 		float p1[], p2[], p3[];
 		
+		boolean absPoint;
 		//   x r/v
 		for(int i=0 ; i<pcount ;) //for each point
 		{
 			aPointOfanObj = aObject.getPoint(i);
+			if(aPointOfanObj == null) {
+			    aPointOfanObj = aObject.getAbsPoint(i);
+			    absPoint = true;
+			} else absPoint = false;
 			
-			XYLambdaI getPoint = (float X0, float Y0, float Z0) -> {
+			XYLambdaI2 getPoint = (float X0, float Y0, float Z0, boolean absP) -> {
 				float X, Y, Z/*, tmp1, tmp2*/, cos$, sin$;
-				//物体上的每个点 绕物体自身中心点旋转
-				//r0、r1、r2是绕x、y、z轴的旋转角度（弧度制）
-				cos$ = GraphicUtils.cos(r2);
-				sin$ = GraphicUtils.sin(r2);
-				X = cos$ * X0 - sin$ * Y0;
-				Y = sin$ * X0 + cos$ * Y0;
-				X0 = X;
-				Y0 = Y;
-
-				cos$ = GraphicUtils.cos(r1);
-				sin$ = GraphicUtils.sin(r1);
-				X = cos$ * X0 - sin$ * Z0;
-				Z = sin$ * X0 + cos$ * Z0;
-				X0 = X;
-				Z0 = Z;
-
-				cos$ = GraphicUtils.cos(r0);
-				sin$ = GraphicUtils.sin(r0);
-				Z = cos$ * Z0 - sin$ * Y0;
-				Y = sin$ * Z0 + cos$ * Y0;
-				Z0 = Z;
-				Y0 = Y;
-				//---旋转结束---
-				
-				//---获得物体每个点相对于摄像机的相对坐标
-				X0 += locationOfanObj[0] - location[0];
-				Y0 += locationOfanObj[1] - location[1];
-				Z0 += locationOfanObj[2] - location[2];
-				
+				if(!absP) {
+    				//物体上的每个点 绕物体自身中心点旋转
+    				//r0、r1、r2是绕x、y、z轴的旋转角度（弧度制）
+    				cos$ = GraphicUtils.cos(r2);
+    				sin$ = GraphicUtils.sin(r2);
+    				X = cos$ * X0 - sin$ * Y0;
+    				Y = sin$ * X0 + cos$ * Y0;
+    				X0 = X;
+    				Y0 = Y;
+    
+    				cos$ = GraphicUtils.cos(r1);
+    				sin$ = GraphicUtils.sin(r1);
+    				X = cos$ * X0 - sin$ * Z0;
+    				Z = sin$ * X0 + cos$ * Z0;
+    				X0 = X;
+    				Z0 = Z;
+    
+    				cos$ = GraphicUtils.cos(r0);
+    				sin$ = GraphicUtils.sin(r0);
+    				Z = cos$ * Z0 - sin$ * Y0;
+    				Y = sin$ * Z0 + cos$ * Y0;
+    				Z0 = Z;
+    				Y0 = Y;
+    				//---旋转结束---
+                    
+    				//---获得物体每个点相对于摄像机的相对坐标
+    				X0 += locationOfanObj[0] - location[0];
+    				Y0 += locationOfanObj[1] - location[1];
+    				Z0 += locationOfanObj[2] - location[2];
+				} else {
+				    X0 -= location[0];
+	                Y0 -= location[1];
+	                Z0 -= location[2];
+				}
 				//---围绕摄像机旋转(或相对的，摄像机原地左右上下转动)---
 				cos$ = GraphicUtils.cos(cr0);
 				sin$ = GraphicUtils.sin(cr0);
@@ -155,7 +165,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 			};
 			
 			//获取一个点在屏幕上的x,y坐标以及距离屏幕的深度z
-            p1 = getPoint.run(aPointOfanObj[0], aPointOfanObj[1], aPointOfanObj[2]);
+            p1 = getPoint.run(aPointOfanObj[0], aPointOfanObj[1], aPointOfanObj[2], absPoint);
             X1 = p1[0];
             Y1 = p1[1];
             Z1 = p1[2];
@@ -163,9 +173,9 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
             switch(aObject.getDrawingMethod()) {
             case drawTriangleSurface:
 
-                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5]);
+                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5], absPoint);
                 Z2 = p2[2];
-                p3 = getPoint.run(aPointOfanObj[6], aPointOfanObj[7], aPointOfanObj[8]);
+                p3 = getPoint.run(aPointOfanObj[6], aPointOfanObj[7], aPointOfanObj[8], absPoint);
                 Z3 = p3[2];
                 
                 suc = aObject.getSurfaceChar(i);
@@ -181,7 +191,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
                 break;
             case drawLine:
                 //获取二个点在屏幕上的x,y坐标以及距离屏幕的深度z
-                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5]);
+                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5], absPoint);
                 X2 = p2[0];
                 Y2 = p2[1];
                 Z2 = p2[2];
@@ -619,7 +629,11 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	interface XYLambdaI {
 		float[] run(float X0, float Y0, float Z0);
 	}
-	
+
+    interface XYLambdaI2 {
+        float[] run(float X0, float Y0, float Z0, boolean absP);
+    }
+    
 	protected float exposureObject(ThreeDs aObject, float cr0, float cr1, float cr2) {
 		return exposureObject(aObject, cr0, cr1, cr2, false);
 	}

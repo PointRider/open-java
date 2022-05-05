@@ -12,6 +12,7 @@ public interface ThreeDs extends Runnable
 	boolean getVisible();
     int	    getPointsCount();
 	float[] getPoint(int index);
+    float[] getAbsPoint(int index);
 	void    go();
     char	getSpecialDisplayChar();
 	void    setIterator(ListIterator<ThreeDs> itr);

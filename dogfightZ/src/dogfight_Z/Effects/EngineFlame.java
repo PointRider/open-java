@@ -57,25 +57,29 @@ public class EngineFlame extends CharObject implements Dynamic
 		missileModelData.add(newPonit);
 	}
 	
-	public EngineFlame(float Location[], long lifeTime)
-	{
-		super(null);
-		specialDisplay	= '@';
-		location[0] = Location[0];
-		location[1] = Location[1];
-		location[2] = Location[2];
-
-		points = missileModelData;
-		points_count = missileModelData.size();
-		
-		lifeLeft = life = lifeTime;
-		lifeTo = life + System.currentTimeMillis();
-		
-		//resistanceRate	= resistance_rate;
-		end				= false;
-		visible			= true;
-		//haveMess		= have_mess;
+	public EngineFlame(float Location[], long lifeTime) {
+		this(Location, lifeTime, DrawingMethod.drawPoint);
 	}
+	
+	public EngineFlame(float Location[], long lifeTime, DrawingMethod drawingMethod)
+    {
+        super(null, drawingMethod);
+        specialDisplay  = '@';
+        location[0] = Location[0];
+        location[1] = Location[1];
+        location[2] = Location[2];
+
+        points = missileModelData;
+        points_count = missileModelData.size();
+        
+        lifeLeft = life = lifeTime;
+        lifeTo = life + System.currentTimeMillis();
+        
+        //resistanceRate    = resistance_rate;
+        end             = false;
+        visible         = true;
+        //haveMess      = have_mess;
+    }
 	
 	public EngineFlame(float Location[], long lifeTime, char specialDisplayChar)
 	{

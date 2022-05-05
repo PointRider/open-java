@@ -13,6 +13,7 @@ public class CharObject extends TDObject implements ThreeDs
 	public char specialDisplay;
 	public int points_count;			//物体点个数
 	public List<float[]> points;		//物体每个点坐标
+    public List<float[]> points_abs;        //物体每个点坐标
 	private DrawingMethod drawingMethod;
 	protected ListIterator<ThreeDs> myPosition;
 	protected char surfaceChar[];
@@ -129,6 +130,7 @@ public class CharObject extends TDObject implements ThreeDs
 
 	@Override
 	public final float[] getPoint(int index) {
+	    if(points == null) return null;
 		return points.get(index);
 	}
 
@@ -155,5 +157,10 @@ public class CharObject extends TDObject implements ThreeDs
     public final char getSurfaceChar(int index) {
         if(surfaceChar != null) return surfaceChar[index];
         return '\0';
+    }
+
+    @Override
+    public float[] getAbsPoint(int index) {
+        return points_abs.get(index);
     }
 }

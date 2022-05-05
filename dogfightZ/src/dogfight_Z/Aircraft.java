@@ -3,8 +3,9 @@ package dogfight_Z;
 import dogfight_Z.Ammo.CannonAmmo;
 import dogfight_Z.Ammo.Decoy;
 import dogfight_Z.Ammo.Missile;
-import dogfight_Z.Effects.EngineFlame;
+//import dogfight_Z.Effects.EngineFlame;
 import dogfight_Z.Effects.EngineFlame2;
+import dogfight_Z.Effects.EngineFlame3;
 import dogfight_Z.Effects.Particle;
 import graphic_Z.Cameras.CharFrapsCamera;
 import graphic_Z.Interfaces.ThreeDs;
@@ -88,6 +89,8 @@ public class Aircraft extends CharMessObject
 	public int   decoyReloadingTime;		//诱饵弹装填时间
 	public int   decoyReloadingTimeLeft;	//诱饵弹装填时间剩余
 	public float effectMakingLocation[][];
+    private float effectMakingLocation_old[][];
+    private boolean iswingsEffectRunning;
 	//--------------------------
 	public int killed;
 	public int dead;
@@ -145,7 +148,7 @@ public class Aircraft extends CharMessObject
         fov_gunFiring       = 8.9F;
         fov_current         = 9.28F;
         fov_range           = fov_1stPerson_base - fov_gunFiring;
-                
+        
 		setRespwanAtTime(0);
 		specialDisplay		= '@';
 		ID					= id;
@@ -156,6 +159,8 @@ public class Aircraft extends CharMessObject
 		cameraLocation		= new float[3];
         directionXYZ        = new float[3];
 		effectMakingLocation= new float[3][3];
+		effectMakingLocation_old = new float[3][3];
+		iswingsEffectRunning = false;
 		cameraLocationFlag	= 0;
 		setLockingPriority(lockingPriority_backup = 1);
 		setCamp(Camp);
@@ -355,7 +360,7 @@ public class Aircraft extends CharMessObject
 	
 	public void control_push() //in a game frap
 	{
-		if(getPushTimeLeft() > getMaxPushTime() / 3) {
+		if(HP > 0 && getPushTimeLeft() > getMaxPushTime() / 3) {
 			isPushing = true;
 			resistanceRate_current = resistanceRate_normal;
 		}
@@ -575,8 +580,19 @@ public class Aircraft extends CharMessObject
 		effectMakingLocation[1][1] += location[1];
 		effectMakingLocation[1][2] += location[2];
 		
-		getGameManager().newEffect(new EngineFlame(effectMakingLocation[0], 75000 + (int)(75000 * GraphicUtils.random()), '*'));
-		getGameManager().newEffect(new EngineFlame(effectMakingLocation[1], 75000 + (int)(75000 * GraphicUtils.random()), '*'));
+		if(iswingsEffectRunning) {
+    		getGameManager().newEffect(new EngineFlame3(effectMakingLocation[0], effectMakingLocation_old[0], 75000 + (int)(75000 * GraphicUtils.random()), '*'));
+    		getGameManager().newEffect(new EngineFlame3(effectMakingLocation[1], effectMakingLocation_old[1], 75000 + (int)(75000 * GraphicUtils.random()), '*'));
+		} else {
+		    getGameManager().newEffect(new EngineFlame3(effectMakingLocation[0], effectMakingLocation[0], 75000 + (int)(75000 * GraphicUtils.random()), '*'));
+            getGameManager().newEffect(new EngineFlame3(effectMakingLocation[1], effectMakingLocation[1], 75000 + (int)(75000 * GraphicUtils.random()), '*'));
+		}
+		effectMakingLocation_old[0][0] = effectMakingLocation[0][0];
+        effectMakingLocation_old[0][1] = effectMakingLocation[0][1];
+        effectMakingLocation_old[0][2] = effectMakingLocation[0][2];
+        effectMakingLocation_old[1][0] = effectMakingLocation[1][0];
+        effectMakingLocation_old[1][1] = effectMakingLocation[1][1];
+        effectMakingLocation_old[1][2] = effectMakingLocation[1][2];
 	}
 
     public void pushEffectRun() {
@@ -661,7 +677,8 @@ public class Aircraft extends CharMessObject
 			if (c > 0.6F) {
 		        if(isPlayer()) getGameManager().addGBlack(c * 2.6F);
 			    wingsEffectRun();
-			}
+			    iswingsEffectRunning = true;
+			} else iswingsEffectRunning = false;
 		}
 	}
 	
