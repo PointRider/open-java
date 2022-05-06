@@ -864,8 +864,8 @@ public class Aircraft extends CharMessObject
 	}
 	
 	protected void randomRespawn() {
+	    iswingsEffectRunning = false;
 		setLockingPriority(0);
-		
 		setLocation (
 			200,
 			getGameManager().getPlayerCameraLocation()[1] + GraphicUtils.random() * getGameManager().getWeaponMaxSearchingRange() * ((GraphicUtils.fastRanodmInt() & 1) == 0? -1 : 1),
