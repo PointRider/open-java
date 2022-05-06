@@ -322,7 +322,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	private final void printBlur(char[][] blurFrame) {
 	    for(int i=0 ; i<resolution[1] ; ++i)
             for(int j=0 ; j<resolution[0] ; ++j){
-                if(fraps_buffer[i][j] == ' '  &&  blurFrame[i][j] != ' ')
+                if(fraps_buffer[i][j] == ' '  &&  blurFrame[i][j] != '\0' &&  blurFrame[i][j] != ' ')
                     fraps_buffer[i][j] = /*blurFrame[i][j]*/'.';
             }
 	}
@@ -374,7 +374,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		    
 		}
 
-        if(motionalBlur.size() > motionalBlurLevel - 1) {
+        if(motionalBlur.size() == motionalBlurLevel) {
             for(char [][] frame : motionalBlur) {
                 printBlur(frame);
             }

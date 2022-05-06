@@ -344,6 +344,8 @@ public class Aircraft extends CharMessObject
 			getGameManager().addKillTip(giver, this, weaponName);
 			++dead;
 			++giver.killed;
+			fov_1stPerson = fov_1stPerson_base;
+            fov_3thPerson = fov_3thPerson_base;
 			Particle.makeExplosion(getGameManager(), location, 20, 40000, 0.075F, 0.2F);
 			setRespwanAtTime(System.currentTimeMillis() + getGameManager().getRespawnTime());
 			//}
@@ -360,7 +362,7 @@ public class Aircraft extends CharMessObject
 	
 	public void control_push() //in a game frap
 	{
-		if(HP > 0 && getPushTimeLeft() > getMaxPushTime() / 3) {
+		if(isAlive() && getPushTimeLeft() > getMaxPushTime() / 3) {
 			isPushing = true;
 			resistanceRate_current = resistanceRate_normal;
 		}
@@ -544,11 +546,11 @@ public class Aircraft extends CharMessObject
 	public void wingsEffectRun() {
 		effectMakingLocation[0][0] = 120;
 		effectMakingLocation[0][1] = 320;
-		effectMakingLocation[0][2] = -240;
+		effectMakingLocation[0][2] = -320;
 		
 		effectMakingLocation[1][0] = 120;
 		effectMakingLocation[1][1] = -320;
-		effectMakingLocation[1][2] = -240;
+		effectMakingLocation[1][2] = -320;
 		
 		getXYZ_afterRolling
 		(
@@ -675,7 +677,7 @@ public class Aircraft extends CharMessObject
             float b = GraphicUtils.abs(velocity_roll[2]) / getMaxVelRollLR();
             float c = GraphicUtils.max(a, b);
 			if (c > 0.6F) {
-		        if(isPlayer()) getGameManager().addGBlack(c * 2.6F);
+		        if(isPlayer()) getGameManager().addGBlack(c * 1.95F);
 			    wingsEffectRun();
 			    iswingsEffectRunning = true;
 			} else iswingsEffectRunning = false;
@@ -823,8 +825,7 @@ public class Aircraft extends CharMessObject
 		if(mainCamera.location != getCameraLocation()) fov_current = 9.37F; //视角跟随导弹时
 		else if(isPushing) fov_current += (fov_pushing / fov_current - 1) * 2;
 		else {
-			/*if(isCannonFiring) fov_current += (fov_gunFiring / fov_current - 1);
-			else*/ switch(cameraLocationFlag) {
+			switch(cameraLocationFlag) {
 				case 0: fov_current += (fov_3thPerson / fov_current - 1) / 2; break;
 				case 1: fov_current += (fov_1stPerson / fov_current - 1) / 2; break;
 			}
@@ -854,7 +855,7 @@ public class Aircraft extends CharMessObject
             lockedByMissile = false;
             if(lockedByEnemy == false) locked_By = null;
         }
-		playersCameraManage();
+		if(iAmPlayer) playersCameraManage();
 	}
 	
 	@Override

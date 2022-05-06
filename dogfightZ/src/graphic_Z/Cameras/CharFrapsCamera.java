@@ -661,14 +661,19 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
         char    pointChar[]
 	 */
 	private char [][] blurFrame;
+	/*
+	private static char [] blurChars = {
+        '.', '\'', '`', ',', '-', '~', ':', '"', ';', '^', 
+        '=', '+', '*', 'o', 'O', 'Q', 'G', '0', '$', '@'
+	};*/
 	public Object exposureStatic()
 	{
         if(inWorld.visualManager.enableMotionalBlur) {
             
             blurFrame = new char[resolution[1]][resolution[0]];
-            for(int i=0 ; i<resolution[1] ; ++i) {
+            /*for(int i=0 ; i<resolution[1] ; ++i) {
                 System.arraycopy(inWorld.visualManager.emptyLine, 0, blurFrame[i], 0, resolution[0]);
-            }
+            }*/
             
         	for(Iterable<ThreeDs> aList:staticObjLists) { 
         		for(ThreeDs aObject:aList) {
@@ -678,7 +683,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
         	            XcenterI, YcenterI, 
         	            aObject, 
         	            roll_angle[0], roll_angle[1], roll_angle[2], 
-        	            false, /*inWorld.visualManager.point*/'.'
+        	            false, /*blurChars*//*inWorld.visualManager.point*/'.'
         		    );
         		}
         	}

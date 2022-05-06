@@ -278,7 +278,6 @@ public class NPC extends Aircraft
             locked = false;
             lockTimeLeft = lockTime;
         }
-        
         if(locked_By != null && currentSelectObj != locked_By && !locked) tracingTarget = locked_By;
         
 		if(rge > 0 && tracingTarget != null && tracingTarget.isAlive() && tracingTarget.getLockingPriority() > 0)
