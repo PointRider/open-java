@@ -29,6 +29,7 @@ public class RunDemo
 		
 		CubeA mainBox = new CubeA("rec3D.dat");
 		//CharMessObject mainBox = testWorld.objectsManager.newMessObject(new CharMessObject("Jet.dat", 10, DrawingMethod.drawLine));
+		
 		testWorld.objectsManager.newMessObject(mainBox);
 		//mainBox.specialDisplay = '';
 		mainBox.setLocation(0, 0, 60);

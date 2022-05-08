@@ -153,6 +153,7 @@ private static ArrayList<float[]> missileModelData;
 	public void go() {
 		if(lifeLeft <= 0) disable();
 		else {
+		    //先计算诱饵相对于飞机的运动状态
             velocity -= velocity * getResistanceRate_normal();
             
 		    float x, y, z;
@@ -167,6 +168,7 @@ private static ArrayList<float[]> missileModelData;
             location[1] += y;
             location[2] += z;
             
+            //叠加计算飞机的运动状态
             speed -= speed * getResistanceRate_normal();
             
 	        r1 = Roll_angle_Aircraft[1];

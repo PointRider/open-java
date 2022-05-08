@@ -214,13 +214,6 @@ public class PlayersJetCamera extends CharFrapsCamera
 						lockTimeLeft				= lockTime;
 						locked						= false;
 						lockingSelected				= true;
-						
-						hudLocking.location[0] = p0 - hud_locking_hlfSize[0];
-						hudLocking.location[1] = p1 - hud_locking_hlfSize[1];
-						hudLocking.printNew();	//盖章
-						GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, p0, p1, linePixel);
-						hudDistance.setLocation(p0 - hudLocking.centerX, p1 + hudLocking.centerY);
-						hudDistance.printNew();
 					}
 					else //未发生优先级切换
 					{
@@ -232,10 +225,10 @@ public class PlayersJetCamera extends CharFrapsCamera
 							{
 								hudLocked.location[0] = p0 - hud_locked_hlfSize[0];
 								hudLocked.location[1] = p1 - hud_locked_hlfSize[1];
-								
+
+                                hudLocked.printNew(); //盖章
 								GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, p0, p1, linePixel);
-								a.warning(myJet);
-								
+								GraphicUtils.drawCircle(fraps_buffer, hudLocked.location[0] + hud_locked_hlfSize[0], hudLocked.location[1] + hud_locked_hlfSize[1], 5, '+');
 								hudDistance.setLocation(p0 - hudLocked.centerX, p1 + hudLocked.centerY);
 								hudDistance.printNew();
 							}
@@ -244,17 +237,6 @@ public class PlayersJetCamera extends CharFrapsCamera
 								if(--lockTimeLeft <= 0)//刚好锁定
 								{
 									locked = true;
-									
-									hudLocked.location[0] = p0 - hud_locked_hlfSize[0];
-									hudLocked.location[1] = p1 - hud_locked_hlfSize[1];
-									hudLocked.printNew();	//盖章
-
-									GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, p0, p1, linePixel);
-									a.warning(myJet);
-									
-									hudDistance.setLocation(p0 - hudLocked.centerX, p1 + hudLocked.centerY);
-									hudDistance.printNew();
-									
 									lockTimeLeft = lockTime;
 								}
 								else //还未锁定
@@ -264,12 +246,12 @@ public class PlayersJetCamera extends CharFrapsCamera
 									hudLocking.printNew();	//盖章
 
 									GraphicUtils.drawLine(fraps_buffer, XcenterI, YcenterI, p0, p1, linePixel);
-									a.warning(myJet);
 									
 									hudDistance.setLocation(p0 - hudLocking.centerX, p1 + hudLocking.centerY);
 									hudDistance.printNew();
 								}
 							}
+                            a.warning(myJet);
 						}
 						else//没有选择锁定的敌机
 						{
@@ -287,13 +269,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 		if(!lockingSelected) {
 			currentMaxLockingPriority = 0;
 			lockTimeLeft			  = lockTime;
-		} else if(locked) {
-			hudLocked.printNew();	//盖章
-			
-			GraphicUtils.drawCircle(fraps_buffer, hudLocked.location[0] + hud_locked_hlfSize[0], hudLocked.location[1] + hud_locked_hlfSize[1], 5, '+');
-			return currentSelectObj;
-		}
-		
+		} else if(locked) return currentSelectObj;
 		return null;
 	}
 

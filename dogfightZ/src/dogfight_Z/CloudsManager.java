@@ -63,7 +63,8 @@ public class CloudsManager implements Runnable
 					aCloud = (RandomCloud) clouds.get(i);
 					
 					if(GraphicUtils.range_YZ(aCloud.location, playerCameraLocation) > visibility * 1.10F)
-						gameManager.execute(aCloud);
+					    aCloud.reConstruct();
+						//gameManager.execute(aCloud);
 				}
 				
 				long now = nextRefreshTime - System.nanoTime();
@@ -72,7 +73,7 @@ public class CloudsManager implements Runnable
 		            Thread.sleep(now / 1000000, (int) (now % 1000000));
 		        }
 			}
-		} catch(InterruptedException e) {e.printStackTrace();}
+		} catch(InterruptedException e) {/*e.printStackTrace();*/}
 	}
 
 }

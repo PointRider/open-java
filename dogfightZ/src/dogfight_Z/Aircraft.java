@@ -659,8 +659,8 @@ public class Aircraft extends CharMessObject
 		if(velocity_roll[2] != 0.0F)
 			velocity_roll[2] /= 1.075F;
 		
-		setSpeed(getSpeed() + F/mess);
-		setSpeed(getSpeed() - speed * resistanceRate_current);
+		setSpeed(getSpeed() + F/mess - speed * resistanceRate_current);
+		//setSpeed(getSpeed() - speed * resistanceRate_current);
 		
 		if(getSpeed() > maxSpeed)
 			setSpeed(maxSpeed);
@@ -802,9 +802,9 @@ public class Aircraft extends CharMessObject
 		} else {
 			if(cameraLocationFlag > 1) cameraLocationFlag = 0;
 			
-			getCameraLocation()[0] = -96;
+			getCameraLocation()[0] = -68;
 			getCameraLocation()[1] = 0;
-			getCameraLocation()[2] = -320;
+			getCameraLocation()[2] = -190;
 			
 			getCameraRollAngle()[0] = -roll_angle[0];
 			getCameraRollAngle()[1] = -roll_angle[1];
