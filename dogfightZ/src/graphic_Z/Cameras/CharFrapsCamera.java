@@ -74,13 +74,17 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		float aPointOfanObj[]    = null;
 		
 		//float X0, Y0, Z0, X, Y, Z;
-		float X1, Y1, Z1, X2, Y2, Z2, Z3;
+		float X1, Y1, Z1, X2, Y2, Z2, Z3, rel_X, rel_Y, rel_Z;
 		int index, x, y;
 		
 		float r0 = rollAngleOfanObj[0];
 		float r1 = rollAngleOfanObj[1];
 		float r2 = rollAngleOfanObj[2];
-		
+
+		rel_X = locationOfanObj[0] - location[0];
+		rel_Y = locationOfanObj[1] - location[1];
+		rel_Z = locationOfanObj[2] - location[2];
+        
 		final float temp = GraphicUtils.tan(FOV/2.0F);
 		float p1[], p2[], p3[];
 		
@@ -93,8 +97,8 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 			    aPointOfanObj = aObject.getAbsPoint(i);
 			    absPoint = true;
 			} else absPoint = false;
-			
-			XYLambdaI2 getPoint = (float X0, float Y0, float Z0, boolean absP) -> {
+            
+			XYLambdaI2 getPoint = (float X0, float Y0, float Z0, float relX, float relY, float relZ, boolean absP) -> {
 				float X, Y, Z/*, tmp1, tmp2*/, cos$, sin$;
 				if(!absP) {
     				//物体上的每个点 绕物体自身中心点旋转
@@ -122,9 +126,9 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
     				//---旋转结束---
                     
     				//---获得物体每个点相对于摄像机的相对坐标
-    				X0 += locationOfanObj[0] - location[0];
-    				Y0 += locationOfanObj[1] - location[1];
-    				Z0 += locationOfanObj[2] - location[2];
+    				X0 += relX;
+    				Y0 += relY;
+    				Z0 += relZ;
 				} else {
 				    X0 -= location[0];
 	                Y0 -= location[1];
@@ -165,7 +169,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 			};
 			
 			//获取一个点在屏幕上的x,y坐标以及距离屏幕的深度z
-            p1 = getPoint.run(aPointOfanObj[0], aPointOfanObj[1], aPointOfanObj[2], absPoint);
+            p1 = getPoint.run(aPointOfanObj[0], aPointOfanObj[1], aPointOfanObj[2], rel_X, rel_Y, rel_Z, absPoint);
             X1 = p1[0];
             Y1 = p1[1];
             Z1 = p1[2];
@@ -173,9 +177,9 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
             switch(aObject.getDrawingMethod()) {
             case drawTriangleSurface:
 
-                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5], absPoint);
+                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5], rel_X, rel_Y, rel_Z, absPoint);
                 Z2 = p2[2];
-                p3 = getPoint.run(aPointOfanObj[6], aPointOfanObj[7], aPointOfanObj[8], absPoint);
+                p3 = getPoint.run(aPointOfanObj[6], aPointOfanObj[7], aPointOfanObj[8], rel_X, rel_Y, rel_Z, absPoint);
                 Z3 = p3[2];
                 
                 suc = aObject.getSurfaceChar(i);
@@ -191,7 +195,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
                 break;
             case drawLine:
                 //获取二个点在屏幕上的x,y坐标以及距离屏幕的深度z
-                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5], absPoint);
+                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5], rel_X, rel_Y, rel_Z, absPoint);
                 X2 = p2[0];
                 Y2 = p2[1];
                 Z2 = p2[2];
@@ -226,6 +230,185 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
             }
 		}
 		return rge;
+	}
+	
+	protected void exposureObject(ThreeDs aObject, boolean staticOver, float result_xyzr[]) {
+	    float locationOfanObj[]  = aObject.getLocation();
+        float rge = GraphicUtils.range(locationOfanObj, location);
+        if(aObject.getVisible() == false || rge > visibility * 10) {
+            result_xyzr[0] = -1;
+            result_xyzr[1] = -1;
+            result_xyzr[2] = -1;
+            result_xyzr[3] = rge;
+            return;
+        }
+        
+        char spc     = aObject.getSpecialDisplayChar(), suc = '\0';
+        int  pcount  = aObject.getPointsCount();
+        
+        float rollAngleOfanObj[] = aObject.getRollAngle();
+        float aPointOfanObj[]    = null;
+        
+        //float X0, Y0, Z0, X, Y, Z;
+        float X1, Y1, Z1, X2, Y2, Z2, Z3, rel_X, rel_Y, rel_Z;
+        int index, x, y;
+        
+        float r0 = rollAngleOfanObj[0];
+        float r1 = rollAngleOfanObj[1];
+        float r2 = rollAngleOfanObj[2];
+
+        rel_X = locationOfanObj[0] - location[0];
+        rel_Y = locationOfanObj[1] - location[1];
+        rel_Z = locationOfanObj[2] - location[2];
+
+        result_xyzr[0] = rel_X;
+        result_xyzr[1] = rel_Y;
+        result_xyzr[2] = rel_Z;
+        result_xyzr[3] = rge;
+        
+        final float temp = GraphicUtils.tan(FOV/2.0F);
+        float p1[], p2[], p3[];
+        
+        boolean absPoint;
+        //   x r/v
+        for(int i=0 ; i<pcount ;) //for each point
+        {
+            aPointOfanObj = aObject.getPoint(i);
+            if(aPointOfanObj == null) {
+                aPointOfanObj = aObject.getAbsPoint(i);
+                absPoint = true;
+            } else absPoint = false;
+            
+            XYLambdaI2 getPoint = (float X0, float Y0, float Z0, float relX, float relY, float relZ, boolean absP) -> {
+                float X, Y, Z/*, tmp1, tmp2*/, cos$, sin$;
+                if(!absP) {
+                    //物体上的每个点 绕物体自身中心点旋转
+                    //r0、r1、r2是绕x、y、z轴的旋转角度（弧度制）
+                    cos$ = GraphicUtils.cos(r2);
+                    sin$ = GraphicUtils.sin(r2);
+                    X = cos$ * X0 - sin$ * Y0;
+                    Y = sin$ * X0 + cos$ * Y0;
+                    X0 = X;
+                    Y0 = Y;
+    
+                    cos$ = GraphicUtils.cos(r1);
+                    sin$ = GraphicUtils.sin(r1);
+                    X = cos$ * X0 - sin$ * Z0;
+                    Z = sin$ * X0 + cos$ * Z0;
+                    X0 = X;
+                    Z0 = Z;
+    
+                    cos$ = GraphicUtils.cos(r0);
+                    sin$ = GraphicUtils.sin(r0);
+                    Z = cos$ * Z0 - sin$ * Y0;
+                    Y = sin$ * Z0 + cos$ * Y0;
+                    Z0 = Z;
+                    Y0 = Y;
+                    //---旋转结束---
+                    
+                    //---获得物体每个点相对于摄像机的相对坐标
+                    X0 += relX;
+                    Y0 += relY;
+                    Z0 += relZ;
+                } else {
+                    X0 -= location[0];
+                    Y0 -= location[1];
+                    Z0 -= location[2];
+                }
+                //---围绕摄像机旋转(或相对的，摄像机原地左右上下转动)---
+                cos$ = GraphicUtils.cos(roll_angle[0]);
+                sin$ = GraphicUtils.sin(roll_angle[0]);
+                Z = cos$ * Z0 - sin$ * Y0;
+                Y = sin$ * Z0 + cos$ * Y0;
+                Z0 = Z;
+                Y0 = Y;
+
+                cos$ = GraphicUtils.cos(roll_angle[1]);
+                sin$ = GraphicUtils.sin(roll_angle[1]);
+                X = cos$ * X0 - sin$ * Z0;
+                Z = sin$ * X0 + cos$ * Z0;
+                X0 = X;
+                Z0 = Z;
+                //---旋转结束---
+                if(Z0>=0)
+                {
+                    //借用cos$作临时变量，计算小孔成像
+                    cos$ = XcenterI*FOV/(XcenterI+temp*Z0);
+                    X0 = X0 * cos$;
+                    Y0 = Y0 * cos$;
+                    //屏幕视角绕Z轴转动
+                    cos$ = GraphicUtils.cos(roll_angle[2]);
+                    sin$ = GraphicUtils.sin(roll_angle[2]);
+                    X = cos$ * X0 - sin$ * Y0;
+                    Y = sin$ * X0 + cos$ * Y0;
+                    
+                    float result[] = {Y+XcenterI, X+YcenterI, Z0};
+                    return result;
+                }
+                return notOnScreen;
+            };
+            
+            //获取一个点在屏幕上的x,y坐标以及距离屏幕的深度z
+            p1 = getPoint.run(aPointOfanObj[0], aPointOfanObj[1], aPointOfanObj[2], rel_X, rel_Y, rel_Z, absPoint);
+            X1 = p1[0];
+            Y1 = p1[1];
+            Z1 = p1[2];
+            
+            switch(aObject.getDrawingMethod()) {
+            case drawTriangleSurface:
+
+                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5], rel_X, rel_Y, rel_Z, absPoint);
+                Z2 = p2[2];
+                p3 = getPoint.run(aPointOfanObj[6], aPointOfanObj[7], aPointOfanObj[8], rel_X, rel_Y, rel_Z, absPoint);
+                Z3 = p3[2];
+                
+                suc = aObject.getSurfaceChar(i);
+
+                if(Z1 < 0  ||  Z2 < 0  || Z3 < 0) {
+                    ++i;
+                    continue;
+                }
+                
+                GraphicUtils.drawTriangleSurface_ZBuffer(fraps_buffer, zBuffer, p1, p2, p3, suc, staticOver);
+                
+                ++i;
+                break;
+            case drawLine:
+                //获取二个点在屏幕上的x,y坐标以及距离屏幕的深度z
+                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5], rel_X, rel_Y, rel_Z, absPoint);
+                X2 = p2[0];
+                Y2 = p2[1];
+                Z2 = p2[2];
+                
+                if(Z1 < 0  ||  Z2 < 0) {
+                    ++i;
+                    continue; 
+                }
+                
+                index = (int)((Z1 * 38) / visibility);
+                
+                if(index < 0) index = 0;
+                else if(index > CharVisualManager.POINTLEVEL) index = CharVisualManager.POINTLEVEL;
+                
+                GraphicUtils.drawLine(fraps_buffer, X1, Y1, X2, Y2, (spc =='\0'? inWorld.visualManager.point[index] : spc), staticOver);
+                ++i;
+                break;
+            case drawPoint:
+                x = (int)(X1 + 0.5F);
+                y = (int)(Y1 + 0.5F);
+                if(x>=0 && y>=0 && x<resolution[0] && y<resolution[1]) {
+                    index = (int)((Z1 * 38) / visibility);
+
+                    if(index < 0) index = 0;
+                    else if(index > CharVisualManager.POINTLEVEL) index = CharVisualManager.POINTLEVEL;
+                    
+                    if(!staticOver  ||  fraps_buffer[y][x] == ' ')
+                        fraps_buffer[y][x] = (spc =='\0'? inWorld.visualManager.point[index] : spc);
+                }
+                i += GraphicUtils.max(5 * (rge / visibility), 1);
+                break;
+            }
+        }
 	}
 	
 	//char                      fraps_buffer[][]
@@ -286,51 +469,64 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
         float aPointOfanObj[]    = null;
         
         //float X0, Y0, Z0, X, Y, Z;
-        float X1, Y1, Z1, X2, Y2, Z2, Z3;
+        float X1, Y1, Z1, X2, Y2, Z2, Z3, rel_X, rel_Y, rel_Z;
         int index, x, y;
         
+        rel_X = locationOfanObj[0] - cameraLocation[0];
+        rel_Y = locationOfanObj[1] - cameraLocation[1];
+        rel_Z = locationOfanObj[2] - cameraLocation[2];
         float r0 = rollAngleOfanObj[0];
         float r1 = rollAngleOfanObj[1];
         float r2 = rollAngleOfanObj[2];
         
         final float temp = GraphicUtils.tan(FOV/2.0F);
         float p1[], p2[], p3[];
-        
+
+        boolean absPoint;
         //   x r/v
         for(int i=0 ; i<pcount ;) //for each point
         {
             aPointOfanObj = aObject.getPoint(i);
+            if(aPointOfanObj == null) {
+                aPointOfanObj = aObject.getAbsPoint(i);
+                absPoint = true;
+            } else absPoint = false;
             
-            XYLambdaI getPoint = (float X0, float Y0, float Z0) -> {
+            XYLambdaI2 getPoint = (float X0, float Y0, float Z0, float relX, float relY, float relZ, boolean absP) -> {
                 float X, Y, Z/*, tmp1, tmp2*/, cos$, sin$;
-                //获取点随着物体分别绕X、Y、Z坐标轴滚动前的原坐标
-                cos$ = GraphicUtils.cos(r2);
-                sin$ = GraphicUtils.sin(r2);
-                X = cos$ * X0 - sin$ * Y0;
-                Y = sin$ * X0 + cos$ * Y0;
-                X0 = X;
-                Y0 = Y;
-
-                cos$ = GraphicUtils.cos(r1);
-                sin$ = GraphicUtils.sin(r1);
-                X = cos$ * X0 - sin$ * Z0;
-                Z = sin$ * X0 + cos$ * Z0;
-                X0 = X;
-                Z0 = Z;
-
-                cos$ = GraphicUtils.cos(r0);
-                sin$ = GraphicUtils.sin(r0);
-                Z = cos$ * Z0 - sin$ * Y0;
-                Y = sin$ * Z0 + cos$ * Y0;
-                Z0 = Z;
-                Y0 = Y;
-                //---旋转结束---
-                
-                //---获得物体每个点相对于摄像机的相对坐标
-                X0 += locationOfanObj[0] - cameraLocation[0];
-                Y0 += locationOfanObj[1] - cameraLocation[1];
-                Z0 += locationOfanObj[2] - cameraLocation[2];
-                
+                if(!absP) {
+                    //获取点随着物体分别绕X、Y、Z坐标轴滚动前的原坐标
+                    cos$ = GraphicUtils.cos(r2);
+                    sin$ = GraphicUtils.sin(r2);
+                    X = cos$ * X0 - sin$ * Y0;
+                    Y = sin$ * X0 + cos$ * Y0;
+                    X0 = X;
+                    Y0 = Y;
+    
+                    cos$ = GraphicUtils.cos(r1);
+                    sin$ = GraphicUtils.sin(r1);
+                    X = cos$ * X0 - sin$ * Z0;
+                    Z = sin$ * X0 + cos$ * Z0;
+                    X0 = X;
+                    Z0 = Z;
+    
+                    cos$ = GraphicUtils.cos(r0);
+                    sin$ = GraphicUtils.sin(r0);
+                    Z = cos$ * Z0 - sin$ * Y0;
+                    Y = sin$ * Z0 + cos$ * Y0;
+                    Z0 = Z;
+                    Y0 = Y;
+                    //---旋转结束---
+                    
+                    //---获得物体每个点相对于摄像机的相对坐标
+                    X0 += relX;
+                    Y0 += relY;
+                    Z0 += relZ;
+                } else {
+                    X0 -= cameraLocation[0];
+                    Y0 -= cameraLocation[1];
+                    Z0 -= cameraLocation[2];
+                }
                 //---围绕摄像机旋转(或相对的，摄像机原地左右上下转动)---
                 cos$ = GraphicUtils.cos(cr0);
                 sin$ = GraphicUtils.sin(cr0);
@@ -366,7 +562,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
             };
             
             //获取一个点在屏幕上的x,y坐标以及距离屏幕的深度z
-            p1 = getPoint.run(aPointOfanObj[0], aPointOfanObj[1], aPointOfanObj[2]);
+            p1 = getPoint.run(aPointOfanObj[0], aPointOfanObj[1], aPointOfanObj[2], rel_X, rel_Y, rel_Z, absPoint);
             X1 = p1[0];
             Y1 = p1[1];
             Z1 = p1[2];
@@ -374,9 +570,9 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
             switch(aObject.getDrawingMethod()) {
             case drawTriangleSurface:
 
-                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5]);
+                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5], rel_X, rel_Y, rel_Z, absPoint);
                 Z2 = p2[2];
-                p3 = getPoint.run(aPointOfanObj[6], aPointOfanObj[7], aPointOfanObj[8]);
+                p3 = getPoint.run(aPointOfanObj[6], aPointOfanObj[7], aPointOfanObj[8], rel_X, rel_Y, rel_Z, absPoint);
                 Z3 = p3[2];
                 
                 suc = aObject.getSurfaceChar(i);
@@ -392,7 +588,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
                 break;
             case drawLine:
                 //获取二个点在屏幕上的x,y坐标以及距离屏幕的深度z
-                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5]);
+                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5], rel_X, rel_Y, rel_Z, absPoint);
                 X2 = p2[0];
                 Y2 = p2[1];
                 Z2 = p2[2];
@@ -485,8 +681,12 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
         float aPointOfanObj[]    = null;
         
         //float X0, Y0, Z0, X, Y, Z;
-        float X1, Y1, Z1, X2, Y2, Z2, Z3;
+        float X1, Y1, Z1, X2, Y2, Z2, Z3, rel_X, rel_Y, rel_Z;
         int x, y;
+        
+        rel_X = locationOfanObj[0] - cameraLocation[0];
+        rel_Y = locationOfanObj[1] - cameraLocation[1];
+        rel_Z = locationOfanObj[2] - cameraLocation[2];
         
         float r0 = rollAngleOfanObj[0];
         float r1 = rollAngleOfanObj[1];
@@ -494,42 +694,52 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
         
         final float temp = GraphicUtils.tan(FOV/2.0F);
         float p1[], p2[], p3[];
-        
+
+        boolean absPoint;
         //   x r/v
         for(int i=0 ; i<pcount ;) //for each point
         {
             aPointOfanObj = aObject.getPoint(i);
+            if(aPointOfanObj == null) {
+                aPointOfanObj = aObject.getAbsPoint(i);
+                absPoint = true;
+            } else absPoint = false;
             
-            XYLambdaI getPoint = (float X0, float Y0, float Z0) -> {
+            XYLambdaI2 getPoint = (float X0, float Y0, float Z0, float relX, float relY, float relZ, boolean absP) -> {
                 float X, Y, Z/*, tmp1, tmp2*/, cos$, sin$;
-                //获取点随着物体分别绕X、Y、Z坐标轴滚动前的原坐标
-                cos$ = GraphicUtils.cos(r2);
-                sin$ = GraphicUtils.sin(r2);
-                X = cos$ * X0 - sin$ * Y0;
-                Y = sin$ * X0 + cos$ * Y0;
-                X0 = X;
-                Y0 = Y;
-
-                cos$ = GraphicUtils.cos(r1);
-                sin$ = GraphicUtils.sin(r1);
-                X = cos$ * X0 - sin$ * Z0;
-                Z = sin$ * X0 + cos$ * Z0;
-                X0 = X;
-                Z0 = Z;
-
-                cos$ = GraphicUtils.cos(r0);
-                sin$ = GraphicUtils.sin(r0);
-                Z = cos$ * Z0 - sin$ * Y0;
-                Y = sin$ * Z0 + cos$ * Y0;
-                Z0 = Z;
-                Y0 = Y;
-                //---旋转结束---
-                
-                //---获得物体每个点相对于摄像机的相对坐标
-                X0 += locationOfanObj[0] - cameraLocation[0];
-                Y0 += locationOfanObj[1] - cameraLocation[1];
-                Z0 += locationOfanObj[2] - cameraLocation[2];
-                
+                if(!absP) {
+                    //获取点随着物体分别绕X、Y、Z坐标轴滚动前的原坐标
+                    cos$ = GraphicUtils.cos(r2);
+                    sin$ = GraphicUtils.sin(r2);
+                    X = cos$ * X0 - sin$ * Y0;
+                    Y = sin$ * X0 + cos$ * Y0;
+                    X0 = X;
+                    Y0 = Y;
+    
+                    cos$ = GraphicUtils.cos(r1);
+                    sin$ = GraphicUtils.sin(r1);
+                    X = cos$ * X0 - sin$ * Z0;
+                    Z = sin$ * X0 + cos$ * Z0;
+                    X0 = X;
+                    Z0 = Z;
+    
+                    cos$ = GraphicUtils.cos(r0);
+                    sin$ = GraphicUtils.sin(r0);
+                    Z = cos$ * Z0 - sin$ * Y0;
+                    Y = sin$ * Z0 + cos$ * Y0;
+                    Z0 = Z;
+                    Y0 = Y;
+                    //---旋转结束---
+                    
+                    //---获得物体每个点相对于摄像机的相对坐标
+                    X0 += locationOfanObj[0] - cameraLocation[0];
+                    Y0 += locationOfanObj[1] - cameraLocation[1];
+                    Z0 += locationOfanObj[2] - cameraLocation[2];
+                } else {
+                    X0 -= cameraLocation[0];
+                    Y0 -= cameraLocation[1];
+                    Z0 -= cameraLocation[2];
+                }
                 //---围绕摄像机旋转(或相对的，摄像机原地左右上下转动)---
                 cos$ = GraphicUtils.cos(cr0);
                 sin$ = GraphicUtils.sin(cr0);
@@ -565,7 +775,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
             };
             
             //获取一个点在屏幕上的x,y坐标以及距离屏幕的深度z
-            p1 = getPoint.run(aPointOfanObj[0], aPointOfanObj[1], aPointOfanObj[2]);
+            p1 = getPoint.run(aPointOfanObj[0], aPointOfanObj[1], aPointOfanObj[2], rel_X, rel_Y, rel_Z, absPoint);
             X1 = p1[0];
             Y1 = p1[1];
             Z1 = p1[2];
@@ -573,9 +783,9 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
             switch(aObject.getDrawingMethod()) {
             case drawTriangleSurface:
 
-                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5]);
+                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5], rel_X, rel_Y, rel_Z, absPoint);
                 Z2 = p2[2];
-                p3 = getPoint.run(aPointOfanObj[6], aPointOfanObj[7], aPointOfanObj[8]);
+                p3 = getPoint.run(aPointOfanObj[6], aPointOfanObj[7], aPointOfanObj[8], rel_X, rel_Y, rel_Z, absPoint);
                 Z3 = p3[2];
                 
                 suc = aObject.getSurfaceChar(i);
@@ -591,7 +801,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
                 break;
             case drawLine:
                 //获取二个点在屏幕上的x,y坐标以及距离屏幕的深度z
-                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5]);
+                p2 = getPoint.run(aPointOfanObj[3], aPointOfanObj[4], aPointOfanObj[5], rel_X, rel_Y, rel_Z, absPoint);
                 X2 = p2[0];
                 Y2 = p2[1];
                 Z2 = p2[2];
@@ -631,7 +841,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	}
 
     interface XYLambdaI2 {
-        float[] run(float X0, float Y0, float Z0, boolean absP);
+        float[] run(float X0, float Y0, float Z0, float absX, float absY, float absZ, boolean absP);
     }
     
 	protected float exposureObject(ThreeDs aObject, float cr0, float cr1, float cr2) {

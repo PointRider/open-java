@@ -20,14 +20,13 @@ import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Worlds.CharWorld;
 import graphic_Z.utils.HzController;
-//import graphic_Z.utils.HzController;
 
 public class CharVisualManager extends VisualManager<CharWorld> implements Runnable
 {
 	public		char	                     point[];			//点样式
 	protected	char	                     blank;				//空白样式
 	public		char	                     fraps_buffer[][];			//帧缓冲，实体
-    public      ConcurrentLinkedQueue<char[][]>         motionalBlur;
+    public      ConcurrentLinkedQueue<char[][]>  motionalBlur;
 	public      char                         emptyLine[];
     public      float                        zBuffer[][];       
     public      float                        zEmptyLine[];
@@ -35,7 +34,6 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	protected	List<CharFrapsCamera>        cameras;
 	protected	JTextArea	                 mainScr;		//在主屏幕引用
 	public		List<Iterable<ThreeDs>>      staticObjLists;
-	//public		List<Iterable<Dynamic>>      dynamicObjLists;
 	public		List<PriorityQueue<Dynamic>> selfDisposable;
 	public		Object	                     mainCameraFeedBack;
 	private     StringBuilder                scr_show;
@@ -83,12 +81,10 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		refreshHz           = inWorld.refreshHz;
 		refreshWaitNanoTime = HzController.nanoOfHz(refreshHz);
 		staticObjLists      = inWorld.objectsManager.staticObjLists;
-		//dynamicObjLists	    = inWorld.objectsManager.dynamicObjLists;
 		selfDisposable      = inWorld.objectsManager.selfDisposable;
 		enableMotionalBlur  = false;
 		motionalBlurLevel   = motional_blurLevel;
-		//hzController    = new HzController(refreshHz);
-		//point = '*';					//default
+		
 		point = new char[POINTLEVEL + 1];
 		point[0]  = '@';
 		point[1]  = '$';
@@ -116,9 +112,6 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		fraps_buffer = new char[resolution_Y][];
 		if(motionalBlurLevel > 0) {
 		    motionalBlur = new ConcurrentLinkedQueue<char[][]>();
-		    /*for(int i = 0; i < motionalBlurLevel; ++i) {
-		        motionalBlur.addFirst(new char[resolution_Y][resolution_X]);
-		    }*/
 		} else motionalBlur = null;
 		
 		emptyLine    = new char[resolution_X];
@@ -167,6 +160,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 			ahud = (CharHUD) hud;
 			ahud.reSizeScreen(resolution, fraps_buffer);
 		}
+		motionalBlur.clear();
 	}
 	
 	public void newCamera()
@@ -339,7 +333,6 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 			iter.hasNext();
 			iter.next().printNew()
 		);
-		
 	}
 	
 	public void buff() {
@@ -362,7 +355,6 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	public void printNew() {
 		refresh();
 		now = nextRefreshTime - System.nanoTime();
-		
 		if(now > 0) {
 	        try {
 	            //System.out.println(now);

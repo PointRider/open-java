@@ -20,6 +20,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 	private CharLabel hudDistance;
 	private CharImage hudWarning_missile;
 	private CharImage hudWarningLocking;
+	private Radar     radar;
 	
 	private float 		  maxSearchingRange;
 	public Aircraft		  myJet;
@@ -74,6 +75,7 @@ public class PlayersJetCamera extends CharFrapsCamera
 		hudLocked	= hud_locked;
 		lockTime	= lockTimeLeft = lock_time;
 		locked		= false;
+		radar       = null;
 		lockingSelected = false;
 		currentSelectObj = null;
 		setMaxSearchingRange(max_searchingRange);
@@ -102,6 +104,8 @@ public class PlayersJetCamera extends CharFrapsCamera
 		});
 	}
 	
+	
+	
 	/*
 	 public CharDynamicHUD hudFriends;
 	public CharDynamicHUD hudLocking;
@@ -111,7 +115,15 @@ public class PlayersJetCamera extends CharFrapsCamera
 	public CharDynamicHUD hudWarning_missile; 
 	 */
 	
-	public void resizeScreen(int x, int y) {
+	public final Radar getRadar() {
+        return radar;
+    }
+
+    public final void setRadar(Radar radar) {
+        this.radar = radar;
+    }
+
+    public void resizeScreen(int x, int y) {
 		super.resizeScreen(x, y);
 		hudFriends.reSizeScreen(inWorld.visualManager.resolution, inWorld.visualManager.fraps_buffer);
 		hudLocking.reSizeScreen(inWorld.visualManager.resolution, inWorld.visualManager.fraps_buffer);
@@ -135,14 +147,17 @@ public class PlayersJetCamera extends CharFrapsCamera
         if(lockedLeft > 0) --lockedLeft;
     }
     
+    private float locationOfanObj[] = new float[3];
+    private float point_on_Scr[] = new float[2];
+    private float xyzr[] = new float[4];
 	@Override
 	public Object exposure()
 	{
 		reversedAngle[0] =  roll_source[0] + GraphicUtils.RAD180;
 		reversedAngle[1] = -roll_source[1];
 		reversedAngle[2] = -roll_source[2];
-		
-		float locationOfanObj[]  = new float[3];
+
+        radar.clear();
 		/*
 		float rollAngleOfanObj[] = new float[3];
 		float aPointOfanObj[]    = new float[3];
@@ -155,9 +170,11 @@ public class PlayersJetCamera extends CharFrapsCamera
 		else lockedLeft = lockedTime;
 		
 		Aircraft a = null;
-		float point_on_Scr[] = new float[2];
-
+		
 		float rge;
+		
+		int p0, p1;
+		float sin$, cos$, y, z;
 		
 		for(ThreeDs aObject:inWorld.objectsManager.objects)	//for each object
 		{
@@ -171,13 +188,25 @@ public class PlayersJetCamera extends CharFrapsCamera
 			r1 = rad(rollAngleOfanObj[1]);
 			r2 = rad(rollAngleOfanObj[2]);
 			*/
-			rge = exposureObject(aObject, roll_angle[0], roll_angle[1], roll_angle[2], false);
+			//rge = exposureObject(aObject, roll_angle[0], roll_angle[1], roll_angle[2], false);
+			exposureObject(aObject, false, xyzr);
+            cos$ = GraphicUtils.cos(roll_angle[0]);
+            sin$ = GraphicUtils.sin(roll_angle[0]);
+            y = sin$ * xyzr[2] + cos$ * xyzr[1];
+            z = cos$ * xyzr[2] - sin$ * xyzr[1];
+            if(a == myJet || !a.isAlive() || !myJet.isAlive()) continue;
+            if(a.getLockingPriority() >= 0) {
+                if(a.getCamp() == myJet.getCamp()) radar.report(y, z, true);
+                else radar.report(y, z, false);
+            }
+            
+			rge = xyzr[3];
 			
 			if(rge > getMaxSearchingRange()) /*try*/
 			{
 				if(a != myJet) a.pollBack();	//防止视角跟随导弹行进时将自己的进行战机拉回
 			} /*catch(ClassCastException e) {System.err.println(aObject.toString());}*/
-			
+
 			if(/*a==null ||*/ a.getID().equals(myJet.getID()) || !a.isAlive() || !myJet.isAlive()) continue;
 			
 			float range_to_Scr = CharFrapsCamera.getXY_onCamera
@@ -186,9 +215,8 @@ public class PlayersJetCamera extends CharFrapsCamera
 				resolution[0], resolution[1], location, roll_angle, point_on_Scr, FOV
 			);
 			
-
-            int p0 = (int) point_on_Scr[0];
-            int p1 = (int) point_on_Scr[1];
+            p0 = (int) point_on_Scr[0];
+            p1 = (int) point_on_Scr[1];
             
 			if
 			(

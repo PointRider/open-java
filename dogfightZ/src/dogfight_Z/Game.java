@@ -89,8 +89,8 @@ public class Game extends CharTimeSpace implements Runnable {
 	private Aircraft myJet;
 	
 	private CharLabel lbl1;
-	private CharLabel lbl2;
-	private CharLabel lbl3;
+	//private CharLabel lbl2;
+	//private CharLabel lbl3;
 	private CharLabel lbl4; 
 	private CharLabel lbl5;
     //private CharLabel lbl6;
@@ -455,8 +455,8 @@ public class Game extends CharTimeSpace implements Runnable {
         //lbltest = visualManager.newLabel("", 18, (int)(resolutionY * 0.8), 99);
                 
         lbl1 = visualManager.newLabel(" ", (resolutionX>>1) + 27, (resolutionY>>1) - 7, 32899);
-        lbl2 = visualManager.newLabel(" ", (resolutionX - 18), (int)(resolutionY * 0.3 + 1), 101);
-        lbl3 = visualManager.newLabel(" ", (resolutionX - 18), (int)(resolutionY * 0.3 + 2), 102);
+        /*lbl2 = visualManager.newLabel(" ", (resolutionX - 18), (int)(resolutionY * 0.3 + 1), 101);
+        lbl3 = visualManager.newLabel(" ", (resolutionX - 18), (int)(resolutionY * 0.3 + 2), 102);*/
         lbl4 = visualManager.newLabel(" ", (resolutionX>>1) - 30, (resolutionY>>1) - 7, 32898);
         lbl5 = visualManager.newLabel("HP:[                                            ]", progressBarLocationBaseX0, progressBarLocationBaseY, 204);
         //lbl6 = visualManager.newLabel("AB:[                    ]", progressBarLocationBaseX1, (progressBarLocationBaseY + 2), 207);
@@ -497,9 +497,10 @@ public class Game extends CharTimeSpace implements Runnable {
             hud_radarPrinter,
             visualManager.fraps_buffer, 124, visualManager.resolution, 
             21, (visualManager.resolution[0] - 12), 
-            11, getMyJet(), objectsManager.objects, visibility * 10
+            11, getMyJet(), visibility * 10
         );
-        visualManager.newDynamicHUD(hud_Radar);
+        visualManager.newImage(hud_Radar);
+        mainCamera.setRadar(hud_Radar);
 	}
 	
 	private final void initClouds() {
@@ -629,9 +630,9 @@ public class Game extends CharTimeSpace implements Runnable {
 		
 	    final int resolution_X = visualManager.resolution[0], resolution_Y = visualManager.resolution[1];
 	    final int progressBarLocationBaseX0  = (resolution_X >> 1) - 24;
-        final int progressBarLocationBaseX2 = (int) (resolution_X - 18);
+        //final int progressBarLocationBaseX2 = (int) (resolution_X - 18);
         final int progressBarLocationBaseY  = 5;
-        final int progressBarLocationBaseY2 = (int) (resolution_Y * 0.3);
+        //final int progressBarLocationBaseY2 = (int) (resolution_Y * 0.3);
 
         final int progressBarLocationBaseX3 = (resolution_X>>1) + 27;
         final int progressBarLocationBaseY3 = (resolution_Y>>1) - 7;
@@ -649,8 +650,8 @@ public class Game extends CharTimeSpace implements Runnable {
         //lbltest.setLocation(18, (int)(resolution_Y * 0.8));
         
         lbl1.setLocation(progressBarLocationBaseX3, progressBarLocationBaseY3);
-        lbl2.setLocation(progressBarLocationBaseX2, (progressBarLocationBaseY2 + 1));
-        lbl3.setLocation(progressBarLocationBaseX2, (progressBarLocationBaseY2 + 2));
+        /*lbl2.setLocation(progressBarLocationBaseX2, (progressBarLocationBaseY2 + 1));
+        lbl3.setLocation(progressBarLocationBaseX2, (progressBarLocationBaseY2 + 2));*/
         lbl4.setLocation(progressBarLocationBaseX4, progressBarLocationBaseY3);
         
         lbl5.setLocation(progressBarLocationBaseX0, progressBarLocationBaseY);
@@ -733,8 +734,8 @@ public class Game extends CharTimeSpace implements Runnable {
 	    */
         
 		lbl1.setText(String.format("%.0f", getMyJet().getSpeed() * 12));
-		lbl2.setText("shift: " + String.format("%.2f", getMyJet().getControl_stick_acc()));
-		lbl3.setText("rpm  : " + String.format("%.2f", Aircraft.getCurrentRPM(getMyJet().getMax_rpm(), getMyJet().getControl_stick_acc())));
+		/*lbl2.setText("shift: " + String.format("%.2f", getMyJet().getControl_stick_acc()));
+		lbl3.setText("rpm  : " + String.format("%.2f", Aircraft.getCurrentRPM(getMyJet().getMax_rpm(), getMyJet().getControl_stick_acc())));*/
 		lbl4.setText(String.format("%.0f", (-getMyJet().location[0] + 200) / 10));
 		//lbl5.setText("roll_angle: " + String.format("%.2f", myJet.roll_angle[2]));
 		//lbl6.setText("cameraRoll: " + String.format("%.2f", myJet.cameraRollAngle[2]));
@@ -747,7 +748,7 @@ public class Game extends CharTimeSpace implements Runnable {
 		if(getMyJet().isAlive()) {
 			lblRespawnTimeLeft.visible = false;
 			hud_roll_up_dn_angle.visible = hud_roll_up_dn_scrollBar.visible = lbl10.visible = hud_pushTime_progressBar.visible = hud_shift_scrollBar.visible = hud_turn_lr_scrollBar.visible = 
-					hud_Radar.visible = lbl1.visible = lbl2.visible = lbl3.visible = lbl4.visible = true;
+					hud_Radar.visible = lbl1.visible = /*lbl2.visible = lbl3.visible = */lbl4.visible = true;
 			//------------[Dynamic HUDs]------------
 			
 			boolean tmpCondi = GraphicUtils.abs(getMyJet().roll_angle[1]) > GraphicUtils.RAD90;
@@ -764,8 +765,8 @@ public class Game extends CharTimeSpace implements Runnable {
 			} else backRGB = 0;
 		} else {
 			hud_roll_up_dn_angle.visible = hud_roll_up_dn_scrollBar.visible = lbl10.visible = hud_pushTime_progressBar.visible = hud_shift_scrollBar.visible = hud_turn_lr_scrollBar.visible = 
-					hud_Radar.visible = lbl1.visible = lbl2.visible = lbl3.visible = lbl4.visible = false;
-			lbl1.visible = lbl2.visible = lbl3.visible = lbl4.visible = false;
+					hud_Radar.visible = lbl1.visible = /*lbl2.visible = lbl3.visible = */lbl4.visible = false;
+			lbl1.visible = /*lbl2.visible = lbl3.visible = */lbl4.visible = false;
 			lblRespawnTimeLeft.visible = true;
 			lblRespawnTimeLeft.setText("You will respawn in\n     " + (getMyJet().getRespwanAtTime() - (float)System.currentTimeMillis()/1000) + " seconds.");
 		}
@@ -852,7 +853,7 @@ public class Game extends CharTimeSpace implements Runnable {
 				
 				//-----------------------------
                     
-				case KeyEvent.VK_C:
+				case -KeyEvent.VK_C:
 					++getMyJet().cameraLocationFlag;
 				break;
 				
