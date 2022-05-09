@@ -207,8 +207,6 @@ public class PlayersJetCamera extends CharFrapsCamera
 				if(a != myJet) a.pollBack();	//防止视角跟随导弹行进时将自己的进行战机拉回
 			} /*catch(ClassCastException e) {System.err.println(aObject.toString());}*/
 
-			if(/*a==null ||*/ a.getID().equals(myJet.getID()) || !a.isAlive() || !myJet.isAlive()) continue;
-			
 			float range_to_Scr = CharFrapsCamera.getXY_onCamera
 			(
 				locationOfanObj[0], locationOfanObj[1], locationOfanObj[2], 
