@@ -282,12 +282,11 @@ public class NPC extends Aircraft
         
 		if(rge > 0 && tracingTarget != null && tracingTarget.isAlive() && tracingTarget.getLockingPriority() > 0)
             pursuit(rge);
-		else if(lockedByEnemy && locked_By.isAlive()) {
+		else {
+		    if(lockedByEnemy && locked_By.isAlive()) {
+    		    escape();
+    		} else cruise();
             cannonStopFiring();
-		    escape();
-		} else {
-            cannonStopFiring();
-			cruise();
 		}
 		
 		if(--lockingLife <= 0) {

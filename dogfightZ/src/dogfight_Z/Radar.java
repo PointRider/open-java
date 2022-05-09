@@ -8,7 +8,6 @@ public class Radar extends CharImage
 {
 	private Aircraft myself;
 	private float maxSearchRange;
-	private char  front[][];
 	private char  back[][];
 	private char  emptyLine[];
 	private float nowAngle;
@@ -39,7 +38,6 @@ public class Radar extends CharImage
 	    super(null, frapsBuffer, size, size, Location_X - (size>>1), Location_Y - (size>>1), HUDLayer, scrResolution, true);
 		myself			= myJet;
 		maxSearchRange	= maxSearch_range;
-		front			= new char[size][size];
 		back			= new char[size][size];
 		emptyLine       = new char[size];
 		nowAngle		= GraphicUtils.RAD270;
@@ -86,7 +84,6 @@ public class Radar extends CharImage
     
     public final void clear() {
         for(int i = 0, j = size[0]; i < j; ++i) {
-            System.arraycopy(emptyLine, 0, front[i], 0, size[0]);
             System.arraycopy(emptyLine, 0, back[i], 0, size[0]);
         }
     }
