@@ -31,6 +31,7 @@ public class MouseResponse implements MouseMotionListener
 		
 		rbt.mouseMove(PCScreenCenter_X, PCScreenCenter_Y);
 	}
+	
 	@Override
 	public void mouseDragged(MouseEvent e)
 	{

@@ -437,7 +437,7 @@ public class Game extends CharTimeSpace implements Runnable {
     ) {
 	    resolution_min = GraphicUtils.min(visualManager.getResolution_X(), visualManager.getResolution_Y()) >> 1;
 	    scoreShow.visible = false;
-        visualManager.newDynamicHUD(scoreShow);          //
+        visualManager.newImage(scoreShow);          //
         EndScreen = visualManager.newLabel("      GAME OVER\n\nPress ESC Key To Exit.", ((resolutionX>>1) - 9), (int)(resolutionY * 0.3), 999);
         EndScreen.visible = false;
         

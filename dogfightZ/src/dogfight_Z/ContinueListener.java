@@ -17,16 +17,11 @@ public class ContinueListener implements KeyListener
 	}
 	
 	@Override
-	public void keyTyped(KeyEvent e)
-	{
-		// TODO 自动生成的方法存根
-		
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		// TODO 自动生成的方法存根
 		if(e.getKeyCode() == KeyEvent.VK_P)
 		{
 			paused = !paused;
@@ -49,10 +44,6 @@ public class ContinueListener implements KeyListener
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e)
-	{
-		// TODO 自动生成的方法存根
-
-	}
+	public void keyReleased(KeyEvent e) {}
 
 }

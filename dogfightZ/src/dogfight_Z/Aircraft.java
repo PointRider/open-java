@@ -583,11 +583,11 @@ public class Aircraft extends CharMessObject
 		effectMakingLocation[1][2] += location[2];
 		
 		if(iswingsEffectRunning) {
-    		getGameManager().newEffect(new EngineFlame3(effectMakingLocation[0], effectMakingLocation_old[0], 75000 + (int)(75000 * GraphicUtils.random()), '*'));
-    		getGameManager().newEffect(new EngineFlame3(effectMakingLocation[1], effectMakingLocation_old[1], 75000 + (int)(75000 * GraphicUtils.random()), '*'));
+    		getGameManager().newEffect(new EngineFlame3(effectMakingLocation[0], effectMakingLocation_old[0], 150000/*75000 + (int)(75000 * GraphicUtils.random())*/, '*'));
+    		getGameManager().newEffect(new EngineFlame3(effectMakingLocation[1], effectMakingLocation_old[1], 150000/*75000 + (int)(75000 * GraphicUtils.random())*/, '*'));
 		} else {
-		    getGameManager().newEffect(new EngineFlame3(effectMakingLocation[0], effectMakingLocation[0], 75000 + (int)(75000 * GraphicUtils.random()), '*'));
-            getGameManager().newEffect(new EngineFlame3(effectMakingLocation[1], effectMakingLocation[1], 75000 + (int)(75000 * GraphicUtils.random()), '*'));
+		    getGameManager().newEffect(new EngineFlame3(effectMakingLocation[0], effectMakingLocation[0], 150000/*75000 + (int)(75000 * GraphicUtils.random())*/, '*'));
+            getGameManager().newEffect(new EngineFlame3(effectMakingLocation[1], effectMakingLocation[1], 150000/*75000 + (int)(75000 * GraphicUtils.random())*/, '*'));
 		}
 		effectMakingLocation_old[0][0] = effectMakingLocation[0][0];
         effectMakingLocation_old[0][1] = effectMakingLocation[0][1];

@@ -58,7 +58,7 @@ public class EventManager extends JFrame
 	private int fontSize;
 	private int currentFontIdx;
 	
-	public JTextArea		   mainScr;
+	public    JTextArea		   mainScr;
 	
 	protected KeyboardResponse keyResponse;
 	protected MouseResponse	   mouseResponse;
@@ -75,8 +75,8 @@ public class EventManager extends JFrame
 		
 		maxKeyBufferSize = maxKeyBuffer_size;
 		
-		keyResponse		= new KeyboardResponse(EventFrapsQueue_keyboard, maxKeyBufferSize);
-		mouseResponse	= new MouseResponse(EventFrapsQueue_mouse);
+		keyResponse	  = new KeyboardResponse(EventFrapsQueue_keyboard, maxKeyBufferSize);
+		mouseResponse = new MouseResponse(EventFrapsQueue_mouse);
 		
 		PCScreenCenter_X = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width >> 1);
 		PCScreenCenter_Y = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height >> 1);
