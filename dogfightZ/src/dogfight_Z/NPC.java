@@ -126,12 +126,12 @@ public class NPC extends Aircraft
             control_roll_lr(-rz / tmp);
             
 			//超出限制高度或者低度
-            if(location[0] < -3500  &&  ry > RADnga30) {
+            if(location[0] < -4000  &&  ry > RADnga30) {
                 if((GraphicUtils.fastRanodmInt() & 1) == 0)
                     turnUp  = ((GraphicUtils.fastRanodmInt() & 1) == 0? true : false);//太高
                 else roll_up_dn_Time = 0;
                 control_roll_up_dn(tmp3); //down
-            } else if(location[0] > -1250  &&  ry < RAD30) {
+            } else if(location[0] > -1750  &&  ry < RAD30) {
                 if((GraphicUtils.fastRanodmInt() & 1) == 0)
                     turnUp  = ((GraphicUtils.fastRanodmInt() & 1) == 0? true : false); //太低
                 else roll_up_dn_Time = 0;
