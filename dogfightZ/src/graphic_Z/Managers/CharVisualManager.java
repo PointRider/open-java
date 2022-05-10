@@ -42,6 +42,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
     private     long                         now;
     private     boolean                      usingZBuffer;
     public      boolean                      enableMotionalBlur;
+    private     boolean                      onceFlag;
     private     int                          motionalBlurLevel;
     
 	public final int getMotionalBlurLevel() {
@@ -83,8 +84,8 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		staticObjLists      = inWorld.objectsManager.staticObjLists;
 		selfDisposable      = inWorld.objectsManager.selfDisposable;
 		enableMotionalBlur  = false;
+        onceFlag            = false;
 		motionalBlurLevel   = motional_blurLevel;
-		
 		point = new char[POINTLEVEL + 1];
 		point[0]  = '@';
 		point[1]  = '$';
@@ -314,6 +315,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 	}
 	
 	private final void printBlur(char[][] blurFrame) {
+	    if(blurFrame == fraps_buffer) return;
 	    for(int i=0 ; i<resolution[1] ; ++i)
             for(int j=0 ; j<resolution[0] ; ++j){
                 if(fraps_buffer[i][j] == ' '  &&  blurFrame[i][j] != '\0' &&  blurFrame[i][j] != ' ')
@@ -351,7 +353,6 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		    inWorld.execute(aCamera);
 		}
 	}
-	
 	public void printNew() {
 		refresh();
 		now = nextRefreshTime - System.nanoTime();
@@ -367,12 +368,19 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		}
 
         if(motionalBlur.size() == motionalBlurLevel) {
-            for(char [][] frame : motionalBlur) {
-                printBlur(frame);
+            if(enableMotionalBlur) {
+                onceFlag = true;
+                for(char [][] frame : motionalBlur) {
+                    printBlur(frame);
+                }
+            } else if(onceFlag) {
+                printBlur(motionalBlur.peek());
+                onceFlag = false;
             }
+
             motionalBlur.poll();
         }
-        
+
 		boolean firstInLine, firstLine;
 		
 		scr_show.delete(0, scr_show.length());

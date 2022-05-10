@@ -879,27 +879,28 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 	public Object exposureStatic()
 	{
         if(inWorld.visualManager.enableMotionalBlur) {
-            
-            blurFrame = new char[resolution[1]][resolution[0]];
-            /*for(int i=0 ; i<resolution[1] ; ++i) {
-                System.arraycopy(inWorld.visualManager.emptyLine, 0, blurFrame[i], 0, resolution[0]);
-            }*/
-            
-        	for(Iterable<ThreeDs> aList:staticObjLists) { 
-        		for(ThreeDs aObject:aList) {
-        			//exposureObject(aObject, roll_angle[0], roll_angle[1], roll_angle[2], true);
-        		    exposureAnObject(
-        		        blurFrame, resolution, location, visibility, FOV, 
-        	            XcenterI, YcenterI, 
-        	            aObject, 
-        	            roll_angle[0], roll_angle[1], roll_angle[2], 
-        	            false, /*blurChars*//*inWorld.visualManager.point*/'.'
-        		    );
-        		}
-        	}
-
-            if(motionalBlur.size() < inWorld.visualManager.getMotionalBlurLevel())
+            if(motionalBlur.size() < inWorld.visualManager.getMotionalBlurLevel()) {
+                blurFrame = new char[resolution[1]][resolution[0]];
+                /*for(int i=0 ; i<resolution[1] ; ++i) {
+                    System.arraycopy(inWorld.visualManager.emptyLine, 0, blurFrame[i], 0, resolution[0]);
+                }*/
+                
+            	for(Iterable<ThreeDs> aList:staticObjLists) { 
+            		for(ThreeDs aObject:aList) {
+            			//exposureObject(aObject, roll_angle[0], roll_angle[1], roll_angle[2], true);
+            		    exposureAnObject(
+            		        blurFrame, resolution, location, visibility, FOV, 
+            	            XcenterI, YcenterI, 
+            	            aObject, 
+            	            roll_angle[0], roll_angle[1], roll_angle[2], 
+            	            false, /*blurChars*//*inWorld.visualManager.point*/'.'
+            		    );
+            		}
+            	}
+    
+                
                 motionalBlur.add(blurFrame);
+            }
         } else {
             for(Iterable<ThreeDs> aList:staticObjLists) { 
                 for(ThreeDs aObject:aList) {
