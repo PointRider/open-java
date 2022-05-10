@@ -377,7 +377,6 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
                 printBlur(motionalBlur.peek());
                 onceFlag = false;
             }
-
             motionalBlur.poll();
         }
 
