@@ -1,6 +1,6 @@
 package graphic_Z.Objects;
 
-public class CharMessObject extends CharObject implements Runnable
+public abstract class CharMessObject extends CharObject implements Runnable
 {
 	protected float mess;
 	protected float velocity[];

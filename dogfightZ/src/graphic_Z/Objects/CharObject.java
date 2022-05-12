@@ -8,7 +8,7 @@ import java.util.ListIterator;
 
 import graphic_Z.Interfaces.ThreeDs;
 
-public class CharObject extends TDObject implements ThreeDs
+public abstract class CharObject extends TDObject implements ThreeDs
 {
 	public char specialDisplay;
 	public int points_count;			//物体点个数

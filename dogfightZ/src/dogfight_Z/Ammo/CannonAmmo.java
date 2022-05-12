@@ -164,4 +164,9 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
     public final String getWeaponName() {
         return "Cannon";
     }
+
+    @Override
+    public final PointType getPointType() {
+        return PointType.rel;
+    }
 }

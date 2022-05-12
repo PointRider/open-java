@@ -193,4 +193,9 @@ public class RandomCloud extends CharObject implements Runnable, ThreeDs
 	{
 		reConstruct();
 	}
+
+    @Override
+    public final PointType getPointType() {
+        return PointType.rel;
+    }
 }

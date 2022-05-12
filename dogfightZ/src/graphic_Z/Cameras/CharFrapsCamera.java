@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
+import graphic_Z.Interfaces.ThreeDs.PointType;
 import graphic_Z.Managers.CharVisualManager;
 import graphic_Z.Worlds.CharWorld;
 import graphic_Z.utils.GraphicUtils;
@@ -88,15 +89,11 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		final float temp = GraphicUtils.tan(FOV/2.0F);
 		float p1[], p2[], p3[];
 		
-		boolean absPoint;
+		boolean absPoint = (aObject.getPointType() == PointType.abs? true: false);
 		//   x r/v
 		for(int i=0 ; i<pcount ;) //for each point
 		{
-			aPointOfanObj = aObject.getPoint(i);
-			if(aPointOfanObj == null) {
-			    aPointOfanObj = aObject.getAbsPoint(i);
-			    absPoint = true;
-			} else absPoint = false;
+			aPointOfanObj = (absPoint? aPointOfanObj = aObject.getAbsPoint(i): aObject.getPoint(i));
             
 			XYLambdaI2 getPoint = (float X0, float Y0, float Z0, float relX, float relY, float relZ, boolean absP) -> {
 				float X, Y, Z/*, tmp1, tmp2*/, cos$, sin$;
@@ -269,15 +266,11 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
         final float temp = GraphicUtils.tan(FOV/2.0F);
         float p1[], p2[], p3[];
         
-        boolean absPoint;
+        boolean absPoint = (aObject.getPointType() == PointType.abs? true: false);
         //   x r/v
         for(int i=0 ; i<pcount ;) //for each point
         {
-            aPointOfanObj = aObject.getPoint(i);
-            if(aPointOfanObj == null) {
-                aPointOfanObj = aObject.getAbsPoint(i);
-                absPoint = true;
-            } else absPoint = false;
+            aPointOfanObj = (absPoint? aPointOfanObj = aObject.getAbsPoint(i): aObject.getPoint(i));
             
             XYLambdaI2 getPoint = (float X0, float Y0, float Z0, float relX, float relY, float relZ, boolean absP) -> {
                 float X, Y, Z/*, tmp1, tmp2*/, cos$, sin$;
@@ -482,15 +475,11 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
         final float temp = GraphicUtils.tan(FOV/2.0F);
         float p1[], p2[], p3[];
 
-        boolean absPoint;
+        boolean absPoint = (aObject.getPointType() == PointType.abs? true: false);
         //   x r/v
         for(int i=0 ; i<pcount ;) //for each point
         {
-            aPointOfanObj = aObject.getPoint(i);
-            if(aPointOfanObj == null) {
-                aPointOfanObj = aObject.getAbsPoint(i);
-                absPoint = true;
-            } else absPoint = false;
+            aPointOfanObj = (absPoint? aPointOfanObj = aObject.getAbsPoint(i): aObject.getPoint(i));
             
             XYLambdaI2 getPoint = (float X0, float Y0, float Z0, float relX, float relY, float relZ, boolean absP) -> {
                 float X, Y, Z/*, tmp1, tmp2*/, cos$, sin$;
@@ -695,15 +684,11 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
         final float temp = GraphicUtils.tan(FOV/2.0F);
         float p1[], p2[], p3[];
 
-        boolean absPoint;
+        boolean absPoint = (aObject.getPointType() == PointType.abs? true: false);
         //   x r/v
         for(int i=0 ; i<pcount ;) //for each point
         {
-            aPointOfanObj = aObject.getPoint(i);
-            if(aPointOfanObj == null) {
-                aPointOfanObj = aObject.getAbsPoint(i);
-                absPoint = true;
-            } else absPoint = false;
+            aPointOfanObj = (absPoint? aPointOfanObj = aObject.getAbsPoint(i): aObject.getPoint(i));
             
             XYLambdaI2 getPoint = (float X0, float Y0, float Z0, float relX, float relY, float relZ, boolean absP) -> {
                 float X, Y, Z/*, tmp1, tmp2*/, cos$, sin$;

@@ -1037,6 +1037,11 @@ public class Aircraft extends CharMessObject
     public final boolean isAlive() {
         return HP > 0;
     }
+
+    @Override
+    public final PointType getPointType() {
+        return PointType.rel;
+    }
 /*
     public final void setAlive(boolean isAlive) {
         this.isAlive = isAlive;

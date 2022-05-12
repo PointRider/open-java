@@ -30,6 +30,7 @@ import graphic_Z.Worlds.CharWorld;
 import graphic_Z.utils.Common;
 import graphic_Z.utils.GraphicUtils;
 import dogfight_Z.dogLog.controller.dependencies.CloudsManager;
+import dogfight_Z.dogLog.controller.dependencies.RelCharMessObject;
 import dogfight_Z.dogLog.view.Menu;
 
 public class ScreenResizer extends Menu
@@ -259,7 +260,7 @@ public class ScreenResizer extends Menu
 	
 	private void initMe(String myJetModel_file, int x, int y) {
 
-        myJet = new CharMessObject(myJetModel_file, 10000, DrawingMethod.drawLine);
+        myJet = new RelCharMessObject(myJetModel_file, 10000, DrawingMethod.drawLine);
         myJet.setLocation(0, 0, 60);
         myJet.specialDisplay = '@';
 

@@ -16,4 +16,9 @@ public class EngineFlame3 extends EngineFlame
 		this(Location1, Location0, lifeTime);
 		specialDisplay = specialDisplayChar;
 	}
+
+    @Override
+    public final PointType getPointType() {
+        return PointType.abs;
+    }
 }

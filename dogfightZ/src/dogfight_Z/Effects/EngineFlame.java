@@ -121,4 +121,8 @@ public class EngineFlame extends CharObject implements Dynamic
 		return this.hashCode();
 	}
 
+    @Override
+    public PointType getPointType() {
+        return PointType.rel;
+    }
 }

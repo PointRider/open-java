@@ -9,4 +9,8 @@ public class CubeA extends CharMessObject {
         surfaceChar = new char[] {'-', '-', '-', '-', '+', '+', '+', '+', '$', '$', '$', '$'};
     }
 
+    @Override
+    public final PointType getPointType() {
+        return PointType.rel;
+    }
 }

@@ -7,7 +7,6 @@ import java.util.PriorityQueue;
 import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Objects.CharMessObject;
-import graphic_Z.Objects.CharObject;
 //import graphic_Z.Worlds.CharWorld;
 import graphic_Z.utils.LinkedListZ;
 
@@ -52,23 +51,23 @@ public class CharObjectsManager extends TDObjectsManager
 	{
 		return objects.pushBack(newObj);
 	}
-	
+	/*
 	public ListIterator<ThreeDs> newObject(String modelFile)
 	{
 		return newObject(new CharObject(modelFile));
 	}
-	
+	*/
 	public CharMessObject newMessObject(CharMessObject newObj)
 	{
 		objects.add(newObj);
 		return newObj;
 	}
-	
+	/*
 	public CharMessObject newMessObject(String modelFile, float Mess)
 	{
 		return newMessObject(new CharMessObject(modelFile, Mess));
 	}
-	
+	*/
 	public void remove(ThreeDs obj)
 	{
 		objects.remove(obj);
