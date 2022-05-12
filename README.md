@@ -1,4 +1,4 @@
-# 	dogfightZ 	![img](dogfightZ/dogfightZ.ico)
+# 	dogfightZ 	![img](dogfightZ.ico)
 
 基于 
 
@@ -57,7 +57,7 @@
 
 - 鼠标左右滑动：战机左右翻滚
 
-- 鼠标滚轮：增加或减少油门控制杆的油门值
+- 鼠标滚轮：瞄准缩放
 
 - 空格：使用加力燃烧加速飞行
 
