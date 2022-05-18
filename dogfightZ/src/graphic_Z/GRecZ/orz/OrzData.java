@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import graphic_Z.GRecZ.datastructureZ.BitArrayZ;
+
 public class OrzData implements Serializable {
     
     /**

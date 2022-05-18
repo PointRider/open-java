@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 
+import graphic_Z.GRecZ.datastructureZ.BitArrayZ;
+
 public class OrzCodeTable implements Serializable {
 
     /**
@@ -16,6 +18,10 @@ public class OrzCodeTable implements Serializable {
     
     public OrzCodeTable() {
         code = new BitArrayZ[256];
+    }
+    
+    public OrzCodeTable(BitArrayZ [] codeTable) {
+        code = codeTable;
     }
     
     public OrzCodeTable(DataInputStream stream) throws IOException {

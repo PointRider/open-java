@@ -1,4 +1,4 @@
-package graphic_Z.GRecZ.orz;
+package graphic_Z.GRecZ.datastructureZ;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

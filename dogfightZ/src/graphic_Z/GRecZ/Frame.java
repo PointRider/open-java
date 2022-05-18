@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import graphic_Z.GRecZ.orz.OrzData;
 
 public class Frame implements Serializable {
-
     
     /**
      * 
