@@ -192,6 +192,12 @@ public class BinarySearchingTree<ElementType extends Comparable<ElementType>>
         return null;
     }
 
+    @Override
+    public Iterator<BinaryNode<ElementType>> iterator() {
+        // TODO 自动生成的方法存根
+        return null;
+    }
+
     //TreeSet<Integer> t;
     
 }

@@ -29,25 +29,21 @@ public class BinarySearchingNode<DataType extends Comparable<DataType>>
 
     @Override
     public BinarySearchingNode<DataType> getParent() {
-        // TODO 自动生成的方法存根
-        return null;
+        return parent;
     }
 
     @Override
     public BinarySearchingNode<DataType> getLeftChild() {
-        // TODO 自动生成的方法存根
-        return null;
+        return left;
     }
 
     @Override
     public BinarySearchingNode<DataType> getRightChild() {
-        // TODO 自动生成的方法存根
-        return null;
+        return right;
     }
 
     @Override
     public int compareTo(BinarySearchingNode<DataType> o) {
-        // TODO 自动生成的方法存根
-        return 0;
+        return data.compareTo(o.data);
     }
 }

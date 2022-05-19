@@ -60,7 +60,21 @@ public class Frame implements Serializable {
         return null;
     }
     
+    public byte[] getFrameData() {
+        if(updates == null) {//pixels
+            
+            for(Pixel p : pixels) {
+                
+            }
+        } else {
+            
+        }
+        return null;
+    }
+    
     public OrzData getOrz() {
+        
+        
         return null;
     }
 }

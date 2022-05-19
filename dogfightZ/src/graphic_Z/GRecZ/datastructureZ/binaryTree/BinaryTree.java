@@ -2,7 +2,7 @@ package graphic_Z.GRecZ.datastructureZ.binaryTree;
 
 import java.util.Iterator;
 
-public class BinaryTree<NodeType extends BinaryNodeRequire<NodeType>> implements Iterable<NodeType> {
+public class BinaryTree<NodeType extends BinaryNodeRequire<NodeType>> /*implements Iterable<NodeType>*/ {
 
     protected NodeType              root;
     protected PreIterator<NodeType> preIterator;
@@ -103,12 +103,16 @@ public class BinaryTree<NodeType extends BinaryNodeRequire<NodeType>> implements
         }
         
         public PreIterator() {
-            this(null);
+            super(null);
         }
         
+        public PreIterator(PreIterator<NodeType> preIterator) {
+            this(preIterator.now, preIterator.nil, preIterator.lrDirection, preIterator.udDirection);
+        }
+
         @Override
         public boolean hasNext() {
-            return now == nil;
+            return now != nil;
         }
 
         @Override
@@ -131,7 +135,7 @@ public class BinaryTree<NodeType extends BinaryNodeRequire<NodeType>> implements
                     }
                 } /**/
             } else {
-                if(now == null) throw new NullPointerException("Iterator is end.");
+                if(now == null) return preNode;
                 if(lrDirection == LEFT) {
                     if(now.getRightChild() != nil) {
                         now = now.getRightChild();
@@ -142,7 +146,7 @@ public class BinaryTree<NodeType extends BinaryNodeRequire<NodeType>> implements
                         next();
                     }
                 } else {
-                    if(now == now.getParent().getLeftChild()) lrDirection = LEFT;
+                    if(now.getParent() != nil && now == now.getParent().getLeftChild()) lrDirection = LEFT;
                     now = now.getParent();
                     next();
                 }
@@ -151,8 +155,7 @@ public class BinaryTree<NodeType extends BinaryNodeRequire<NodeType>> implements
         }
     }
 
-    @Override
-    public PreIterator<NodeType> iterator() {
-        return preIterator;
+    public PreIterator<NodeType> getIterator() {
+        return new PreIterator<NodeType>(preIterator);
     }
 }
