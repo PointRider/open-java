@@ -9,5 +9,4 @@ public class Pixel {
         this.repeat = repeat;
         this.pixel  = pixel;
     }
-
 }

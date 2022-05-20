@@ -70,8 +70,8 @@ public class OrzData implements Serializable {
         
         int orzBitIndex = 0, bitIndexOfCode, bitLenOfCode;
         BitArrayZ codeOfByte = null;
-        for(byte B : bytes) {
-            codeOfByte = codeTable.get(ByteCodeMap.byteToUnsignedInt(B));
+        for(int i = 0; i < len; ++i) {
+            codeOfByte = codeTable.get(ByteCodeMap.byteToUnsignedInt(bytes[start+i]));
             
             for(
                 bitIndexOfCode = 0, bitLenOfCode = codeOfByte.getBitLen(); 
@@ -107,6 +107,20 @@ public class OrzData implements Serializable {
         
         return unorzed;
     }
+    
+    public final int getSrcByteSize() {
+        if(head == null) return 0;
+        return head.sourceByteSize;
+    }
+    
+    public final int getOrzedBitSize() {
+        if(head == null) return 0;
+        return head.bitSize;
+    } 
+    
+    public final int getOrzedByteSize() {
+        return getOrzedBitSize() >> 3;
+    } 
     
     public static void main(String args[]) {
         byte [] testArr1 = new byte[256];

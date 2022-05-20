@@ -301,7 +301,7 @@ public class BitArrayZ implements Serializable {
     }
     
     public final void set(int bitIndex, int x) {
-        int byteIndex = bitIndex >> 3 + byteBase;
+        int byteIndex = (bitIndex >> 3) + byteBase;
         int bitOffset = bitIndex & 7;
         
         byte mask = (byte) (1 << (7 ^ bitOffset));
@@ -309,7 +309,7 @@ public class BitArrayZ implements Serializable {
     }
 
     public final int get(int bitIndex) {
-        int byteIndex = bitIndex >> 3 + byteBase;
+        int byteIndex = (bitIndex >> 3) + byteBase;
         int bitOffset = bitIndex & 7;
         return (data[byteIndex] & (1 << (7 ^ bitOffset))) == 0? 0: 1;
     }

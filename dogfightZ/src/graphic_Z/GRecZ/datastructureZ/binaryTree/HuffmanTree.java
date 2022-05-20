@@ -93,7 +93,6 @@ public final class HuffmanTree<ValueType> extends BinaryTree<BinarySearchingNode
             left = weightList.poll();
             right = weightList.poll();
             mid = newNode(left.data.key.intValue() + right.data.key.intValue(), null, left, null, right);
-            //System.err.println("left: " + left.data.key + ", mid: " + mid.data.key + ", right: " + right.data.key);
             left.parent  = mid;
             right.parent = mid;
             weightList.add(mid);
