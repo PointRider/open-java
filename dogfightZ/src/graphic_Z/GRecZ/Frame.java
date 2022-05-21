@@ -1,6 +1,8 @@
 package graphic_Z.GRecZ;
 
 import java.io.Serializable;
+
+import graphic_Z.GRecZ.Recoder.FrameLoad;
 import graphic_Z.GRecZ.datastructureZ.BitArrayZ;
 import graphic_Z.GRecZ.orz.OrzData;
 
@@ -16,7 +18,7 @@ public class Frame implements Serializable {
     private int     length;
     
     private StringBuilder decodeString;
-    private String        decodeResult;
+    private FrameLoad     decodeResult;
     
     public final static int loadByte(byte x) {
         return BitArrayZ.ByteCodeMap.byteToUnsignedInt(x);
@@ -25,9 +27,9 @@ public class Frame implements Serializable {
         return BitArrayZ.ByteCodeMap.unsignedIntToByte(x);
     }
     
-    public Frame(OrzData orzedData) {
+    public Frame(OrzData orzedData, boolean type) {
         this.data = orzedData.unorz();
-        this.type = (data[0] == 1);
+        this.type = type;
         this.length = orzedData.getSrcByteSize();
         decodeString = null;
         decodeResult = null;
@@ -35,25 +37,25 @@ public class Frame implements Serializable {
     
     public Frame(
         String firstFrame,
-        byte br, byte bg, byte bb,
-        byte fr, byte fg, byte fb,
+        int br, int bg, int bb,
+        int fr, int fg, int fb,
         int resolutionX, int resolutionY
     ) {
         decodeString = null;
         decodeResult = null;
         type = true;
         char now;
-        data = new byte[((resolutionX * resolutionY) << 1) + 7];
+        data = new byte[((resolutionX * resolutionY) << 1) + 6];
         
         length = 0;
 
-        data[length++] = 1;
-        data[length++] = br;
-        data[length++] = bg;
-        data[length++] = bb;
-        data[length++] = fr;
-        data[length++] = fg;
-        data[length++] = fb;
+        //data[length++] = 1;
+        data[length++] = storeByte(br);
+        data[length++] = storeByte(bg);
+        data[length++] = storeByte(bb);
+        data[length++] = storeByte(fr);
+        data[length++] = storeByte(fg);
+        data[length++] = storeByte(fb);
         
         for(int i = 0, end = firstFrame.length(), repeat; i < end;) {
             now = firstFrame.charAt(i);
@@ -71,8 +73,8 @@ public class Frame implements Serializable {
     
     public Frame(
         String oldFrame, String newFrame,
-        byte br, byte bg, byte bb,
-        byte fr, byte fg, byte fb,
+        int br, int bg, int bb,
+        int fr, int fg, int fb,
         int resolutionX, int resolutionY
     ) {
         if(oldFrame.length() != newFrame.length()) throw new java.lang.ArithmeticException("Frame length is not equal.");
@@ -84,17 +86,17 @@ public class Frame implements Serializable {
         boolean ff = false;
         int lIndex = 0;
         int len;
-        data = new byte[((resolutionX * resolutionY) << 1) + 7];
+        data = new byte[((resolutionX * resolutionY) << 1) + 6];
 
         length = 0;
         
-        data[length++] = 0;
-        data[length++] = br;
-        data[length++] = bg;
-        data[length++] = bb;
-        data[length++] = fr;
-        data[length++] = fg;
-        data[length++] = fb;
+        //data[length++] = 0;
+        data[length++] = storeByte(br);
+        data[length++] = storeByte(bg);
+        data[length++] = storeByte(bb);
+        data[length++] = storeByte(fr);
+        data[length++] = storeByte(fg);
+        data[length++] = storeByte(fb);
         
         for(int i = 0, end = newFrame.length(); i < end;) {
             
@@ -106,22 +108,24 @@ public class Frame implements Serializable {
             data[length++] = Update.getLowerByteOfUShort((char) i); //idx
             
             ++i;
-            
+            /*
+            "uhsaaaakdnbiasu iasxxxxxxxxxxxxxhd uias  iausdboiasudaiusbs", 
+            "uhszdcakdnbiasu iasxxxxyyyyyyxxxhd uias  iausdboiasudaiusbs",
+             * */
             ff = true;
-            for(len = i; len < end  &&  (now = newFrame.charAt(len)) != oldFrame.charAt(len); ++len) {
+            for(len = i; i < end  &&  (now = newFrame.charAt(i)) != oldFrame.charAt(i); ++i) {
                 if(ff) {
                     data[length++] = 127;              //x
-                    lIndex = (length++);               //l - wait to update
+                    lIndex = length++;               //l - wait to update
                     data[length++] = storeByte(first); //c - 1
                     ff = false;
                 }
-                
                 data[length++] = storeByte(now);    //c
             }
             if(ff) {
                 data[length++] = storeByte(first);  //c
             } else {
-                data[lIndex] = storeByte(len + 1 - i);  //l
+                data[lIndex] = storeByte(i - len + 1);  //l
             }
         }
     }
@@ -142,37 +146,43 @@ public class Frame implements Serializable {
     
     public final int getBColorR() {
         if(data == null) return 0;
-        return loadByte(data[1]);
+        return loadByte(data[0]);
     }
     public final int getBColorG() {
         if(data == null) return 0;
-        return loadByte(data[2]);
+        return loadByte(data[1]);
     }
     public final int getBColorB() {
         if(data == null) return 0;
-        return loadByte(data[3]);
+        return loadByte(data[2]);
     }
     public final int getFColorR() {
         if(data == null) return 0;
-        return loadByte(data[4]);
+        return loadByte(data[3]);
     }
     public final int getFColorG() {
         if(data == null) return 0;
-        return loadByte(data[5]);
+        return loadByte(data[4]);
     }
     public final int getFColorB() {
         if(data == null) return 0;
-        return loadByte(data[6]);
+        return loadByte(data[5]);
     }
     
-    public String getFrame() {
+    public FrameLoad getFrame(String oldFrame) {
         
         if(decodeResult != null) return decodeResult;
         if(data == null) return null;
         if(decodeString == null) decodeString = new StringBuilder(); 
             else decodeString.delete(0, decodeString.length());
         
-        int decodingIndex = 7, repeat;
+        FrameLoad result = new FrameLoad(
+            null, 
+            loadByte(data[0]), loadByte(data[1]), loadByte(data[2]), 
+            loadByte(data[3]), loadByte(data[4]), loadByte(data[5])
+        );
+        
+        int decodingIndex = 6, repeat;
         char c;
         
         if(type) { //first frame
@@ -185,25 +195,52 @@ public class Frame implements Serializable {
                 } else decodeString.append(c);
             }  
         } else {
+            if(oldFrame == null) return null;
+            decodeString.append(oldFrame);
+            char idx;
+            byte higher, lower;
             while(decodingIndex < length) {
-                //TODO
+                higher = data[decodingIndex++];
+                lower  = data[decodingIndex++];
+                idx = Update.getUShortOfByte(higher, lower); //idx
+                if(data[decodingIndex] == 127) {//x
+                    for(int i = 0, j = data[++decodingIndex]; i < j; ++i) {//l
+                        decodeString.setCharAt(idx + i, (char) loadByte(data[++decodingIndex]));
+                    }
+                    ++decodingIndex;
+                } else decodeString.setCharAt(idx, (char) loadByte(data[decodingIndex++]));
             }  
         }
-        
-        return decodeResult = decodeString.toString();
+        result.frame = decodeString.toString();
+        return decodeResult = result;
+    }
+    
+    public FrameLoad getFrame() {
+        return getFrame(null);
     }
     
     public static void main(String [] args) {
         //11,s,33,d,j,m,o
-        Frame f = new Frame("uhsaaaakdnbiasu iasxxxxxxxxxxxxxhd uias  iausdboiasudaiusbs", 
+        Frame f1 = new Frame(
+            "uhsaaaakdnbiasu iasxxxxxxxxxxxxxhd uias  iausdboiasudaiusbs", 
             (byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255,
             256, 256
         );
         
-        System.out.println(f.getFrame());
-        System.out.println(f.length);
-        System.out.println(f.getOrz().getOrzedByteSize());
+        Frame f2 = new Frame(
+            "uhsaaaakdnbiasu iasxxxxxxxxxxxxxhd uias  iausdboiasudaiusbs", 
+            "uhszdcakdnbiasu iasxxxxyyyyyyxxxhd uias  iausdboiasudaiusbs", 
+            (byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255, (byte) 255,
+            256, 256
+        );
         
+        System.out.println(f1.getFrame());
+        System.out.println(f1.length);
+        System.out.println(f1.getOrz().getOrzedByteSize());
+
+        System.out.println(f2.getFrame("                                                           "));
+        System.out.println(f2.length);
+        System.out.println(f2.getOrz().getOrzedByteSize());
     }
     
     public byte[] getFrameData() {

@@ -4,9 +4,10 @@ import graphic_Z.GRecZ.orz.OrzData;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameVideoRecording implements Serializable {
     
@@ -14,29 +15,59 @@ public class GameVideoRecording implements Serializable {
      * 
      */
     private static final long serialVersionUID = 8875764655301454786L;
-    byte [] resolution;
-    byte fps;
-    LinkedList<OrzData> frames;
+    private int size;
     
-    public GameVideoRecording(byte resolutionX, byte resolutionY, byte fps) {
-        resolution = new byte[] {resolutionX, resolutionY};
+    private int resolutionX, resolutionY, fps;
+    
+    ConcurrentLinkedQueue<OrzData> frames;
+    
+    public GameVideoRecording(int resolutionX, int resolutionY, int fps) {
+        size = 0;
+        this.resolutionX = resolutionX;
+        this.resolutionY = resolutionY;
         this.fps = fps;
-        frames = new LinkedList<>();
+        frames = new ConcurrentLinkedQueue<OrzData>();
     }
     
     public GameVideoRecording(DataInputStream stream) throws IOException {
-        stream.read(resolution);
-        fps = stream.readByte();
-        frames = new LinkedList<OrzData>();
-
-        while(true) frames.addLast(new OrzData(stream));
+        try {
+            resolutionX = Frame.loadByte(stream.readByte());
+            resolutionY = Frame.loadByte(stream.readByte());
+            fps = Frame.loadByte(stream.readByte());
+        } catch (IOException e) {
+            throw(e);
+        }
+        frames = new ConcurrentLinkedQueue<OrzData>();
+        size = 0;
+        try {
+            while(true) {
+                frames.add(new OrzData(stream));
+                ++size;
+            }
+        } catch(EOFException e) {
+            System.out.println("Recording loaded.");
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
     
-    public void store(DataOutputStream stream) throws IOException {
-        stream.write(resolution);
-        stream.writeByte(fps);
-        for(OrzData frame : frames) {
-            frame.store(stream);
+    public synchronized void store(DataOutputStream stream) throws IOException {
+        stream.writeByte(Frame.storeByte(resolutionX));
+        stream.writeByte(Frame.storeByte(resolutionY));
+        stream.writeByte(Frame.storeByte(fps));
+        
+        while(!frames.isEmpty()) {
+            frames.poll().store(stream);
+            --size;
         }
+    }
+    
+    public final void add(Frame frame) {
+        frames.add(frame.getOrz());
+        synchronized(this) {++size;}
+    }
+    
+    public final synchronized int size() {
+        return size;
     }
 }
