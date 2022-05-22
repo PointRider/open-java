@@ -337,7 +337,8 @@ public class BitArrayZ implements Serializable {
     
     public final void store(DataOutputStream stream) throws IOException {
         stream.writeInt(bitLen);
-        stream.write(data);
+        int byteLen = upDiv(bitLen, 8);
+        stream.write(data, byteBase, byteLen);
     }
     
     public final int getBitLen() {

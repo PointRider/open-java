@@ -136,7 +136,6 @@ public class Recoder implements Runnable {
                     }
                 }
             }
-            
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

@@ -27,7 +27,7 @@ public class OrzData implements Serializable {
     
     public void store(DataOutputStream stream) throws IOException {
         head.store(stream);
-        stream.write(data);
+        stream.write(data, 0, BitArrayZ.upDiv(head.bitSize, 8));
     }
     
     public HuffmanTree<Integer> countByte(byte [] bytes, int start, int len) {

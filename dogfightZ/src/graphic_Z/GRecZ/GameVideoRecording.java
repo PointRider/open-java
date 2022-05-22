@@ -7,9 +7,10 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class GameVideoRecording implements Serializable {
+public class GameVideoRecording implements Iterable<OrzData>, Serializable {
     
     /**
      * 
@@ -40,7 +41,7 @@ public class GameVideoRecording implements Serializable {
         try {
             resolutionX = Frame.loadByte(stream.readByte());
             resolutionY = Frame.loadByte(stream.readByte());
-            fps = Frame.loadByte(stream.readByte());
+            fps         = Frame.loadByte(stream.readByte());
         } catch (IOException e) {
             throw(e);
         }
@@ -87,6 +88,10 @@ public class GameVideoRecording implements Serializable {
 
     public final int getResolutionY() {
         return resolutionY;
+    }
+    
+    public Iterator<OrzData> iterator() {
+        return frames.iterator();
     }
     
     public final void setResolution(int x, int y) {

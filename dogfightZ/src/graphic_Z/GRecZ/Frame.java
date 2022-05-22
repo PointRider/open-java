@@ -13,6 +13,8 @@ public class Frame implements Serializable {
      */
     private static final long serialVersionUID = 5924611790139759528L;
     
+    private static final byte x = 127;
+    
     private byte [] data;
     private boolean type;
     private int     length;
@@ -64,7 +66,7 @@ public class Frame implements Serializable {
                 ++i; ++repeat;
             }
             if(repeat > 1) {
-                data[length++] = 127;
+                data[length++] = x;
                 data[length++] = storeByte(repeat);
             }
             data[length++] = storeByte(now);
@@ -115,7 +117,7 @@ public class Frame implements Serializable {
             ff = true;
             for(len = i; i < end  &&  (now = newFrame.charAt(i)) != oldFrame.charAt(i); ++i) {
                 if(ff) {
-                    data[length++] = 127;              //x
+                    data[length++] = x;              //x
                     lIndex = length++;               //l - wait to update
                     data[length++] = storeByte(first); //c - 1
                     ff = false;
@@ -188,7 +190,7 @@ public class Frame implements Serializable {
         if(type) { //first frame
             while(decodingIndex < length) {
                 c = (char) loadByte(data[decodingIndex++]);
-                if(c == 127) {
+                if(c == x) {
                     repeat = loadByte(data[decodingIndex++]);
                     c = (char) loadByte(data[decodingIndex++]);
                     while(repeat --> 0) decodeString.append(c);
@@ -203,7 +205,7 @@ public class Frame implements Serializable {
                 higher = data[decodingIndex++];
                 lower  = data[decodingIndex++];
                 idx = Update.getUShortOfByte(higher, lower); //idx
-                if(data[decodingIndex] == 127) {//x
+                if(data[decodingIndex] == x) {//x
                     for(int i = 0, j = data[++decodingIndex]; i < j; ++i) {//l
                         decodeString.setCharAt(idx + i, (char) loadByte(data[++decodingIndex]));
                     }
