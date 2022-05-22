@@ -29,16 +29,24 @@ public class Recoder implements Runnable {
     
     private ConcurrentLinkedQueue<FrameLoad> framesQueue;
     private GameVideoRecording recordFileBuffer;
+    private boolean paused;
     private boolean running;
-    private boolean terminated;
     private long    refreshWaitNanoTime;
     
     private int resolutionX, resolutionY, flushBufferSize;
     
     private DataOutputStream recFile;
     
+    public void setResolution(int x, int y) {
+        if(running) {
+            System.err.println("Recoder !> Can not change video file when recording.");
+            return;
+        }
+        recordFileBuffer.setResolution(x, y);
+    }
+    
     public void setOutputFile(String recFile) {
-        if(!terminated) {
+        if(running) {
             System.err.println("Recoder !> Can not change video file when recording.");
             return;
         }
@@ -59,8 +67,8 @@ public class Recoder implements Runnable {
         int storeWaitSecond
     ) {
         this.framesQueue = framesQueue;
+        paused  = false;
         running = false;
-        terminated = true;
         this.resolutionX    = resolutionX;
         this.resolutionY    = resolutionY;
         recordFileBuffer    = new GameVideoRecording(resolutionX, resolutionY, fps);
@@ -76,8 +84,8 @@ public class Recoder implements Runnable {
             System.err.println("Recoder !> Video recording output file not set.");
             return;
         }
-        terminated = false;
         running = true;
+        paused  = false;
         
         boolean ff = true;
         
@@ -87,13 +95,14 @@ public class Recoder implements Runnable {
         long now, nextRefreshTime;
         
         try {
-            while(!terminated) {
-                nextRefreshTime = System.nanoTime() + refreshWaitNanoTime; 
-                if(!running) try {
+            while(running) {
+                if(paused) try {
                     synchronized(this) { wait(); }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                
+                nextRefreshTime = System.nanoTime() + refreshWaitNanoTime; 
                 
                 if(!framesQueue.isEmpty()) {
                     frameLoad = framesQueue.poll();
@@ -131,16 +140,17 @@ public class Recoder implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            terminated = true;
+            running = false;
             if(recFile != null) {
                 //flush buffer
-                if(recordFileBuffer.size() >= flushBufferSize) {
-                    try {
+                try {
+                    while(recordFileBuffer.size() > 0) {
                         recordFileBuffer.store(recFile);
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                recordFileBuffer.reset();
                 //close
                 try {
                     recFile.close();
@@ -153,15 +163,15 @@ public class Recoder implements Runnable {
     }
     
     public void pause() {
-        running = false;
+        paused = true;
     }
     
     public void resume() {
-        running = true;
+        paused = false;
         synchronized(this) { notifyAll(); }
     }
     
     public void finish() {
-        terminated = true;
+        running = false;
     }
 }

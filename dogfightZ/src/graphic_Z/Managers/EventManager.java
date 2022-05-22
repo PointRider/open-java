@@ -40,7 +40,6 @@ public class EventManager extends JFrame
             supportedFonts[1] = Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemResourceAsStream("DejaVuSansMono_0.ttf"));
             supportedFonts[2] = Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemResourceAsStream("simsun.ttc"));
 	    } catch (FontFormatException | IOException e) {
-            // TODO 自动生成的 catch 块
             e.printStackTrace();
         }
 	};

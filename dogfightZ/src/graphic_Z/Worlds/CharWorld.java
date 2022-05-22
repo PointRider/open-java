@@ -89,6 +89,7 @@ public class CharWorld extends TDWorld<CharWorld, CharObject, CharHUD>
 	
 	public void startRecording(String recFile) {
 	    recoding = true;
+        recoder.setResolution(visualManager.getResolution_X(), visualManager.getResolution_Y());
 	    recoder.setOutputFile(recFile);
 	    execute(recoder);
 	}

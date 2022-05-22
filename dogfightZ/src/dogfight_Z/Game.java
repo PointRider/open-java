@@ -972,18 +972,22 @@ public class Game extends CharTimeSpace implements Runnable {
                 break;
 				
 				case KeyEvent.VK_J:
+				    if(recording) break;
 					mainCamera.resizeScreen(visualManager.resolution[0] - 1, visualManager.resolution[1]);
 					reLocateHUD();
 				break;
 				case KeyEvent.VK_L:
+                    if(recording) break;
 					mainCamera.resizeScreen(visualManager.resolution[0] + 1, visualManager.resolution[1]);
 					reLocateHUD();
 				break;
                 case KeyEvent.VK_K:
+                    if(recording) break;
                     mainCamera.resizeScreen(visualManager.resolution[0], visualManager.resolution[1] + 1);
                     reLocateHUD();
                 break;
                 case KeyEvent.VK_I:
+                    if(recording) break;
                     mainCamera.resizeScreen(visualManager.resolution[0], visualManager.resolution[1] - 1);
                     reLocateHUD();
                 break;
@@ -1172,9 +1176,6 @@ public class Game extends CharTimeSpace implements Runnable {
 			printNew();
 			//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 		}
-        if(recording) finishRecording();
-        recording = false;
-        lblRecoding.visible = false;
 		getMyJet().visible = false;
 		buffStatic();
 		EndScreen.visible = true;
@@ -1201,13 +1202,27 @@ public class Game extends CharTimeSpace implements Runnable {
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                
+                switch (e.getKeyCode()) {
+                case KeyEvent.VK_F12:
+                    if(recording) {
+                        recording = false;
+                        buffStatic();
+                        finishRecording();
+                        lblRecoding.visible = false;
+                        printNew();
+                    }
+                    break;
+                case KeyEvent.VK_ESCAPE:
+                    if(recording) finishRecording();
+                    lblRecoding.visible = false;
                     setRunning(false);
                     soundTrack.interrupt();
                     shutdown();
                     eventManager.removeKeyListener(this);
                     eventManager.setVisible(false);
                     eventManager.dispose();
+                    break;
                 }
             }
 		});
