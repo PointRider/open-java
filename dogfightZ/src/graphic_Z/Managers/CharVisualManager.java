@@ -23,27 +23,27 @@ import graphic_Z.utils.HzController;
 
 public class CharVisualManager extends VisualManager<CharWorld> implements Runnable
 {
-	public		char	                     point[];			//点样式
-	protected	char	                     blank;				//空白样式
-	public		char	                     fraps_buffer[][];			//帧缓冲，实体
-    public      ConcurrentLinkedQueue<char[][]>  motionalBlur;
-	public      char                         emptyLine[];
-    public      float                        zBuffer[][];       
-    public      float                        zEmptyLine[];
-	public      static final int             POINTLEVEL = 19;
-	protected	List<CharFrapsCamera>        cameras;
-	protected	JTextArea	                 mainScr;		//在主屏幕引用
-	public		List<Iterable<ThreeDs>>      staticObjLists;
-	public		List<PriorityQueue<Dynamic>> selfDisposable;
-	public		Object	                     mainCameraFeedBack;
-	private     StringBuilder                scr_show;
-	private     long                         refreshWaitNanoTime;
-    private     long                         nextRefreshTime;
-    private     long                         now;
-    private     boolean                      usingZBuffer;
-    public      boolean                      enableMotionalBlur;
-    private     boolean                      onceFlag;
-    private     int                          motionalBlurLevel;
+	public		char	                         point[];			//点样式
+	protected	char	                         blank;				//空白样式
+	public		char	                         fraps_buffer[][];			//帧缓冲，实体
+    public      ConcurrentLinkedQueue<char[][]>  motionalBlur;      //帧缓冲，实体
+	public      char                             emptyLine[];
+    public      float                            zBuffer[][];       
+    public      float                            zEmptyLine[];
+	public      static final int                 POINTLEVEL = 19;
+	protected	List<CharFrapsCamera>            cameras;
+	protected	JTextArea	                     mainScr;		//在主屏幕引用
+	public		List<Iterable<ThreeDs>>          staticObjLists;
+	public		List<PriorityQueue<Dynamic>>     selfDisposable;
+	public		Object	                         mainCameraFeedBack;
+	private     StringBuilder                    scr_show;
+	private     long                             refreshWaitNanoTime;
+    private     long                             nextRefreshTime;
+    private     long                             now;
+    private     boolean                          usingZBuffer;
+    public      boolean                          enableMotionalBlur;
+    private     boolean                          onceFlag;
+    private     int                              motionalBlurLevel;
     
 	public final int getMotionalBlurLevel() {
         return motionalBlurLevel;
@@ -74,7 +74,11 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
         this(resolution_X, resolution_Y, inWhichWorld, main_scr, false, motionalBlurLevel);
     }
 	
-	public CharVisualManager(int resolution_X, int resolution_Y, CharWorld inWhichWorld, JTextArea main_scr, boolean useZBuffer, int motional_blurLevel) {
+	public CharVisualManager(
+	        int resolution_X, int resolution_Y, 
+	        CharWorld inWhichWorld, JTextArea main_scr,
+	        boolean useZBuffer, int motional_blurLevel
+	) {
 		super(resolution_X, resolution_Y, inWhichWorld);
 		usingZBuffer        = useZBuffer;
 		mainCameraFeedBack  = null;
@@ -353,7 +357,7 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		    inWorld.execute(aCamera);
 		}
 	}
-	public void printNew() {
+	public String printNew() {
 		refresh();
 		now = nextRefreshTime - System.nanoTime();
 		if(now > 0) {
@@ -399,8 +403,10 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 			
 			firstLine = false;
 		}
-
-		mainScr.setText(scr_show.toString());
+		
+		String newFrame = scr_show.toString();
+		mainScr.setText(newFrame);
+		return newFrame;
 	}
 
 }

@@ -14,7 +14,7 @@ public abstract class VisualManager<WorldType>
 	public int refreshHz;
 	protected HzController hzController;
 	
-	public abstract void printNew();
+	public abstract String printNew();
 	
 	public VisualManager(int resolution_X, int resolution_Y, WorldType inWhichWorld)
 	{

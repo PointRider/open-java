@@ -101,6 +101,7 @@ public class Game extends CharTimeSpace implements Runnable {
 	
     private CharLabel lblRespawnTimeLeft;
 	private CharLabel lblGameTimeLeft;
+    private CharLabel lblRecoding;
 	private CharLabel lblKillTipList;
 
 	private CharLabel 			EndScreen;
@@ -158,6 +159,8 @@ public class Game extends CharTimeSpace implements Runnable {
 	private boolean keyState_TAB;
 	private boolean keyState_SPACE;
 	private boolean keyState_SHIFT;
+	
+	private boolean recording;
 	
 	private int   playersCamp;
 	private long  gameTimeUsed;
@@ -465,6 +468,8 @@ public class Game extends CharTimeSpace implements Runnable {
         lbl9 = visualManager.newLabel("DECOY:[    ]", (resolutionX - 18), (resolutionY >> 1) + 9, 256);
         lblRespawnTimeLeft = visualManager.newLabel(" ", ((resolutionX>>1) - 9), (int)(resolutionY * 0.3), 999);
         lblGameTimeLeft = visualManager.newLabel(" ", ((resolutionX>>1) - 11), 3, 998);
+        lblRecoding = visualManager.newLabel("Recording Video...", ((resolutionX>>1) - 8), 6, 9927);
+        lblRecoding.visible = false;
         lblKillTipList = visualManager.newLabel(" ", 3, 3, 123);
         
         hud_HP_progressBar          = visualManager.newProgressBar((progressBarLocationBaseX0 + 4), progressBarLocationBaseY, 205, 44, '=', CharProgressBar.Direction.horizon, 1.0F);
@@ -584,6 +589,7 @@ public class Game extends CharTimeSpace implements Runnable {
         flag.specialDisplay = '#';
         flag.visible = true;
         clouds.add(flag);*/
+        recording = false;
 	}
 	
 	public final void addKillTip(Aircraft killer, Aircraft deader, String WeaponName) {
@@ -629,10 +635,8 @@ public class Game extends CharTimeSpace implements Runnable {
 	    resolution_min = GraphicUtils.min(visualManager.getResolution_X(), visualManager.getResolution_Y()) >> 1;
 		
 	    final int resolution_X = visualManager.resolution[0], resolution_Y = visualManager.resolution[1];
-	    final int progressBarLocationBaseX0  = (resolution_X >> 1) - 24;
-        //final int progressBarLocationBaseX2 = (int) (resolution_X - 18);
+	    final int progressBarLocationBaseX0 = (resolution_X >> 1) - 24;
         final int progressBarLocationBaseY  = 5;
-        //final int progressBarLocationBaseY2 = (int) (resolution_Y * 0.3);
 
         final int progressBarLocationBaseX3 = (resolution_X>>1) + 27;
         final int progressBarLocationBaseY3 = (resolution_Y>>1) - 7;
@@ -644,8 +648,8 @@ public class Game extends CharTimeSpace implements Runnable {
         
         mainCamera.getHudWarning_missile().location[0] = (resolution_X - 16);
         mainCamera.getHudWarning_missile().location[1] = (resolution_Y >> 1);
-        mainCamera.getHudWarningLocking().location[0] = (resolution_X - 16);
-        mainCamera.getHudWarningLocking().location[1] = (resolution_Y >> 1);
+        mainCamera.getHudWarningLocking().location[0]  = (resolution_X - 16);
+        mainCamera.getHudWarningLocking().location[1]  = (resolution_Y >> 1);
         
         //lbltest.setLocation(18, (int)(resolution_Y * 0.8));
         
@@ -663,7 +667,7 @@ public class Game extends CharTimeSpace implements Runnable {
         EndScreen.setLocation(((resolution_X>>1) - 9), (int) (resolution_Y * 0.3));
         lblRespawnTimeLeft.setLocation(((resolution_X>>1) - 9), (int) (resolution_Y * 0.3));
         lblGameTimeLeft.setLocation(((resolution_X>>1) - 11), 3);
-        
+        lblRecoding.setLocation(((resolution_X>>1) - 8), 6);
         hud_HP_progressBar.setLocation(progressBarLocationBaseX0 + 4, progressBarLocationBaseY);
         hud_pushTime_progressBar.setLocation((resolution_X >> 1) + (resolution_X >> 2) + 1, (resolution_Y >> 1) + 22);
         hud_cannon_progressBar.setLocation(progressBarLocationBaseX3 + 1, progressBarLocationBaseYB);
@@ -695,6 +699,8 @@ public class Game extends CharTimeSpace implements Runnable {
 	private final void updateHUD() {
 
         updateKillList();
+
+        lblRecoding.visible = recording;
         
         float x = getMyJet().getCurrentDirectionXYZ()[0];
         float y = getMyJet().getCurrentDirectionXYZ()[1];
@@ -987,6 +993,12 @@ public class Game extends CharTimeSpace implements Runnable {
     					soundTrack.switchPrevious();
     			        execute(soundTrack);
 				break;
+				
+				case -KeyEvent.VK_F12:
+				    recording = !recording;
+				    if(recording) startRecording("testFile");
+				        else finishRecording();
+                break;
 					
 				case -KeyEvent.VK_R:
     				    soundTrack.interrupt();
@@ -1160,7 +1172,9 @@ public class Game extends CharTimeSpace implements Runnable {
 			printNew();
 			//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 		}
-		
+        if(recording) finishRecording();
+        recording = false;
+        lblRecoding.visible = false;
 		getMyJet().visible = false;
 		buffStatic();
 		EndScreen.visible = true;

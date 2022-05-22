@@ -13,23 +13,17 @@ public class CharTimeSpace extends CharWorld
     public CharTimeSpace(int resolution_X, int resolution_Y) {
         super(resolution_X, resolution_Y);
     }
-	
+    
 	public CharTimeSpace(int resolution_X, int resolution_Y, int refresh_rate, float g, boolean useZBuffer)
-	{
-		super(resolution_X, resolution_Y, refresh_rate, useZBuffer);
-		CharTimeSpace.g = g;
-		//CharTimeSpace.valRate = frapsValRate / refresh_rate;
-	}
-	/*
-	public CharTimeSpace(short resolution_X, short resolution_Y, int refresh_rate, double g)
-	{
-		this(resolution_X, resolution_Y, refresh_rate, g, 36);
-	}
-	*/
+    {
+        super(resolution_X, resolution_Y, refresh_rate, useZBuffer);
+        CharTimeSpace.g = g;
+    }
+	
 	public CharTimeSpace(int resolution_X, int resolution_Y, int refresh_rate, boolean useZBuffer)
-	{
-		this(resolution_X, resolution_Y, refresh_rate, 9.8F, useZBuffer);
-	}
+    {
+        this(resolution_X, resolution_Y, refresh_rate, 9.8F, useZBuffer);
+    }
 	
 	public void buffStatic() {
 		visualManager.buff();
@@ -40,7 +34,7 @@ public class CharTimeSpace extends CharWorld
 	{
 		//visualManager.printNew();
 		//Thread visualPrintNew = new Thread(visualManager);
-		visualManager.printNew();
+	    super.printNew();
 		//visualManager.printNew();
 		/*
 		try
