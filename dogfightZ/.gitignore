@@ -1,5 +1,8 @@
 .classpath
 .project
+testFile
+testFile.ASCII.txt
+testFile.txt
 /bin
 /common
 /.settings
