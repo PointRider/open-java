@@ -79,8 +79,7 @@ public class Frame implements Serializable {
             int fr, int fg, int fb,
             int resolutionX, int resolutionY
         ) {
-        this(newFrame,br, bg, bb,fr, fg, fb,
-                resolutionX, resolutionY);
+        this(newFrame,br, bg, bb,fr, fg, fb, resolutionX, resolutionY);
     }
     
     /*

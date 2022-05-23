@@ -19,7 +19,7 @@ import javax.swing.JTextArea;
 
 import graphic_Z.GRecZ.GameVideoRecording;
 import graphic_Z.GRecZ.player.controller.PlayerController;
-import graphic_Z.GRecZ.player.view.parts.KeyBoardController;
+import graphic_Z.GRecZ.player.view.parts.UserController;
 
 
 public class GRecZPlayer extends JFrame {
@@ -48,8 +48,6 @@ public class GRecZPlayer extends JFrame {
 
     public GRecZPlayer(String vRecFile) throws HeadlessException {
         super("dogfight Z - Recording Player");
-        
-        addKeyListener(new KeyBoardController(this));
         
         PCScreenCenter_X = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width >> 1);
         PCScreenCenter_Y = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height >> 1);
@@ -97,6 +95,12 @@ public class GRecZPlayer extends JFrame {
         if(controller != null) {
             (new Thread(controller)).start();
         }
+        
+        UserController controller = new UserController(this);
+        addKeyListener(controller);
+        mainScr.addMouseListener(controller);
+        mainScr.addMouseWheelListener(controller);
+        mainScr.addMouseMotionListener(controller);
     }
     
     public void setScrZoom(int size) {

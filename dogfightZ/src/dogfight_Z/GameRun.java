@@ -36,6 +36,7 @@ public class GameRun {
     
     public static void initEnviroment() {
         makeDir("resources");
+        makeDir("recordedVidos");
         for(String resource : DATAFILELIST) {
             if(!fileExists("resources/" + resource)) extractResource(resource, "resources/");
         }

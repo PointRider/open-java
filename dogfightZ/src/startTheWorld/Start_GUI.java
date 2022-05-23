@@ -3,8 +3,11 @@ package startTheWorld;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
 
 import dogfight_Z.GameRun;
+import dogfight_Z.dogLog.utils.Common;
+import graphic_Z.GRecZ.player.view.GRecZPlayer;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -18,6 +21,8 @@ import javax.swing.SwingUtilities;
 import javax.imageio.ImageIO;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -71,7 +76,6 @@ public class Start_GUI extends JFrame {
             try {
                 filewrite.createNewFile();
             } catch (IOException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
         }
@@ -83,7 +87,6 @@ public class Start_GUI extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                // TODO Auto-generated method stub
                 try {
                     FileWriter fw=new FileWriter(filewrite,true);
                     BufferedWriter bw=new BufferedWriter(fw);//新建缓存
@@ -93,7 +96,6 @@ public class Start_GUI extends JFrame {
                     System.out.println("成功加载数据");//在控制台端输出提示
                     
                 } catch (IOException e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }
@@ -123,16 +125,13 @@ public class Start_GUI extends JFrame {
 		try {
 			sourceImg = ImageIO.read(new FileInputStream(picture));
 		} catch (FileNotFoundException e2) {
-			// TODO 自动生成的 catch 块
 			e2.printStackTrace();
 		} catch (IOException e2) {
-			// TODO 自动生成的 catch 块
 			e2.printStackTrace();
 		} 
 		BackgroundPanel bgp=new BackgroundPanel(sourceImg);
 		bgp.setBounds(0,0,800,450);
 		
-		//contentPane.add(comboBox);
 		
 		//标题
 		JLabel lblNewLabel_1 = new JLabel("dogfight_Z");
@@ -146,6 +145,12 @@ public class Start_GUI extends JFrame {
 		//命令行运行beready，启动
 		contentPane.add(bgp);
 		bgp.setLayout(null);
+
+        //添加按钮播放录制的游戏！
+        JButton btnNewButtonPlayRec = new JButton("播放录制的游戏");
+        btnNewButtonPlayRec.setBounds(24, 100, 200, 40);
+        bgp.add(btnNewButtonPlayRec);
+        btnNewButtonPlayRec.setFont(new Font("宋体", Font.BOLD, 22));
 		
 		//添加游戏参与者
 		JButton btnNewButton0 = new JButton("游戏设置");
@@ -171,6 +176,7 @@ public class Start_GUI extends JFrame {
 		btnNewButton1.setBounds(24, 350, 200, 40);
 		bgp.add(btnNewButton1);
 		btnNewButton1.setFont(new Font("宋体", Font.BOLD, 26));
+		
 		
 		//播放列表窗体启动
 		JButton btnNewButton3 = new JButton("播放列表");
@@ -219,6 +225,45 @@ public class Start_GUI extends JFrame {
             }
         }
 		
+		btnNewButtonPlayRec.addActionListener
+        ( 
+            new ActionListener()
+            {
+                public void actionPerformed(ActionEvent e)
+                {
+                    String fileName = null;
+                    JFileChooser jfc = new JFileChooser("./recordedVidos/");
+                    
+                    FileFilter filter = new FileFilter()
+                    {
+                        public String getDescription()
+                        {    
+                            return "*.dogGRecZ";    
+                        }    
+                            
+                        public boolean accept(File file)
+                        {    
+                            String name = file.getName();    
+                            return file.isDirectory() || name.toLowerCase().endsWith(".doggrecz");
+                        }
+                    };
+                    
+                    jfc.addChoosableFileFilter(filter);
+                    jfc.setFileFilter(filter);
+                    
+                    jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    jfc.setMultiSelectionEnabled(false);
+                    jfc.showDialog(new JLabel(), "Select");
+                    File file = jfc.getSelectedFile();
+                    if(file == null) return;
+                    fileName = file.getPath();
+                    if(Common.isStringEmpty(fileName)) return;
+                    String args[] = {fileName};
+                    GRecZPlayer.main(args);
+                    dispose();
+                }
+            }
+        );
 		
 		//监听Start按钮，当被点击时，
 		//将选择的难度添加到 beready中，
@@ -298,10 +343,8 @@ public class Start_GUI extends JFrame {
 					try {
 						gamerecord=new RecordUI("resources/gameRecord.rec");
 					} catch (FileNotFoundException e1) {
-						// TODO 自动生成的 catch 块
 						e1.printStackTrace();
 					} catch (IOException e1) {
-						// TODO 自动生成的 catch 块
 						e1.printStackTrace();
 					}
 					gamerecord.setVisible(true);
@@ -359,6 +402,5 @@ try
     pb.start();
 } catch (IOException e1)
 {
-    // TODO 自动生成的 catch 块
     e1.printStackTrace();
 }*/

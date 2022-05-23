@@ -156,7 +156,7 @@ public class LinkedListZ<ElementType> implements Iterable<ElementType>, Deque<El
 	
     @Override
     public Iterator iterator() {
-        return begin();
+        return new Iterator(start);
     }
 
     @Override
@@ -444,10 +444,8 @@ public class LinkedListZ<ElementType> implements Iterable<ElementType>, Deque<El
         return true;
     }
 
-
     public ListIterator<ElementType> listIterator() {
-        // TODO 自动生成的方法存根
-        return null;
+        return new Iterator(start);
     }
 
     @Override

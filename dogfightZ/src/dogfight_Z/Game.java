@@ -12,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -700,7 +702,12 @@ public class Game extends CharTimeSpace implements Runnable {
 
         updateKillList();
 
-        lblRecoding.visible = recording;
+        if(isRecording()) {
+            lblRecoding.visible = true;
+            if(isRecordingPaused()) {
+                lblRecoding.setText("Recording Paused..");
+            } else lblRecoding.setText("Recording Video...");
+        } else lblRecoding.visible = false;
         
         float x = getMyJet().getCurrentDirectionXYZ()[0];
         float y = getMyJet().getCurrentDirectionXYZ()[1];
@@ -998,10 +1005,20 @@ public class Game extends CharTimeSpace implements Runnable {
     			        execute(soundTrack);
 				break;
 				
+				case -KeyEvent.VK_F11:
+				    recordingPauseOrResume();
+                break;
+            
 				case -KeyEvent.VK_F12:
 				    recording = !recording;
-				    if(recording) startRecording("testFile");
-				        else finishRecording();
+				    if(recording) {
+				        startRecording(
+				            "recordedVidos/dogZ_" + 
+				            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd_hh_mm_ss")) +
+				            "_" + GraphicUtils.absI(GraphicUtils.fastRanodmInt()) +
+				            "_recording.dogGRecZ"
+				        );  
+				    } else finishRecording();
                 break;
 					
 				case -KeyEvent.VK_R:
@@ -1206,15 +1223,25 @@ public class Game extends CharTimeSpace implements Runnable {
                 switch (e.getKeyCode()) {
                 case KeyEvent.VK_F12:
                     if(recording) {
-                        recording = false;
-                        buffStatic();
-                        finishRecording();
                         lblRecoding.visible = false;
+                        buffStatic();
                         printNew();
+                        buffStatic();
+                        printNew();
+                        recording = false;
+                        finishRecording();
                     }
                     break;
                 case KeyEvent.VK_ESCAPE:
-                    if(recording) finishRecording();
+                    if(recording) {
+                        lblRecoding.visible = false;
+                        buffStatic();
+                        printNew();
+                        buffStatic();
+                        printNew();
+                        recording = false;
+                        finishRecording();
+                    }
                     lblRecoding.visible = false;
                     setRunning(false);
                     soundTrack.interrupt();

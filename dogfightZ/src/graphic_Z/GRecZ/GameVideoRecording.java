@@ -1,6 +1,7 @@
 package graphic_Z.GRecZ;
 
 import graphic_Z.GRecZ.orz.OrzData;
+import graphic_Z.utils.LinkedListZ;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -8,6 +9,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameVideoRecording implements Iterable<OrzData>, Serializable {
@@ -19,9 +21,12 @@ public class GameVideoRecording implements Iterable<OrzData>, Serializable {
     private int size;
     private boolean headNotStoredFF;
     
+    private boolean readOnly;
+    
     private int resolutionX, resolutionY, fps;
     
     ConcurrentLinkedQueue<OrzData> frames;
+    LinkedListZ<OrzData> readOnlyFrames;
     
     public GameVideoRecording(int resolutionX, int resolutionY, int fps) {
         size = 0;
@@ -30,6 +35,7 @@ public class GameVideoRecording implements Iterable<OrzData>, Serializable {
         this.fps = fps;
         frames = new ConcurrentLinkedQueue<OrzData>();
         headNotStoredFF = true;
+        readOnly = false;
     }
     
     public void reset() {
@@ -38,6 +44,7 @@ public class GameVideoRecording implements Iterable<OrzData>, Serializable {
     
     public GameVideoRecording(DataInputStream stream) throws IOException {
         headNotStoredFF = true;
+        readOnly = true;
         try {
             resolutionX = Frame.loadByte(stream.readByte());
             resolutionY = Frame.loadByte(stream.readByte());
@@ -45,11 +52,11 @@ public class GameVideoRecording implements Iterable<OrzData>, Serializable {
         } catch (IOException e) {
             throw(e);
         }
-        frames = new ConcurrentLinkedQueue<OrzData>();
+        readOnlyFrames = new LinkedListZ<OrzData>();
         size = 0;
         try {
             while(true) {
-                frames.add(new OrzData(stream));
+                readOnlyFrames.add(new OrzData(stream));
                 ++size;
             }
         } catch(EOFException e) {
@@ -60,6 +67,8 @@ public class GameVideoRecording implements Iterable<OrzData>, Serializable {
     }
     
     public synchronized void store(DataOutputStream stream) throws IOException {
+        if(readOnly) return;
+        
         if(headNotStoredFF) {
             stream.writeByte(Frame.storeByte(resolutionX));
             stream.writeByte(Frame.storeByte(resolutionY));
@@ -74,6 +83,7 @@ public class GameVideoRecording implements Iterable<OrzData>, Serializable {
     }
     
     public final void add(Frame frame) {
+        if(readOnly) return;
         frames.add(frame.getOrz());
         synchronized(this) {++size;}
     }
@@ -91,7 +101,13 @@ public class GameVideoRecording implements Iterable<OrzData>, Serializable {
     }
     
     public Iterator<OrzData> iterator() {
-        return frames.iterator();
+        if(!readOnly) return frames.iterator();
+        return null;
+    }
+    
+    public ListIterator<OrzData> listIterator() {
+        if(readOnly) return readOnlyFrames.listIterator();
+        return null;
     }
     
     public final void setResolution(int x, int y) {

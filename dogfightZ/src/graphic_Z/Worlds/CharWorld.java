@@ -98,4 +98,11 @@ public class CharWorld extends TDWorld<CharWorld, CharObject, CharHUD>
 	    recoder.finish();
 	}
 	
+	public boolean isRecording() {
+        return recoder.isRunning();
+    }
+	
+	public boolean isRecordingPaused() {
+	    return !recoding;
+	}
 }

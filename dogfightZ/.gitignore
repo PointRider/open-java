@@ -1,8 +1,6 @@
 .classpath
 .project
-testFile
-testFile.ASCII.txt
-testFile.txt
+/recordedVidos
 /bin
 /common
 /.settings

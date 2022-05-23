@@ -169,6 +169,12 @@ public class Recoder implements Runnable {
     }
     
     public void finish() {
+        paused = false;
         running = false;
+        synchronized(this) { notifyAll(); }
+    }
+    
+    public boolean isRunning() {
+        return running;
     }
 }
