@@ -131,9 +131,7 @@ public class Recoder implements Runnable {
                 if(now > 0) {
                     try {
                         Thread.sleep(now / 1000000, (int) (now % 1000000));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    } catch (InterruptedException e) {}
                 }
             }
         } catch (IOException e) {

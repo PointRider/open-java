@@ -19,7 +19,7 @@ import javax.swing.JTextArea;
 
 import graphic_Z.GRecZ.GameVideoRecording;
 import graphic_Z.GRecZ.player.controller.PlayerController;
-import graphic_Z.GRecZ.player.parts.KeyBoardController;
+import graphic_Z.GRecZ.player.view.parts.KeyBoardController;
 
 
 public class GRecZPlayer extends JFrame {
@@ -121,5 +121,9 @@ public class GRecZPlayer extends JFrame {
                 }
             }
         });
+    }
+
+    public final PlayerController getController() {
+        return controller;
     }
 }

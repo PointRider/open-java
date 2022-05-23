@@ -15,14 +15,10 @@ public class KeyBoardController implements KeyListener {
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // TODO 自动生成的方法存根
-
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        // TODO 自动生成的方法存根
-
     }
 
     @Override
@@ -30,6 +26,7 @@ public class KeyBoardController implements KeyListener {
         
         switch(e.getKeyCode()) {
         case KeyEvent.VK_ESCAPE:
+            player.getController().finish();
             player.setVisible(false);
             player.dispose();
             break;

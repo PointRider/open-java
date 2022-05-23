@@ -59,14 +59,17 @@ public class PlayerController implements Runnable {
             
             newFrame = new Frame(itr.next(), firstFrame);
             firstFrame = false;
-            bg = new Color(newFrame.getBColorR() ,newFrame.getBColorG(),newFrame.getBColorB());
-            fg = new Color(newFrame.getFColorR() ,newFrame.getFColorG(),newFrame.getFColorB());
+            bg = new Color(newFrame.getBColorR(), newFrame.getBColorG(), newFrame.getBColorB());
+            fg = new Color(newFrame.getFColorR(), newFrame.getFColorG(), newFrame.getFColorB());
+            
             frame = newFrame.getFrame(frame).frame;
-
+            
             mainScr.setBackground(bg);
             mainScr.setForeground(fg);
             mainScr.setText(frame);
-                    
+            
+            //System.err.println(frame);
+            
             now = nextRefreshTime - System.nanoTime();
             if(now > 0) {
                 try {
@@ -77,6 +80,7 @@ public class PlayerController implements Runnable {
             }
         }
         running = false;
+        System.out.println("THE END");
     }
 
     public void pause() {

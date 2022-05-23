@@ -60,9 +60,13 @@ public class Update implements Serializable {
     }
     
     public static void main(String [] args) {
-        char x = 12345;
-        System.out.println((int) x);
-        System.out.println(getHigherByteOfUShort(x) + "," + getLowerByteOfUShort(x));
-        System.out.println((int) getUShortOfByte(getHigherByteOfUShort(x), getLowerByteOfUShort(x)));
+        
+        for(int i = 32768; i < 40123; ++i) {
+            char x = (char) i;
+            System.out.println();
+            System.out.print((int) x + "\t");
+            System.out.println(getHigherByteOfUShort(x) + "," + getLowerByteOfUShort(x));
+            System.out.println((int) getUShortOfByte(getHigherByteOfUShort(x), getLowerByteOfUShort(x)));
+        }
     }
 }
