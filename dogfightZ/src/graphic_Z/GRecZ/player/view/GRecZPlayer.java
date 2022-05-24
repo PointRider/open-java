@@ -18,11 +18,12 @@ import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
 import graphic_Z.GRecZ.GameVideoRecording;
+import graphic_Z.GRecZ.player.controller.PController;
 import graphic_Z.GRecZ.player.controller.PlayerController;
 import graphic_Z.GRecZ.player.view.parts.UserController;
+import graphic_Z.GRecZ.player.view.parts.WaitingDialog;
 
-
-public class GRecZPlayer extends JFrame {
+public class GRecZPlayer extends JFrame implements GRZPlayer {
 
     /**
      * 
@@ -44,10 +45,11 @@ public class GRecZPlayer extends JFrame {
         }
     };
     
-    private PlayerController controller;
+    private PlayerController     controller;
 
-    public GRecZPlayer(String vRecFile) throws HeadlessException {
+    public GRecZPlayer(String vRecFile, String bgm_info_file) throws HeadlessException {
         super("dogfight Z - Recording Player");
+        
         
         PCScreenCenter_X = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().width >> 1);
         PCScreenCenter_Y = (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height >> 1);
@@ -88,7 +90,7 @@ public class GRecZPlayer extends JFrame {
         
         try(DataInputStream recFileStream = new DataInputStream(new BufferedInputStream(new FileInputStream(vRecFile)))) {
             GameVideoRecording recording = new GameVideoRecording(recFileStream);
-            controller = new PlayerController(mainScr, recording);
+            controller = new PlayerController(mainScr, recording, bgm_info_file);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,22 +105,26 @@ public class GRecZPlayer extends JFrame {
         mainScr.addMouseMotionListener(controller);
     }
     
-    public void setScrZoom(int size) {
+    public final void setScrZoom(int size) {
         fontSize = size;
         mainScr.setFont(supportedFonts[currentFontIdx].deriveFont(Font.PLAIN, fontSize));
     }
 
-    public void switchFont(int idx) {
+    public final void switchFont(int idx) {
         if(idx < 0 || idx > supportedFonts.length) return;
         mainScr.setFont(supportedFonts[idx].deriveFont(Font.PLAIN, fontSize));
         currentFontIdx = idx;
     }
 
     public static void main(String args[]) {
+        WaitingDialog dia = new WaitingDialog("文件已选择。正在预缓冲解码，请稍候");
+        dia.setVisible(true);
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    GRecZPlayer player = new GRecZPlayer(args[0]);
+                    GRecZPlayer player = new GRecZPlayer(args[0], args[1]);
+                    dia.setVisible(false);
+                    dia.dispose();
                     player.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -127,7 +133,7 @@ public class GRecZPlayer extends JFrame {
         });
     }
 
-    public final PlayerController getController() {
+    public final PController getController() {
         return controller;
     }
 }

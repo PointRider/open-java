@@ -32,6 +32,7 @@ import graphic_Z.Interfaces.Dynamic;
 import graphic_Z.Interfaces.ThreeDs;
 import graphic_Z.Interfaces.ThreeDs.DrawingMethod;
 import graphic_Z.Managers.EventManager;
+import graphic_Z.Managers.SoundTrack;
 import graphic_Z.Worlds.CharTimeSpace;
 import graphic_Z.utils.GraphicUtils;
 
@@ -161,7 +162,7 @@ public class Game extends CharTimeSpace implements Runnable {
 	private boolean keyState_TAB;
 	private boolean keyState_SPACE;
 	private boolean keyState_SHIFT;
-	
+
 	private boolean recording;
 	
 	private int   playersCamp;
@@ -538,7 +539,7 @@ public class Game extends CharTimeSpace implements Runnable {
 	}
 	
 	private final void initSoundTrack(String bgm_file) {
-        soundTrack = new SoundTrack(gameManager, bgm_file);
+        soundTrack = new SoundTrack(bgm_file);
 	}
 	
 	public Game(
@@ -1000,9 +1001,7 @@ public class Game extends CharTimeSpace implements Runnable {
                 break;
                 
 				case -KeyEvent.VK_E:
-    				    soundTrack.interrupt();
-    					soundTrack.switchPrevious();
-    			        execute(soundTrack);
+				    soundTrack.switchPrevious();
 				break;
 				
 				case -KeyEvent.VK_F11:
@@ -1022,9 +1021,7 @@ public class Game extends CharTimeSpace implements Runnable {
                 break;
 					
 				case -KeyEvent.VK_R:
-    				    soundTrack.interrupt();
-    					soundTrack.switchNext();
-    			        execute(soundTrack);
+    				soundTrack.switchNext();
 				break;
                 
                 case -KeyEvent.VK_ESCAPE:
@@ -1126,10 +1123,9 @@ public class Game extends CharTimeSpace implements Runnable {
 			lblGameTimeLeft.visible = false;
 		setRunning(true);
 		execute(cloudMan);
-		execute(soundTrack);
-        ///bgmThread.start();
+        execute(soundTrack);
+        
 		//游戏主循环
-	    
 		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 		
 		while(isRunning() && (gameStopTime == -1  ||  (leftTime = gameStopTime - ((double)System.currentTimeMillis()/1000.0)) > 0))
@@ -1242,6 +1238,7 @@ public class Game extends CharTimeSpace implements Runnable {
                         recording = false;
                         finishRecording();
                     }
+                    soundTrack.terminate();
                     lblRecoding.visible = false;
                     setRunning(false);
                     soundTrack.interrupt();

@@ -7,22 +7,25 @@ import javax.swing.JTextArea;
 
 import graphic_Z.GRecZ.Frame;
 import graphic_Z.GRecZ.GameVideoRecording;
+import graphic_Z.GRecZ.RecordingFile;
 import graphic_Z.GRecZ.orz.OrzData;
+import graphic_Z.Managers.SoundTrack;
 import graphic_Z.utils.HzController;
 
-public class PlayerController implements Runnable {
+public class PlayerController implements Runnable, PController {
     
-    private                    JTextArea mainScr;
-    //private int                resolutionX, resolutionY;
-    private GameVideoRecording    record;
-    private boolean               paused;
-    private boolean               running;
-    private long                  refreshWaitNanoTime;
-    private ListIterator<OrzData> itr;
-    private boolean               firstFrame;
-    private String                frame;
+    private                        JTextArea mainScr;
+    //private int                  resolutionX, resolutionY;
+    private RecordingFile<OrzData> record;
+    private boolean                paused;
+    private boolean                running;
+    private long                   refreshWaitNanoTime;
+    private ListIterator<OrzData>  itr;
+    private boolean                firstFrame;
+    private String                 frame;
+    private SoundTrack             bgm;
 
-    public PlayerController(JTextArea mainScr, GameVideoRecording record) {
+    public PlayerController(JTextArea mainScr, GameVideoRecording record, String bgm_info_file) {
         this.mainScr             = mainScr;
         this.record              = record;
         //this.resolutionX         = record.getResolutionX();
@@ -33,14 +36,17 @@ public class PlayerController implements Runnable {
         itr                      = record.listIterator();
         firstFrame               = true;
         frame                    = null;
+        bgm                      = new SoundTrack(bgm_info_file);
     }
 
+    @Override
     public void reset() {
         boolean toPause = paused;
         if(paused) resume();
         itr        = record.listIterator();
         firstFrame = true;
         frame      = null;
+        bgm.switchFirst();
         if(toPause) pause();
     }
     
@@ -58,8 +64,10 @@ public class PlayerController implements Runnable {
         Frame newFrame = null;
         Color bg, fg;
         running = true;
+        new Thread(bgm).start();
         while(running) {
             firstFrame = true;
+            bgm.switchFirst();
             while(running) {
                 pausePoint();
                 nextRefreshTime = System.nanoTime() + refreshWaitNanoTime; 
@@ -93,16 +101,20 @@ public class PlayerController implements Runnable {
                 reset();
             } else System.out.println("THE END");
         }
+        bgm.terminate();
     }
 
+    @Override
     public void pause() {
         paused = true;
     }
-    
+
+    @Override
     public final boolean isPaused() {
         return paused;
     }
-    
+
+    @Override
     public final void goAhead(int frames) {
         --frames;
         boolean toPause = paused;
@@ -113,14 +125,17 @@ public class PlayerController implements Runnable {
         if(toPause) pause();
     }
 
+    @Override
     public final void goAhead() {
         goAhead(8);
     }
-    
+
+    @Override
     public final void goAround() {
         goAround(8);
     }
-    
+
+    @Override
     public final void goAround(int frames) {
         ++frames;
         boolean toPause = paused;
@@ -131,13 +146,25 @@ public class PlayerController implements Runnable {
         }
         if(toPause) pause();
     }
-    
+
+    @Override
     public void resume() {
         paused = false;
         synchronized(this) { notifyAll(); }
     }
-    
+
+    @Override
     public void finish() {
         running = false;
+    }
+    
+    @Override
+    public void previousBgm() {
+        bgm.switchPrevious();
+    }
+
+    @Override
+    public void nextBgm() {
+        bgm.switchNext();
     }
 }

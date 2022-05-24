@@ -10,7 +10,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
-import graphic_Z.GRecZ.player.view.GRecZPlayer;
+import graphic_Z.GRecZ.player.view.GRZPlayer;
 
 public class UserController implements KeyListener, MouseWheelListener, MouseListener, MouseMotionListener {
 
@@ -18,9 +18,9 @@ public class UserController implements KeyListener, MouseWheelListener, MouseLis
     private int flag = 0;
     private final int PCScreenCenter_X;
     private final int PCScreenCenter_Y;
-    private GRecZPlayer player;
+    private GRZPlayer player;
     
-    public UserController(GRecZPlayer player) {
+    public UserController(GRZPlayer player) {
         this.player = player;
         try
         {
@@ -72,6 +72,12 @@ public class UserController implements KeyListener, MouseWheelListener, MouseLis
         case KeyEvent.VK_DOWN:
             player.getController().goAhead(1);
             break;
+        case KeyEvent.VK_E:
+            player.getController().previousBgm();
+            break;
+        case KeyEvent.VK_R:
+            player.getController().nextBgm();
+            break;
         }
     }
 
@@ -120,12 +126,12 @@ public class UserController implements KeyListener, MouseWheelListener, MouseLis
         
         int f = e.getX() - PCScreenCenter_X;
         if(f >= 0) {
-            player.getController().goAhead(f);
+            player.getController().goAhead(f << 1);
         } else {
-            player.getController().goAround(-f);
+            player.getController().goAround((-f) << 1);
         }
         
-        if(flag == 4) 
+        if(flag == 2) 
         {
             rbt.mouseMove(PCScreenCenter_X, PCScreenCenter_Y);
             flag = 0;

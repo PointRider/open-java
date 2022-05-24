@@ -98,7 +98,8 @@ public class Frame implements Serializable {
         boolean ff = false;
         int lIndex = 0;
         int len;
-        data = new byte[((resolutionX * resolutionY) << 1) + 6];
+        int pcount = resolutionX * resolutionY;
+        data = new byte[(pcount << 1) + (pcount >> 1) + 6];
 
         length = 0;
         

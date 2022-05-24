@@ -49,12 +49,6 @@ public abstract class AbstractDecoder {
 
         isInterrupted = false;
         
-	    try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
 		if (layer != null) {
 			layer.initialize();
 			

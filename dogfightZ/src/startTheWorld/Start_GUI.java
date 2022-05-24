@@ -8,6 +8,7 @@ import javax.swing.filechooser.FileFilter;
 import dogfight_Z.GameRun;
 import dogfight_Z.dogLog.utils.Common;
 import graphic_Z.GRecZ.player.view.GRecZPlayer;
+import graphic_Z.GRecZ.player.view.GRecZPlayerFast;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -147,10 +148,15 @@ public class Start_GUI extends JFrame {
 		bgp.setLayout(null);
 
         //添加按钮播放录制的游戏！
-        JButton btnNewButtonPlayRec = new JButton("播放录制的游戏");
-        btnNewButtonPlayRec.setBounds(24, 100, 200, 40);
+        JButton btnNewButtonPlayRec = new JButton("播放游戏");
+        btnNewButtonPlayRec.setBounds(24, 100, 100, 40);
         bgp.add(btnNewButtonPlayRec);
-        btnNewButtonPlayRec.setFont(new Font("宋体", Font.BOLD, 22));
+        btnNewButtonPlayRec.setFont(new Font("宋体", Font.BOLD, 15));
+        
+        JButton btnNewButtonPlayRecFast = new JButton("全缓冲播放");
+        btnNewButtonPlayRecFast.setBounds(124, 100, 100, 40);
+        bgp.add(btnNewButtonPlayRecFast);
+        btnNewButtonPlayRecFast.setFont(new Font("宋体", Font.BOLD, 12));
 		
 		//添加游戏参与者
 		JButton btnNewButton0 = new JButton("游戏设置");
@@ -225,6 +231,51 @@ public class Start_GUI extends JFrame {
             }
         }
 		
+		btnNewButtonPlayRecFast.addActionListener
+        ( 
+                new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        if(JOptionPane.showConfirmDialog(
+                                null, "此功能通过预缓冲解码提升播放游戏录制时的流畅度，\n但需要更大的运行内存(RAM)的占用(可能达4GB及以上)！\n如果您安装的内存小于8GB请慎用此功能，否则可能导致死机。\n\n确定要继续吗?", "告知及确认", JOptionPane.OK_CANCEL_OPTION) == 2) 
+                                    return;
+                        
+                        String fileName = null;
+                        JFileChooser jfc = new JFileChooser("./recordedVidos/");
+                        
+                        FileFilter filter = new FileFilter()
+                        {
+                            public String getDescription()
+                            {    
+                                return "*.dogGRecZ";    
+                            }    
+                                
+                            public boolean accept(File file)
+                            {    
+                                String name = file.getName();    
+                                return file.isDirectory() || name.toLowerCase().endsWith(".doggrecz");
+                            }
+                        };
+
+                        
+                        jfc.addChoosableFileFilter(filter);
+                        jfc.setFileFilter(filter);
+                        
+                        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                        jfc.setMultiSelectionEnabled(false);
+                        jfc.showDialog(new JLabel(), "Select");
+                        File file = jfc.getSelectedFile();
+                        if(file == null) return;
+                        fileName = file.getPath();
+                        if(Common.isStringEmpty(fileName)) return;
+                        String args[] = {fileName, "resources/config_OST.cfg"};
+                        GRecZPlayerFast.main(args);
+                        dispose();
+                    }
+                }
+            );
+		
 		btnNewButtonPlayRec.addActionListener
         ( 
             new ActionListener()
@@ -258,7 +309,7 @@ public class Start_GUI extends JFrame {
                     if(file == null) return;
                     fileName = file.getPath();
                     if(Common.isStringEmpty(fileName)) return;
-                    String args[] = {fileName};
+                    String args[] = {fileName, "resources/config_OST.cfg"};
                     GRecZPlayer.main(args);
                     dispose();
                 }
@@ -329,6 +380,9 @@ public class Start_GUI extends JFrame {
 			{
 				public void actionPerformed(ActionEvent e) {
 				//将选择的难度加入到需要的命令行String中
+	                if(JOptionPane.showConfirmDialog(
+	                    null, "确定要清除游戏记录吗?", "确认", JOptionPane.OK_CANCEL_OPTION) == 2) 
+	                        return;
 					File f = new File("resources/gameRecord.rec");
 					f.delete();
 					JOptionPane.showMessageDialog(null, "所有游戏记录已成功清除。");

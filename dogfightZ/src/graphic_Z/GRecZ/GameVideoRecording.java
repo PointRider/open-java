@@ -7,12 +7,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class GameVideoRecording implements Iterable<OrzData>, Serializable {
+public class GameVideoRecording implements RecordingFile<OrzData> {
     
     /**
      * 
