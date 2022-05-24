@@ -55,7 +55,7 @@ public class SoundTrack implements Runnable
 	}
 	
 	public void switchFirst() {
-	    currentPlayingIndex = 0;
+	    currentPlayingIndex = -1;
         interrupt();
 	}
 	
