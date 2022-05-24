@@ -22,7 +22,7 @@ public class SoundTrack implements Runnable
 	{
 		soundTrack = new ArrayList<String>();
 		soundTrack.clear();
-		currentPlayingIndex = 0;
+		currentPlayingIndex = -1;
 		player = null;
 		try(InputStreamReader reader = new InputStreamReader(new FileInputStream(sountrack_info_file), "GBK"))
 		{
@@ -44,11 +44,12 @@ public class SoundTrack implements Runnable
 	}
 	
 	public void switchNext() {
-		if(++currentPlayingIndex == soundTrack.size()) currentPlayingIndex = 0;
+		//if(++currentPlayingIndex == soundTrack.size()) currentPlayingIndex = 0;
         interrupt();
 	}
 	
 	public void switchPrevious() {
+		if(currentPlayingIndex-- == 0) currentPlayingIndex = soundTrack.size()-1;
 		if(currentPlayingIndex-- == 0) currentPlayingIndex = soundTrack.size()-1;
         interrupt();
 	}
@@ -73,6 +74,7 @@ public class SoundTrack implements Runnable
 	{
 	    Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 	    running = true;
+        currentPlayingIndex = -1;
 		if(soundTrack.size() > 0)
 		{
 			player = new MiniPlayer(new Audio());
@@ -80,6 +82,7 @@ public class SoundTrack implements Runnable
 			{
 				while(running)
 				{
+				    if(++currentPlayingIndex == soundTrack.size()) currentPlayingIndex = 0;
 					player.open(soundTrack.get(currentPlayingIndex));
 					player.run();
 					try {
