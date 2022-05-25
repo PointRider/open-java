@@ -5,6 +5,7 @@
 /common
 /.settings
 /resources/gameRecord.rec
+/resources/config_OST.cfg
 /target/archive-tmp
 /target/classes
 /target/dogfightZ.jar
