@@ -1,0 +1,1861 @@
+{
+  "paper": {
+    "name": "A4",
+    "leftMargin": 0.5,
+    "rightMargin": 0.5,
+    "topMargin": 0.5,
+    "bottomMargin": 0.5,
+    "isPortriat": true
+  },
+  "modelVersion": 2.01,
+  "defaultSchema": "Default",
+  "server": {
+    "objectType": "Server_SQLITE",
+    "name": "Default",
+    "serverVersion": 3000000,
+    "edition": "Default",
+    "schemas": [
+      {
+        "objectType": "Schema_SQLITE",
+        "name": "Default",
+        "tables": [
+          {
+            "objectType": "Table_SQLITE",
+            "name": "bgmLists",
+            "autoIncrement": 0,
+            "isWithoutRowID": false,
+            "oldName": "",
+            "rootPage": 0,
+            "sql": "",
+            "hasIndexes": false,
+            "hasTriggers": false,
+            "hasAutoIncrementInDB": false,
+            "fields": [
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "listID",
+                "type": "INTEGER",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": true,
+                "oldName": "listID"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "userID",
+                "type": "INTEGER",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "userID"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "listName",
+                "type": "varchar",
+                "size": 64,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "listName"
+              }
+            ],
+            "indexes": [
+              {
+                "objectType": "Index_SQLITE",
+                "name": "listIdOnBgmLists",
+                "isUnique": true,
+                "oldName": "",
+                "tableName": "bgmLists",
+                "isAutoIndex": false,
+                "rootPage": 0,
+                "onConflict": "None",
+                "fields": [
+                  {
+                    "objectType": "IndexField_SQLITE",
+                    "name": "listID",
+                    "collate": "BINARY",
+                    "order": "Ascending",
+                    "oldName": ""
+                  }
+                ]
+              },
+              {
+                "objectType": "Index_SQLITE",
+                "name": "userIdOnBgmLists",
+                "isUnique": false,
+                "oldName": "",
+                "tableName": "bgmLists",
+                "isAutoIndex": false,
+                "rootPage": 0,
+                "onConflict": "None",
+                "fields": [
+                  {
+                    "objectType": "IndexField_SQLITE",
+                    "name": "userID",
+                    "collate": "BINARY",
+                    "order": "Ascending",
+                    "oldName": ""
+                  }
+                ]
+              }
+            ],
+            "primaryKey": {
+              "objectType": "PrimaryKey_SQLITE",
+              "name": "",
+              "fields": [
+                "listID"
+              ],
+              "onConflict": "None",
+              "oldName": ""
+            },
+            "foreignKeys": [
+              {
+                "objectType": "ForeignKey_SQLITE",
+                "name": "fk_bgmLists_PlayerProfile_1",
+                "fields": [
+                  "userID"
+                ],
+                "referencedSchema": "main",
+                "referencedTable": "PlayerProfile",
+                "referencedFields": [
+                  "userName"
+                ],
+                "onDelete": "CASCADE",
+                "onUpdate": "",
+                "isDeferred": false,
+                "sourceCardinality": "ZeroOrManyRelationship",
+                "targetCardinality": "OneAndOnlyOneRelationship",
+                "oldName": ""
+              }
+            ],
+            "uniques": [
+              {
+                "objectType": "Unique_SQLITE",
+                "name": "uniqListID",
+                "onConflict": "Abort",
+                "oldName": "",
+                "fields": [
+                  {
+                    "objectType": "IndexField_SQLITE",
+                    "name": "listID",
+                    "collate": "BINARY",
+                    "order": "Ascending",
+                    "oldName": ""
+                  }
+                ]
+              }
+            ],
+            "checks": [],
+            "triggers": []
+          },
+          {
+            "objectType": "Table_SQLITE",
+            "name": "playerBattleGroundConfig",
+            "autoIncrement": 0,
+            "isWithoutRowID": false,
+            "oldName": "",
+            "rootPage": 0,
+            "sql": "",
+            "hasIndexes": false,
+            "hasTriggers": false,
+            "hasAutoIncrementInDB": false,
+            "fields": [
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "userID",
+                "type": "INTEGER",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "userID"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "configName",
+                "type": "varchar",
+                "size": 64,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "configName"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "battleTime",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "battleTime"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "bgmList",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "bgmList"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "npcs",
+                "type": "TEXT",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "''",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "npcs"
+              }
+            ],
+            "indexes": [
+              {
+                "objectType": "Index_SQLITE",
+                "name": "userIdOnPlayerBattleGroundConfig",
+                "isUnique": false,
+                "oldName": "",
+                "tableName": "playerBattleGroundConfig",
+                "isAutoIndex": false,
+                "rootPage": 0,
+                "onConflict": "None",
+                "fields": [
+                  {
+                    "objectType": "IndexField_SQLITE",
+                    "name": "userID",
+                    "collate": "BINARY",
+                    "order": "Ascending",
+                    "oldName": ""
+                  }
+                ]
+              }
+            ],
+            "primaryKey": {
+              "objectType": "PrimaryKey_SQLITE",
+              "name": "",
+              "fields": [],
+              "onConflict": "None",
+              "oldName": ""
+            },
+            "foreignKeys": [
+              {
+                "objectType": "ForeignKey_SQLITE",
+                "name": "fk_playerBattleGroundConfig_bgmLists_1",
+                "fields": [
+                  "bgmList"
+                ],
+                "referencedSchema": "Default",
+                "referencedTable": "bgmLists",
+                "referencedFields": [
+                  "listID"
+                ],
+                "onDelete": "SET NULL",
+                "onUpdate": "",
+                "isDeferred": false,
+                "sourceCardinality": "ZeroOrManyRelationship",
+                "targetCardinality": "ZeroOrOneRelationship",
+                "oldName": ""
+              },
+              {
+                "objectType": "ForeignKey_SQLITE",
+                "name": "fk_playerBattleGroundConfig_PlayerProfile_1",
+                "fields": [
+                  "userID"
+                ],
+                "referencedSchema": "main",
+                "referencedTable": "PlayerProfile",
+                "referencedFields": [
+                  "userID"
+                ],
+                "onDelete": "CASCADE",
+                "onUpdate": "",
+                "isDeferred": false,
+                "sourceCardinality": "ZeroOrManyRelationship",
+                "targetCardinality": "OneAndOnlyOneRelationship",
+                "oldName": ""
+              }
+            ],
+            "uniques": [],
+            "checks": [],
+            "triggers": []
+          },
+          {
+            "objectType": "Table_SQLITE",
+            "name": "userKeyMap",
+            "autoIncrement": 0,
+            "isWithoutRowID": false,
+            "oldName": "",
+            "rootPage": 0,
+            "sql": "",
+            "hasIndexes": false,
+            "hasTriggers": false,
+            "hasAutoIncrementInDB": false,
+            "fields": [
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "userID",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "userID"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "W",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "W"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "A",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "A"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "S",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "S"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "D",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "D"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "mouse_up",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "mouse_up"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "mouse_down",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "mouse_down"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "mouse_left",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "mouse_left"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "mouse_right",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "mouse_right"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "mouse_wheel_up",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "mouse_wheel_up"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "mouse_wheel_dn",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "mouse_wheel_dn"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "mouse_key_left",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "mouse_key_left"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "mouse_key_right",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "mouse_key_right"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "mouse_key_mid",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "mouse_key_mid"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "X",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "X"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "F",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "F"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "C",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "C"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "V",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "V"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "Q",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "Q"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "P",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "P"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "E",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "E"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "R",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "R"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "[",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "["
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "]",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "]"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "J",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "J"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "K",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "K"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "L",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "L"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "I",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "I"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "M",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "M"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "N",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "N"
+              }
+            ],
+            "indexes": [
+              {
+                "objectType": "Index_SQLITE",
+                "name": "index_userID_on_keyMap",
+                "isUnique": false,
+                "oldName": "",
+                "tableName": "userKeyMap",
+                "isAutoIndex": false,
+                "rootPage": 0,
+                "onConflict": "None",
+                "fields": [
+                  {
+                    "objectType": "IndexField_SQLITE",
+                    "name": "userID",
+                    "collate": "BINARY",
+                    "order": "Ascending",
+                    "oldName": ""
+                  }
+                ]
+              }
+            ],
+            "primaryKey": {
+              "objectType": "PrimaryKey_SQLITE",
+              "name": "",
+              "fields": [
+                "userID"
+              ],
+              "onConflict": "None",
+              "oldName": ""
+            },
+            "foreignKeys": [
+              {
+                "objectType": "ForeignKey_SQLITE",
+                "name": "fk_userKeyMap_PlayerProfile_1",
+                "fields": [
+                  "userID"
+                ],
+                "referencedSchema": "main",
+                "referencedTable": "PlayerProfile",
+                "referencedFields": [
+                  "userID"
+                ],
+                "onDelete": "CASCADE",
+                "onUpdate": "",
+                "isDeferred": false,
+                "sourceCardinality": "OneAndOnlyOneRelationship",
+                "targetCardinality": "OneAndOnlyOneRelationship",
+                "oldName": ""
+              }
+            ],
+            "uniques": [],
+            "checks": [],
+            "triggers": []
+          }
+        ],
+        "views": []
+      },
+      {
+        "objectType": "Schema_SQLITE",
+        "name": "main",
+        "tables": [
+          {
+            "objectType": "Table_SQLITE",
+            "name": "sqlite_sequence",
+            "autoIncrement": -1,
+            "isWithoutRowID": false,
+            "oldName": "sqlite_sequence",
+            "rootPage": 5,
+            "sql": "CREATE TABLE sqlite_sequence(name,seq)",
+            "hasIndexes": false,
+            "hasTriggers": false,
+            "hasAutoIncrementInDB": false,
+            "fields": [
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "name",
+                "type": "",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "name"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "seq",
+                "type": "",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "seq"
+              }
+            ],
+            "indexes": [],
+            "primaryKey": {
+              "objectType": "PrimaryKey_SQLITE",
+              "name": "",
+              "fields": [],
+              "onConflict": "None",
+              "oldName": ""
+            },
+            "foreignKeys": [],
+            "uniques": [],
+            "checks": [],
+            "triggers": []
+          },
+          {
+            "objectType": "Table_SQLITE",
+            "name": "playerGameRecord",
+            "autoIncrement": -1,
+            "isWithoutRowID": false,
+            "oldName": "playerGameRecord",
+            "rootPage": 12,
+            "sql": "CREATE TABLE `playerGameRecord` (  `userID` integer NOT NULL,  `gameTime` long,  `enemyCount` integer,  `friendCount` integer,  `enemyAvgDiff` double,  `friendAvgDiff` double,  `killed` integer,  `dead` integer,  `getBank` decimal(12,2),  `gameVersion` varchar(32),  `resolutionX` integer,  `resolutionY` integer,  `recDateTime` datetime DEFAULT (datetime('now', 'localtime')),  CONSTRAINT `fk_playerGameRecord_PlayerProfile_1` FOREIGN KEY (`userID`) REFERENCES `PlayerProfile` (`userID`) ON DELETE CASCADE)",
+            "hasIndexes": false,
+            "hasTriggers": false,
+            "hasAutoIncrementInDB": false,
+            "fields": [
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "userID",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "userID"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "gameTime",
+                "type": "long",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "gameTime"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "enemyCount",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "enemyCount"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "friendCount",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "friendCount"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "enemyAvgDiff",
+                "type": "double",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "enemyAvgDiff"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "friendAvgDiff",
+                "type": "double",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "friendAvgDiff"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "killed",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "killed"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "dead",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "dead"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "getBank",
+                "type": "decimal",
+                "size": 12,
+                "scale": 2,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "getBank"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "gameVersion",
+                "type": "varchar",
+                "size": 32,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "gameVersion"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "resolutionX",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "resolutionX"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "resolutionY",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "resolutionY"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "recDateTime",
+                "type": "datetime",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "(datetime('now', 'localtime'))",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "recDateTime"
+              }
+            ],
+            "indexes": [
+              {
+                "objectType": "Index_SQLITE",
+                "name": "userIdOnPlayerGameRecord",
+                "isUnique": false,
+                "oldName": "",
+                "tableName": "playerGameRecord",
+                "isAutoIndex": false,
+                "rootPage": 0,
+                "onConflict": "None",
+                "fields": [
+                  {
+                    "objectType": "IndexField_SQLITE",
+                    "name": "userID",
+                    "collate": "BINARY",
+                    "order": "Ascending",
+                    "oldName": ""
+                  }
+                ]
+              }
+            ],
+            "primaryKey": {
+              "objectType": "PrimaryKey_SQLITE",
+              "name": "",
+              "fields": [],
+              "onConflict": "None",
+              "oldName": ""
+            },
+            "foreignKeys": [
+              {
+                "objectType": "ForeignKey_SQLITE",
+                "name": "fk_playerGameRecord_PlayerProfile_1",
+                "fields": [
+                  "userID"
+                ],
+                "referencedSchema": "main",
+                "referencedTable": "PlayerProfile",
+                "referencedFields": [
+                  "userID"
+                ],
+                "onDelete": "CASCADE",
+                "onUpdate": "NO ACTION",
+                "isDeferred": false,
+                "sourceCardinality": "ZeroOrManyRelationship",
+                "targetCardinality": "OneAndOnlyOneRelationship",
+                "oldName": "fk_playerGameRecord_PlayerProfile_1"
+              }
+            ],
+            "uniques": [],
+            "checks": [],
+            "triggers": []
+          },
+          {
+            "objectType": "Table_SQLITE",
+            "name": "listBGM",
+            "autoIncrement": -1,
+            "isWithoutRowID": false,
+            "oldName": "playerBGM",
+            "rootPage": 10,
+            "sql": "CREATE TABLE `playerBGM` (  `userID` INTEGER NOT NULL,  `index` integer NOT NULL,  `title` varchar(64),  `filePathName` varchar(256) NOT NULL,  CONSTRAINT `fk_playerBGM_PlayerProfile_1` FOREIGN KEY (`userID`) REFERENCES `PlayerProfile` (`userID`) ON DELETE CASCADE)",
+            "hasIndexes": true,
+            "hasTriggers": false,
+            "hasAutoIncrementInDB": false,
+            "fields": [
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "listID",
+                "type": "INTEGER",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": true,
+                "oldName": "listID"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "index",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "index"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "title",
+                "type": "varchar",
+                "size": 64,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "title"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "filePathName",
+                "type": "varchar",
+                "size": 256,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "filePathName"
+              }
+            ],
+            "indexes": [
+              {
+                "objectType": "Index_SQLITE",
+                "name": "listIdOnBGM",
+                "isUnique": false,
+                "oldName": "",
+                "tableName": "listBGM",
+                "isAutoIndex": false,
+                "rootPage": 0,
+                "onConflict": "None",
+                "fields": [
+                  {
+                    "objectType": "IndexField_SQLITE",
+                    "name": "listID",
+                    "collate": "BINARY",
+                    "order": "Ascending",
+                    "oldName": ""
+                  }
+                ]
+              }
+            ],
+            "primaryKey": {
+              "objectType": "PrimaryKey_SQLITE",
+              "name": "",
+              "fields": [],
+              "onConflict": "None",
+              "oldName": ""
+            },
+            "foreignKeys": [
+              {
+                "objectType": "ForeignKey_SQLITE",
+                "name": "fk_playerBGM_bgmLists_1",
+                "fields": [
+                  "listID"
+                ],
+                "referencedSchema": "Default",
+                "referencedTable": "bgmLists",
+                "referencedFields": [
+                  "listID"
+                ],
+                "onDelete": "CASCADE",
+                "onUpdate": "",
+                "isDeferred": false,
+                "sourceCardinality": "ZeroOrManyRelationship",
+                "targetCardinality": "OneAndOnlyOneRelationship",
+                "oldName": ""
+              }
+            ],
+            "uniques": [],
+            "checks": [],
+            "triggers": []
+          },
+          {
+            "objectType": "Table_SQLITE",
+            "name": "PlayerProfile",
+            "autoIncrement": 0,
+            "isWithoutRowID": false,
+            "oldName": "PlayerProfile",
+            "rootPage": 2,
+            "sql": "CREATE TABLE `PlayerProfile` (  `userID` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,  `userName` varchar(64) NOT NULL,  `userPass` varchar(64) NOT NULL,  `userNick` varchar(64),  `userBank` decimal(12,2) DEFAULT 0.00,  `gameRecordShare` integer NOT NULL,  `createTime` datetime NOT NULL DEFAULT (datetime('now', 'localtime')),  `resolutionX` integer DEFAULT 160,  `resolutionY` integer DEFAULT 83,  `fontSize` integer DEFAULT 10,  CONSTRAINT `uidKey` UNIQUE (`userID` COLLATE BINARY ASC),  CONSTRAINT `unameKey` UNIQUE (`userName` COLLATE BINARY ASC))",
+            "hasIndexes": true,
+            "hasTriggers": false,
+            "hasAutoIncrementInDB": true,
+            "fields": [
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "userID",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": true,
+                "oldName": "userID"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "userName",
+                "type": "varchar",
+                "size": 64,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "userName"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "userPass",
+                "type": "varchar",
+                "size": 64,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "userPass"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "userNick",
+                "type": "varchar",
+                "size": 64,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "userNick"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "userBank",
+                "type": "decimal",
+                "size": 12,
+                "scale": 2,
+                "isNullable": "Yes",
+                "defaultValue": "0.00",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "userBank"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "userExp",
+                "type": "decimal",
+                "size": 12,
+                "scale": 2,
+                "isNullable": "Yes",
+                "defaultValue": "0.00",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "userExp"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "gameRecordShare",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "gameRecordShare"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "createTime",
+                "type": "datetime",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "No",
+                "defaultValue": "(datetime('now', 'localtime'))",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "createTime"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "resolutionX",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "160",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "resolutionX"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "resolutionY",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "83",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "resolutionY"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "fontSize",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "10",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "fontSize"
+              },
+              {
+                "objectType": "TableField_SQLITE",
+                "name": "fontIndx",
+                "type": "integer",
+                "size": -2147483648,
+                "scale": -2147483648,
+                "isNullable": "Yes",
+                "defaultValue": "1",
+                "defaultValueType": "Others",
+                "collate": "",
+                "notNullOnConflict": "None",
+                "isAutoIncrement": false,
+                "oldName": "fontIndx"
+              }
+            ],
+            "indexes": [
+              {
+                "objectType": "Index_SQLITE",
+                "name": "uidIdx",
+                "isUnique": true,
+                "oldName": "uidIdx",
+                "tableName": "PlayerProfile",
+                "isAutoIndex": false,
+                "rootPage": 8,
+                "onConflict": "Abort",
+                "fields": [
+                  {
+                    "objectType": "IndexField_SQLITE",
+                    "name": "userID",
+                    "collate": "BINARY",
+                    "order": "Ascending",
+                    "oldName": "userID"
+                  }
+                ]
+              },
+              {
+                "objectType": "Index_SQLITE",
+                "name": "unameIdx",
+                "isUnique": true,
+                "oldName": "unameIdx",
+                "tableName": "PlayerProfile",
+                "isAutoIndex": false,
+                "rootPage": 6,
+                "onConflict": "Abort",
+                "fields": [
+                  {
+                    "objectType": "IndexField_SQLITE",
+                    "name": "userName",
+                    "collate": "BINARY",
+                    "order": "Ascending",
+                    "oldName": "userName"
+                  }
+                ]
+              }
+            ],
+            "primaryKey": {
+              "objectType": "PrimaryKey_SQLITE",
+              "name": "",
+              "fields": [
+                "userID"
+              ],
+              "onConflict": "None",
+              "oldName": ""
+            },
+            "foreignKeys": [],
+            "uniques": [
+              {
+                "objectType": "Unique_SQLITE",
+                "name": "uidKey",
+                "onConflict": "None",
+                "oldName": "uidKey",
+                "fields": [
+                  {
+                    "objectType": "IndexField_SQLITE",
+                    "name": "userID",
+                    "collate": "BINARY",
+                    "order": "Ascending",
+                    "oldName": "userID"
+                  }
+                ]
+              },
+              {
+                "objectType": "Unique_SQLITE",
+                "name": "unameKey",
+                "onConflict": "None",
+                "oldName": "unameKey",
+                "fields": [
+                  {
+                    "objectType": "IndexField_SQLITE",
+                    "name": "userName",
+                    "collate": "BINARY",
+                    "order": "Ascending",
+                    "oldName": "userName"
+                  }
+                ]
+              }
+            ],
+            "checks": [],
+            "triggers": []
+          }
+        ],
+        "views": []
+      }
+    ]
+  },
+  "diagrams": [
+    {
+      "name": "Diagram 1",
+      "paperWidth": 1,
+      "paperHeight": 1,
+      "tableFont": "Arial Unicode MS",
+      "tableFontSize": 14,
+      "isBalckWhite": false,
+      "showDBSchemaName": false,
+      "showViewRelations": true,
+      "notation": "default",
+      "showFieldComment": false,
+      "showTableComment": false,
+      "shapes": [
+        {
+          "type": "table",
+          "schemaName": "main",
+          "tableName": "PlayerProfile",
+          "x": 460,
+          "y": 90,
+          "width": 196,
+          "height": 250,
+          "isBold": false,
+          "titleColor": {
+            "r": 55,
+            "g": 131,
+            "b": 192,
+            "a": 1
+          }
+        },
+        {
+          "type": "table",
+          "schemaName": "main",
+          "tableName": "listBGM",
+          "x": 90,
+          "y": 170,
+          "width": 197,
+          "height": 160,
+          "isBold": false,
+          "titleColor": {
+            "r": 55,
+            "g": 131,
+            "b": 192,
+            "a": 1
+          }
+        },
+        {
+          "type": "table",
+          "schemaName": "main",
+          "tableName": "playerGameRecord",
+          "x": 700,
+          "y": 60,
+          "width": 188,
+          "height": 310,
+          "isBold": false,
+          "titleColor": {
+            "r": 55,
+            "g": 131,
+            "b": 192,
+            "a": 1
+          }
+        },
+        {
+          "type": "table",
+          "schemaName": "Default",
+          "tableName": "bgmLists",
+          "x": 260,
+          "y": 350,
+          "width": 200,
+          "height": 120,
+          "isBold": false,
+          "titleColor": {
+            "r": 55,
+            "g": 131,
+            "b": 192,
+            "a": 1
+          }
+        },
+        {
+          "type": "table",
+          "schemaName": "Default",
+          "tableName": "playerBattleGroundConfig",
+          "x": 190,
+          "y": 0,
+          "width": 270,
+          "height": 140,
+          "isBold": false,
+          "titleColor": {
+            "r": 55,
+            "g": 131,
+            "b": 192,
+            "a": 1
+          }
+        },
+        {
+          "type": "table",
+          "schemaName": "Default",
+          "tableName": "userKeyMap",
+          "x": 480,
+          "y": 370,
+          "width": 200,
+          "height": 200,
+          "isBold": false,
+          "titleColor": {
+            "r": 55,
+            "g": 131,
+            "b": 192,
+            "a": 1
+          }
+        }
+      ],
+      "layers": [],
+      "relations": [
+        {
+          "name": "fk_playerGameRecord_PlayerProfile_1",
+          "sourceTableName": "playerGameRecord",
+          "sourceSchemaName": "main",
+          "lineWidth": 1,
+          "visible": true,
+          "vertices": [
+            {
+              "x": 685,
+              "y": 220
+            },
+            {
+              "x": 678,
+              "y": 220
+            },
+            {
+              "x": 678,
+              "y": 220
+            },
+            {
+              "x": 671,
+              "y": 220
+            }
+          ],
+          "label": {
+            "x": 701,
+            "y": 222,
+            "width": 256,
+            "height": 30,
+            "fontName": "Arial Unicode MS",
+            "fontSize": 14,
+            "fontColor": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "isFontBold": false,
+            "isFontItalic": false,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "fk_playerBGM_bgmLists_1",
+          "sourceTableName": "listBGM",
+          "sourceSchemaName": "main",
+          "lineWidth": 1,
+          "visible": true,
+          "vertices": [
+            {
+              "x": 302,
+              "y": 260
+            },
+            {
+              "x": 330,
+              "y": 260
+            },
+            {
+              "x": 330,
+              "y": 335
+            }
+          ],
+          "label": {
+            "x": 292,
+            "y": 222,
+            "width": 179,
+            "height": 30,
+            "fontName": "Arial Unicode MS",
+            "fontSize": 14,
+            "fontColor": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "isFontBold": false,
+            "isFontItalic": false,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "fk_bgmLists_PlayerProfile_1",
+          "sourceTableName": "bgmLists",
+          "sourceSchemaName": "Default",
+          "lineWidth": 1,
+          "visible": true,
+          "vertices": [
+            {
+              "x": 410,
+              "y": 335
+            },
+            {
+              "x": 410,
+              "y": 250
+            },
+            {
+              "x": 445,
+              "y": 250
+            }
+          ],
+          "label": {
+            "x": 412,
+            "y": 305,
+            "width": 188,
+            "height": 30,
+            "fontName": "Arial Unicode MS",
+            "fontSize": 14,
+            "fontColor": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "isFontBold": false,
+            "isFontItalic": false,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "fk_playerBattleGroundConfig_bgmLists_1",
+          "sourceTableName": "playerBattleGroundConfig",
+          "sourceSchemaName": "Default",
+          "lineWidth": 1,
+          "visible": true,
+          "lineColor": {
+            "r": 255,
+            "g": 214,
+            "b": 147,
+            "a": 1
+          },
+          "vertices": [
+            {
+              "x": 360,
+              "y": 155
+            },
+            {
+              "x": 360,
+              "y": 250
+            },
+            {
+              "x": 360,
+              "y": 335
+            }
+          ],
+          "label": {
+            "x": 197,
+            "y": 105,
+            "width": 281,
+            "height": 30,
+            "fontName": "Arial Unicode MS",
+            "fontSize": 14,
+            "fontColor": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "isFontBold": false,
+            "isFontItalic": false,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "fk_playerBattleGroundConfig_PlayerProfile_1",
+          "sourceTableName": "playerBattleGroundConfig",
+          "sourceSchemaName": "Default",
+          "lineWidth": 1,
+          "visible": true,
+          "vertices": [
+            {
+              "x": 410,
+              "y": 155
+            },
+            {
+              "x": 410,
+              "y": 200
+            },
+            {
+              "x": 445,
+              "y": 200
+            }
+          ],
+          "label": {
+            "x": 205,
+            "y": 105,
+            "width": 305,
+            "height": 30,
+            "fontName": "Arial Unicode MS",
+            "fontSize": 14,
+            "fontColor": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "isFontBold": false,
+            "isFontItalic": false,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "fk_userKeyMap_PlayerProfile_1",
+          "sourceTableName": "userKeyMap",
+          "sourceSchemaName": "Default",
+          "lineWidth": 1,
+          "visible": true,
+          "vertices": [
+            {
+              "x": 580,
+              "y": 355
+            },
+            {
+              "x": 580,
+              "y": 410
+            },
+            {
+              "x": 580,
+              "y": 355
+            }
+          ],
+          "label": {
+            "x": 582,
+            "y": 325,
+            "width": 212,
+            "height": 30,
+            "fontName": "Arial Unicode MS",
+            "fontSize": 14,
+            "fontColor": {
+              "r": 51,
+              "g": 51,
+              "b": 51,
+              "a": 1
+            },
+            "isFontBold": false,
+            "isFontItalic": false,
+            "isVisible": false
+          }
+        }
+      ],
+      "viewRelations": []
+    }
+  ]
+}

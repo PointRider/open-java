@@ -1,0 +1,15 @@
+.classpath
+.project
+/recordedVidos
+/bin
+/common
+/.settings
+/resources/gameRecord.rec
+/resources/config_OST.cfg
+/target/archive-tmp
+/target/classes
+/target/dogfightZ.jar
+/target/generated-sources
+/target/maven-archiver
+/target/maven-status
+/target/resources
