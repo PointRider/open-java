@@ -14,14 +14,15 @@ import graphic_Z.GRecZ.player.view.GRZPlayer;
 
 public class UserController implements KeyListener, MouseWheelListener, MouseListener, MouseMotionListener {
 
-    private Robot rbt;
-    private int flag = 0;
+    private Robot     rbt;
+    private int       flag = 0;
     private final int PCScreenCenter_X;
     private final int PCScreenCenter_Y;
     private GRZPlayer player;
     
     public UserController(GRZPlayer player) {
         this.player = player;
+        
         try
         {
             rbt = new Robot();
@@ -77,6 +78,20 @@ public class UserController implements KeyListener, MouseWheelListener, MouseLis
             break;
         case KeyEvent.VK_R:
             player.getController().nextBgm();
+            break;
+            
+            
+        case KeyEvent.VK_N:
+            player.privFont();
+            break;
+        case KeyEvent.VK_M:
+            player.nextFont();
+            break;
+        case 93://]
+            player.addSize();
+            break;
+        case 91://[
+            player.decSize();
             break;
         }
     }

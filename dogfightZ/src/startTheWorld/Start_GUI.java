@@ -269,7 +269,7 @@ public class Start_GUI extends JFrame {
                         if(file == null) return;
                         fileName = file.getPath();
                         if(Common.isStringEmpty(fileName)) return;
-                        String args[] = {fileName, "resources/config_OST.cfg"};
+                        String args[] = {fileName, "resources/config_OST.cfg", Integer.toString(fontSize), Integer.toString(fontIdx)};
                         GRecZPlayerFast.main(args);
                         dispose();
                     }
@@ -309,7 +309,7 @@ public class Start_GUI extends JFrame {
                     if(file == null) return;
                     fileName = file.getPath();
                     if(Common.isStringEmpty(fileName)) return;
-                    String args[] = {fileName, "resources/config_OST.cfg"};
+                    String args[] = {fileName, "resources/config_OST.cfg", Integer.toString(fontSize), Integer.toString(fontIdx)};
                     GRecZPlayer.main(args);
                     dispose();
                 }

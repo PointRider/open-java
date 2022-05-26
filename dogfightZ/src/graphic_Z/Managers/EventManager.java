@@ -47,7 +47,11 @@ public class EventManager extends JFrame
 	public Font getCurrentFont() {
 	    return supportedFonts[currentFontIdx];
 	}
-	
+
+    public static Font getSupportedFonts(int idx) {
+        return supportedFonts[idx];
+    }
+    
 	public static int getSupportedFontsCount() {
 	    return supportedFonts.length;
 	}
