@@ -12,20 +12,22 @@ import graphic_Z.utils.LinkedListZ;
 
 public class CharObjectsManager extends TDObjectsManager
 {
-	public LinkedListZ<ThreeDs> objects;
+    public LinkedListZ<ThreeDs> objects;
 	public List<Iterable<ThreeDs>> staticObjLists;
-	public List<Iterable<Dynamic>> dynamicObjLists;
+	//public List<Iterable<Dynamic>> dynamicObjLists;
 	public List<PriorityQueue<Dynamic>> selfDisposable;
 	
+	//private int cpuCount;
 	//private CharWorld inWorld;
 	
 	public CharObjectsManager(/*CharWorld inWorld*/)
 	{
 	    //this.inWorld    = inWorld;
-		count = 0;
+		count           = 0;
+		//cpuCount        = Runtime.getRuntime().availableProcessors();
 		objects         = new LinkedListZ<ThreeDs>();
 		staticObjLists  = new ArrayList<Iterable<ThreeDs>>();
-		dynamicObjLists = new ArrayList<Iterable<Dynamic>>();
+		//dynamicObjLists = new ArrayList<Iterable<Dynamic>>();
 		selfDisposable  = new ArrayList<PriorityQueue<Dynamic>>();
 	}
 	
@@ -34,13 +36,13 @@ public class CharObjectsManager extends TDObjectsManager
 		staticObjLists.add(objLst);
 		return objLst;
 	}
-	
+	/*
 	public Iterable<Dynamic> newDynamicObjectList(Iterable<Dynamic> objLst)
 	{
 		dynamicObjLists.add(objLst);
 		return objLst;
 	}
-	
+	*/
 	public PriorityQueue<Dynamic> newSelfDisposableObjList(PriorityQueue<Dynamic> objLst)
 	{
 		selfDisposable.add(objLst);
@@ -79,9 +81,12 @@ public class CharObjectsManager extends TDObjectsManager
 			for(Dynamic aObj:eachList) //aObj.go();
 			    inWorld.execute(aObj);
 		*/
-		for(PriorityQueue<Dynamic> eachList:selfDisposable)
-			for(Dynamic aObj:eachList)
+	    
+		for(PriorityQueue<Dynamic> eachList:selfDisposable) {
+			for(Dynamic aObj:eachList) {
 				aObj.go();
+			}
+		}
 		
 		for(ThreeDs aObj:objects) {
 		    //epool.execute(aObj);//

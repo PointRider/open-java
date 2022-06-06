@@ -5,6 +5,7 @@ import graphic_Z.Managers.TDObjectsManager;
 import graphic_Z.Managers.VisualManager;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public abstract class TDWorld<WorldType, ObjectType, HUDType> {
     
@@ -30,6 +31,10 @@ public abstract class TDWorld<WorldType, ObjectType, HUDType> {
 
     public void execute(Runnable r) {
         epool.execute(r);
+    }
+    
+    public Future<?> submit(Runnable r) {
+        return epool.submit(r);
     }
 
     @Override
