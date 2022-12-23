@@ -93,7 +93,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
 		//   x r/v
 		for(int i=0 ; i<pcount ;) //for each point
 		{
-			aPointOfanObj = (absPoint? aPointOfanObj = aObject.getAbsPoint(i): aObject.getPoint(i));
+			aPointOfanObj = (absPoint? aObject.getAbsPoint(i): aObject.getPoint(i));
             
 			XYLambdaI2 getPoint = (float X0, float Y0, float Z0, float relX, float relY, float relZ, boolean absP) -> {
 				float X, Y, Z/*, tmp1, tmp2*/, cos$, sin$;
@@ -270,7 +270,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
         //   x r/v
         for(int i=0 ; i<pcount ;) //for each point
         {
-            aPointOfanObj = (absPoint? aPointOfanObj = aObject.getAbsPoint(i): aObject.getPoint(i));
+            aPointOfanObj = (absPoint? aObject.getAbsPoint(i): aObject.getPoint(i));
             
             XYLambdaI2 getPoint = (float X0, float Y0, float Z0, float relX, float relY, float relZ, boolean absP) -> {
                 float X, Y, Z/*, tmp1, tmp2*/, cos$, sin$;
@@ -479,7 +479,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
         //   x r/v
         for(int i=0 ; i<pcount ;) //for each point
         {
-            aPointOfanObj = (absPoint? aPointOfanObj = aObject.getAbsPoint(i): aObject.getPoint(i));
+            aPointOfanObj = (absPoint? aObject.getAbsPoint(i): aObject.getPoint(i));
             
             XYLambdaI2 getPoint = (float X0, float Y0, float Z0, float relX, float relY, float relZ, boolean absP) -> {
                 float X, Y, Z/*, tmp1, tmp2*/, cos$, sin$;
@@ -688,7 +688,7 @@ public class CharFrapsCamera extends TDCamera<CharWorld> implements Runnable
         //   x r/v
         for(int i=0 ; i<pcount ;) //for each point
         {
-            aPointOfanObj = (absPoint? aPointOfanObj = aObject.getAbsPoint(i): aObject.getPoint(i));
+            aPointOfanObj = (absPoint? aObject.getAbsPoint(i): aObject.getPoint(i));
             
             XYLambdaI2 getPoint = (float X0, float Y0, float Z0, float relX, float relY, float relZ, boolean absP) -> {
                 float X, Y, Z/*, tmp1, tmp2*/, cos$, sin$;

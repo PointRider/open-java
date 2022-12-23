@@ -25,7 +25,8 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 	public		  Aircraft	launcher;
 	public		  LinkedListZ<ThreeDs> aircrafts;
     private       GameManagement gameManager;
-	
+    private       int       tick;
+	/*
 	private static ArrayList<float[]> missileModelData;
 	static {
 		missileModelData = new ArrayList<float[]>();
@@ -40,7 +41,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 		newPonit[5] = 0;
 		missileModelData.add(newPonit);
 	}
-	
+	*/
 	public CannonAmmo
 	(
 	    GameManagement gameManager,
@@ -56,19 +57,19 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 	{
 		super(null, 1, DrawingMethod.drawLine);
 		this.gameManager = gameManager;
-		specialDisplay	= '@';
-		temp 			= new float[3];
-		actived			= true;
-		lifeLeft = life = lifeTime;
-		myCamp			= my_camp;
-		speed			= Speed;
-		resistanceRate	= resistance_rate;
-		aircrafts		= Aircrafts;
-		launcher		= souce;
+		specialDisplay	 = '@';
+		temp 			 = new float[3];
+		actived			 = true;
+		lifeLeft = life  = lifeTime;
+		myCamp			 = my_camp;
+		speed			 = Speed;
+		resistanceRate	 = resistance_rate;
+		aircrafts		 = Aircrafts;
+		launcher		 = souce;
 		if(lifeTime > maxLife)
 			lifeTime = maxLife;
 		
-		lifeTo			= lifeTime + System.currentTimeMillis();
+		lifeTo			 = lifeTime + System.currentTimeMillis();
 		
 		location[0] = Location[0];
 		location[1] = Location[1];
@@ -78,10 +79,15 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 		roll_angle[1] = Roll_angle[1];
 		roll_angle[2] = Roll_angle[2];
 		
-		points = missileModelData;
-		points_count = missileModelData.size();
+		//points = missileModelData;
+		//points_count = missileModelData.size();
+		
+		points_abs = new ArrayList<float[]>();
+		points_count = 1;
+        points_abs.add(new float [] {Location[0], Location[1], Location[2], Location[0], Location[1], Location[2]});
 		
 		visible = true;
+		tick = 0;
 	}
 	
 	@Override
@@ -94,7 +100,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 		}
 		
         Aircraft aJet = null;
-		float x, y, z, t, r1, r2;
+		float x, y, z, t, r1, r2, ref_locAbs[] = points_abs.get(0);
 		for(int repeat = 0; repeat < 5; ++repeat)
 		{
 			//------------[go street]------------
@@ -109,6 +115,17 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 			location[0]	-= x;
 			location[1]	+= y;
 			location[2]	+= z;
+			
+			if(++tick == 4) {
+	            ref_locAbs[0] = ref_locAbs[3];
+	            ref_locAbs[1] = ref_locAbs[4];
+	            ref_locAbs[2] = ref_locAbs[5];
+
+	            ref_locAbs[3] = location[0];
+	            ref_locAbs[4] = location[1];
+	            ref_locAbs[5] = location[2];
+	            tick = 0;
+			}
 			
 			for(ThreeDs T : aircrafts) {
 				aJet = (Aircraft) T;
@@ -167,6 +184,6 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 
     @Override
     public final PointType getPointType() {
-        return PointType.rel;
+        return PointType.abs;
     }
 }
