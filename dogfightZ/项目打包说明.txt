@@ -1,1 +1,1 @@
-请运行 mavenPackage.bat，打包后位于 target/dogfightZ-jar-with-dependencies.jar，包含依赖项，可在JRE1.8环境下独立运行，若正确配置JAVA_HOME，双击该jar包即可启动游戏。
+请运行 mavenPackage.bat，打包后位于 target/dogfightZ-jar-with-dependencies.jar，包含依赖项，可在JRE17环境下独立运行，若正确配置JAVA_HOME，双击该jar包即可启动游戏。
