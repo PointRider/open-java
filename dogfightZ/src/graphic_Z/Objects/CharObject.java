@@ -8,12 +8,11 @@ import java.util.ListIterator;
 
 import graphic_Z.Interfaces.ThreeDs;
 
-public abstract class CharObject extends TDObject implements ThreeDs
-{
+public abstract class CharObject extends TDObject implements ThreeDs {
 	public char specialDisplay;
 	public int points_count;			//物体点个数
 	public List<float[]> points;		//物体每个点坐标
-    public List<float[]> points_abs;        //物体每个点坐标
+    public List<float[]> points_abs;    //物体每个点坐标
 	private DrawingMethod drawingMethod;
 	protected ListIterator<ThreeDs> myPosition;
 	protected char surfaceChar[];

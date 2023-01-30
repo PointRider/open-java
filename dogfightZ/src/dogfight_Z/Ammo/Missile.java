@@ -230,7 +230,6 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 		getCameraRollAngle()[1] = -roll_angle[1];
 		getCameraRollAngle()[2] = -roll_angle[2];
 		
-		float x, y, z, t, r1, r2;
 		getGameManager().newEffect(new EngineFlame(location, 75000 + (int)(75000 * GraphicUtils.random())));
 		
 		for(int repeat = 0; repeat < 2; ++repeat) {
@@ -240,17 +239,7 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 			
 			if(life - lifeLeft > startGuideTime) trace();
 			//------------[go street]------------
-			r1 = roll_angle[1];
-			r2 = GraphicUtils.cos(roll_angle[0]);
-			t  = GraphicUtils.cos(r1) * getSpeed();
-			x  = GraphicUtils.tan(r1) * t;
-			y  = GraphicUtils.sin(roll_angle[0]) * t;
-			z  = r2 * t;
-			
-			location[0]	-= x;
-			location[1]	+= y;
-			location[2]	+= z;
-			
+			goStreet(getSpeed());
 			//--------------[motion]-------------
 			roll_up_dn(velocity_roll[0]);
 			turn_lr(velocity_roll[1]);
