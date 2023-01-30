@@ -389,16 +389,23 @@ public class CharVisualManager extends VisualManager<CharWorld> implements Runna
 		scr_show.delete(0, scr_show.length());
 		firstLine = true;
 		
-		for(char y[]:fraps_buffer)
-		{
+		char t;
+		for(char y[]:fraps_buffer) {
 			firstInLine = true;
 			if(!firstLine) scr_show.append('\n');
-			
-			for(char x:y)
-			{
-				if(!firstInLine) scr_show.append(' ');
+			t = ' ';
+			for(char x:y) {
+			    
+				if(!firstInLine) {
+				    if(
+				        t == '@' && x == '@' ||
+				        t == '.' && x == '.'
+				    ) scr_show.append(t);
+				    else scr_show.append(' ');
+				}
 				scr_show.append(x);
 				firstInLine = false;
+				t = x;
 			}
 			
 			firstLine = false;

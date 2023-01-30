@@ -369,6 +369,17 @@ public class GraphicUtils
         //return new float[] {x / length, y / length, z / length};
     }
     
+    /**
+     * 返回方向向量所对应的xyz夹角的弧度
+     * @param directionVector 方向向量
+     * @return 弧度制夹角
+     */
+    public static final void toDirectionXY(float directionXYZVector[]) {
+        float x = directionXYZVector[0];
+        directionXYZVector[0] = -GraphicUtils.atan2(directionXYZVector[2], -directionXYZVector[1]);
+        directionXYZVector[1] = GraphicUtils.asin(x);
+        directionXYZVector[2] = 0;
+    }
 	
 	public static final void drawCircle(char fraps_buffer[][], int x0, int y0, int r, char pixel) {
 		
@@ -467,6 +478,10 @@ public class GraphicUtils
     
     public static final int randomInt(int max) {
         return randomMaker.nextInt(max);
+    }
+    
+    public static final float asymptoticToZero(float x, float velocity) {
+        return x / velocity;
     }
 }
 

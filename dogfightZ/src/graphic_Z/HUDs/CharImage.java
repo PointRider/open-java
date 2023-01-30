@@ -20,7 +20,8 @@ public class CharImage extends CharHUD
 		int locationY, 
 		int HUDLayer, 
 		int[] scrResolution,
-		boolean transparent_at_space
+		boolean transparent_at_space, 
+		boolean needImgBuffer
 	) {
 		super(null, frapsBuffer, HUDLayer, scrResolution, transparent_at_space);
 
@@ -35,7 +36,7 @@ public class CharImage extends CharHUD
 		centerX = size[0] >> 1;
 		centerY = size[1] >> 1;
 
-		HUDImg = new char[sizeY][sizeX];
+		if(needImgBuffer) HUDImg = new char[sizeY][sizeX];
 		
 		if(HUDImgFile != null) try(FileReader data = new FileReader(HUDImgFile)) {
 			for(int i=0 ; i<sizeY ; ++i) {
@@ -52,6 +53,20 @@ public class CharImage extends CharHUD
 			for(int j=0 ; j<sizeX ; ++j) HUDImg[i][j] = ' ';
 		}
 	}
+	
+	public CharImage(
+        String HUDImgFile, 
+        char[][] frapsBuffer,
+        int sizeX,
+        int sizeY,
+        int locationX,
+        int locationY, 
+        int HUDLayer, 
+        int[] scrResolution,
+        boolean transparent_at_space
+    ) {
+        this(HUDImgFile, frapsBuffer, sizeX, sizeY, locationX, locationY, HUDLayer, scrResolution, transparent_at_space, true);
+    }
 	
 	private int x, y;
 	public void printNew() {

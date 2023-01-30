@@ -495,11 +495,9 @@ public class Aircraft extends CharMessObject
             cannonLocation[0] += 180;
         else cannonLocation[0] -= 60;
         
-        getXYZ_afterRolling
-        (
+        getXYZ_afterRolling (
             cannonLocation[0], cannonLocation[1], cannonLocation[2],
             roll_angle[0],     roll_angle[1],     roll_angle[2],
-            
             cannonLocation
         );
         
@@ -507,24 +505,10 @@ public class Aircraft extends CharMessObject
         cannonLocation[1] += location[1];
         cannonLocation[2] += location[2];
         
-        Missile m;
-        
-        if(cameraTrace)
-        {
-            m = new Missile
-            (
-                getGameManager(), 1280000, getSpeed()/2+5, 512, cannonLocation, 
-                roll_angle, 20, 512, 3.0F, this, target, mainCamera
-            );
-        }
-        else
-        {
-            m = new Missile
-            (
-                getGameManager(), 1280000, getSpeed()/2+5, 512, cannonLocation, 
-                roll_angle, 20, 512, 3.0F, this, target, null
-            );
-        }
+        Missile m = new Missile (
+            getGameManager(), 1280000, getSpeed()/2+5, 512, cannonLocation, 
+            roll_angle, 20, 512, 3.0F, this, target, cameraTrace? mainCamera: null
+        );
         
         getGameManager().fireAmmo(m);
         
@@ -552,8 +536,7 @@ public class Aircraft extends CharMessObject
 		effectMakingLocation[1][1] = -320;
 		effectMakingLocation[1][2] = -320;
 		
-		getXYZ_afterRolling
-		(
+		getXYZ_afterRolling(
 			effectMakingLocation[0][0], 
 			effectMakingLocation[0][1], 
 			effectMakingLocation[0][2],
@@ -563,8 +546,7 @@ public class Aircraft extends CharMessObject
 			effectMakingLocation[0]
 		);
 		
-		getXYZ_afterRolling
-		(
+		getXYZ_afterRolling(
 			effectMakingLocation[1][0], 
 			effectMakingLocation[1][1], 
 			effectMakingLocation[1][2],
@@ -602,8 +584,7 @@ public class Aircraft extends CharMessObject
         effectMakingLocation[2][1] = 0;
         effectMakingLocation[2][2] = -240;
         
-        getXYZ_afterRolling
-        (
+        getXYZ_afterRolling (
             effectMakingLocation[2][0], 
             effectMakingLocation[2][1], 
             effectMakingLocation[2][2],
@@ -624,64 +605,63 @@ public class Aircraft extends CharMessObject
         return directionXYZ;
     }
 	
-    public void doMotion() {
-		//------------[go street]------------
-        float r1 = roll_angle[1];
-        float r2 = roll_angle[0];
+	public void attitude() {
+        roll_up_dn(velocity_roll[0]);
+        turn_lr(velocity_roll[1]);
+        roll_lr(velocity_roll[2]);
         
-		float t  = GraphicUtils.cos(r1) * getSpeed();
-		
-		location[0]	-= directionXYZ[0] = GraphicUtils.sin(r1) * getSpeed();
-		location[1]	+= directionXYZ[1] = GraphicUtils.sin(r2) * t;
-		location[2]	+= directionXYZ[2] = GraphicUtils.cos(r2) * t;
-		GraphicUtils.toDirectionVector(directionXYZ);
-		toDirectionXY(directionXYZ);
-		directionXYZ[2] = roll_angle[2];
-		//--------------[motion]-------------
-		roll_up_dn(velocity_roll[0]);
-		turn_lr(velocity_roll[1]);
-		roll_lr(velocity_roll[2]);
-		//-----------------------------------
-		engine_rpm = getCurrentRPM(getMax_rpm(), getControl_stick_acc());
-		float F   = getCurrentForce(maxAccForce, getMax_rpm(), engine_rpm);
+        velocity_roll[0] = GraphicUtils.asymptoticToZero(velocity_roll[0], 1.050F);
+        velocity_roll[1] = GraphicUtils.asymptoticToZero(velocity_roll[1], 1.050F);
+        velocity_roll[2] = GraphicUtils.asymptoticToZero(velocity_roll[2], 1.050F);
+	}
 	
-		if(isPushing) {
-			F += pushPower;
-			if(isPlayer()) getGameManager().addGBlack(1.3F);
-			if((pushTimeLeft = getPushTimeLeft() - 2) <= 0) isPushing = false;
-			pushEffectRun();
-		} else if(getPushTimeLeft() < getMaxPushTime())pushTimeLeft = getPushTimeLeft() + 1;
-		
-		if(velocity_roll[0] != 0.0F)
-			velocity_roll[0] /= 1.050F;
-		if(velocity_roll[1] != 0.0F)
-			velocity_roll[1] /= 1.050F;
-		if(velocity_roll[2] != 0.0F)
-			velocity_roll[2] /= 1.075F;
-		
-		setSpeed(getSpeed() + F/mess - speed * resistanceRate_current);
-		//setSpeed(getSpeed() - speed * resistanceRate_current);
-		
-		if(getSpeed() > maxSpeed)
-			setSpeed(maxSpeed);
-		
-		if(getSpeed() < getMinStableSpeed()) {
-			motionRate = getSpeed() * 0.8F / getMinStableSpeed();
-			if(location[0] < 200)
-				location[0] += CharTimeSpace.g * (1.0F - getSpeed() / getMinStableSpeed());
-			else location[0] = 200;
-		} else {
-			motionRate = 0.8F;
-			if(location[0] > 200) location[0] = 200;
-			float a = GraphicUtils.abs(velocity_roll[0]) / getMaxVelRollUp();
+	public void engineRun() {
+	    engine_rpm = getCurrentRPM(getMax_rpm(), getControl_stick_acc());
+        float F    = getCurrentForce(maxAccForce, getMax_rpm(), engine_rpm);
+    
+        if(isPushing) {
+            F += pushPower;
+            if(isPlayer()) getGameManager().addGBlack(1.3F);
+            if((pushTimeLeft = getPushTimeLeft() - 2) <= 0) isPushing = false;
+            pushEffectRun();
+        } else if(getPushTimeLeft() < getMaxPushTime())pushTimeLeft = getPushTimeLeft() + 1;
+        setSpeed(getSpeed() + F/mess - speed * resistanceRate_current);
+
+        if(getSpeed() > maxSpeed)
+            setSpeed(maxSpeed);
+	}
+	
+	public void stabilitySimulate() {
+	    if(getSpeed() < getMinStableSpeed()) {
+            motionRate = getSpeed() * 0.8F / getMinStableSpeed();
+            if(location[0] < 200)
+                location[0] += CharTimeSpace.g * (1.0F - getSpeed() / getMinStableSpeed());
+            else location[0] = 200;
+        } else {
+            motionRate = 0.8F;
+            if(location[0] > 200) location[0] = 200;
+            float a = GraphicUtils.abs(velocity_roll[0]) / getMaxVelRollUp();
             float b = GraphicUtils.abs(velocity_roll[2]) / getMaxVelRollLR();
             float c = GraphicUtils.max(a, b);
-			if (c > 0.6F) {
-		        if(isPlayer()) getGameManager().addGBlack(c * 1.95F);
-			    wingsEffectRun();
-			    iswingsEffectRunning = true;
-			} else iswingsEffectRunning = false;
-		}
+            if (c > 0.6F) {
+                if(isPlayer()) getGameManager().addGBlack(c * 1.95F);
+                wingsEffectRun();
+                iswingsEffectRunning = true;
+            } else iswingsEffectRunning = false;
+        }
+	}
+	
+    public void doMotion() {
+		//------------[go street]------------
+        goStreet(directionXYZ, getSpeed());
+        //---------[DirectionVector]---------
+        GraphicUtils.toDirectionXY(directionXYZ);
+        directionXYZ[2] = roll_angle[2];
+        //--------------[motion]-------------
+        attitude();
+		//-----------------------------------
+        engineRun();
+        stabilitySimulate();
 	}
 	
 	public void weaponSystemRun()
@@ -1047,17 +1027,6 @@ public class Aircraft extends CharMessObject
         this.isAlive = isAlive;
     }
 */
-    /**
-     * 返回方向向量所对应的xyz夹角的弧度
-     * @param directionVector 方向向量
-     * @return 弧度制夹角
-     */
-    public static final void toDirectionXY(float directionXYZVector[]) {
-        float x = directionXYZVector[0];
-        directionXYZVector[0] = GraphicUtils.atan2(directionXYZVector[2], -directionXYZVector[1]);
-        directionXYZVector[1] = GraphicUtils.asin(x);
-        directionXYZVector[2] = 0;
-    }
     
     public final float getMinStableSpeed() {
         return minStableSpeed;

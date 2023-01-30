@@ -1,7 +1,6 @@
 package graphic_Z.Objects;
 
-public abstract class CharMessObject extends CharObject implements Runnable
-{
+public abstract class CharMessObject extends CharObject implements Runnable {
 	protected float mess;
 	protected float velocity[];
 	public float velocity_roll[];
@@ -24,8 +23,7 @@ public abstract class CharMessObject extends CharObject implements Runnable
 		velocity_roll[2] = another.velocity_roll[2];
 	}
 	*/
-	public CharMessObject(String ModelFile, float Mess, DrawingMethod drawingMethod)
-	{
+	public CharMessObject(String ModelFile, float Mess, DrawingMethod drawingMethod) {
 		super(ModelFile, drawingMethod);
 
 		mess = Mess;
@@ -47,8 +45,7 @@ public abstract class CharMessObject extends CharObject implements Runnable
 	}
 
 	@Override
-	public void go()
-	{
+	public void go() {
 		location[0] += velocity[0];
 		location[1] += velocity[1];
 		location[2] += velocity[2];

@@ -2,25 +2,21 @@ package graphic_Z.Objects;
 
 import graphic_Z.utils.GraphicUtils;
 
-public abstract class TDObject
-{
+public abstract class TDObject {
 	public float location[];		//物体中心坐标
 	public float roll_angle[];		//物体旋转角度
 	public boolean visible;			//物体是否可见
 	
-	public TDObject(TDObject another)
-	{
+	public TDObject(TDObject another) {
 		location	= another.location.clone();
 		roll_angle	= another.roll_angle.clone();
 	}
 	
-	public static void getXYZ_afterRolling
-	(
+	public static final void getXYZ_afterRolling (
 		float X0, float Y0, float Z0,
 		float r0, float r1, float r2,
 		float result[/*3*/]  //x, y, z
-	)
-	{
+	) {
 		float X, Y, Z, cos$, sin$;
 		/*
 		X = GraphicUtils.cos(GraphicUtils.atan(Y0/X0)+GraphicUtils.toRadians(rz))*GraphicUtils.sqrt(X0*X0+Y0*Y0);
@@ -59,13 +55,11 @@ public abstract class TDObject
 		result[2] = Z;
 	}
 	
-	public static void getXYZ_beforeRolling
-	(
+	public static void getXYZ_beforeRolling (
 		float X0, float Y0, float Z0,
         float r0, float r1, float r2,
 		float result[]  //x, y, z
-	)
-	{
+	) {
 		/*
 		float X, Y, Z;
 		
@@ -107,14 +101,36 @@ public abstract class TDObject
 		result[2] = Z;
 	}
 	
-	public TDObject()
-	{
+	public TDObject() {
 		location	= new float[3];
 		roll_angle	= new float[3];
 		
 		location[0]   = location[1]   = location[2]   = 0.0F;
 		roll_angle[0] = roll_angle[1] = roll_angle[2] = 0.0F;
 	}
+	
+	public void goStreet(float[] directionXYZ, float velocity) {
+	    float r1 = roll_angle[1];
+        float r2 = roll_angle[0];
+        
+        float t  = GraphicUtils.cos(r1) * velocity;
+        
+        location[0] -= directionXYZ[0] = GraphicUtils.sin(r1) * velocity;
+        location[1] += directionXYZ[1] = GraphicUtils.sin(r2) * t;
+        location[2] += directionXYZ[2] = GraphicUtils.cos(r2) * t;
+        GraphicUtils.toDirectionVector(directionXYZ);
+	}
+	
+	public void goStreet(float velocity) {
+        float r1 = roll_angle[1];
+        float r2 = roll_angle[0];
+        
+        float t  = GraphicUtils.cos(r1) * velocity;
+        
+        location[0] -= GraphicUtils.sin(r1) * velocity;
+        location[1] += GraphicUtils.sin(r2) * t;
+        location[2] += GraphicUtils.cos(r2) * t;
+    }
 	
 	public abstract void go();
 }

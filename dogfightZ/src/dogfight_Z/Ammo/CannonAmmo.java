@@ -25,7 +25,6 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 	public		  Aircraft	launcher;
 	public		  LinkedListZ<ThreeDs> aircrafts;
     private       GameManagement gameManager;
-    private       int       tick;
 	/*
 	private static ArrayList<float[]> missileModelData;
 	static {
@@ -87,7 +86,6 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
         points_abs.add(new float [] {Location[0], Location[1], Location[2], Location[0], Location[1], Location[2]});
 		
 		visible = true;
-		tick = 0;
 	}
 	
 	@Override
@@ -100,33 +98,21 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 		}
 		
         Aircraft aJet = null;
-		float x, y, z, t, r1, r2, ref_locAbs[] = points_abs.get(0);
-		for(int repeat = 0; repeat < 5; ++repeat)
-		{
+		float ref_locAbs[] = points_abs.get(0);
+		
+		ref_locAbs[0] = ref_locAbs[3];
+        ref_locAbs[1] = ref_locAbs[4];
+        ref_locAbs[2] = ref_locAbs[5];
+
+        ref_locAbs[3] = location[0];
+        ref_locAbs[4] = location[1];
+        ref_locAbs[5] = location[2];
+        
+		for(int repeat = 0; repeat < 5; ++repeat) {
 			//------------[go street]------------
             speed -= speed * resistanceRate;
-            r1 = roll_angle[1];
-            r2 = roll_angle[0];
-			t  = GraphicUtils.cos(r1) * speed;
-			x  = GraphicUtils.sin(r1) * speed;
-			y  = GraphicUtils.sin(r2) * t;
-			z  = GraphicUtils.cos(r2) * t;
-			
-			location[0]	-= x;
-			location[1]	+= y;
-			location[2]	+= z;
-			
-			if(++tick == 4) {
-	            ref_locAbs[0] = ref_locAbs[3];
-	            ref_locAbs[1] = ref_locAbs[4];
-	            ref_locAbs[2] = ref_locAbs[5];
-
-	            ref_locAbs[3] = location[0];
-	            ref_locAbs[4] = location[1];
-	            ref_locAbs[5] = location[2];
-	            tick = 0;
-			}
-			
+            goStreet(speed);
+            
 			for(ThreeDs T : aircrafts) {
 				aJet = (Aircraft) T;
 				if(aJet.getID().charAt(0) != '\n' && aJet.isAlive() && GraphicUtils.range(location, aJet.location) < 480) {
