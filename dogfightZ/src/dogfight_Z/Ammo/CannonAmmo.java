@@ -119,7 +119,7 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 			aJet = (Aircraft) T;
 			
 			//condition_dist = GraphicUtils.range(location, aJet.location) < 480;
-			condition_dist = GraphicUtils.dist_point2line3D(ref_locAbs, location, aJet.location) < 480;
+			condition_dist = GraphicUtils.dist_point2line3D(ref_locAbs, location, aJet.location) < 320;
 			
 			if(aJet.getID().charAt(0) != '\n' && aJet.isAlive() && condition_dist) {
 				if(aJet.getCamp() != myCamp) {

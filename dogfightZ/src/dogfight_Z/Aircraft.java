@@ -696,7 +696,7 @@ public class Aircraft extends CharMessObject
 					cannonLocation[2] += location[2];
 					getGameManager().fireAmmo(
 						new CannonAmmo (
-							getGameManager(), 400000, getCamp(), 2000 + getSpeed(), 0.00175F, 
+							getGameManager(), 400000, getCamp(), 2500 + getSpeed(), 0.0125F, 
 							cannonLocation, roll_angle, aircrafts, this
 						)
 					);
