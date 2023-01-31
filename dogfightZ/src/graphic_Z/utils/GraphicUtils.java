@@ -483,6 +483,36 @@ public class GraphicUtils
     public static final float asymptoticToZero(float x, float velocity) {
         return x / velocity;
     }
+    
+    public static final float dot3D(float[] a, float[] b) {
+        return a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
+    }
+    
+    public static final float[] cross3D(float[] a, float[] b) {
+        return new float[] {
+            a[1]*b[2] - b[1]*a[2],
+            b[0]*a[2] - a[0]*b[2],
+            a[0]*b[1] - b[0]*a[1]
+        };
+    }
+    
+    public static final float dist_point2line3D(float[] a, float[] b, float[] p) {
+        float res;
+        float ab[]  = {a[0]-b[0], a[1]-b[1], a[2]-b[2]};
+        float ap[]  = {a[0]-p[0], a[1]-p[1], a[2]-p[2]};
+        float molAB = vectorLength(ab);
+        float r     = dot3D(ab, ap) / (molAB * molAB);
+        if(r <= 0) {
+            res = vectorLength(ap);
+        } else if(r >= 1) {
+            float bp[] = {b[0]-p[0], b[1]-p[1], b[2]-p[2]};
+            res = vectorLength(bp);
+        } else {
+            res = vectorLength(cross3D(ap, ab)) / molAB;
+        }
+        
+        return res;
+    }
 }
 
 /*

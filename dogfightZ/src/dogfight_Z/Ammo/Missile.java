@@ -18,6 +18,7 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 	public		  int		lifeLeft;
 	public		  long		lifeTo;
 	//public 		  float 	guideLocation[];
+	public        float     location_old[];
 	public		  float 	startGuideTime;
 	public		  Aircraft  launcher;
 	public		  Aircraft  target;
@@ -139,6 +140,8 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 		location[1] = Location[1];
 		location[2] = Location[2];
 		
+		location_old = new float[3];
+		
 		roll_angle[0] = Roll_angle[0];
 		roll_angle[1] = Roll_angle[1];
 		roll_angle[2] = Roll_angle[2];
@@ -196,10 +199,10 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 						range_old - range > 64 && range < 20000 && range > 0 && 
 						getSpeed() > target.getSpeed() + 50 && target.getSpeed() < 71
 					)
-				)	setSpeed(getSpeed() - 5);
-				else if(getSpeed() < maxSpeed)	setSpeed(getSpeed() + 0.5F);
+				)	setSpeed(getSpeed() - 10F);
+				else if(getSpeed() < maxSpeed)	setSpeed(getSpeed() + 1.25F);
 				target.warningMissile(launcher);
-			} else if(range < 0) lifeLeft -= 2000;
+			} else if(range < 0) lifeLeft -= 4000;
 			range_old = range;
 		}
 	}
@@ -232,33 +235,42 @@ public class Missile extends Aircraft implements Dynamic, Dangerous
 		
 		getGameManager().newEffect(new EngineFlame(location, 75000 + (int)(75000 * GraphicUtils.random())));
 		
-		for(int repeat = 0; repeat < 2; ++repeat) {
-			if(velocity_roll[0] != 0.0F) velocity_roll[0] /= 2;
-			if(velocity_roll[1] != 0.0F) velocity_roll[1] /= 2;
-			if(velocity_roll[2] != 0.0F) velocity_roll[2] /= 2;
-			
-			if(life - lifeLeft > startGuideTime) trace();
-			//------------[go street]------------
-			goStreet(getSpeed());
-			//--------------[motion]-------------
-			roll_up_dn(velocity_roll[0]);
-			turn_lr(velocity_roll[1]);
-			roll_lr(velocity_roll[2]);
-			//-----------------------------------
-			
-			if(target != null  &&  target.isAlive()) {
-			    if(GraphicUtils.range(location, target.location) < 224) {
-    				target.getDamage((int)(50 - 10 * GraphicUtils.random()), launcher, "Missile");
-    				Particle.makeExplosion(getGameManager(), location, 15, 75000, 0.025F, 0.1F);
-    
-    				if(target.isPlayer()) target.getGameManager().colorFlash(255, 255, 255, 127, 16, 16, 20);
-    				if(launcher.isPlayer()) launcher.getGameManager().colorFlash(0, 192, 255, 0, 0, 0, 12);
-    				
-    				disable();
-    				return;
-    			}
-			} else lifeLeft -= 3000;
-		}
+		velocity_roll[0] /= 2;
+		velocity_roll[1] /= 2;
+		velocity_roll[2] /= 2;
+		
+		if(life - lifeLeft > startGuideTime) trace();
+		
+		//------------[go street]------------
+        location_old[0] = location[0];
+        location_old[1] = location[1];
+        location_old[2] = location[2];
+        
+		goStreet(getSpeed());
+		//--------------[motion]-------------
+		roll_up_dn(velocity_roll[0]);
+		turn_lr(velocity_roll[1]);
+		roll_lr(velocity_roll[2]);
+		//-----------------------------------
+        
+		if(target != null  &&  target.isAlive()) {
+
+	        //boolean condition_dist = GraphicUtils.range(location, target.location) < 224;
+		    boolean condition_dist = 
+		            GraphicUtils.dist_point2line3D(location_old, location, target.location) < 224;
+	                
+		    if(condition_dist) {
+				target.getDamage((int)(50 - 10 * GraphicUtils.random()), launcher, "Missile");
+				Particle.makeExplosion(getGameManager(), location, 15, 75000, 0.025F, 0.1F);
+
+				if(target.isPlayer()) target.getGameManager().colorFlash(255, 255, 255, 127, 16, 16, 20);
+				if(launcher.isPlayer()) launcher.getGameManager().colorFlash(0, 192, 255, 0, 0, 0, 12);
+				
+				disable();
+				return;
+			}
+		} else lifeLeft -= 6000;
+		
 				
 		lifeLeft -= 1000;
 	}

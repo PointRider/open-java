@@ -506,7 +506,7 @@ public class Aircraft extends CharMessObject
         cannonLocation[2] += location[2];
         
         Missile m = new Missile (
-            getGameManager(), 1280000, getSpeed()/2+5, 512, cannonLocation, 
+            getGameManager(), 1280000, getSpeed() + 10, 2048, cannonLocation, 
             roll_angle, 20, 512, 3.0F, this, target, cameraTrace? mainCamera: null
         );
         
@@ -696,7 +696,7 @@ public class Aircraft extends CharMessObject
 					cannonLocation[2] += location[2];
 					getGameManager().fireAmmo(
 						new CannonAmmo (
-							getGameManager(), 400000, getCamp(), 400 + getSpeed(), 0.00175F, 
+							getGameManager(), 400000, getCamp(), 2000 + getSpeed(), 0.00175F, 
 							cannonLocation, roll_angle, aircrafts, this
 						)
 					);

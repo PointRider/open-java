@@ -103,30 +103,38 @@ public class CannonAmmo extends CharMessObject implements Dynamic, Dangerous
 		ref_locAbs[0] = ref_locAbs[3];
         ref_locAbs[1] = ref_locAbs[4];
         ref_locAbs[2] = ref_locAbs[5];
+        
+		//for(int repeat = 0; repeat < 5; ++repeat) {
+		//------------[go street]------------
+        speed -= speed * resistanceRate;
+        goStreet(speed);
 
         ref_locAbs[3] = location[0];
         ref_locAbs[4] = location[1];
         ref_locAbs[5] = location[2];
         
-		for(int repeat = 0; repeat < 5; ++repeat) {
-			//------------[go street]------------
-            speed -= speed * resistanceRate;
-            goStreet(speed);
-            
-			for(ThreeDs T : aircrafts) {
-				aJet = (Aircraft) T;
-				if(aJet.getID().charAt(0) != '\n' && aJet.isAlive() && GraphicUtils.range(location, aJet.location) < 480) {
-					if(aJet.getCamp() != myCamp) {
-						aJet.getDamage(5, launcher, "Cannon");
-						Particle.makeExplosion(gameManager, location, 10, 75000, 0.01F, 0.1F);
-						if(aJet.isPlayer()) aJet.getGameManager().colorFlash(255, 255, 128, 128, 16, 16, 2);
-						if(launcher.isPlayer()) launcher.getGameManager().colorFlash(255, 255, 128, 96, 72, 0, 2);
-						disable();
-						return;
-					}
+        boolean condition_dist;
+        
+		for(ThreeDs T : aircrafts) {
+			aJet = (Aircraft) T;
+			
+			//condition_dist = GraphicUtils.range(location, aJet.location) < 480;
+			condition_dist = GraphicUtils.dist_point2line3D(ref_locAbs, location, aJet.location) < 480;
+			
+			if(aJet.getID().charAt(0) != '\n' && aJet.isAlive() && condition_dist) {
+				if(aJet.getCamp() != myCamp) {
+					aJet.getDamage(5, launcher, "Cannon");
+					Particle.makeExplosion(gameManager, location, 10, 75000, 0.01F, 0.1F);
+					if(aJet.isPlayer()) aJet.getGameManager().colorFlash(255, 255, 128, 128, 16, 16, 2);
+					if(launcher.isPlayer()) launcher.getGameManager().colorFlash(255, 255, 128, 96, 72, 0, 2);
+					disable();
+					return;
 				}
 			}
 		}
+		
+		
+		//}
 		lifeLeft -= 1000;
 	}
 	
