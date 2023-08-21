@@ -263,6 +263,8 @@ public class DBInit {
                 } catch (SQLException e) {
                     e.printStackTrace();
                     return false;
+                } finally {
+                    conn.close();
                 }
                 return true;
             }
