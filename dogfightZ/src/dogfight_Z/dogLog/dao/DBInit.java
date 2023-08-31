@@ -264,7 +264,7 @@ public class DBInit {
                     e.printStackTrace();
                     return false;
                 } finally {
-                    conn.close();
+                    JDBCFactory.returnBack(conn);
                 }
                 return true;
             }

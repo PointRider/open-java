@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: net.jafama:jafama:2.3.2">
+    <CLASSES>
+      <root url="jar://D:/Application Development/apache-maven-3.6.0/localRepository/net/jafama/jafama/2.3.2/jafama-2.3.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://D:/Application Development/apache-maven-3.6.0/localRepository/net/jafama/jafama/2.3.2/jafama-2.3.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://D:/Application Development/apache-maven-3.6.0/localRepository/net/jafama/jafama/2.3.2/jafama-2.3.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
