@@ -1205,10 +1205,7 @@ public class Game extends CharTimeSpace implements Runnable {
 			fw.write('\n');
 			fw.write(Integer.toString(getMyJet().dead));
 			fw.write('\n');
-		}	catch(IOException exc){}
-        finally {
-            fw.close();
-        }
+		}	catch(IOException exc) {}
 		
 		eventManager.addKeyListener(new KeyListener() {
             @Override
