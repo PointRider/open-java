@@ -1,5 +1,7 @@
 # 	dogfightZ 	![img](dogfightZ/dogfightZ.ico)
 
+<a href="https://hellogithub.com/repository/c2b77dfe28f6452c99d57fb89b81ecd4" target="_blank"><img src="https://api.hellogithub.com/v1/widgets/recommend.svg?rid=c2b77dfe28f6452c99d57fb89b81ecd4&claim_uid=Hz9BxJFM57YdZ0U&theme=neutral&theme=dark" alt="Featured｜HelloGitHub" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+
 基于 
 
 ​	**Java Swing** 
